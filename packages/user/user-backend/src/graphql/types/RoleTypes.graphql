@@ -1,0 +1,28 @@
+type Role {
+    id: ID!
+    name: String!
+    childRoles: [ID]
+    permissions: [String]
+}
+
+input RoleInput{
+    name: String!
+    childRoles: [ID]
+    permissions: [String]
+}
+
+type Query {
+    roles: [Role]
+    role(id:ID!): Role
+}
+
+type RoleDelete{
+    id: ID!
+    success: Boolean!
+}
+
+type Mutation {
+    roleCreate(input: RoleInput): Role
+    roleUpdate(id:ID!, input:RoleInput):Role
+    roleDelete(id: ID!): RoleDelete!
+}

@@ -1,0 +1,17 @@
+query customization{
+    customization{
+        colors{
+            primary
+            onPrimary
+            secondary
+            onSecondary
+        }
+        logo{
+            mode
+            title
+            filename
+            url
+        }
+        language
+    }
+}

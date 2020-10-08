@@ -1,0 +1,4 @@
+type OperationResponse{
+    status: Boolean
+    message: String
+}

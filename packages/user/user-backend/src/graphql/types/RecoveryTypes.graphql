@@ -1,0 +1,11 @@
+type RecoveryResponse{
+    status: Boolean!
+    token: String
+    message: String
+}
+
+type Mutation {
+    recoveryByEmail(email:String!):OperationResponse!
+    recoveryChangePassword(token: String!, newPassword:String!): RecoveryResponse!
+
+}

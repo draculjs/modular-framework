@@ -1,0 +1,12 @@
+mutation groupCreate($name:String!, $color:String, $users: [String]){
+    groupCreate(input: {name: $name, color: $color, users:$users }){
+        id
+        name
+        color
+        users{
+            id
+            username
+        }
+    }
+}
+

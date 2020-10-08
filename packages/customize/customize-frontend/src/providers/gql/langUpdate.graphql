@@ -1,0 +1,6 @@
+mutation langUpdate($language:String!){
+    langUpdate(input: {language: $language }){
+        language
+    }
+}
+

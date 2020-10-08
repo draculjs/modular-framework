@@ -1,0 +1,6 @@
+query permissions{
+    permissions{
+        permissions
+    }
+}
+

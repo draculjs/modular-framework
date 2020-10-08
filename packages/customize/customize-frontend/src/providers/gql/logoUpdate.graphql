@@ -1,0 +1,8 @@
+mutation logoUpdate($mode:String!, $title: String!){
+    logoUpdate(input: {mode: $mode, title: $title }){
+        mode
+        title
+        url
+    }
+}
+

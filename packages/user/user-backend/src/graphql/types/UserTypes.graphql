@@ -1,0 +1,49 @@
+type User {
+    id: ID!
+    username: String!
+    name: String!
+    email: String!
+    phone: String
+    avatar: String
+    avatarurl: String
+    role: Role
+    groups: [Group]
+    active: Boolean!
+    createdAt: String
+    updatedAt: String
+}
+
+input UserInput{
+    username: String!
+    name: String!
+    email: String!
+    password: String
+    phone: String
+    role: String!
+    groups: [String]
+    active: Boolean!
+}
+
+type UsersPaginated{
+    totalItems: Int!
+    page: Int!
+    users: [User!]
+}
+
+type Query {
+    users: [User!]
+    user(id: ID!): User
+    paginateUsers(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean): UsersPaginated
+}
+
+type UserDelete{
+    id: ID!
+    success: Boolean!
+}
+
+type Mutation {
+    createUser(input: UserInput): User
+    updateUser(id: ID!, input: UserInput): User
+    deleteUser(id: ID!): UserDelete!
+    changePasswordAdmin(id: ID!, password:String!, passwordVerify:String!): OperationResponse!
+}

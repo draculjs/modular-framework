@@ -1,0 +1,7 @@
+mutation groupDelete($id: ID!){
+    groupDelete(id: $id){
+        id
+        deleteSuccess
+    }
+}
+

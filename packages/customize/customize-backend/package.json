@@ -1,0 +1,46 @@
+{
+  "name": "@dracul/customize-backend",
+  "version": "1.0.0",
+  "description": "node, express, graphql, custom color, theme, logo and i18n",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest --runInBand",
+    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cincarnato/ci-custom-module.git"
+  },
+  "keywords": [
+    "graphql",
+    "i18n",
+    "theme",
+    "color",
+    "custom"
+  ],
+  "author": "Cristian Incarnato",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cincarnato/ci-custom-module/issues"
+  },
+  "homepage": "https://github.com/cincarnato/ci-custom-module#readme",
+  "dependencies": {
+    "@dracul/user-backend": "^1.0.0",
+    "apollo-server-express": "^2.15.0",
+    "graphql": "^14.5.8",
+    "graphql-import": "^0.7.1",
+    "graphql-tools": "^4.0.5",
+    "mongoose": "^5.9.19"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@shelf/jest-mongodb": "^1.1.5",
+    "babel-jest": "^25.4.0",
+    "jest": "^25.4.0",
+    "mongodb-memory-server": "^6.5.2",
+    "nodemon": "^1.19.4"
+  }
+}

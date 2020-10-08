@@ -1,0 +1,18 @@
+type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+    url: String!
+}
+
+type AvatarFile {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+    url: String!
+}
+
+type Mutation {
+    changePassword( currentPassword:String!, newPassword:String!): OperationResponse!
+    avatarUpload(file: Upload!): AvatarFile!
+}

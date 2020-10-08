@@ -1,0 +1,73 @@
+type Customization{
+    colors: Colors!
+    logo: Logo!
+    language: String!
+}
+
+type Colors{
+    primary: String!
+    onPrimary: String!
+    secondary: String!
+    onSecondary: String!
+}
+
+type Logo{
+    mode: String!
+    title: String
+    filename: String
+    url: String
+}
+
+type Lang {
+    language: String!
+}
+
+type Query {
+    customization: Customization
+}
+
+input CustomizationInput{
+    primary: String!
+    onPrimary: String!
+    secondary: String!
+    onSecondary: String!
+    logo: String!
+    language: String!
+}
+
+input ColorInput{
+    primary: String!
+    onPrimary: String!
+    secondary: String!
+    onSecondary: String!
+}
+
+input LogoInput{
+    mode: String!
+    title: String
+}
+
+
+type LogoFile {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+    url: String!
+}
+
+input LangInput{
+    language: String!
+}
+
+
+
+type Mutation {
+    customizationCreate(input: CustomizationInput): Customization
+    customizationUpdate(id: ID!, input: CustomizationInput): Customization
+
+    colorsUpdate(input: ColorInput): Colors
+    logoUpdate(input: LogoInput): Logo
+    logoUpload(file: Upload!): LogoFile!
+    langUpdate(input: LangInput): Lang
+
+}

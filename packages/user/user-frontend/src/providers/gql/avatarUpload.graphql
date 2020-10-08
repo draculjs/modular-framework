@@ -1,0 +1,8 @@
+mutation ( $file: Upload!){
+    avatarUpload(file: $file){
+        filename
+        mimetype
+        encoding
+        url
+    }
+}

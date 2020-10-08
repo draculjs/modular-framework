@@ -1,0 +1,12 @@
+type AuthResponse {
+    token:String!
+}
+
+type Query {
+    me: User
+}
+
+type Mutation {
+    auth(username: String!, password:String!): AuthResponse!
+    apikey(userid: ID!): AuthResponse!
+}

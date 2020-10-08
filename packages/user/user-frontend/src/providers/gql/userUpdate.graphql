@@ -1,0 +1,21 @@
+mutation UserUpdate( $id: ID!, $name:String!,$username: String!, $email: String!, $phone: String, $role: String!, $groups: [String], $active: Boolean!){
+    updateUser(id: $id, input: {name:$name, username: $username, email:$email, phone:$phone, role: $role, groups: $groups, active: $active})
+    {
+
+        id
+        name
+        username
+        email
+        phone
+        avatarurl
+        active
+        role{
+            id
+            name
+        }
+        groups{
+            id
+            name
+        }
+    }
+}

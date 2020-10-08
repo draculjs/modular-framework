@@ -1,0 +1,17 @@
+query{
+    me{
+        id
+        firstName
+        username
+        lastName
+        email
+        groups{
+            id
+            name
+        }
+        avatar{
+            image
+        }
+
+    }
+}

@@ -1,0 +1,11 @@
+
+type ValidateTokenResponse{
+    valid: Boolean!
+    operation: String
+    message: String
+}
+
+
+type Query{
+    validateToken(token:String): ValidateTokenResponse!
+}

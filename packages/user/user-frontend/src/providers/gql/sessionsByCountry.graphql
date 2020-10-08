@@ -1,0 +1,6 @@
+query sessionsByCountry{
+    sessionsByCountry{
+        country
+        sum
+    }
+}

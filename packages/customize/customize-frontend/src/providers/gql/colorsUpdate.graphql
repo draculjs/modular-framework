@@ -1,0 +1,9 @@
+mutation colorsUpdate($primary:String!, $onPrimary:String!, $secondary:String!, $onSecondary:String!){
+    colorsUpdate(input: {primary: $primary, onPrimary: $onPrimary, secondary: $secondary, onSecondary: $onSecondary }){
+        primary
+        onPrimary
+        secondary
+        onSecondary
+    }
+}
+

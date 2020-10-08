@@ -1,0 +1,36 @@
+type Group{
+    id: ID!
+    color: String
+    name: String!
+    users: [User]
+}
+
+type GroupPaginated{
+    totalItems: Int!
+    page: Int!
+    items: [Group!]
+}
+
+type Query {
+    groups: [Group]
+    groupsPaginate(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean): GroupPaginated
+    group(id:ID!): Group
+}
+
+input GroupInput{
+    name: String!
+    color: String
+    users: [String]
+}
+
+type GroupDelete{
+    id: ID!
+    deleteSuccess: Boolean!
+}
+
+
+type Mutation {
+    groupCreate(input: GroupInput): Group
+    groupUpdate(id: ID!, input: GroupInput): Group
+    groupDelete(id: ID!): GroupDelete!
+}

@@ -1,0 +1,24 @@
+input RegisterInput{
+    username: String!
+    name: String!
+    email: String!
+    password: String!
+    phone: String
+}
+
+type RegisterResponse{
+    status: Boolean!,
+    id: String!,
+    email: String!
+}
+
+type ActivationResponse{
+    status: Boolean!
+    token: String
+    message: String
+}
+
+type Mutation {
+    register(input: RegisterInput): RegisterResponse!
+    activationUser(token:String!):ActivationResponse!
+}

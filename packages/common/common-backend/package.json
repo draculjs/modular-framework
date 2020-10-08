@@ -1,0 +1,27 @@
+{
+  "name": "@dracul/common-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cincarnato/ci-common-module.git"
+  },
+  "keywords": [
+    "common",
+    "api",
+    "backend"
+  ],
+  "author": "Cristian Incarnato",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cincarnato/ci-common-module/issues"
+  },
+  "homepage": "https://github.com/cincarnato/ci-common-module#readme",
+  "devDependencies": {
+    "jest": "^26.1.0"
+  }
+}

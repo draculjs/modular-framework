@@ -1,0 +1,58 @@
+type Session {
+    id: ID!
+    user: User!
+    username: String
+    ip: String
+    since: String
+    until: String
+    agent: String
+    duration: Int
+    geo: Geo
+    os: Os
+}
+
+type SessionsByUser{
+    durationAvg: Float
+    durationMin: Float
+    durationMax: Float
+    durationLast: Float
+    durationSum: Float
+    sessionCount: Int
+    requestSum: Int
+    requestAvg: Float
+    username: String
+}
+
+type SessionsByCountry{
+    country: String
+    sum: Int
+}
+
+type SessionsByOs{
+    osname: String
+    sum: Int
+}
+
+type SessionsByDeviceType{
+    devicetype: String
+    sum: Int
+}
+
+type SessionsByCity{
+    city: String
+    sum: Int
+}
+
+type SessionsByClient{
+    clientname: String
+    sum: Int
+}
+
+type Query {
+    sessionsByUser: [SessionsByUser!]
+    sessionsByCountry: [SessionsByCountry]
+    sessionsByOs: [SessionsByOs]
+    sessionsByDeviceType: [SessionsByDeviceType]
+    sessionsByCity: [SessionsByCity]
+    sessionsByClient: [SessionsByClient]
+}

@@ -1,0 +1,7 @@
+mutation activationUser($token:String!){
+    activationUser(token:$token){
+        status
+        token
+        message
+    }
+}

@@ -1,0 +1,9 @@
+mutation logoUpload( $file: Upload!){
+    logoUpload(file: $file){
+        filename
+        mimetype
+        encoding
+        url
+    }
+}
+

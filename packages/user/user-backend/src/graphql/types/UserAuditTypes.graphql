@@ -1,0 +1,13 @@
+type UserAudit {
+    id: ID!
+    date: String
+    actionBy: User
+    actionFor: User
+    action: String
+
+}
+
+type Query {
+    userAuditsFrom: [UserAudit!]
+    userAuditsLimit: [UserAudit!]
+}

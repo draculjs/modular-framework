@@ -1,0 +1,6 @@
+type Geo{
+    country: String
+    region: String
+    city: String
+    timezone: String
+}

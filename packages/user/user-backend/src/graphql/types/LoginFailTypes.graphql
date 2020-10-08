@@ -1,0 +1,20 @@
+type LoginFail {
+    id: ID!
+    username: String!
+    ip: String
+    date: String
+    agent: String
+    duration: Int
+    geo: Geo
+    os: Os
+}
+
+type LoginFailByUsername{
+    username: String
+    attempts: Int
+}
+
+
+type Query {
+    loginFailByUsername(time: Int, unit: String): [LoginFailByUsername!]
+}

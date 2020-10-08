@@ -1,0 +1,5 @@
+mutation ( $userid: ID!){
+    apikey(userid: $userid){
+        token
+    }
+}

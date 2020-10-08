@@ -1,0 +1,18 @@
+type Os{
+    family: String
+    name: String
+    version: String
+    platform: String
+}
+
+type client{
+    type: String
+    name: String
+    version: String
+}
+
+type device{
+    type: String
+    brand: String
+    model: String
+}

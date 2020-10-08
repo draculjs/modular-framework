@@ -1,0 +1,7 @@
+query validateToken($token: String!){
+    validateToken(token:$token){
+        valid
+        operation
+        message
+    }
+}

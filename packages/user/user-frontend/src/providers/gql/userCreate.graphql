@@ -1,0 +1,24 @@
+mutation createUser($username: String!,$password: String!, $name:String!,
+    $email: String!, $phone: String, $role: String!, $groups: [String], $active: Boolean!)
+{
+    createUser( input: {username:$username ,password:$password, name:$name, email:$email, phone:$phone, role: $role, groups: $groups, active: $active})
+    {
+
+        id
+        name
+        username
+        email
+        phone
+        avatarurl
+        active
+        role{
+            id
+            name
+        }
+        groups{
+            id
+            name
+        }
+
+    }
+}

@@ -1,0 +1,6 @@
+query loginFailByUsername($time: Int, $unit: String){
+    loginFailByUsername(time: $time, unit: $unit){
+        username
+        attempts
+    }
+}
