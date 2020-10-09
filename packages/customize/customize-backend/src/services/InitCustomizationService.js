@@ -1,4 +1,7 @@
 import winston from "winston";
+import {setupDefaultLogger} from "@dracul/logger-backend";
+setupDefaultLogger()
+
 import {
     CUSTOMIZATION_COLORS_UPDATE,
     CUSTOMIZATION_CREATE,

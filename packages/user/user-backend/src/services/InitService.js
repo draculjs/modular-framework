@@ -1,4 +1,7 @@
 import winston from "winston";
+import {setupDefaultLogger} from "@dracul/logger-backend";
+setupDefaultLogger()
+
 import {createRole, findRoleByName, fetchRolesInName, updateRole} from './RoleService'
 import {changePasswordAdmin, createUser, findUserByUsername} from './UserService'
 import {createPermission, fetchPermissionsInName} from './PermissionService'
