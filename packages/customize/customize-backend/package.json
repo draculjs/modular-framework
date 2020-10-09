@@ -25,12 +25,14 @@
   },
   "homepage": "https://github.com/cincarnato/ci-custom-module#readme",
   "dependencies": {
+    "@dracul/logger-backend": "^1.0.2",
     "@dracul/user-backend": "^1.0.3",
     "apollo-server-express": "^2.15.0",
     "graphql": "^14.5.8",
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.5",
-    "mongoose": "^5.9.19"
+    "mongoose": "^5.9.19",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

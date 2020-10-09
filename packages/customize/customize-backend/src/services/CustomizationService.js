@@ -2,15 +2,6 @@ import Customization from '../models/CustomizationModel'
 import {UserInputError} from 'apollo-server-express'
 import path from "path";
 import fs from "fs";
-import {
-    CUSTOMIZATION_SHOW,
-    CUSTOMIZATION_CREATE,
-    CUSTOMIZATION_UPDATE,
-    CUSTOMIZATION_COLORS_UPDATE,
-    CUSTOMIZATION_LANG_UPDATE,
-    CUSTOMIZATION_LOGO_UPDATE
-} from "../permissions";
-import {InitService} from "@dracul/user-backend";
 import createDirIfNotExist from "./helpers/createDirIfNotExist";
 
 
@@ -177,40 +168,3 @@ export const uploadLogo = function (file) {
 }
 
 
-export const initCustomization = async function () {
-
-    let customDoc = await findCustomization()
-
-    if (!customDoc) {
-        let customDoc = await createCustomization({
-            colors: {
-                primary: '#3F51B5',
-                onPrimary: '#FFFFFF',
-                secondary: '#1565C0',
-                onSecondary: '#FFFFFF'
-            },
-            logo: {
-                mode: 'OnlyTitle',
-                title: 'APP'
-            },
-            language: 'en'
-        })
-        console.log("Customization created: ", customDoc.id)
-    } else {
-        console.log("Customization found: ", customDoc.id)
-    }
-
-}
-
-
-export const initPermissionsCustomization = async function () {
-    let permissions = [
-        CUSTOMIZATION_SHOW,
-        CUSTOMIZATION_CREATE,
-        CUSTOMIZATION_UPDATE,
-        CUSTOMIZATION_COLORS_UPDATE,
-        CUSTOMIZATION_LANG_UPDATE,
-        CUSTOMIZATION_LOGO_UPDATE]
-    await InitService.initPermissions(permissions)
-    console.log("Load custom permissions done.")
-}

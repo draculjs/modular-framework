@@ -46,12 +46,12 @@ const initPermissions = async (permissions) => {
     }
 
     //permissions Found
-    winston.debug("Permissions found: ",permissionsFound.map(p => p.name))
+    winston.debug("Permissions found: " + permissionsFound.map(p => p.name).toString())
 
     // Exec All Create Promises
     let permissionsCreated = await Promise.all(permissionToCreate.map(name => createPermission(name)))
 
-    winston.info("Permissions created: ",permissionsCreated.map(p => p.name))
+    winston.info("Permissions created: " + permissionsCreated.map(p => p.name).toString())
 
 }
 

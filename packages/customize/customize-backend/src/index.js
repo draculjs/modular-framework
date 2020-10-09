@@ -5,12 +5,11 @@ import {
     updateColors,
     updateLang,
     updateLogo,
-    uploadLogo,
-    initCustomization,
-    initPermissionsCustomization
+    uploadLogo
 } from "./services/CustomizationService";
 import * as permissions from './permissions'
 import {types, resolvers} from './graphql'
+import {initCustomization, initPermissionsCustomization} from "./services/InitCustomizationService";
 
 export {
     //permissions
