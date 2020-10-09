@@ -49,12 +49,16 @@ const initPermissions = async (permissions) => {
     }
 
     //permissions Found
-    winston.debug("Permissions found: " + permissionsFound.map(p => p.name).toString())
+    if(permissionsFound.length > 0){
+        winston.debug("Permissions found: " + permissionsFound.map(p => p.name).toString())
+    }
 
     // Exec All Create Promises
     let permissionsCreated = await Promise.all(permissionToCreate.map(name => createPermission(name)))
 
-    winston.info("Permissions created: " + permissionsCreated.map(p => p.name).toString())
+    if(permissionsCreated.length > 0){
+        winston.info("Permissions created: " + permissionsCreated.map(p => p.name).toString())
+    }
 
 }
 
@@ -226,7 +230,6 @@ const initOperatorUser = async (user) => {
         u = await createUser({...user, role: roleOperator.id})
         loggingEvent("created", "user",u.username, u.id)
     } else {
-        winston.debug("User Operator found: ", u.id)
         loggingEvent("found", "user",u.username, u.id)
     }
 
