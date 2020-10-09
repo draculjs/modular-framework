@@ -30,7 +30,7 @@ export const auth = async function ({username, password}, req) {
                 reject('UserDoesntExist')
             }
 
-            if (!user.active) {
+            if (user && user.active === false) {
                 reject('DisabledUser')
             }
 

@@ -1,5 +1,6 @@
+import winston from "winston";
 import {createRole, findRoleByName, fetchRolesInName, updateRole} from './RoleService'
-import {changeRecoveryPassword, createUser, findUserByUsername} from './UserService'
+import {changePasswordAdmin, createUser, findUserByUsername} from './UserService'
 import {createPermission, fetchPermissionsInName} from './PermissionService'
 
 import adminRoleTemplate from '../roles/admin'
@@ -45,15 +46,30 @@ const initPermissions = async (permissions) => {
     }
 
     //permissions Found
-    permissionsFound.forEach(p => {
-        console.log("Permission Found: " + p.name + " " + p.id)
-    })
+    winston.debug("Permissions found: ",permissionsFound.map(p => p.name))
 
     // Exec All Create Promises
     let permissionsCreated = await Promise.all(permissionToCreate.map(name => createPermission(name)))
-    permissionsCreated.forEach(p => {
-        console.log("Permissions Created: " + p.name + " " + p.id)
-    })
+
+    winston.info("Permissions created: ",permissionsCreated.map(p => p.name))
+
+}
+
+function loggingEvent(event, entity, name, id) {
+
+    let message = entity + " " + event + ": {name: " + name + ", id: " + id + "}"
+
+    switch (event) {
+        case "created":
+            winston.info(message)
+            break
+        case "updated":
+        case "found":
+            winston.debug(message)
+            break
+        default:
+            winston.debug(message)
+    }
 }
 
 const initAdminRole = async () => {
@@ -65,11 +81,10 @@ const initAdminRole = async () => {
             name: adminRoleT.name,
             permissions: adminRoleT.permissions
         })
-
-        console.log("Admin Role Updated: " + adminRoleUpdated.name + " " + adminRoleUpdated.id)
+        loggingEvent("updated", "role", adminRoleUpdated.name, adminRoleUpdated.id)
     } else {
         adminRole = await createRole(adminRoleT)
-        console.log("Admin Role Created: " + adminRole.name + " " + adminRole.id)
+        loggingEvent("created", "role", adminRole.name, adminRole.id)
     }
 }
 
@@ -85,11 +100,10 @@ const initSupervisorRole = async () => {
                 childRoles: supervisorRoleT.childRoles,
                 permissions: supervisorRoleT.permissions
             })
-
-        console.log("Supervisor Role Updated: " + supervisorRoleUpdated.name + " " + supervisorRoleUpdated.id)
+        loggingEvent("updated", "role", supervisorRoleUpdated.name, supervisorRoleUpdated.id)
     } else {
         supervisorRole = await createRole(supervisorRoleT)
-        console.log("Supervisor Role Created: " + supervisorRole.name + " " + supervisorRole.id)
+        loggingEvent("created", "role", supervisorRole.name, supervisorRole.id)
     }
 }
 
@@ -105,10 +119,10 @@ const initOperatorRole = async () => {
                 permissions: operatorRoleT.permissions
             })
 
-        console.log("Operator Role Updated: " + operatorRoleUpdated.name + " " + operatorRoleUpdated.id)
+        loggingEvent("updated", "role", operatorRoleUpdated.name, operatorRoleUpdated.id)
     } else {
         operatorRole = await createRole(operatorRoleT)
-        console.log("Operator Role Created: " + operatorRole.name + " " + operatorRole.id)
+        loggingEvent("created", "role", operatorRole.name, operatorRole.id)
     }
 }
 
@@ -133,7 +147,7 @@ const initRoles = async (roles) => {
     // Exec All Create Promises
     let rolesCreated = await Promise.all(rolesToCreate.map(role => createRole(role)))
     rolesCreated.forEach(r => {
-        console.log("Role Created: " + r.name + " " + r.id)
+        loggingEvent("created", "role", r.name, r.id)
     })
 
     //Update Roles
@@ -142,7 +156,7 @@ const initRoles = async (roles) => {
         return updateRole(roleToUpdate.id, {name: roleToUpdate.name, permissions: p})
     }))
     rolesUpdated.forEach(r => {
-        console.log("Role Updated: " + r.name + " " + r.id)
+        loggingEvent("updated", "role", r.name, r.id)
     })
 
     return {rolesCreated: rolesCreated, rolesUpdated: rolesUpdated}
@@ -163,9 +177,9 @@ const initRootUser = async (user) => {
 
     if (!u) {
         u = await createUser({...user, role: roleAdmin.id})
-        console.log("User root created: ", u.id)
+        loggingEvent("created", "user",u.username, u.id)
     } else {
-        console.log("User root found: ", u.id)
+        loggingEvent("found", "user",u.username, u.id)
     }
 
 }
@@ -185,9 +199,9 @@ const initSupervisorUser = async (user) => {
 
     if (!u) {
         u = await createUser({...user, role: roleSupervisor.id})
-        console.log("User supervisor created: ", u.id)
+        loggingEvent("created", "user",u.username, u.id)
     } else {
-        console.log("User supervisor found: ", u.id)
+        loggingEvent("found", "user",u.username, u.id)
     }
 
 }
@@ -207,20 +221,22 @@ const initOperatorUser = async (user) => {
 
     if (!u) {
         u = await createUser({...user, role: roleOperator.id})
-        console.log("User Operator created: ", u.id)
+        loggingEvent("created", "user",u.username, u.id)
     } else {
-        console.log("User Operator found: ", u.id)
+        winston.debug("User Operator found: ", u.id)
+        loggingEvent("found", "user",u.username, u.id)
     }
 
 }
 
 const rootRecover = async (password = "root.123") => {
     findUserByUsername("root").then(rootUser => {
-        changeRecoveryPassword(rootUser.id, {
-            newPassword: password,
-        }, rootUser).then(result => {
-            console.log(result)
-        })
+        changePasswordAdmin(rootUser.id, {
+            password: password,
+            passwordVerify: password
+        }, rootUser.id).then(result => {
+            winston.info(result)
+        }).catch(e => winston.error("rootRecover ",e))
     })
 }
 

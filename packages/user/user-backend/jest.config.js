@@ -10,7 +10,8 @@ module.exports = {
     ],
 
     setupFiles: [
-        "<rootDir>/.jest/EnvVars.js"
+        "<rootDir>/.jest/EnvVars.js",
+        "<rootDir>/.jest/logger.js",
     ],
 
     transform: {
