@@ -10,7 +10,7 @@ function FileErrorTransport(level, formatter) {
     }
 
     if(!level){
-        level= process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'error'
+        level= 'error'
     }
 
     return new winston.transports.File({
