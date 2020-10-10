@@ -1,6 +1,4 @@
-import winston from "winston";
-import {setupDefaultLogger} from "@dracul/logger-backend";
-setupDefaultLogger()
+import {DefaultLogger} from "@dracul/logger-backend";
 
 import {
     CUSTOMIZATION_COLORS_UPDATE,
@@ -31,9 +29,9 @@ export const initCustomization = async function () {
             },
             language: 'en'
         })
-        winston.info("customization created: ", customDoc.id)
+        DefaultLogger.info("customization created: ", customDoc.id)
     } else {
-        winston.debug("customization found: ", customDoc.id)
+        DefaultLogger.debug("customization found: ", customDoc.id)
     }
 
 }
