@@ -6,7 +6,7 @@ import DefaultFormatter from "../formatters/DefaultFormatter";
 function FileGqlErrorTransport(level, formatter) {
 
     if (!formatter) {
-        formatter = DefaultFormatter
+        formatter = DefaultFormatter(false)
     }
 
     if (!level) {

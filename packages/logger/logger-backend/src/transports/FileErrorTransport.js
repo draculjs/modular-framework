@@ -6,7 +6,7 @@ import DefaultFormatter from "../formatters/DefaultFormatter";
 function FileErrorTransport(level, formatter) {
 
     if (!formatter) {
-        formatter = DefaultFormatter
+        formatter = DefaultFormatter(false)
     }
 
     if(!level){

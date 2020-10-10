@@ -1,11 +1,13 @@
 require('dotenv').config()
 import  winston from "winston";
 
-function DefaultTextFormatter() {
+function DefaultTextFormatter(color) {
 
     const {combine, timestamp, printf, errors, colorize, uncolorize} = winston.format;
 
-    const color = process.env.LOG_COLORIZE === 'ON' ? true : false
+    if(color === undefined){
+        color = process.env.LOG_COLORIZE === 'ON' ? true : false
+    }
 
     return combine(
         errors({stack: true}),
@@ -20,4 +22,4 @@ function DefaultTextFormatter() {
     );
 }
 
-export default DefaultTextFormatter()
+export default DefaultTextFormatter

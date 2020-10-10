@@ -13,4 +13,4 @@ function DefaultJsonFormatter() {
     );
 }
 
-export default DefaultJsonFormatter()
+export default DefaultJsonFormatter

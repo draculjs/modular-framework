@@ -2,16 +2,16 @@ require('dotenv').config()
 import DefaultTextFormatter from "./DefaultTextFormatter";
 import DefaultJsonFormatter from "./DefaultJsonFormatter";
 
-function DefaultFormatter() {
+function DefaultFormatter(color) {
 
     switch (process.env.LOG_MODE) {
         case "JSON":
-            return DefaultJsonFormatter
+            return DefaultJsonFormatter()
         case "TEXT":
-            return DefaultTextFormatter
+            return DefaultTextFormatter(color)
         default:
-            return DefaultTextFormatter
+            return DefaultTextFormatter(color)
     }
 }
 
-export default DefaultFormatter()
+export default DefaultFormatter

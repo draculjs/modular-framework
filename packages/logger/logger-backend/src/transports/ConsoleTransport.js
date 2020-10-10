@@ -6,7 +6,7 @@ import DefaultFormatter from "../formatters/DefaultFormatter";
 function ConsoleTransport(level, formatter) {
 
     if (!formatter) {
-        formatter = DefaultFormatter
+        formatter = DefaultFormatter()
     }
 
     if(!level){

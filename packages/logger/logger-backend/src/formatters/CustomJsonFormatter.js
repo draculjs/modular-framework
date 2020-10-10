@@ -19,4 +19,4 @@ function CustomJsonFormatter() {
     )
 }
 
-export default CustomJsonFormatter()
+export default CustomJsonFormatter
