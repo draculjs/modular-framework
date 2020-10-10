@@ -21,10 +21,11 @@ function DefaultLogger() {
         transports.push(FileErrorTransport())
     }
 
-    return winston.configure({
-        transports: transports,
+    winston.configure({
+        transports: transports
     });
 
+    return winston
 }
 
 export default DefaultLogger()
