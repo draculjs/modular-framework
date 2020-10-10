@@ -25,7 +25,7 @@ function RequestLogger() {
 
 
     return winston.createLogger({
-        format: DefaultTextFormatter,
+        format: DefaultTextFormatter(false),
         transports: transports
     })
 
