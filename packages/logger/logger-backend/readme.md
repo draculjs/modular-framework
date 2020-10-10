@@ -1,3 +1,10 @@
+# Dracul Logger Module
+Dracul logger provide several winston loggers configurations and factories ready to use
+
+
+### ENV
+
+```$xslt
 ### LOG ENVIRONMENT VARIABLES
 
 # LOG LEVEL: error, warning, info, debug
@@ -27,3 +34,21 @@ LOG_FILE_MAX_FILES=3
 
 # LOG MODES: TEXT / JSON
 LOG_MODE=TEXT
+```
+
+
+## Default logger
+
+Setup a default logger with 3 transports **console**, **comined.log** and **error.log**
+
+## Express middleware Request Logger
+
+Setup an express middleware for log requests
+
+####Request items in log
+
+- Method
+- Path
+- IP
+- User
+- Graphql Operation name  (if is present) 
