@@ -1,4 +1,3 @@
-import winston from "winston";
 import {DefaultLogger} from "@dracul/logger-backend";
 
 
@@ -68,14 +67,14 @@ function loggingEvent(event, entity, name, id) {
 
     switch (event) {
         case "created":
-            winston.info(message)
+            DefaultLogger.info(message)
             break
         case "updated":
         case "found":
-            winston.debug(message)
+            DefaultLogger.debug(message)
             break
         default:
-            winston.debug(message)
+            DefaultLogger.debug(message)
     }
 }
 
@@ -241,8 +240,8 @@ const rootRecover = async (password = "root.123") => {
             password: password,
             passwordVerify: password
         }, rootUser.id).then(result => {
-            winston.info(result)
-        }).catch(e => winston.error("rootRecover ",e))
+            DefaultLogger.info(result)
+        }).catch(e => DefaultLogger.error("rootRecover ",e))
     })
 }
 
