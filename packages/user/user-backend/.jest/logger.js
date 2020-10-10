@@ -1,2 +1,1 @@
-const {setupDefaultLogger} = require("@dracul/logger-backend")
-setupDefaultLogger()
+const {DefaultLogger} = require("@dracul/logger-backend")

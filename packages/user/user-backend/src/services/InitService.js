@@ -1,5 +1,5 @@
 import winston from "winston";
-import DefaultLogger from "@dracul/logger-backend";
+import {DefaultLogger} from "@dracul/logger-backend";
 
 
 import {createRole, findRoleByName, fetchRolesInName, updateRole} from './RoleService'
@@ -50,14 +50,14 @@ const initPermissions = async (permissions) => {
 
     //permissions Found
     if(permissionsFound.length > 0){
-        winston.debug("Permissions found: " + permissionsFound.map(p => p.name).toString())
+        DefaultLogger.debug("Permissions found: " + permissionsFound.map(p => p.name).toString())
     }
 
     // Exec All Create Promises
     let permissionsCreated = await Promise.all(permissionToCreate.map(name => createPermission(name)))
 
     if(permissionsCreated.length > 0){
-        winston.info("Permissions created: " + permissionsCreated.map(p => p.name).toString())
+        DefaultLogger.info("Permissions created: " + permissionsCreated.map(p => p.name).toString())
     }
 
 }
