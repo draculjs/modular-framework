@@ -7,7 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "build": "vue-cli-service build --dest ../api/dist/web --mode production"
+    "build": "vue-cli-service build --dest dist --mode production"
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.0.0",
