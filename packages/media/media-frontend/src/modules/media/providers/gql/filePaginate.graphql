@@ -1,0 +1,28 @@
+query filePaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $orderBy: String, $orderDesc: Boolean){
+    filePaginate( pageNumber: $pageNumber, itemsPerPage: $itemsPerPage, search: $search, orderBy: $orderBy, orderDesc: $orderDesc){
+        totalItems
+        page
+        items{
+            id
+            filename
+            description
+            tags
+            mimetype
+            type
+            extension
+            relativePath
+            absolutePath
+            size
+            url
+            createdAt
+            createdBy{
+                user{
+                    id
+                    name
+                    username
+                }
+                username
+            }
+        }
+    }
+}

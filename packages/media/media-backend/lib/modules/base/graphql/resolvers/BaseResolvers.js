@@ -1,0 +1,18 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  Query: {
+    ping: (_, {
+      id
+    }) => {
+      return Promise.resolve({
+        status: true
+      });
+    }
+  }
+};
+exports.default = _default;

@@ -1,0 +1,14 @@
+version: "3.5"
+
+services:
+  draculmedia:
+    image: cincarnato/dracul-media
+    container_name: draculmedia
+    volumes:
+      - ./media:/app/media
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    ports:
+      - "80:5000"
+    networks:
+      - "host"

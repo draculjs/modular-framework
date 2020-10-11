@@ -1,0 +1,25 @@
+mutation fileUpdate($id: ID!, $description:String, $tags:[String]){
+    fileUpdate(id: $id, input: {description: $description, tags: $tags}){
+        id
+        filename
+        description
+        tags
+        mimetype
+        type
+        extension
+        relativePath
+        absolutePath
+        size
+        url
+        createdAt
+        createdBy{
+            user{
+                id
+                name
+                username
+            }
+            username
+        }
+    }
+}
+

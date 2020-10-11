@@ -1,0 +1,7 @@
+mutation fileDelete($id: ID!){
+    fileDelete(id: $id){
+        id
+        success
+    }
+}
+

@@ -1,0 +1,6 @@
+query fileGlobalMetrics{
+    fileGlobalMetrics{
+        count
+        weight
+    }
+}

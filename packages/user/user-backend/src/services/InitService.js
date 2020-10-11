@@ -63,7 +63,7 @@ const initPermissions = async (permissions) => {
 
 function loggingEvent(event, entity, name, id) {
 
-    let message = entity + " " + event + ": <name= " + name + " id= " + id + ">"
+    let message = entity + " " + event + ": < name=" + name + " id=" + id + " >"
 
     switch (event) {
         case "created":

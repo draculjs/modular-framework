@@ -1,0 +1,24 @@
+mutation fileUpload( $file: Upload!){
+    fileUpload(file: $file){
+        id
+        filename
+        description
+        tags
+        mimetype
+        type
+        extension
+        relativePath
+        absolutePath
+        size
+        url
+        createdAt
+        createdBy{
+            user{
+                id
+                name
+                username
+            }
+            username
+        }
+    }
+}

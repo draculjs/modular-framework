@@ -1,0 +1,5 @@
+node_modules
+media/avatar/*
+media/logo/*
+!.gitkeep
+logs/*

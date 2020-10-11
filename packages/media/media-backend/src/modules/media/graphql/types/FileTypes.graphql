@@ -1,0 +1,58 @@
+type File{
+    id: ID!
+    filename: String!
+    description: String
+    tags: [String]
+    mimetype: String!
+    type: String!
+    extension: String!
+    relativePath: String!
+    absolutePath: String!
+    size: Int!
+    url: String!
+    createdAt: String!
+    createdBy: CreatedBy
+}
+
+type CreatedBy{
+    user: User
+    username: String
+}
+
+type FilePaginated{
+    totalItems: Int!
+    page: Int!
+    items: [File!]
+}
+
+type Query {
+    fileFind(id:ID!): File
+    fileFetch: [File]
+    filePaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): FilePaginated
+}
+
+input FileInput{
+    filename: String!
+    extension: String!
+    relativePath: String!
+    absolutePath: String!
+    size: Int!
+    url: String!
+    createdAt: String!
+}
+
+input FileUpdateInput{
+    description: String
+    tags: [String]
+}
+
+type FileDelete{
+    id: ID!
+    success: Boolean!
+}
+
+
+type Mutation {
+    fileUpdate(id: ID!, input: FileUpdateInput): File
+    fileDelete(id: ID!): FileDelete!
+}

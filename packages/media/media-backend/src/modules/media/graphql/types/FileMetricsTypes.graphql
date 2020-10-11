@@ -1,0 +1,15 @@
+type UserMetrics{
+    user: String
+    count: Int
+    weight: Int
+}
+
+type TotalMetrics{
+    count: Int
+    weight: Int
+}
+
+type Query {
+    fileUserMetrics: [UserMetrics]
+    fileGlobalMetrics: TotalMetrics
+}

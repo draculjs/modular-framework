@@ -1,0 +1,24 @@
+query fileFind($id:ID!){
+    fileFind(id:$id){
+        id
+        filename
+        description
+        tags
+        mimetype
+        type
+        extension
+        relativePath
+        absolutePath
+        size
+        url
+        createdAt
+        createdBy{
+            user{
+                id
+                name
+                username
+            }
+            username
+        }
+    }
+}

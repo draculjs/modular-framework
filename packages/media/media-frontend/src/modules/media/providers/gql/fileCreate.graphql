@@ -1,0 +1,23 @@
+mutation fileCreate($filename:String!, $extension:String!, $relativePath:String!, $absolutePath:String!, $size:String!, $url:String!){
+    fileCreate(input: {filename: $filename, extension: $extension, relativePath: $relativePath, absolutePath: $absolutePath, size: $size, url: $url }){
+        id
+        filename
+        mimetype
+        type
+        extension
+        relativePath
+        absolutePath
+        size
+        url
+        createdAt
+        createdBy{
+            user{
+                id
+                name
+                username
+            }
+            username
+        }
+    }
+}
+
