@@ -1,6 +1,6 @@
 {
-  "name": "@ci-media-module/frontend",
-  "version": "1.0.10",
+  "name": "@dracul/media-frontend",
+  "version": "1.0.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",

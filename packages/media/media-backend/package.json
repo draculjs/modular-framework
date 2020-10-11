@@ -1,6 +1,6 @@
 {
-  "name": "@ci-media-module/api",
-  "version": "1.0.10",
+  "name": "@dracul/media-backend",
+  "version": "1.0.0",
   "author": "Cristian Incarnato",
   "main": "./lib/exports.js",
   "scripts": {
