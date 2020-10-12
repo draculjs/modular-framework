@@ -3,3 +3,4 @@ media/avatar/*
 media/logo/*
 !.gitkeep
 logs/*
+.env
