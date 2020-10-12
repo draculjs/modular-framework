@@ -4,9 +4,9 @@ var _dotenv = _interopRequireDefault(require("dotenv"));
 
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
-var _api = require("@ci-user-module/api");
+var _userBackend = require("@dracul/user-backend");
 
-var _api2 = require("@ci-custom-module/api");
+var _api = require("@ci-custom-module/api");
 
 var _InitMediaPermissions = require("../modules/media/services/InitMediaPermissions");
 
@@ -24,13 +24,13 @@ _mongoose.default.connect(process.env.MONGO_URI, {
 _mongoose.default.set('useCreateIndex', true);
 
 const init = async () => {
-  await _api.InitService.initPermissions();
-  await (0, _api2.initPermissionsCustomization)();
+  await _userBackend.InitService.initPermissions();
+  await (0, _api.initPermissionsCustomization)();
   await (0, _InitMediaPermissions.initMediaPermissions)();
-  await _api.InitService.initAdminRole();
-  await _api.InitService.initRoles();
-  await _api.InitService.initRootUser();
-  await (0, _api2.initCustomization)();
+  await _userBackend.InitService.initAdminRole();
+  await _userBackend.InitService.initRoles();
+  await _userBackend.InitService.initRootUser();
+  await (0, _api.initCustomization)();
   console.log("Done");
   process.exit();
 };

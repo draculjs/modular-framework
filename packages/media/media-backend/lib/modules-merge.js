@@ -7,9 +7,9 @@ exports.typeDefs = exports.resolvers = void 0;
 
 var _mergeGraphqlSchemas = require("merge-graphql-schemas");
 
-var _api = require("@ci-user-module/api");
+var _userBackend = require("@dracul/user-backend");
 
-var _api2 = require("@ci-custom-module/api");
+var _customizeBackend = require("@dracul/customize-backend");
 
 var _graphql = require("./modules/base/graphql");
 
@@ -17,7 +17,7 @@ var _graphql2 = require("./modules/media/graphql");
 
 //BASE RESOLVERS
 //BASE TYPEDEFS
-const resolvers = (0, _mergeGraphqlSchemas.mergeResolvers)([_graphql.resolvers, _api.securityResolvers, _api2.resolvers, _graphql2.resolvers]);
+const resolvers = (0, _mergeGraphqlSchemas.mergeResolvers)([_graphql.resolvers, _userBackend.securityResolvers, _customizeBackend.resolvers, _graphql2.resolvers]);
 exports.resolvers = resolvers;
-const typeDefs = (0, _mergeGraphqlSchemas.mergeTypes)([_graphql.types, _api.securityTypes, _api2.types, _graphql2.types]);
+const typeDefs = (0, _mergeGraphqlSchemas.mergeTypes)([_graphql.types, _userBackend.securityTypes, _customizeBackend.types, _graphql2.types]);
 exports.typeDefs = typeDefs;

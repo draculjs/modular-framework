@@ -7,7 +7,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
 mongoose.set('useCreateIndex', true)
 
-import {InitService} from '@ci-user-module/api'
+import {InitService} from '@dracul/user-backend'
 import {initCustomization,initPermissionsCustomization} from '@ci-custom-module/api'
 
 //FILES

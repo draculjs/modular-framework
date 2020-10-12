@@ -5,7 +5,7 @@ import {
     FILE_DELETE
 } from '../permissions/File'
 
-import {InitService} from "@ci-user-module/api";
+import {InitService} from "@dracul/user-backend";
 
 const initMediaPermissions = async function () {
     let permissions = [

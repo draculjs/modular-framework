@@ -7,11 +7,11 @@ exports.default = exports.initMediaPermissions = void 0;
 
 var _File = require("../permissions/File");
 
-var _api = require("@ci-user-module/api");
+var _userBackend = require("@dracul/user-backend");
 
 const initMediaPermissions = async function () {
   let permissions = [_File.FILE_SHOW, _File.FILE_CREATE, _File.FILE_UPDATE, _File.FILE_DELETE];
-  await _api.InitService.initPermissions(permissions);
+  await _userBackend.InitService.initPermissions(permissions);
   console.log("Load custom permissions done.");
 };
 
