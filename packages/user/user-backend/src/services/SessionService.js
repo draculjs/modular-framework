@@ -1,3 +1,4 @@
+import {DefaultLogger as winston} from '@dracul/logger-backend';
 import Session from "../models/SessionModel";
 import moment from "moment";
 import DeviceDetector from 'node-device-detector'
@@ -44,7 +45,7 @@ export const createSession = async function (user, req) {
         newSession.save().then(() => {
             resolve(newSession)
         }).catch(err => {
-            console.error(err)
+            winston.error('SessionService.createSession ',err)
             reject(err)
         })
 
@@ -64,7 +65,7 @@ export const updateSession = async function (user) {
                 doc.save()
             }
         }).catch(err => {
-            console.error(err)
+            winston.error('SessionService.updateSession ',err)
         })
     }
 
@@ -97,6 +98,11 @@ export const sessionsByUser = async function (time, unit = 'days') {
                     }
                 }
             ], function (err, result) {
+
+                if(err){
+                    winston.error('SessionService.sessionsByUser ',err)
+                }
+
                 resolve(result)
             })
 
@@ -120,6 +126,11 @@ export const sessionsByCountry = async function (time, unit = 'days') {
                     }
                 }
             ], function (err, result) {
+
+                if(err){
+                    winston.error('SessionService.sessionsByCountry ',err)
+                }
+
                 resolve(result)
             })
 
@@ -140,6 +151,11 @@ export const sessionsByOs = async function (time, unit = 'days') {
                     }
                 }
             ], function (err, result) {
+
+                if(err){
+                    winston.error('SessionService.sessionsByOs ',err)
+                }
+
                 resolve(result)
             })
 
@@ -160,6 +176,11 @@ export const sessionsByDeviceType = async function (time, unit = 'days') {
                     }
                 }
             ], function (err, result) {
+
+                if(err){
+                    winston.error('SessionService.sessionsByDeviceType ',err)
+                }
+
                 resolve(result)
             })
 
@@ -181,6 +202,11 @@ export const sessionsByCity = async function (time, unit = 'days') {
                     }
                 }
             ], function (err, result) {
+
+                if(err){
+                    winston.error('SessionService.sessionsByCity ',err)
+                }
+
                 resolve(result)
             })
 
@@ -202,6 +228,10 @@ export const sessionsByClient = async function (time, unit = 'days') {
                     }
                 }
             ], function (err, result) {
+                if(err){
+                    winston.error('SessionService.sessionsByClient ',err)
+                }
+
                 resolve(result)
             })
 

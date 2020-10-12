@@ -1,3 +1,4 @@
+import {DefaultLogger as winston} from '@dracul/logger-backend';
 import bcryptjs from "bcryptjs";
 import {createSession} from "./SessionService";
 import jsonwebtoken from "jsonwebtoken";
@@ -26,17 +27,19 @@ export const auth = async function ({username, password}, req) {
 
 
             if (!user) {
+                winston.warn('AuthService.auth: UserDoesntExist => ' + username)
                 reject('UserDoesntExist')
             }
 
             if (user && user.active === false) {
+                winston.warn('AuthService.auth: DisabledUser => ' + username)
                 reject('DisabledUser')
             }
 
             if (user) {
                 if (bcryptjs.compareSync(password, user.password)) {
 
-                    createSession(user, req).then( session => {
+                    createSession(user, req).then(session => {
 
                         const payload = tokenSignPayload(user, session)
 
@@ -51,11 +54,15 @@ export const auth = async function ({username, password}, req) {
                             options
                         )
 
-                        resolve({ token, payload, options } )
+                        resolve({token, payload, options})
 
-                    }).catch(err => reject(err))
+                    }).catch(err => {
+                        winston.error('AuthService.auth.createSession ', err)
+                        reject(err)
+                    })
 
                 } else {
+                    winston.warn('AuthService.auth: BadCredentials =>' + username)
                     createLoginFail(username, req)
                     reject('BadCredentials')
                 }
@@ -90,6 +97,7 @@ export const apiKey = function (userId, req) {
             reject("User doesn't exist")
 
         }).catch(err => {
+            winston.error('AuthService.apiKey ', err)
             reject(err)
         })
     })

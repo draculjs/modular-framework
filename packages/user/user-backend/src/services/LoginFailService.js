@@ -1,3 +1,4 @@
+import {DefaultLogger as winston} from '@dracul/logger-backend';
 import LoginFail from "../models/LoginFailModel";
 import moment from "moment";
 import DeviceDetector from 'node-device-detector'
@@ -38,6 +39,7 @@ export const createLoginFail = async function (username, req) {
         doc.save().then(() => {
             resolve(doc)
         }).catch(err => {
+            winston.error("LoginFailService.createLoginFail ", err)
             reject(err)
         })
 
@@ -52,9 +54,15 @@ export const loginFailByUsername = async function (time = 72, unit = 'hours') {
         let from = now.subtract(time, unit)
         LoginFail.aggregate(
             [
-                {$match: {date: {$gte: from.toDate() }}},
+                {$match: {date: {$gte: from.toDate()}}},
                 {$group: {_id: "$username", username: {$last: "$username"}, attempts: {$sum: 1}}}
             ], function (err, result) {
+
+                if(err){
+                    winston.error("LoginFailService.loginFailByUsername ", err)
+                    reject(err)
+                }
+
                 resolve(result)
             })
 

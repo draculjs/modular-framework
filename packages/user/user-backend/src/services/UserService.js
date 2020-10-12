@@ -1,3 +1,5 @@
+import {DefaultLogger as winston} from '@dracul/logger-backend';
+
 import User from '../models/UserModel'
 import '../models/GroupModel'
 import {createUserAudit} from './UserAuditService'
@@ -33,13 +35,16 @@ export const createUser = async function ({username, password, name, email, phon
 
     })
 
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         newUser.save((error, doc) => {
             if (error) {
                 if (error.name == "ValidationError") {
-                    rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                    winston.warn("createUser ValidationError ", error)
+                    reject(new UserInputError(error.message, {inputErrors: error.errors}));
+                } else {
+                    winston.error("UserService.createUser ", error)
                 }
-                rejects(error)
+                reject(error)
             } else {
                 createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userCreated')
                 doc.populate('role').populate('groups').execPopulate(() => (resolve(doc))
@@ -53,7 +58,7 @@ export const createUser = async function ({username, password, name, email, phon
 export const updateUser = async function (id, {username, name, email, phone, role, groups, active}, actionBy = null) {
     let updatedAt = Date.now()
 
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         User.findOneAndUpdate(
             {_id: id}, {username, name, email, phone, role, groups, active, updatedAt}, {
                 new: true,
@@ -62,9 +67,14 @@ export const updateUser = async function (id, {username, name, email, phone, rol
             },
             (error, doc) => {
                 if (error) {
+
                     if (error.name == "ValidationError") {
-                        rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                        winston.warn("updateUser ValidationError ", error)
+                        reject(new UserInputError(error.message, {inputErrors: error.errors}));
+                    } else {
+                        winston.error("UserService.updateUser ", error)
                     }
+
                     rejects(error)
                 } else {
                     createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userModified')
@@ -76,12 +86,17 @@ export const updateUser = async function (id, {username, name, email, phone, rol
 }
 
 export const deleteUser = function (id, actionBy = null) {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
 
         findUser(id).then((doc) => {
             doc.softdelete(function (err) {
                 createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userDeleted')
-                err ? rejects(err) : resolve({success: true, id: id})
+                if (err) {
+                    winston.error("UserService.deleteUser ", err)
+                    reject(err)
+                } else {
+                    resolve({success: true, id: id})
+                }
             });
         })
 
@@ -90,7 +105,6 @@ export const deleteUser = function (id, actionBy = null) {
 
 
 export const findUsers = function (roles = []) {
-
     return new Promise((resolve, reject) => {
 
         let qs = {}
@@ -99,9 +113,14 @@ export const findUsers = function (roles = []) {
             qs.role = {$in: roles}
         }
 
-        User.find(qs).isDeleted(false).populate('role').populate('groups').exec((err, res) => (
-            err ? reject(err) : resolve(res)
-        ));
+        User.find(qs).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
+            if (err) {
+                winston.error("UserService.findUsers ", err)
+                reject(err)
+            } else {
+                resolve(res)
+            }
+        });
     })
 }
 
@@ -146,23 +165,36 @@ export const paginateUsers = function (limit, pageNumber = 1, search = null, ord
         User.paginate(query, params).then(result => {
                 resolve({users: result.docs, totalItems: result.totalDocs, page: result.page})
             }
-        ).catch(err => reject(err))
+        ).catch(err => {
+            winston.error("UserService.paginateUsers ", err)
+            reject(err)
+        })
     })
 }
 
 export const findUser = function (id) {
     return new Promise((resolve, reject) => {
-        User.findOne({_id: id}).populate('role').populate('groups').exec((err, res) => (
-            err ? reject(err) : resolve(res)
-        ));
+        User.findOne({_id: id}).populate('role').populate('groups').exec((err, res) => {
+            if (err) {
+                winston.error("UserService.findUser ", err)
+                reject(err)
+            } else {
+                resolve(res)
+            }
+        });
     })
 }
 
 export const findUserByUsername = function (name) {
     return new Promise((resolve, reject) => {
-        User.findOne({username: name}).populate('role').populate('groups').exec((err, res) => (
-            err ? reject(err) : resolve(res)
-        ));
+        User.findOne({username: name}).populate('role').populate('groups').exec((err, res) => {
+            if (err) {
+                winston.error("UserService.findUserByUsername ", err)
+                reject(err)
+            } else {
+                resolve(res)
+            }
+        });
     })
 }
 
@@ -174,9 +206,10 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
         return new Promise((resolve, rejects) => {
             User.findOneAndUpdate(
                 {_id: id}, {password: hashPassword(password)}, {new: true},
-                (error, doc) => {
-                    if (error) {
-                        rejects({status: false, message: "Falla al intentar modificar password"})
+                (err, doc) => {
+                    if (err) {
+                        winston.error("UserService.changePasswordAdmin ", err)
+                        rejects({status: false, message: "Change password fail"})
                     } else {
                         createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'changePasswordAdmin')
                         resolve({success: true, message: "PasswordChange", operation: "changePasswordAdmin"})
@@ -188,7 +221,7 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
 
     } else {
         return new Promise((resolve, rejects) => {
-            resolve({status: false, message: "Las password no concuerdan"})
+            resolve({status: false, message: "Password doesn't match"})
         })
     }
 }
@@ -199,8 +232,9 @@ export const changePassword = function (id, {currentPassword, newPassword}, acti
         if (bcryptjs.compareSync(currentPassword, user.password)) {
             User.findOneAndUpdate(
                 {_id: id}, {password: hashPassword(newPassword)}, {new: true},
-                (error, doc) => {
-                    if (error) {
+                (err, doc) => {
+                    if (err) {
+                        winston.error("UserService.changePassword ", err)
                         rejects(error)
                     } else {
                         createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'adminPasswordChange')
@@ -209,6 +243,7 @@ export const changePassword = function (id, {currentPassword, newPassword}, acti
                 }
             );
         } else {
+            winston.warn("UserService.changePassword: password doesnt match")
             rejects(new UserInputError('auth.wrongPassword',
                 {
                     inputErrors: {
@@ -223,13 +258,18 @@ export const changePassword = function (id, {currentPassword, newPassword}, acti
 const storeFS = (stream, dst) => {
     return new Promise((resolve, reject) =>
         stream
-            .on('error', error => {
-                if (stream.truncated)
-                    fs.unlinkSync(dst);
-                reject(error);
+            .on('error', err => {
+                if (stream.truncated) {
+                    fs.unlinkSync(dst)
+                }
+                winston.error("UserService.storeFS: stream error", err)
+                reject(err)
             })
             .pipe(fs.createWriteStream(dst))
-            .on('error', error => reject(error))
+            .on('error', err => {
+                winston.error("UserService.storeFS: createWriteStream error: ", err)
+                reject(err)
+            })
             .on('finish', () => resolve(true))
     );
 }
@@ -238,7 +278,7 @@ const storeFS = (stream, dst) => {
 export const avatarUpload = function (user, file) {
 
 
-    return new Promise(async (resolve, rejects) => {
+    return new Promise(async (resolve, reject) => {
         //@TODO validate image size, extension
         const {filename, mimetype, encoding, createReadStream} = await file;
 
@@ -258,7 +298,7 @@ export const avatarUpload = function (user, file) {
                 {_id: user.id}, {avatar: finalFileName, avatarurl: url}, {useFindAndModify: false},
                 (error) => {
                     if (error) {
-                        rejects(error)
+                        reject(error)
                     } else {
                         createUserAudit(user.id, user.id, 'avatarChange')
                         resolve({filename, mimetype, encoding, url})
@@ -266,7 +306,8 @@ export const avatarUpload = function (user, file) {
                 }
             );
         } else {
-            rejects(new Error("Upload Fail"))
+            winston.error("UserService.avatarUpload: upload fail")
+            reject(new Error("Upload fail"))
         }
 
     })
@@ -289,6 +330,7 @@ export const findUsersGroup = function (group) {
         User.find({groups: group.id}).then(users => {
             resolve(users)
         }).catch(err => {
+            winston.error("UserService.findUsersGroup ", err)
             reject(err)
         })
     })
@@ -325,23 +367,29 @@ export const setUsersGroups = function (group, users) {
 
     return new Promise(async (resolve, reject) => {
 
-        //0. Find actual users with this group
-        let oldUsers = await findUsersGroup(group)
 
-        //1. Delete group for old users that doesnt exist anymore
-        let deletePromises = getDeletePromises(oldUsers)
+        findUsersGroup(group).then(oldUsers => {
 
-        Promise.all(deletePromises).then(() => {
+            Promise.all(getDeletePromises(oldUsers)).then(() => {
 
-            //2. Push group in new users
-            let pushPromises = getPushPromises()
+                //2. Push group in new users
+                let pushPromises = getPushPromises()
 
-            Promise.all(pushPromises).then(() => {
-                resolve(true)
-            }).catch(err => reject(err))
+                Promise.all(pushPromises).then(() => {
+                    resolve(true)
+                }).catch(err => reject(err))
 
-        }).catch(err => reject(err))
+            }).catch(err => {
+                    winston.error("UserService.setUsersGroups ", err)
+                    reject(err)
+                }
+            )
 
+        }).catch(e => {
+
+            winston.error("UserService.setUsersGroups.findUsersGroup ", e)
+            reject(e)
+        })
 
     })
 }

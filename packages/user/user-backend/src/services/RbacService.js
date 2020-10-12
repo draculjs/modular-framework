@@ -1,3 +1,4 @@
+import {DefaultLogger as winston} from "@dracul/logger-backend";
 import RBAC from "../rbac";
 import RoleModel from "../models/RoleModel";
 
@@ -7,7 +8,7 @@ const rbacFactory = function () {
         RoleModel.find({}).then(roles => {
             resolve(new RBAC(roles))
         }).catch(err => {
-            console.error("RbacFactory Error:", err)
+            winston.error("RbacService.RbacFactory ", err)
             reject(err)
         })
 
@@ -31,7 +32,7 @@ const UserRbacFactory = async function (user) {
                 }
             )
             .catch(err => {
-                console.error("UserRbacFactory Error:", err)
+                winston.error("RbacService.UserRbacFactory ", err)
                 reject(err)
             })
 

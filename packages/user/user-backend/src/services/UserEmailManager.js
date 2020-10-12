@@ -1,4 +1,5 @@
-require('dotenv').config();
+require('dotenv').config()
+import {DefaultLogger as winston} from '@dracul/logger-backend';
 import nodemailer from "nodemailer"
 
 import Email from 'email-templates';
@@ -45,10 +46,10 @@ class UserEmailManager {
                     btnText: "Recuperar Contraseña",
                     copyright: "Copyright @ " + process.env.APP_NAME + " " + new Date().getFullYear()
                 },
-            }).then((response) => {
+            }).then(() => {
                 resolve(true)
-            }).catch((error) => {
-                console.error(error)
+            }).catch(error => {
+                winston.error('UserEmailManager.recovery ', error)
                 reject(error)
             })
 
@@ -83,7 +84,8 @@ class UserEmailManager {
             }).then((response) => {
                 resolve(true)
             }).catch((error) => {
-                console.error(error)
+
+                winston.error('UserEmailManager.activation ', error)
                 reject(error)
             })
         })

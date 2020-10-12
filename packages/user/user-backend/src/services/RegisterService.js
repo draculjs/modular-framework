@@ -1,3 +1,4 @@
+import {DefaultLogger as winston} from '@dracul/logger-backend';
 import {findRoleByName} from "./RoleService";
 import User from "../models/UserModel";
 import {UserInputError} from "apollo-server-express";
@@ -5,7 +6,8 @@ import jsonwebtoken from "jsonwebtoken";
 import {createUserAudit} from "./UserAuditService";
 import UserEmailManager from "./UserEmailManager";
 import {hashPassword} from "./UserService";
-import {session} from "./AuthService";
+import {session, tokenSignPayload} from "./AuthService";
+import {createSession} from "./SessionService";
 
 export const registerUser = async function ({username, password, name, email, phone}) {
 
@@ -33,7 +35,10 @@ export const registerUser = async function ({username, password, name, email, ph
         newUser.save((error => {
             if (error) {
                 if (error.name == "ValidationError") {
+                    winston.warn("RegisterService.registerUser.ValidationError ", error)
                     rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                }else{
+                    winston.error("RegisterService.registerUser ", error)
                 }
                 rejects(error)
             } else {
@@ -72,15 +77,37 @@ export const activationUser = function (token, req) {
             {_id: decoded.id},
             {active: true},
             (error, user) => {
+
                 if (error) {
-                    rejects({status: false, message: "common.operation.fail"})
+                    winston.error("RegisterService.activationUser.findOneAndUpdate ", error)
+                    resolve({status: false, message: "common.operation.fail"})
                 }
+
                 createUserAudit(user._id, user._id, 'userActivated')
-                session(user, req).then(authToken => {
-                    resolve({status: true, token: authToken, message: "common.operation.success"})
+
+                createSession(user, req).then(session => {
+
+                    const payload = tokenSignPayload(user, session)
+
+                    const options = {
+                        expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1d',
+                        jwtid: user.id
+                    }
+
+                    let token = jsonwebtoken.sign(
+                        payload,
+                        process.env.JWT_SECRET,
+                        options
+                    )
+
+
+                    resolve({status: true, token: token, message: "common.operation.success"})
+
                 }).catch(err => {
-                    rejects(err)
+                    winston.error("RegisterService.activationUser ", error)
+                    reject(err)
                 })
+
 
             })
 

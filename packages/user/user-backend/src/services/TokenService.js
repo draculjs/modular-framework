@@ -1,3 +1,4 @@
+import {DefaultLogger as winston} from "@dracul/logger-backend";
 import jwt from "jsonwebtoken";
 import {findUser} from "./UserService";
 
@@ -21,6 +22,7 @@ export const validateToken = function (token) {
             resolve({valid: true, operation: decoded.operation, message: "common.operation.success"})
 
         } catch (e) {
+            winston.error("TokenService.validateToken", e)
             rejects(e)
         }
 
