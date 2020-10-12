@@ -5,6 +5,7 @@ import routes from './modules/media/routes'
 //Providers
 import FileProvider from './modules/media/providers/FileProvider'
 import UploadProvider from './modules/media/providers/UploadProvider'
+import FileMetricsProvider from './modules/media/providers/FileMetricsProvider'
 
 //Components
 import FileUploadExpress from './modules/media/components/FileUploadExpress'
@@ -30,6 +31,7 @@ export {
     //Providers
     FileProvider,
     UploadProvider,
+    FileMetricsProvider,
 
     //Components
     FileUploadExpress,

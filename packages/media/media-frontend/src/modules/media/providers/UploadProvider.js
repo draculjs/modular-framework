@@ -1,10 +1,8 @@
-import graphqlClient from "../../../apollo";
-
 class UploadProvider {
 
 
     constructor() {
-        this.gqlc = graphqlClient
+        this.gqlc = null
     }
 
     setGqlc(gqlc){
