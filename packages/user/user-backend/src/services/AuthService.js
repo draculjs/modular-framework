@@ -24,7 +24,6 @@ export const auth = async function ({username, password}, req) {
     return new Promise((resolve, reject) => {
         findUserByUsername(username).then(user => {
 
-            console.log(user)
 
             if (!user) {
                 reject('UserDoesntExist')

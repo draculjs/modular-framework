@@ -48,7 +48,7 @@ class UserEmailManager {
             }).then((response) => {
                 resolve(true)
             }).catch((error) => {
-                console.log(error)
+                console.error(error)
                 reject(error)
             })
 
@@ -83,7 +83,7 @@ class UserEmailManager {
             }).then((response) => {
                 resolve(true)
             }).catch((error) => {
-                console.log(error)
+                console.error(error)
                 reject(error)
             })
         })
