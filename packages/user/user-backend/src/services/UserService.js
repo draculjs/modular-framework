@@ -75,7 +75,7 @@ export const updateUser = async function (id, {username, name, email, phone, rol
                         winston.error("UserService.updateUser ", error)
                     }
 
-                    rejects(error)
+                    reject(error)
                 } else {
                     createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userModified')
                     doc.populate('role').populate('groups').execPopulate(() => resolve(doc))
