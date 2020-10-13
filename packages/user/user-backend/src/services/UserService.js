@@ -46,6 +46,7 @@ export const createUser = async function ({username, password, name, email, phon
                 }
                 reject(error)
             } else {
+                winston.info('UserService.createUser successful for ' + doc.username)
                 createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userCreated')
                 doc.populate('role').populate('groups').execPopulate(() => (resolve(doc))
                 )
@@ -56,9 +57,10 @@ export const createUser = async function ({username, password, name, email, phon
 
 
 export const updateUser = async function (id, {username, name, email, phone, role, groups, active}, actionBy = null) {
-    let updatedAt = Date.now()
 
     return new Promise((resolve, reject) => {
+        let updatedAt = Date.now()
+
         User.findOneAndUpdate(
             {_id: id}, {username, name, email, phone, role, groups, active, updatedAt}, {
                 new: true,
@@ -77,6 +79,7 @@ export const updateUser = async function (id, {username, name, email, phone, rol
 
                     reject(error)
                 } else {
+                    winston.info('UserService.updateUser successful for ' + doc.username)
                     createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userModified')
                     doc.populate('role').populate('groups').execPopulate(() => resolve(doc))
                 }
@@ -95,6 +98,7 @@ export const deleteUser = function (id, actionBy = null) {
                     winston.error("UserService.deleteUser ", err)
                     reject(err)
                 } else {
+                    winston.info('UserService.deleteUser successful for ' + doc.username)
                     resolve({success: true, id: id})
                 }
             });
@@ -118,6 +122,7 @@ export const findUsers = function (roles = []) {
                 winston.error("UserService.findUsers ", err)
                 reject(err)
             } else {
+                winston.debug('UserService.findUsers successful')
                 resolve(res)
             }
         });
@@ -163,6 +168,7 @@ export const paginateUsers = function (limit, pageNumber = 1, search = null, ord
     let params = {page: pageNumber, limit: limit, populate: populate, sort}
     return new Promise((resolve, reject) => {
         User.paginate(query, params).then(result => {
+                winston.debug('UserService.paginateUsers successful')
                 resolve({users: result.docs, totalItems: result.totalDocs, page: result.page})
             }
         ).catch(err => {
@@ -179,6 +185,7 @@ export const findUser = function (id) {
                 winston.error("UserService.findUser ", err)
                 reject(err)
             } else {
+                winston.debug('UserService.findUser successful')
                 resolve(res)
             }
         });
@@ -192,6 +199,7 @@ export const findUserByUsername = function (name) {
                 winston.error("UserService.findUserByUsername ", err)
                 reject(err)
             } else {
+                winston.debug('UserService.findUserByUsername successful')
                 resolve(res)
             }
         });
@@ -211,6 +219,7 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
                         winston.error("UserService.changePasswordAdmin ", err)
                         rejects({status: false, message: "Change password fail"})
                     } else {
+                        winston.debug('UserService.changePasswordAdmin successful')
                         createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'changePasswordAdmin')
                         resolve({success: true, message: "PasswordChange", operation: "changePasswordAdmin"})
                     }
@@ -237,6 +246,7 @@ export const changePassword = function (id, {currentPassword, newPassword}, acti
                         winston.error("UserService.changePassword ", err)
                         rejects(error)
                     } else {
+                        winston.debug('UserService.changePassword successful')
                         createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'adminPasswordChange')
                         resolve({status: true, message: "Password Changed"})
                     }
@@ -270,7 +280,10 @@ const storeFS = (stream, dst) => {
                 winston.error("UserService.storeFS: createWriteStream error: ", err)
                 reject(err)
             })
-            .on('finish', () => resolve(true))
+            .on('finish', () => {
+                winston.debug('UserService.storeFS finish successful')
+                resolve(true)
+            })
     );
 }
 
@@ -300,6 +313,7 @@ export const avatarUpload = function (user, file) {
                     if (error) {
                         reject(error)
                     } else {
+                        winston.debug('UserService.avatarUpload successful')
                         createUserAudit(user.id, user.id, 'avatarChange')
                         resolve({filename, mimetype, encoding, url})
                     }
@@ -328,6 +342,7 @@ function randomstring(length) {
 export const findUsersGroup = function (group) {
     return new Promise((resolve, reject) => {
         User.find({groups: group.id}).then(users => {
+            winston.debug('UserService.findUsersGroup successful')
             resolve(users)
         }).catch(err => {
             winston.error("UserService.findUsersGroup ", err)
@@ -376,6 +391,7 @@ export const setUsersGroups = function (group, users) {
                 let pushPromises = getPushPromises()
 
                 Promise.all(pushPromises).then(() => {
+                    winston.debug('UserService.setUsersGroups successful')
                     resolve(true)
                 }).catch(err => reject(err))
 

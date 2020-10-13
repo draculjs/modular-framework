@@ -30,6 +30,8 @@ export const recoveryPassword = function (email) {
                 let url = process.env.APP_WEB_URL + "/recovery/" + token
 
                 UserEmailManager.recovery(email, url, user).then(result => {
+
+                    winston.info('RecoveryService.recoveryPassword successful for '+ user.username)
                     createUserAudit(user.id, user.id, 'passwordRecovery')
                     resolve({status: result, message: 'common.operation.success'})
                 }).catch(err => {
@@ -94,7 +96,7 @@ export const recoveryChangePassword = function (token, newPassword, req) {
                         options
                     )
 
-
+                    winston.info('RecoveryService.recoveryChangePassword successful for '+ user.username)
                     resolve({status: true, token: token, message: "common.operation.success"})
 
                 }).catch(err => {

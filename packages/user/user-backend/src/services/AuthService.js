@@ -53,7 +53,7 @@ export const auth = async function ({username, password}, req) {
                             process.env.JWT_SECRET,
                             options
                         )
-
+                        winston.info('AuthService.auth successful by ' + user.username)
                         resolve({token, payload, options})
 
                     }).catch(err => {
@@ -62,7 +62,7 @@ export const auth = async function ({username, password}, req) {
                     })
 
                 } else {
-                    winston.warn('AuthService.auth: BadCredentials =>' + username)
+                    winston.warn('AuthService.auth: BadCredentials => ' + username)
                     createLoginFail(username, req)
                     reject('BadCredentials')
                 }

@@ -11,6 +11,7 @@ export const fetchRolesInName = function (roleNames) {
                 winston.error("RoleService.fetchRolesInName ", err)
                 reject(err)
             }
+            winston.debug('RoleService.fetchRolesInName successful')
             resolve(res)
 
         });
@@ -33,6 +34,7 @@ export const findRoles = function (roles = []) {
                 winston.error("RoleService.findRoles ", err)
                 reject(err)
             }
+            winston.debug('RoleService.findRoles successful')
             resolve(res)
 
         });
@@ -47,6 +49,8 @@ export const findRole = function (id) {
                 winston.error("RoleService.findRole ", err)
                 reject(err)
             }
+
+            winston.debug('RoleService.findRole successful')
             resolve(res)
 
         });
@@ -61,6 +65,7 @@ export const findRoleByName = function (roleName) {
                 winston.error("RoleService.findRoleByName ", err)
                 reject(err)
             }
+            winston.debug('RoleService.findRoleByName successful')
             resolve(res)
 
         });
@@ -78,6 +83,7 @@ export const deleteRole = function (id) {
                     reject(err)
                 }
 
+                winston.info('RoleService.deleteRole successful')
                 resolve({ id: id, success: true })
 
             });
@@ -105,6 +111,8 @@ export const createRole = function ({ name, childRoles, permissions }) {
 
                 rejects(error)
             } else {
+
+                winston.info('RoleService.createRole successful')
                 resolve(newRole)
             }
         }))
@@ -129,6 +137,7 @@ export const updateRole = async function (id, { name,  childRoles, permissions =
                     rejects(error)
                 }
 
+                winston.info('RoleService.updateRole successful')
                 resolve(doc)
             })
     })

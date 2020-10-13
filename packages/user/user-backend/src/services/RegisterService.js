@@ -53,6 +53,7 @@ export const registerUser = async function ({username, password, name, email, ph
                 let url = process.env.APP_WEB_URL + "/activation/" + token
                 createUserAudit(newUser.id, newUser.id, 'userRegistered')
                 UserEmailManager.activation(newUser.email, url, newUser);
+                winston.info("RegisterService.registerUser successful for " + newUser.username)
                 resolve({status: true, id: newUser.id, email: newUser.email});
             }
         }))
@@ -101,6 +102,7 @@ export const activationUser = function (token, req) {
                     )
 
 
+                    winston.info("RegisterService.activationUser successful for " + user.username)
                     resolve({status: true, token: token, message: "common.operation.success"})
 
                 }).catch(err => {

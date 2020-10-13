@@ -51,6 +51,13 @@ describe("UserService", () => {
 
     }, 2000);
 
+    test('updateUserEmailValidationFail', async () => {
+        let user = await findUserByUsername('root')
+        user.email = 'wrongemailformat'
+
+        await expect(updateUser(user.id,user, null)).rejects.toThrow('Validation failed: email: validation.emailFormat');
+
+    }, 2000);
 
 
     test('updateUserOk ', async () => {

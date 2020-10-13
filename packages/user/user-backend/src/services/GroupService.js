@@ -21,6 +21,7 @@ export const fetchGroups = async function () {
                 winston.error("GroupService.fetchGroups ", err)
                 reject(err)
             }
+            winston.debug("GroupService.fetchGroups successful")
             resolve(res)
 
         });
@@ -61,6 +62,8 @@ export const paginateGroup = function (limit, pageNumber = 1, search = null, ord
                     group.users = await findUsersGroup(group)
                     return group
                 })
+
+                winston.debug("GroupService.paginateGroup successful")
                 resolve({items: docs, totalItems: result.totalDocs, page: result.page})
             }
         ).catch(err => {
@@ -78,6 +81,8 @@ export const findGroup = async function (id) {
                 winston.error("GroupService.findGroup ", err)
                 reject(err)
             }
+
+            winston.debug("GroupService.findGroup successful")
             resolve(res)
 
         });
@@ -108,6 +113,7 @@ export const createGroup = async function (user, {name, color, users}) {
 
             await setUsersGroups(doc, users)
             doc.users = await findUsersGroup(doc)
+            winston.info("GroupService.createGroup successful for " + doc.name)
             resolve(doc)
         })
     })
@@ -134,6 +140,8 @@ export const updateGroup = async function (user, id, {name, color, users = []}) 
 
                 await setUsersGroups(doc, users)
                 doc.users = await findUsersGroup(doc)
+
+                winston.info("GroupService.updateGroup successful for " + doc.name)
                 resolve(doc)
             })
     })
@@ -149,6 +157,7 @@ export const deleteGroup = function (id) {
                     reject(err)
                 }
 
+                winston.info("GroupService.deleteGroup successful for " + doc.name)
                 resolve({id: id, deleteSuccess: true})
 
             });
