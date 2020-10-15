@@ -94,7 +94,9 @@ export const avatarUpload = function (user, file) {
             const {filename, mimetype, encoding, createReadStream} = await file;
 
             if(!mimetypesAllowed.includes(mimetype)){
+
                 reject(new Error("Mimetype not allowed"))
+                return;
             }
 
             const parseFileName = path.parse(filename);
@@ -104,25 +106,32 @@ export const avatarUpload = function (user, file) {
             //Store
             createDirIfNotExist(dst)
 
-            let fileResult = await storeFS(createReadStream(), dst)
+            storeFS(createReadStream(), dst).then(() => {
 
+                const rand = randomstring(3)
+                const url = process.env.APP_API_URL + "/media/avatar/" + finalFileName + "?" + rand
 
-            const rand = randomstring(3)
-            const url = process.env.APP_API_URL + "/media/avatar/" + finalFileName + "?" + rand
-
-            User.findOneAndUpdate(
-                {_id: user.id}, {avatar: finalFileName, avatarurl: url}, {useFindAndModify: false},
-                (error) => {
-                    if (error) {
-                        winston.error("UserService.avatarUpload: update fail", error)
-                        reject(error)
-                    } else {
-                        winston.debug('UserService.avatarUpload successful')
-                        createUserAudit(user.id, user.id, 'avatarChange')
-                        resolve({filename, mimetype, encoding, url})
+                User.findOneAndUpdate(
+                    {_id: user.id}, {avatar: finalFileName, avatarurl: url}, {useFindAndModify: false},
+                    (error) => {
+                        if (error) {
+                            winston.error("UserService.avatarUpload: update fail", error)
+                            reject(error)
+                        } else {
+                            winston.debug('UserService.avatarUpload successful')
+                            createUserAudit(user.id, user.id, 'avatarChange')
+                            resolve({filename, mimetype, encoding, url})
+                        }
                     }
-                }
-            )
+                )
+
+            }).catch(err => {
+                winston.error("UserService.avatarUpload: store fail", err)
+                reject(new Error("Error storeFS detail: " + err.message))
+            })
+
+
+
 
         } catch (e) {
             winston.error("UserService.avatarUpload: store fail", e)

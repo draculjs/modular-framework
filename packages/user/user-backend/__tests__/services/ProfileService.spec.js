@@ -6,10 +6,10 @@ import {avatarUpload} from "../../src/services/ProfileService";
 const mongoHandler = require('../utils/mongo-handler');
 
 import uploadFileSimulator from '../utils/uploadFileSimulator'
-import {findUser, findUserByUsername} from "../../src/services/UserService";
+import {findUserByUsername} from "../../src/services/UserService";
 import path from 'path'
 
-describe("AvatarService", () => {
+describe("ProfileServiceTest", () => {
 
 
     let connection;
@@ -34,7 +34,13 @@ describe("AvatarService", () => {
         let filePath = path.join(__dirname,'../assets/','VladDracul.png')
         let file = uploadFileSimulator(filePath)
 
-        await expect(avatarUpload(user, file)).resolves.toHaveProperty('filename')
+
+        await expect(avatarUpload(user, file)).resolves.toHaveProperty('filename','VladDracul.png')
+
+        let userUpdated = await findUserByUsername('root')
+
+
+        expect (userUpdated.avatar).toEqual("root.png")
 
     });
 
@@ -53,6 +59,11 @@ describe("AvatarService", () => {
         let file = uploadFileSimulator(filePath)
 
         await expect(avatarUpload(user, file)).rejects.toThrow("Mimetype not allowed")
+
+        let userUpdated = await findUserByUsername('root')
+
+
+        expect (userUpdated.avatar).not.toEqual("root.pdf")
 
     });
 
