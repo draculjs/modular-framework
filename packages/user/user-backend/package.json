@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -45,9 +45,9 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.8.7",
     "@shelf/jest-mongodb": "^1.1.5",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "babel-jest": "^25.4.0",
     "jest": "^25.4.0",
     "mime-types": "^2.1.27",
