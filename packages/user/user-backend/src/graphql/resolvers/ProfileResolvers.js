@@ -1,9 +1,5 @@
-import {
-    changePassword,
-    avatarUpload,
-} from '../../services/UserService'
-
 import {AuthenticationError} from "apollo-server-express";
+import {avatarUpload, changePassword} from "../../services/ProfileService";
 
 export default {
     Mutation: {

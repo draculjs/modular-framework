@@ -13,7 +13,8 @@ import {
     UserEmailManager,
     LoginFailService,
     SessionService,
-    InitService
+    InitService,
+    ProfileService
 } from './services'
 
 import * as permissions from './permissions'
@@ -42,6 +43,7 @@ export {
     LoginFailService,
     SessionService,
     InitService,
+    ProfileService,
 
     //permissions
     permissions
