@@ -104,7 +104,7 @@ export const avatarUpload = function (user, file) {
             //Store
             createDirIfNotExist(dst)
 
-            let fileResult = await storeFS(createReadStream, dst)
+            let fileResult = await storeFS(createReadStream(), dst)
 
 
             const rand = randomstring(3)

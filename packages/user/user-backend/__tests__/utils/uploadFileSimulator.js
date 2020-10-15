@@ -7,7 +7,7 @@ const uploadFileSimulator = (filePath) => {
     let encoding = '7bit'
     let filePathSplited = filePath.split("/")
     let filename = filePathSplited[filePathSplited.length - 1]
-    let createReadStream = fs.createReadStream(filePath)
+    let createReadStream = () => fs.createReadStream(filePath)
 
     const file = {
         filename,
