@@ -49,7 +49,7 @@ describe("ProfileServiceTest", () => {
         let filePath = path.join(__dirname,'../assets/','big.png')
         let file = uploadFileSimulator(filePath)
 
-        await expect(avatarUpload(user, file)).rejects.toThrow('Max file size exceeded')
+        await expect(avatarUpload(user, file)).rejects.toThrow('MAX_FILE_SIZE_EXCEEDED')
 
     });
 
@@ -58,7 +58,7 @@ describe("ProfileServiceTest", () => {
         let filePath = path.join(__dirname,'../assets/','Dracul.pdf')
         let file = uploadFileSimulator(filePath)
 
-        await expect(avatarUpload(user, file)).rejects.toThrow("Mimetype not allowed")
+        await expect(avatarUpload(user, file)).rejects.toThrow("MIMETYPE_NOT_ALLOWED")
 
         let userUpdated = await findUserByUsername('root')
 

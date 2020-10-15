@@ -1,11 +1,7 @@
 <template>
     <div>
-        <v-alert :value="errors.length?true:false" color="error" outlined>
-            <ul>
-                <li v-for="(error,i) in errors" :key="i">
-                    {{error}}
-                </li>
-            </ul>
+        <v-alert :value="!!errorMessage" color="error" outlined>
+            {{errorMessage}}
         </v-alert>
 
         <v-form ref="form" autocomplete="off">
@@ -21,13 +17,12 @@
 <script>
 
     import ProfileProvider from "../../../providers/ProfileProvider"
-    import ClientError from "../../../errors/ClientError";
 
     export default {
         name: "ProfileAvatarForm",
         data: () => ({
             loading: false,
-            errors: [],
+            errorMessage: null,
             img: null,
         }),
         methods: {
@@ -36,8 +31,7 @@
                 ProfileProvider.avatarUpload(file).then((response) => {
                     this.$store.commit('avatarUpdate', response.data.avatarUpload.url)
                 }).catch((err) => {
-                    let clientError = new ClientError(err)
-                    this.errors = clientError.inputErrors
+                    this.errorMessage = err.message
                 }).finally(() => this.loading = false)
             },
             openFilePicker() {

@@ -19,7 +19,7 @@ class StreamSizeValidator extends Transform {
         this.length += chunk.length
 
         if (this.length > this.maxFileSize) {
-            this.destroy(new Error(`Max file size exceeded`));
+            this.destroy(new Error(`MAX_FILE_SIZE_EXCEEDED`));
             return;
         }
 
@@ -95,7 +95,7 @@ export const avatarUpload = function (user, file) {
 
             if(!mimetypesAllowed.includes(mimetype)){
 
-                reject(new Error("Mimetype not allowed"))
+                reject(new Error("MIMETYPE_NOT_ALLOWED"))
                 return;
             }
 
@@ -127,7 +127,7 @@ export const avatarUpload = function (user, file) {
 
             }).catch(err => {
                 winston.error("UserService.avatarUpload: store fail", err)
-                reject(new Error("Error storeFS detail: " + err.message))
+                reject(new Error(err.message))
             })
 
 
@@ -135,7 +135,7 @@ export const avatarUpload = function (user, file) {
 
         } catch (e) {
             winston.error("UserService.avatarUpload: store fail", e)
-            reject(new Error("Error storeFS detail: " + e.message))
+            reject(new Error(e.message))
         }
 
     })
