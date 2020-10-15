@@ -47,11 +47,12 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@shelf/jest-mongodb": "^1.1.5",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "babel-jest": "^25.4.0",
     "jest": "^25.4.0",
     "mime-types": "^2.1.27",
     "mongodb-memory-server": "^6.5.2",
     "nodemon": "^1.19.4"
   },
-  "gitHead": "a1bc03ef4d4075be1b525b93466a96314c5204d5"
+  "gitHead": "04009bbca009cc4de8be4987ee581f4e3c96aaa3"
 }
