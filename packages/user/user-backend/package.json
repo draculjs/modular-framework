@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dracul/logger-backend": "^1.0.15",
+    "@dracul/logger-backend": "^1.0.25",
     "apollo-server-express": "^2.12.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.1.0",
