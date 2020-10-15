@@ -28,10 +28,11 @@
         methods: {
             uploadAvatar(file) {
                 this.loading = true
+                this.errorMessage = null
                 ProfileProvider.avatarUpload(file).then((response) => {
                     this.$store.commit('avatarUpdate', response.data.avatarUpload.url)
                 }).catch((err) => {
-                    this.errorMessage = err.message
+                    this.errorMessage = this.$t('error.'+err.message.replace('GraphQL error:', '').trim())
                 }).finally(() => this.loading = false)
             },
             openFilePicker() {

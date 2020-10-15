@@ -7,6 +7,7 @@ import AuditMessages from './audit-messages'
 import MetricsMessages from './metrics-messages'
 import SessionMessages from './session-messages'
 import ValidationMessages from './validation-messages'
+import ErrorMessages from './error-messages'
 
 const messages = merge.all([
     UserMessages,
@@ -16,7 +17,8 @@ const messages = merge.all([
     AuditMessages,
     MetricsMessages,
     SessionMessages,
-    ValidationMessages
+    ValidationMessages,
+    ErrorMessages
 ])
 
 export default messages
