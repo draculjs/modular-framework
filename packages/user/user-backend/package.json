@@ -10,7 +10,7 @@
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files && ./node_modules/.bin/babel emails -d lib/emails --copy-files"
   },
   "keywords": [],
-  "author": "",
+  "author": "Cristian Incarnato & Dracul Team",
   "license": "ISC",
   "dependencies": {
     "@dracul/logger-backend": "^1.0.25",
