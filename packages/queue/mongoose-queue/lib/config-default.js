@@ -1,11 +1,10 @@
 "use strict";
 
-const mongoose = require("mongoose");
+const dotenv = require('dotenv');
 
+dotenv.config();
 const config = {
-  payloadRefType: mongoose.Types.UUID,
-  queueCollection: 'queue',
-  blockDuration: 30000,
-  maxRetries: 3
+  blockDuration: process.env.BLOCK_DURATION ? process.env.BLOCK_DURATION : 30000,
+  maxRetries: process.env.MAX_RETRIES ? process.env.MAX_RETRIES : 3
 };
 module.exports = config;

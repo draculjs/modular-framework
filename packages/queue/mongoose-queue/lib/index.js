@@ -1,29 +1,45 @@
-'use strict';
+"use strict";
 
-const MongooseQueue = require('./mongoose-queue');
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 
-const QueueModel = require('./models/QueueModel');
+var _mongooseQueue = _interopRequireDefault(require("./mongoose-queue"));
 
-const QueueStatsModel = require('./models/QueueStatsModel');
+var _QueueModel = _interopRequireDefault(require("./models/QueueModel"));
 
-const producerManager = require('./producer-manager');
+var _QueueStatsModel = _interopRequireDefault(require("./models/QueueStatsModel}"));
 
-const workerManager = require('./worker-manager');
+var _producerManager = _interopRequireDefault(require("./producer-manager"));
 
-const {
-  fetchQueues
-} = require('./services/QueueService');
+var _workerManager = _interopRequireDefault(require("./worker-manager"));
 
-const {
-  fetchQueueStats
-} = require('./services/QueueStatsService');
+var _QueueService = require("./services/QueueService");
 
-module.exports = {
-  MongooseQueue,
-  QueueModel,
-  QueueStatsModel,
-  producerManager,
-  workerManager,
-  fetchQueues,
-  fetchQueueStats
+var _QueueStatsService = require("./services/QueueStatsService");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  //Queue Services
+  fetchQueues: _QueueService.fetchQueues,
+  addJob: _QueueService.addJob,
+  ackJob: _QueueService.ackJob,
+  errorJob: _QueueService.errorJob,
+  getJob: _QueueService.getJob,
+  cleanQueue: _QueueService.cleanQueue,
+  resetQueue: _QueueService.resetQueue,
+  //Queue Stat Services
+  fetchQueueStats: _QueueStatsService.fetchQueueStats,
+  incrementAddedStat: _QueueStatsService.incrementAddedStat,
+  incrementGottenStat: _QueueStatsService.incrementGottenStat,
+  incrementFailedStat: _QueueStatsService.incrementFailedStat,
+  incrementDoneStat: _QueueStatsService.incrementDoneStat,
+  workerManager: _workerManager.default,
+  producerManager: _producerManager.default,
+  QueueStatsModel: _QueueStatsModel.default,
+  QueueModel: _QueueModel.default,
+  MongooseQueue: _mongooseQueue.default
 };
+exports.default = _default;

@@ -1,3 +1,5 @@
+const {fetchQueues} = require("../src/services/QueueService");
+
 const producerManager = require('../src/producer-manager')
 var assert = require('assert');
 
@@ -19,10 +21,13 @@ describe("Producer", () => {
     })
 
     it('Should accept a job if a topic and payload is provided', async () => {
-        let jobId = await producerManager.addJob('test', {name: 'test'})
+        let jobId = await producerManager.addJob('test', {name: 'some name'})
         console.log(jobId)
+
+
         assert.equal(typeof jobId, 'string')
         assert.notEqual(jobId, null)
+
     })
 
 })
