@@ -1,6 +1,6 @@
 import MongooseQueue from './mongoose-queue'
 import QueueModel from './models/QueueModel'
-import QueueStatsModel from './models/QueueStatsModel}'
+import QueueStatsModel from './models/QueueStatsModel'
 import producerManager from './producer-manager'
 import workerManager from './worker-manager'
 
