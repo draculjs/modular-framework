@@ -14,7 +14,7 @@
     "i18n",
     "common"
   ],
-  "author": "Cristian Incarnato",
+  "author": "Cristian Incarnato & Dracul Team",
   "license": "MIT",
   "dependencies": {
     "@dracul/common-frontend": "^1.0.0",
