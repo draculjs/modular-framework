@@ -23,7 +23,7 @@ import {
 } from './services/QueueStatsService'
 
 
-export default {
+export {
     //Queue Services
     fetchQueues,
     addJob,

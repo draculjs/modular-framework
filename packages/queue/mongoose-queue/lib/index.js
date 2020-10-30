@@ -9,7 +9,7 @@ var _mongooseQueue = _interopRequireDefault(require("./mongoose-queue"));
 
 var _QueueModel = _interopRequireDefault(require("./models/QueueModel"));
 
-var _QueueStatsModel = _interopRequireDefault(require("./models/QueueStatsModel}"));
+var _QueueStatsModel = _interopRequireDefault(require("./models/QueueStatsModel"));
 
 var _producerManager = _interopRequireDefault(require("./producer-manager"));
 
