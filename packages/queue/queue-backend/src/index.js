@@ -1,15 +1,12 @@
+import {types, resolvers} from './graphql'
+import * as permissions from './permissions'
 
-'use strict'
+export {
+    //permissions
+    permissions,
 
-var MongooseQueue = require('./mongoose-queue');
-var QueueSchema = require('./schemas/queue-schema');
-var producerManager = require('./producer-manager');
-var workerManager = require('./worker-manager');
+    //Graphql
+    types,
+    resolvers,
 
-module.exports = {
-    MongooseQueue: MongooseQueue,
-    QueueSchema: QueueSchema,
-    producerManager: producerManager,
-    workerManager: workerManager
-
-};
+}

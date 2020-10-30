@@ -1,9 +1,6 @@
 const producerManager = require('../src/producer-manager')
 var assert = require('assert');
 
-var mongoose = require('mongoose');
-var QueueSchema = require('../src/index').QueueSchema;
-var Queue = QueueSchema('queue', mongoose.Schema.Types.ObjectId);
 
 describe("Producer", () => {
 

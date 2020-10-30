@@ -2,9 +2,6 @@ const workerManager = require('../src/worker-manager')
 const producerManager = require('../src/producer-manager')
 var assert = require('assert');
 
-var mongoose = require('mongoose');
-var QueueSchema = require('../src/index').QueueSchema;
-var Queue = QueueSchema('queue', mongoose.Schema.Types.ObjectId);
 
 describe("WorkerManager", () => {
 
@@ -51,6 +48,29 @@ describe("WorkerManager", () => {
     });
 
 
+    it('should recibe null job when queue is empty', async () => {
+
+        const handlerPromise = (job) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("Handler Job:", job)
+                    resolve(true)
+                }, 50)
+            })
+        }
+
+        let subscription = await workerManager.subscribe('test', handlerPromise)
+
+        assert.equal(subscription.status, 'subscribed')
+
+        //3. Process the Job
+
+        let result = await workerManager.processJobByTopic('test')
+
+        assert.equal(result, null)
+
+    })
+
     it('should process one job', async () => {
 
         //1. Add some jobs to queue
@@ -62,7 +82,7 @@ describe("WorkerManager", () => {
                 setTimeout(() => {
                     console.log("Handler Job:", job)
                     resolve(true)
-                }, 500)
+                }, 50)
             })
         }
 

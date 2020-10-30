@@ -1,0 +1,14 @@
+type Queue{
+    blockedUntil: String
+    workerHostname: String
+    workerId: String
+    retries: Int
+    topic: String!
+    payload: String
+    done: Boolean
+    error: String
+}
+
+type Query {
+    queues: [Queue]
+}

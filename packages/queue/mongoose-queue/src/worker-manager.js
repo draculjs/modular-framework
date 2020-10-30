@@ -73,7 +73,7 @@ class WorkerManager {
             }
 
 
-            subscription.worker.getByTopic(subscription.topic)
+            subscription.worker.get(subscription.topic)
                 .then(job => {
 
                     //Si obtuve un Job de la Queue
