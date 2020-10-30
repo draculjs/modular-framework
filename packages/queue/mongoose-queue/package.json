@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@dracul/logger-backend": "^1.0.25",
+    "dotenv": "^8.2.0",
     "mongoose": "^5.10.11",
     "underscore": "^1.11.0"
   },

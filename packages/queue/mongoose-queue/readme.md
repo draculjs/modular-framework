@@ -11,7 +11,7 @@ In order to add a job to the queue you need to import producerManager and call a
 ### Example
 ```$xslt
 const {producerManager} = require('@dracul/queue-backend')
-producerManager.addJob('topico',{data: "some data})
+producerManager.addJob('topico',{data: "some data"})
 ```
 
 ## Subscribre a function handler to topic 

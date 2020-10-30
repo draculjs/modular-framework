@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const QueueStatsSchema = new Schema({
@@ -26,9 +26,8 @@ const QueueStatsSchema = new Schema({
         type: Number,
         required: false,
         default: 0
-    },
-
-});
+    }
+})
 
 const QueueStats = mongoose.model('QueueStats', QueueStatsSchema);
 

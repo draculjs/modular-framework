@@ -1,12 +1,8 @@
-'use strict';
-
 /**
  * Dependencies
  */
 var os = require('os');
 const _ = require('underscore');
-const QueueModel = require('./models/QueueModel');
-const isPlainObject = require('./validations/isPlainObject')
 const {addJob, getJob, ackJob, errorJob, cleanQueue, resetQueue} = require('./services/QueueService')
 
 /**

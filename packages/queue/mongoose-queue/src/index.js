@@ -1,6 +1,3 @@
-
-'use strict'
-
 const MongooseQueue = require('./mongoose-queue');
 const QueueModel = require('./models/QueueModel');
 const QueueStatsModel = require('./models/QueueStatsModel');
@@ -10,11 +7,11 @@ const {fetchQueues} = require('./services/QueueService')
 const {fetchQueueStats} = require('./services/QueueStatsService')
 
 module.exports = {
-    MongooseQueue,
-    QueueModel,
-    QueueStatsModel,
-    producerManager,
-    workerManager,
-    fetchQueues,
-    fetchQueueStats
+    MongooseQueue: MongooseQueue,
+    QueueModel: QueueModel,
+    QueueStatsModel: QueueStatsModel,
+    producerManager: producerManager,
+    workerManager: workerManager,
+    fetchQueues: fetchQueues,
+    fetchQueueStats: fetchQueueStats
 };

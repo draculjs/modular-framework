@@ -49,11 +49,14 @@
         methods: {
             fetchQueueStats() {
                 this.loading = true
-                queueStatsProvider.queueStats().then(response => {
-                    this.queueStats = response.data.queueStats
-                }).catch(err => {
-                    console.error(err)
-                }).finally(() => this.loading = false)
+                queueStatsProvider.queueStats()
+                    .then(response => {
+                        this.queueStats = response.data.queueStats
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
+                    .finally(() => this.loading = false)
             }
         }
     }
