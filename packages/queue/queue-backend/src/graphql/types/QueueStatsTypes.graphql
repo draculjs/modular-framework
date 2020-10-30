@@ -7,5 +7,5 @@ type QueueStats{
 }
 
 type Query {
-    queueStats: [Queue]
+    queueStats: [QueueStats]
 }
