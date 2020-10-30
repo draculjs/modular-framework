@@ -1,0 +1,55 @@
+{
+  "name": "@dracul/queue-frontend",
+  "version": "1.0.0",
+  "description": "Dracul Vue Queue",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-storybook": "build-storybook --no-dll",
+    "storybook": "start-storybook -p 6006 --no-dll"
+  },
+  "keywords": [
+    "vue",
+    "vuetify",
+    "i18n",
+    "common"
+  ],
+  "author": "Cristian Incarnato",
+  "license": "MIT",
+  "dependencies": {
+    "@dracul/common-frontend": "^1.0.0",
+    "deepmerge": "^4.2.2",
+    "vue": "^2.6.11",
+    "vue-i18n": "^8.18.1",
+    "vuetify": "^2.3.2",
+    "vuex": "^3.4.0",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "apollo-link-error": "^1.1.13"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@mdx-js/loader": "^1.6.6",
+    "@storybook/addon-actions": "^6.0.28",
+    "@storybook/addon-essentials": "^6.0.28",
+    "@storybook/addon-links": "^6.0.28",
+    "@storybook/vue": "^6.0.28",
+    "@vue/cli-plugin-babel": "~4.4.0",
+    "@vue/cli-plugin-eslint": "~4.4.0",
+    "@vue/cli-plugin-unit-jest": "^4.4.4",
+    "@vue/cli-service": "~4.4.0",
+    "@vue/test-utils": "^1.0.3",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-preset-vue": "^2.0.2",
+    "react-is": "^17.0.1",
+    "sass": "^1.26.8",
+    "sass-loader": "^8.0.2",
+    "graphql": "^15.4.0",
+    "graphql-tag": "^2.11.0",
+    "vue-cli-plugin-vuetify": "^2.0.6",
+    "vue-template-compiler": "^2.6.11",
+    "mock-apollo-client": "^0.4.0"
+  }
+}

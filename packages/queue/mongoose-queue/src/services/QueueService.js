@@ -1,8 +1,8 @@
-import {DefaultLogger as winston} from '@dracul/logger-backend';
+const {DefaultLogger} = require('@dracul/logger-backend');
 
 const QueueModel = require('../models/QueueModel');
 const isPlainObject = require('../validations/isPlainObject')
-const {incrementAddStat, incrementGetStat, incrementDoneStat, incrementErrorStat} = require('./QueueStatsService')
+const {incrementDoneStat, incrementAddedStat, incrementFailedStat, incrementGottenStat} = require('./QueueStatsService')
 
 const fetchQueues = function () {
 
@@ -10,10 +10,10 @@ const fetchQueues = function () {
         QueueModel.find({}).exec((err, res) => {
 
             if (err) {
-                winston.error("QueueService.fetchQueues ", err)
+                DefaultLogger.error("QueueService.fetchQueues ", err)
                 reject(err)
             }
-            winston.debug("QueueService.fetchQueues successful")
+            DefaultLogger.debug("QueueService.fetchQueues successful")
             resolve(res)
 
         });
@@ -38,18 +38,17 @@ const addJob = function (topic, payload) {
 
     return new Promise((resolve, reject) => {
 
-        var newJob = new QueueModel({
+        new QueueModel({
             topic: topic,
             payload: payload
-        })
-            .save(function (err, job) {
-                if (err) {
-                    reject(err)
-                    return
-                }
-                incrementAddStat(topic)
-                resolve(job);
-            });
+        }).save(function (err, job) {
+            if (err) {
+                reject(err)
+                return
+            }
+            incrementAddedStat(topic)
+            resolve(job);
+        });
     })
 }
 
@@ -90,7 +89,7 @@ const getJob = function (topic, workerId, workerHostname, maxRetries, blockDurat
                 } else if (!job) {
                     resolve(null);
                 } else {
-                    incrementGetStat(topic)
+                    incrementGottenStat(topic)
                     resolve(job)
                 }
             })
@@ -162,7 +161,7 @@ const errorJob = function (jobId, errorMessage, done = true) {
             else if (!job)
                 reject(new Error('Job id invalid, job not found.'));
             else
-                incrementErrorStat(job.topic)
+                incrementFailedStat(job.topic)
             resolve(job)
         });
     })
@@ -201,8 +200,6 @@ const cleanQueue = function () {
     })
 
 }
-
-
 
 
 module.exports = {

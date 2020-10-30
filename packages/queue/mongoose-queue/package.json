@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "mongoose": "^5.10.11",
-    "underscore": "^1.11.0"
+    "underscore": "^1.11.0",
+    "@dracul/logger-backend": "^1.0.25"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

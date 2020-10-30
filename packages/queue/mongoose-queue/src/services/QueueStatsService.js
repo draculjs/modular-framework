@@ -17,7 +17,7 @@ const fetchQueueStats = function () {
 
 }
 
-const incrementAddStat = function (topic) {
+const incrementAddedStat = function (topic) {
 
     return new Promise((resolve, reject) => {
         QueueStatsModel.findOneAndUpdate(
@@ -44,7 +44,7 @@ const incrementAddStat = function (topic) {
 
 }
 
-const incrementGetStat = function (topic) {
+const incrementGottenStat = function (topic) {
 
     return new Promise((resolve, reject) => {
         QueueStatsModel.findOneAndUpdate(
@@ -98,7 +98,7 @@ const incrementDoneStat = function (topic) {
 
 }
 
-const incrementErrorStat = function (topic) {
+const incrementFailedStat = function (topic) {
 
     return new Promise((resolve, reject) => {
         QueueStatsModel.findOneAndUpdate(
@@ -141,9 +141,9 @@ const createTopic = function (topic) {
 }
 
 module.exports = {
-    incrementAddStat,
-    incrementGetStat,
-    incrementErrorStat,
+    incrementAddedStat,
+    incrementGottenStat,
+    incrementFailedStat,
     incrementDoneStat,
     createTopic,
     fetchQueueStats

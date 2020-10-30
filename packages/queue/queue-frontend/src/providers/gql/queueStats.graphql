@@ -1,0 +1,10 @@
+query queueStats{
+    queueStats{
+        topic
+        added
+        gotten
+        failed
+        done
+
+    }
+}

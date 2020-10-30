@@ -12,7 +12,7 @@ const QueueStatsSchema = new Schema({
         required: false,
         default: 0
     },
-    getted: {
+    gotten: {
         type: Number,
         required: false,
         default: 0

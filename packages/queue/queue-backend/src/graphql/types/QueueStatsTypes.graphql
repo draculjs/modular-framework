@@ -1,11 +1,11 @@
 type QueueStats{
     topic: String!
     added: Int
-    getted: Int
+    gotten: Int
     failed: Int
     done: Int
 }
 
 type Query {
-    queues: [Queue]
+    queueStats: [Queue]
 }
