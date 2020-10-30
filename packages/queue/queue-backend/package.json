@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-backend",
-  "version": "1.0.0",
+  "version": "1.0.29",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -11,18 +11,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "mongoose": "^5.10.11",
-    "underscore": "^1.11.0",
-    "bluebird": "^3.7.2"
+    "underscore": "^1.11.0"
   },
   "devDependencies": {
-    "mocha": "^8.2.0",
-    "mongodb-memory-server": "^6.9.2",
-    "istanbul": "^0.4.5",
-    "cpx": "^1.5.0",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.8.7"
+    "@babel/preset-env": "^7.8.7",
+    "cpx": "^1.5.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^8.2.0",
+    "mongodb-memory-server": "^6.9.2"
   }
 }
