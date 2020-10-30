@@ -8,9 +8,11 @@ var Queue = QueueSchema('queue', mongoose.Schema.Types.ObjectId);
 
 describe("WorkerManager", () => {
 
+    /*
     afterEach(function(){
-        // workerManager.clean()
-    })
+           workerManager.clean()
+      })
+    */
 
 
     it('should fail if topic is not provided ', async () => {

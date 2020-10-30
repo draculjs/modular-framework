@@ -10,7 +10,7 @@ class WorkerManager {
         this.daemon = null
     }
 
-    clean(){
+    clean() {
         this.subscriptions = []
         this.workers = []
     }
@@ -24,29 +24,33 @@ class WorkerManager {
 
         return new Promise((resolve, reject) => {
 
-            if (!topic)
+            if (!topic) {
                 reject(new Error('topic missing.'))
-            else if (typeof topic !== 'string')
+                return;
+            } else if (typeof topic !== 'string') {
                 reject(new Error('topic is not a String.'))
+            }
 
-            if (!handlerPromise)
+            if (!handlerPromise) {
                 reject(new Error('handlerPromise missing.'))
-            else if (!isFunction(handlerPromise))
+                return;
+
+            } else if (!isFunction(handlerPromise)) {
                 reject(new Error('handlerPromise is not a function.'))
+                return;
+            }
 
             let subscription = {
                 topic: topic,
-                handler: handlerPromise
+                handler: handlerPromise,
+                worker: new MongooseQueue(topic)
             }
 
-            console.log(subscription)
-            this.subscriptions.push(subscription)
 
-            let worker = this.addWorker(topic)
+            this.subscriptions.push(subscription)
 
             resolve({
                 status: 'subscribed',
-                worker: worker,
                 subscription: subscription
             })
 
@@ -54,36 +58,26 @@ class WorkerManager {
 
     }
 
-    addWorker(topic) {
-        let workerInstance = new MongooseQueue(topic)
-        let worker = {
-            topic: topic,
-            workerInstance: workerInstance
-        }
-        this.workers.push(worker)
-        return worker
-    }
-
     processJobByTopic(topic) {
-        let worker = this.workers.find(worker => worker.topic === topic)
-        return this.processJobByWorker(worker)
+        let subscription = this.subscriptions.find(worker => worker.topic === topic)
+        return this.processJob(subscription)
     }
 
-    processJobByWorker(worker) {
+    processJob(subscription) {
+
         return new Promise((resolve, reject) => {
 
-            worker.workerInstance.getByTopic(worker.topic)
+            //TODO: Improve validation
+            if (!subscription) {
+                reject(new Error("Subscription missing"))
+            }
+
+
+            subscription.worker.getByTopic(subscription.topic)
                 .then(job => {
 
                     //Si obtuve un Job de la Queue
                     if (job) {
-                        let subscription = this.subscriptions.find(sub => sub.topic === job.topic)
-
-                        if (!subscription) {
-                            reject(new Error("Subscription not found"))
-                        }
-
-                        console.log(subscription)
 
                         //El handler procesa el job
                         subscription.handler(job)
@@ -91,7 +85,7 @@ class WorkerManager {
                                 if (result) {
                                     console.log("the job " + job.id + " with topic " + job.topic + " was completed successfully")
                                     //Notifico a la queue que el job se completo con exito
-                                    worker.workerInstance.ack(job.id)
+                                    subscription.worker.ack(job.id)
                                         .then(rjob => {
                                             console.log("the job " + rjob.id + " with topic " + rjob.topic + " done:" + rjob.done.toString())
                                             resolve("the job " + rjob.id + " with topic " + rjob.topic + " done:" + rjob.done.toString())
@@ -121,8 +115,8 @@ class WorkerManager {
     }
 
     processJobs() {
-        this.workers.forEach(worker => {
-            this.processJobByWorker(worker)
+        this.subscriptions.forEach(subscription => {
+            this.processJob(subscription.topic)
         })
     }
 
