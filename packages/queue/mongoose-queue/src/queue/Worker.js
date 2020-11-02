@@ -3,6 +3,7 @@
  */
 const isFunction = require('../utils/isFunction')
 const Consumer = require('./Consumer')
+const EventEmitter = require('events');
 
 /**
  * Implements a Worker.
@@ -42,6 +43,22 @@ class Worker {
         this.working = false
         this.running = false
         this.worksDone = 0
+        this.events = new EventEmitter();
+    }
+
+    on(event, handler) {
+
+        if (!event)
+            throw new Error('event missing.')
+        else if (typeof event !== 'string')
+            throw new Error('event is not a String.')
+
+        if (!handler)
+            throw new Error('handler missing.')
+        else if (!isFunction(handler))
+            throw new Error('handler is not a function.')
+
+        this.events.on(event, handler)
     }
 
     /**
@@ -116,9 +133,9 @@ class Worker {
     work() {
         return new Promise((resolve, reject) => {
             this.working = true
-
+            this.events.emit('workStart')
             this.consumer.get(this.workerId).then(async (job) => {
-
+                this.events.emit('workGet', job)
                 if (!job) {
                     resolve(null)
                     return
@@ -131,6 +148,7 @@ class Worker {
                     //ACK
                     this.consumer.ack(job.id)
                         .then(resp => {
+                            this.events.emit('workAck', job)
                             this.worksDone++
                             resolve(job.id.toString())
                         })
@@ -139,6 +157,7 @@ class Worker {
 
                 } catch (e) {
                     //ERROR
+                    this.events.emit('workError', job, e)
                     this.consumer.error(job.id, e.message)
                         .finally(() => {
                             this.working = false

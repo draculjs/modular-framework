@@ -183,3 +183,40 @@ worker.run(10000)
 //...
 worker.stop()
 ```
+
+
+###Metodo: _on_
+El worker permite suscribirse a un EventEmitter con los siguientes eventos
+
+
+**Eventos**:  
+- **workStart**: El worker inicia un trabajo
+- **workGet**: El worker obtiene un trabajo de la cola
+- **workAck**: El worker da un trabajo por terminado
+- **workError**: El worker registra un error en un trabajo
+    
+**Ejemplo**: 
+```js
+const {Consumer,Worker} = require('@dracul/mongoose-queue')
+let consumer = new Consumer('test')
+const handler = (job)=>{console.log(job.id)}
+let worker = new Worker(consumer,'worker1',handler)
+
+worker.on('workStart',()=>{
+console.log("El worker inicia un trabajo")
+})
+
+worker.on('workGet',(job)=>{
+console.log("El worker toma un trabajo", job)
+})
+
+worker.on('workAck',(job)=>{
+console.log("El worker da un trabajo por terminado", job)
+})
+
+worker.on('workError',(job, error)=>{
+console.log("El worker registra un error en un trabajo", job,  error)
+})
+
+worker.run(10000)
+```

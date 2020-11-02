@@ -3,6 +3,7 @@ const Consumer = require('../src/queue/Consumer')
 const Producer = require('../src/queue/Producer')
 var assert = require('assert');
 const {AssertionError} = require('assert');
+var sinon = require('sinon')
 
 describe("Worker", () => {
 
@@ -146,6 +147,37 @@ describe("Worker", () => {
         //3. Process the Job
         let job = await worker.work()
         assert.notEqual(job, null)
+
+    })
+
+    it('should emit events', (done) => {
+
+        //1. Add some jobs to queue
+        let producer = new Producer('test')
+        producer.add({name: 'some name'})
+
+        //2. Create Consumer
+        const handler = (job) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("Handler Job:", job)
+                    resolve(true)
+                }, 50)
+            })
+        }
+
+        let consumer = new Consumer('test')
+        let worker = new Worker(consumer, '123', handler)
+
+        worker.on('workStart',()=> {
+            console.log('workStart')
+            assert(true)
+            done()
+            }
+        )
+
+        //3. Process the Job
+        worker.work()
 
     })
 
