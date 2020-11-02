@@ -1,29 +1,26 @@
 /**
  * Dependencies
  */
-var os = require('os');
 const _ = require('underscore');
-const {addJob, getJob, ackJob, errorJob, cleanQueue, resetQueue} = require('./services/QueueService')
+const {addJob, getJob, ackJob, errorJob, cleanQueue, resetQueue} = require('../services/QueueService')
+const {fetchQueueStats} = require('../services/QueueStatsService')
 
 /**
  * Implements a queue based on mongoose.
  *
- * @class MongooseQueue
+ * @class Queue
  */
-class MongooseQueue {
+class Queue {
     /**
-     * Creates an instance of MongooseQueue.
-     * @param {string} [workerId='']
+     * Creates an instance of Queue.
      * @param {Object} [options={}]
      */
-    constructor(workerId = '', options = {}) {
-
-        this.workerHostname = os.hostname();
-        this.workerId = workerId;
+    constructor(options = {}) {
 
         this.options = _.defaults(options, {
             blockDuration: 600000, //1 Hour
-            maxRetries: 5
+            maxRetries: 5,
+            delayDuration: 0
         });
 
     }
@@ -33,13 +30,14 @@ class MongooseQueue {
      *
      * @param {string} topic
      * @param {Object} payload    - The payload to attach to this job. This needs to be a plain object.
+     * @param {number} delay      - The delay duration of the task
      * @return {Promise}
      */
-    add(topic, payload) {
-
+    add(topic, payload, delay) {
+        let delayTask = delay ? delay : this.options.delayDuration
         return new Promise((resolve, reject) => {
 
-            addJob(topic, payload)
+            addJob(topic, payload, delayTask)
                 .then(job => {
                     resolve(job._id.toString());
                 })
@@ -55,13 +53,12 @@ class MongooseQueue {
      * @param {string} topic
      * @return {Promise}
      */
-    get(topic) {
+    get(topic, workerId) {
         return new Promise((resolve, reject) => {
 
             getJob(
                 topic,
-                this.workerId,
-                this.workerHostname,
+                workerId,
                 this.options.maxRetries,
                 this.options.blockDuration
             )
@@ -130,7 +127,6 @@ class MongooseQueue {
         })
 
 
-
     }
 
     /**
@@ -148,6 +144,17 @@ class MongooseQueue {
 
         })
     }
+
+    stats(){
+        return new Promise((resolve, reject) => {
+            fetchQueueStats()
+                .then(result => {
+                    resolve(result)
+                })
+                .catch(err => reject(err))
+
+        })
+    }
 }
 
-module.exports = MongooseQueue;
+module.exports = Queue;

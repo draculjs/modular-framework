@@ -6,10 +6,8 @@ const fetchQueueStats = function () {
         QueueStatsModel.find({}).exec((err, res) => {
 
             if (err) {
-                winston.error("QueueStatsService.fetchQueueStats ", err)
                 reject(err)
             }
-            winston.debug("QueueStatsService.fetchQueueStats successful")
             resolve(res)
 
         });
@@ -51,7 +49,7 @@ const incrementGottenStat = function (topic) {
             {topic: topic},
             {
                 $inc: {
-                    getted: 1
+                    gotten: 1
                 }
             },
             {

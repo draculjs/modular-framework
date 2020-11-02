@@ -1,8 +1,10 @@
-import MongooseQueue from './mongoose-queue'
 import QueueModel from './models/QueueModel'
 import QueueStatsModel from './models/QueueStatsModel'
-import producerManager from './producer-manager'
-import workerManager from './worker-manager'
+import Queue from './queue/Queue'
+import Producer from './queue/Producer'
+import Consumer from './queue/Consumer'
+import Worker from './queue/Worker'
+import WorkerManager from './queue/WorkerManager'
 
 import {
     fetchQueues,
@@ -38,9 +40,13 @@ export {
     incrementGottenStat,
     incrementFailedStat,
     incrementDoneStat,
-    workerManager,
-    producerManager,
+    //Classes
+    Queue,
+    Producer,
+    Consumer,
+    Worker,
+    WorkerManager,
+    //Models
     QueueStatsModel,
     QueueModel,
-    MongooseQueue
 }

@@ -8,11 +8,6 @@ const QueueSchema = new Schema({
         default: Date.now(),
         required: false
     },
-    // hostname of the worker currently blocking/processing the job
-    workerHostname: {
-        type: String,
-        required: false
-    },
     // Id of the worker currently blocking/processing the job
     workerId: {
         type: String,
