@@ -6,7 +6,7 @@ const {
 
 const QueueModel = require('../models/QueueModel');
 
-const isPlainObject = require('../validations/isPlainObject');
+const isPlainObject = require('../utils/isPlainObject');
 
 const {
   incrementDoneStat,
@@ -29,13 +29,15 @@ const fetchQueues = function () {
   });
 };
 
-const addJob = function (topic, payload) {
+const addJob = function (topic, payload, delay) {
   if (!topic) return Promise.reject(new Error('Topic missing.'));else if (!topic instanceof String) return Promise.reject(new Error('Topic is not a String.'));
   if (!payload) return Promise.reject(new Error('Payload missing.'));else if (!isPlainObject(payload)) return Promise.reject(new Error('Payload is not a plain object.'));
+  if (delay === null || delay === undefined) return Promise.reject(new Error('delay missing.'));else if (!delay instanceof Number) return Promise.reject(new Error('delay is not a number.'));
   return new Promise((resolve, reject) => {
     new QueueModel({
       topic: topic,
-      payload: payload
+      payload: payload,
+      blockedUntil: new Date(Date.now() + delay)
     }).save(function (err, job) {
       if (err) {
         reject(err);
@@ -48,8 +50,9 @@ const addJob = function (topic, payload) {
   });
 };
 
-const getJob = function (topic, workerId, workerHostname, maxRetries, blockDuration) {
+const getJob = function (topic, workerId, maxRetries, blockDuration) {
   if (!topic) return Promise.reject(new Error('Topic missing.'));else if (!topic instanceof String) return Promise.reject(new Error('Topic is not a String.'));
+  if (!workerId) return Promise.reject(new Error('workerId missing.'));else if (!workerId instanceof String) return Promise.reject(new Error('workerId is not a String.'));
   return new Promise((resolve, reject) => {
     QueueModel.findOneAndUpdate({
       topic: topic,
@@ -63,8 +66,7 @@ const getJob = function (topic, workerId, workerHostname, maxRetries, blockDurat
     }, {
       $set: {
         blockedUntil: new Date(Date.now() + blockDuration),
-        workerId: workerId,
-        workerHostname: workerHostname
+        workerId: workerId
       },
       $inc: {
         retries: 1
@@ -113,7 +115,7 @@ const ackJob = function (jobId) {
   });
 };
 
-const errorJob = function (jobId, errorMessage, done = true) {
+const errorJob = function (jobId, errorMessage, done = false) {
   if (!jobId) return Promise.reject(new Error('jobId missing.'));else if (!jobId instanceof String) return Promise.reject(new Error('jobId is not a String.'));
   if (!errorMessage) return Promise.reject(new Error('errorMessage missing.'));else if (!errorMessage instanceof String) return Promise.reject(new Error('errorMessage is not a String.'));
   return new Promise((resolve, reject) => {

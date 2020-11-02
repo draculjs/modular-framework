@@ -3,12 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "MongooseQueue", {
-  enumerable: true,
-  get: function () {
-    return _mongooseQueue.default;
-  }
-});
 Object.defineProperty(exports, "QueueModel", {
   enumerable: true,
   get: function () {
@@ -21,16 +15,34 @@ Object.defineProperty(exports, "QueueStatsModel", {
     return _QueueStatsModel.default;
   }
 });
-Object.defineProperty(exports, "producerManager", {
+Object.defineProperty(exports, "Queue", {
   enumerable: true,
   get: function () {
-    return _producerManager.default;
+    return _Queue.default;
   }
 });
-Object.defineProperty(exports, "workerManager", {
+Object.defineProperty(exports, "Producer", {
   enumerable: true,
   get: function () {
-    return _workerManager.default;
+    return _Producer.default;
+  }
+});
+Object.defineProperty(exports, "Consumer", {
+  enumerable: true,
+  get: function () {
+    return _Consumer.default;
+  }
+});
+Object.defineProperty(exports, "Worker", {
+  enumerable: true,
+  get: function () {
+    return _Worker.default;
+  }
+});
+Object.defineProperty(exports, "WorkerManager", {
+  enumerable: true,
+  get: function () {
+    return _WorkerManager.default;
   }
 });
 Object.defineProperty(exports, "fetchQueues", {
@@ -106,15 +118,19 @@ Object.defineProperty(exports, "incrementDoneStat", {
   }
 });
 
-var _mongooseQueue = _interopRequireDefault(require("./mongoose-queue"));
-
 var _QueueModel = _interopRequireDefault(require("./models/QueueModel"));
 
 var _QueueStatsModel = _interopRequireDefault(require("./models/QueueStatsModel"));
 
-var _producerManager = _interopRequireDefault(require("./producer-manager"));
+var _Queue = _interopRequireDefault(require("./queue/Queue"));
 
-var _workerManager = _interopRequireDefault(require("./worker-manager"));
+var _Producer = _interopRequireDefault(require("./queue/Producer"));
+
+var _Consumer = _interopRequireDefault(require("./queue/Consumer"));
+
+var _Worker = _interopRequireDefault(require("./queue/Worker"));
+
+var _WorkerManager = _interopRequireDefault(require("./queue/WorkerManager"));
 
 var _QueueService = require("./services/QueueService");
 
