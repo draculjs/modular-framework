@@ -135,11 +135,13 @@ class Worker {
             this.working = true
             this.events.emit('workStart')
             this.consumer.get(this.workerId).then(async (job) => {
-                this.events.emit('workGet', job)
+
                 if (!job) {
                     resolve(null)
                     return
                 }
+
+                this.events.emit('workGet', job)
 
                 try {
                     //HANDLER WORK
