@@ -1,0 +1,13 @@
+mutation createNotification($title: String, $content: String, $type: String, $icon: String){
+    createNotification(title: $title, content: $content, type: $type, icon: $icon){
+        Notification{
+            id
+            title
+            content
+            read
+            creationDate
+            type
+            icon
+        }
+    }
+}

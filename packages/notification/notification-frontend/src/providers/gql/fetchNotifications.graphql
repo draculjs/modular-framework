@@ -1,0 +1,12 @@
+query fetchNotifications($limit: Int, $isRead: Boolean ,$type: String){
+    fetchNotifications(limit: $limit, isRead: $isRead, type: $type){
+            id
+            title
+            content
+            read
+            creationDate
+            type
+            icon
+            readDate
+    }
+}

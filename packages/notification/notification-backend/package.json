@@ -1,0 +1,48 @@
+{
+  "name": "@dracul/notification-backend",
+  "version": "1.0.0",
+  "description": "Modulo de notificaciones de usuario",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
+    "test": "./node_modules/.bin/mocha --require @babel/register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draculjs/modular-framework.git"
+  },
+  "keywords": [
+    "notification",
+    "websocket",
+    "subscriptions",
+    "pubsub"
+  ],
+  "dependencies": {
+    "@babel/runtime": "^7.12.5",
+    "@dracul/logger-backend": "^1.0.25",
+    "apollo-server-express": "^2.15.0",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "graphql-tools": "^4.0.5",
+    "moment": "^2.27.0",
+    "mongoose": "^5.9.19",
+    "mongoose-paginate-v2": "^1.3.6",
+    "subscriptions-transport-ws": "^0.9.18",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.8.7",
+    "mocha": "^8.2.0",
+    "mongodb-memory-server": "^6.5.2"
+  },
+  "author": "Dracul team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/draculjs/modular-framework/issues"
+  },
+  "homepage": "https://github.com/draculjs/modular-framework#readme"
+}
