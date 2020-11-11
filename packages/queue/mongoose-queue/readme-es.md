@@ -70,7 +70,7 @@ Obtener un trabajo de la cola
 **Argumentos**:  
 - {string} **workerId**: identificador del worker que toma la tarea 
 
-**Retorna**: {Object} Objecto con todos los datos del job
+**Retorna**: {Object|null} Objecto con todos los datos del job o null si no hay tareas pendientes en la cola
 
 **Ejemplo**: 
 
@@ -131,7 +131,7 @@ Inicializa una instancia de Worker
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.id)}
+const handler = (payload)=>{console.log(payload)}
 let worker = new Worker(consumer,'worker1',handler)
 ```
 
@@ -145,7 +145,7 @@ Sin argumentos
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.id)}
+const handler = (payload)=>{console.log(payload)}
 let worker = new Worker(consumer,'worker1',handler)
 worker.work()
 ```
@@ -161,7 +161,7 @@ Ejecuta el worker como daemon. El worker ejecutara el metodo "work" continuament
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.id)}
+const handler = (payload)=>{console.log(payload)}
 let worker = new Worker(consumer,'worker1',handler)
 worker.run(10000)
 ```
@@ -177,7 +177,7 @@ sin argumentos
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.id)}
+const handler = (payload)=>{console.log(payload)}
 let worker = new Worker(consumer,'worker1',handler)
 worker.run(10000)
 //...
@@ -199,7 +199,7 @@ El worker permite suscribirse a un EventEmitter con los siguientes eventos
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.id)}
+const handler = (payload)=>{console.log(payload)}
 let worker = new Worker(consumer,'worker1',handler)
 
 worker.on('workStart',()=>{
