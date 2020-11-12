@@ -1,55 +1,70 @@
-import {apolloClientWs, apolloClient} from "../../../apollo";
 
 class notificationProvider {
 
+  constructor() {
+    this.gqlcWs = null;
+    this.gqlc = null;
+  }
+
+  setGqlc(gqlc) {
+    this.gqlc = gqlc;
+  }
+
+  setGqlcWs(gqlc) {
+    this.gqlcWs = gqlc;
+  }
+
   markAsReadOrNotRead(id, isRead) {
-    return apolloClient.mutate({
+    return this.gqlc.mutate({
       mutation: require("./gql/markAsReadOrNotRead.graphql"),
       variables: {
         id,
-        isRead
+        isRead,
       },
     });
   }
 
   markAllReadOrNotRead(isRead) {
-    return apolloClient.mutate({
+    return this.gqlc.mutate({
       mutation: require("./gql/markAllReadOrNotRead.graphql"),
-      variables:{
-        isRead
-      }
+      variables: {
+        isRead,
+      },
     });
   }
 
   fetchNotifications(limit, isRead, type) {
-    return apolloClient.query({
+    return this.gqlc.query({
       query: require("./gql/fetchNotifications.graphql"),
       variables: { limit, isRead, type },
-      fetchPolicy: "network-only"
+      fetchPolicy: "network-only",
     });
   }
 
-  notificationsPaginateFilter(limit, pageNumber, isRead, type){
-    return apolloClient.query({
+  notificationsPaginateFilter(limit, pageNumber, isRead, type) {
+    return this.gqlc.query({
       query: require("./gql/notificationsPaginate.graphql"),
-      variables:{limit, pageNumber, isRead, type}
-    })
+      variables: { limit, pageNumber, isRead, type },
+    });
   }
 
-  createNotification(title,content,type,icon){
-    return apolloClient.mutate({
+  createNotification(title, content, type, icon) {
+    return this.gqlc.mutate({
       mutation: require("./gql/createNotification.graphql"),
-      variables:{
-        title, content,type,icon
-      }
-    })
+      variables: {
+        title,
+        content,
+        type,
+        icon,
+      },
+    });
   }
 
-  subscriptionNotification(user){
-    return apolloClientWs.subscribe({
+  subscriptionNotification(user) {
+    return this.gqlcWs.subscribe({
       query: require("./gql/subscriptionNotification.graphql"),
-      variables:{user}
-    })
+      variables: { user },
+    });
   }
 }
 
