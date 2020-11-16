@@ -1,7 +1,7 @@
 import notificationPage from "./index";
 
 export default {
-  title: "Pages/notificationPage",
+  title: "Pages/NotificationPage",
   component: notificationPage,
 };
 

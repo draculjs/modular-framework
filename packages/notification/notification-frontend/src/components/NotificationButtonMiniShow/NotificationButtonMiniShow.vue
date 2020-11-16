@@ -102,7 +102,7 @@
 
 <script>
     import moment from "moment";
-    import notificationProvider from "../providers/notificationProvider";
+    import notificationProvider from "../../providers/notificationProvider";
 
     export default {
         props: {

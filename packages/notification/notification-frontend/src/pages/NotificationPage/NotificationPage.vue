@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import notificationShow from "./notificationShow";
+    import notificationShow from "./NotificationShow";
 
     export default {
         name: "notifications",

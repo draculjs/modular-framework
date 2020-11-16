@@ -20,7 +20,7 @@
 
 <script>
 import notificationMiniShow from "../NotificationButtonMiniShow";
-import notificationProvider from "../providers/notificationProvider";
+import notificationProvider from "../../providers/notificationProvider";
 import {mapGetters} from 'vuex'
 
 export default {
@@ -55,7 +55,6 @@ export default {
       })
     },
     subscribeNotification(){
-
       notificationProvider.subscriptionNotification(this.me.id).subscribe(res => {
         console.log(res.data)
         this.items.push(res.data.notification)
@@ -76,11 +75,3 @@ export default {
    }
 };
 </script>
-
-
-computed: {
-            ...mapGetters(['isAuth', 'hasRole']),
-            mustShow() {
-                return this.hasRole('admin')
-            }
-        }

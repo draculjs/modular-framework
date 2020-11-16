@@ -1,4 +1,4 @@
-import notificationPage from '../pages/notificationPage'
+import notificationPage from '../pages/NotificationPage'
 
 export const notificationRoutes = [
     {

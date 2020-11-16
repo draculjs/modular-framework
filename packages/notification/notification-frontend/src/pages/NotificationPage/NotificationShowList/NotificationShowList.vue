@@ -48,7 +48,7 @@
 <script>
 import notificationProvider from "../../../providers/notificationProvider";
 import Snackbar from "@dracul/common-frontend/src/components/Snackbar/Snackbar";
-import notificationShowListContent from "../notificationshowListContent/notificationShowListContent";
+import notificationShowListContent from "../NotificationshowListContent/NotificationShowListContent";
 import moment from "moment-timezone";
 import {mapGetters} from "vuex";
 

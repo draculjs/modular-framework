@@ -14,16 +14,13 @@
 </template>
 
 <script>
-import notificationShowList from "../notificationShowList";
-
+import notificationShowList from "../NotificationShowList";
 
 export default {
   name: "notificationShow",
   components: {
     notificationShowList
-
   }
 };
 </script>
 
-<style lang="stylus"></style>
