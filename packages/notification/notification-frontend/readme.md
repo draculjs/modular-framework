@@ -1,6 +1,6 @@
 # Dracul Notification module 
 
-## Vue Component
+## Notification button (Vue Component) 
 ```js
 
 <template>

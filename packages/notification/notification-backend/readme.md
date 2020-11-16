@@ -1,7 +1,7 @@
 # Dracul notification module
 
 
-## Create notification
+## Create notification service
 
 ```js
 import {createNotificationService} from "@dracul/notification-backend"
