@@ -51,5 +51,6 @@
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-vuetify": "^2.0.6",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b"
 }

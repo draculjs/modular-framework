@@ -45,5 +45,6 @@
     "jest": "^25.4.0",
     "mongodb-memory-server": "^6.5.2",
     "nodemon": "^1.19.4"
-  }
+  },
+  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b"
 }

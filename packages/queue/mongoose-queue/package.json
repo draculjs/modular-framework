@@ -26,5 +26,6 @@
     "mocha": "^8.2.0",
     "mongodb-memory-server": "^6.9.2",
     "sinon": "^9.2.1"
-  }
+  },
+  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b"
 }
