@@ -2,7 +2,7 @@
   "name": "@dracul/notification-backend",
   "version": "1.0.0",
   "description": "Modulo de notificaciones de usuario",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
     "test": "./node_modules/.bin/mocha --require @babel/register"

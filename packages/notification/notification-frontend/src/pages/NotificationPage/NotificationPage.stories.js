@@ -1,18 +1,19 @@
-import notificationPage from "./index";
+import NotificationPage from "./index";
+import i18n from "../../i18n";
 
 export default {
   title: "Pages/NotificationPage",
-  component: notificationPage,
+  component: NotificationPage,
 };
 
 const Template = (args, { argTypes }) => ({
-
     props: Object.keys(argTypes),
-    components: { notificationPage },
+    components: { NotificationPage },
     template:
-    '<notification-page/>'
+    '<notification-page/>',
+    i18n
 
 });
 
 export const Main = Template.bind({});
-Main.args = {};
+

@@ -6,9 +6,6 @@ import {types, resolvers} from './graphql'
 const WS_PORT = process.env.NOTIFICATION_WS_PORT ? process.env.NOTIFICATION_WS_PORT : 5555;
 const WS_URL = process.env.NOTIFICATION_WS_URL ? process.env.NOTIFICATION_WS_URL : 'http://localhost';
 
-
-
-
 const apolloServerSub = new ApolloServer({
     typeDefs: types,
     resolvers,

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center" v-if="mustShow">
+  <div class="text-center">
     <v-menu offset-y left open-on-hover :close-on-content-click="false">
       <template v-slot:activator="{ on, attrs }" >
         <v-badge
@@ -8,7 +8,7 @@
           color="secondary"
           overlap
         >
-          <v-icon  v-bind="attrs" v-on="on" color="white">
+          <v-icon  v-bind="attrs" v-on="on" :color="colorIcon">
             notifications
           </v-icon>
         </v-badge>
@@ -21,7 +21,6 @@
 <script>
 import notificationMiniShow from "../NotificationButtonMiniShow";
 import notificationProvider from "../../providers/notificationProvider";
-import {mapGetters} from 'vuex'
 
 export default {
   components: { notificationMiniShow },
@@ -29,6 +28,10 @@ export default {
      this.getNotifications()
     // this.pollData()
     this.subscribeNotification();
+  },
+  props:{
+    userId: String,
+    colorIcon: {type: String, default: 'primary'}
   },
   data(){
     return{
@@ -55,17 +58,13 @@ export default {
       })
     },
     subscribeNotification(){
-      notificationProvider.subscriptionNotification(this.me.id).subscribe(res => {
-        console.log(res.data)
+      notificationProvider.subscriptionNotification(this.userId).subscribe(res => {
+        console.log('Subscribe: ',res.data)
         this.items.push(res.data.notification)
       })
     }
   },
   computed: {
-    ...mapGetters(['isAuth', 'hasRole', 'me']),
-            mustShow() {
-                return this.hasRole('admin') || this.hasRole('operator')
-            },
     totalNotifications(){
       return this.getNotificationsWithoutRead.length
     },

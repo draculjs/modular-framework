@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import Vuetify, {
     VSimpleTable,
     VApp,
@@ -15,7 +16,21 @@ import Vuetify, {
     VDataFooter,
     VDivider,
     VCounter,
-    VDataTable
+    VDataTable,
+    VMenu,
+    VBadge,
+    VIcon,
+    VTooltip,
+    VBtn,
+    VCardActions,
+    VListItem,
+    VSpacer,
+    VList,
+    VCardText,
+    VCard,
+    VListItemContent,
+    VListItemTitle,
+    VListItemAction
 } from 'vuetify/lib';
 
 import i18n from '../i18n'
@@ -37,7 +52,21 @@ Vue.use(Vuetify, {
         VDataFooter,
         VDivider,
         VCounter,
-        VDataTable
+        VDataTable,
+        VMenu,
+        VBadge,
+        VIcon,
+        VTooltip,
+        VBtn,
+        VCardActions,
+        VListItem,
+        VSpacer,
+        VList,
+        VCardText,
+        VCard,
+        VListItemContent,
+        VListItemTitle,
+        VListItemAction
     }
 });
 

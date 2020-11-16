@@ -1,4 +1,4 @@
-import notificationShow from "./NotificationShow";
+import NotificationShow from "./NotificationShow";
 
-export {notificationShow}
-export default notificationShow
+export {NotificationShow}
+export default NotificationShow

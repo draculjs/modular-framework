@@ -1,5 +1,5 @@
 import notificationPage from "./pages/NotificationPage"
-import notificationButton from "./components/notificationButton"
+import notificationButton from "./components/NotificationButton"
 import i18nMessages from "./i18n/messages"
 import routes from "./routes"
 import notificationProvider from "./providers/notificationProvider"

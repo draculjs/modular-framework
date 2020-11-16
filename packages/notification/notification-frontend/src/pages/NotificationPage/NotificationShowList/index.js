@@ -1,4 +1,4 @@
-import notificationShowList from "./NotificationShowList";
+import NotificationShowList from "./NotificationShowList";
 
-export {notificationShowList}
-export default notificationShowList
+export {NotificationShowList}
+export default NotificationShowList

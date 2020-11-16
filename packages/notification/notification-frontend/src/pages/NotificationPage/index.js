@@ -1,4 +1,4 @@
-import notificationPage from "./NotificationPage";
+import NotificationPage from "./NotificationPage";
 
-export {notificationPage}
-export default notificationPage
+export {NotificationPage}
+export default NotificationPage

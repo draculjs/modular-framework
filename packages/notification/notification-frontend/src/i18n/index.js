@@ -5,6 +5,6 @@ import messages from './messages'
 Vue.use(VueI18n)
 
 export default new VueI18n({
-    locale: 'en',
+    locale: 'es',
     messages: messages,
 })

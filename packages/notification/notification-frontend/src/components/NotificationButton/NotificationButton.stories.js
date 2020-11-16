@@ -1,7 +1,7 @@
 import NotificationButton from './NotificationButton.vue';
 
 export default {
-    title: 'Notifications/NotificationButton',
+    title: 'Components/NotificationButton',
     component: NotificationButton
 }
 
@@ -10,4 +10,4 @@ const Template = (args, {}) => ({
     template: '<notification-button></notification-button>'
 })
 
-export const WithoutNotifications = Template.bind({})
+export const WithNotifications = Template.bind({})

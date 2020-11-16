@@ -9,15 +9,11 @@
 </template>
 
 <script>
-    import notificationShow from "./NotificationShow";
+    import NotificationShow from "./NotificationShow";
 
     export default {
-        name: "notifications",
-        components: {notificationShow}
+        components: {NotificationShow}
     }
 
 </script>
 
-<style scoped>
-
-</style>

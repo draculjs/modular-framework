@@ -1,6 +1,6 @@
 import notificationPage from '../pages/NotificationPage'
 
-export const notificationRoutes = [
+const notificationRoutes = [
     {
         name: "notifications",
         path: '/notifications',
@@ -11,3 +11,5 @@ export const notificationRoutes = [
         }
     }
 ]
+
+export default notificationRoutes

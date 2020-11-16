@@ -101,7 +101,7 @@ export default {
           this.loading = false;
         })
         .catch((err) => {
-          this.loadin = false;
+          this.loading = false;
           this.snackbarColor = "error";
           this.snackbarMessage = this.$t(
             "notification.errorLoadingNotifications"

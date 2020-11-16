@@ -69,12 +69,12 @@ export default {
   methods: {
     getDate(date) {
       let num = parseInt(date);
-      let fecha = moment(num).format("llll");
+      let dateParse = moment(num).format("llll");
 
-      if (fecha == this.$t("notification.invalidDate")) {
+      if (dateParse == this.$t("notification.invalidDate")) {
         return moment().format("llll");
       } else {
-        return fecha;
+        return dateParse;
       }
     },
     changeStateRead(item) {
