@@ -1,5 +1,4 @@
 import QueueStatsPage from './QueueStatsPage';
-
 export default {
   title: 'Pages/QueueStatsPage',
   component: QueueStatsPage,

@@ -1,7 +1,41 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+import Vuetify, {
+    VSimpleTable,
+    VApp,
+    VMain,
+    VProgressLinear,
+    VRow,
+    VCol,
+    VImg,
+    VItemGroup,
+    VToolbar,
+    VWindow,
+    VTreeview,
+    VColorPickerPreview,
+    VColorPickerEdit,
+    VDataFooter
+} from 'vuetify/lib';
+
 import i18n from '../i18n'
-Vue.use(Vuetify);
+
+Vue.use(Vuetify, {
+    components: {
+        VSimpleTable,
+        VApp,
+        VMain,
+        VProgressLinear,
+        VRow,
+        VCol,
+        VImg,
+        VItemGroup,
+        VToolbar,
+        VWindow,
+        VTreeview,
+        VColorPickerPreview,
+        VColorPickerEdit,
+        VDataFooter
+    }
+});
 
 let colors = {
     primary: '#3F51B5',
@@ -15,7 +49,7 @@ export default new Vuetify({
     lang: {
         t: (key, ...params) => i18n.t(key, params),
     },
-    icons:{
+    icons: {
         iconfont: 'md'
     },
     theme: {

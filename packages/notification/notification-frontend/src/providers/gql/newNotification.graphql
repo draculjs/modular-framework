@@ -1,0 +1,11 @@
+subscription newNotification {
+  newNotification {
+    id
+    title
+    content
+    read
+    creationDate
+    type
+    icon
+  }
+}

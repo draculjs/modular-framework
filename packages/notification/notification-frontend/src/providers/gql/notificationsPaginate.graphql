@@ -1,0 +1,26 @@
+query notificationsPaginateFilter(
+  $limit: Int
+  $pageNumber: Int
+  $isRead: Boolean
+  $type: String
+) {
+  notificationsPaginateFilter(
+    limit: $limit
+    pageNumber: $pageNumber
+    isRead: $isRead
+    type: $type
+  ) {
+    totalItems
+    page
+    items {
+      id
+      title
+      content
+      read
+      creationDate
+      type
+      icon
+      readDate
+    }
+  }
+}

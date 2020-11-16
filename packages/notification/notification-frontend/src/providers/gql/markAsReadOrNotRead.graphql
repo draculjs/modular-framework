@@ -1,0 +1,11 @@
+mutation markAsReadOrNotRead($id: ID, $isRead: Boolean){
+    markAsReadOrNotRead(id: $id, isRead: $isRead){
+            id
+            title
+            content
+            read
+            creationDate
+            type
+            icon
+    }
+}
