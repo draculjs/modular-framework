@@ -53,7 +53,6 @@ export const createNotificationService = (
                 //Publico
                 pubsub.publish('notification', documentNotification)
 
-
                 resolve(documentNotification);
             })
             .catch((err) => {
@@ -123,8 +122,6 @@ export const fetchNotificationsService = (userId, limit = 0, isRead, type) => {
  * @param {ObjectId} userId
  * @param {Integer} limit
  * @param {Integer} pageNumber
- * @param {Integer} orderBy
- * @param {Boolean} orderDesc
  * @param {Boolean} isRead
  * @param {String} type
  * @return {Promise}
