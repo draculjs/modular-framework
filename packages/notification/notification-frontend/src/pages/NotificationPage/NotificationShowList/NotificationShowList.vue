@@ -80,7 +80,7 @@ export default {
     pollData() {
       setInterval(() => {
         this.getAndUpdateNotifications();
-      }, timePolling);
+      }, this.timePolling);
     },
     getAndUpdateNotifications() {
       if(this.activateWebSocket){
@@ -137,10 +137,12 @@ export default {
     },
   },
   computed: {
-    ...mapState({
-      activateWebSocket: state => state.notificationStore.activateWebSocket,
-      timePolling: state => state.notificationStore.notificationPollTime
-    }),
+    activateWebSocket(){
+      return process.env.VUE_APP_ACTIVATE_WEB_SOCKET
+    },
+    timePolling(){
+      return process.env.VUE_APP_TIME_POLLING
+    },
     getOrderBy() {
       return Array.isArray(this.orderBy) ? this.orderBy[0] : this.orderBy;
     },

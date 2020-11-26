@@ -22,7 +22,6 @@
 <script>
 import notificationMiniShow from "../NotificationButtonMiniShow";
 import notificationProvider from "../../providers/notificationProvider";
-import {mapState} from "vuex";
 
 export default {
   components: {notificationMiniShow},
@@ -72,10 +71,12 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      activateWebSocket: state => state.notificationStore.activateWebSocket,
-      timePolling: state => state.notificationStore.notificationPollTime
-    }),
+    activateWebSocket(){
+      return process.env.VUE_APP_ACTIVATE_WEB_SOCKET
+    },
+    timePolling(){
+      return process.env.VUE_APP_TIME_POLLING
+    },
     totalNotifications() {
       return this.getNotificationsWithoutRead.length
     },
