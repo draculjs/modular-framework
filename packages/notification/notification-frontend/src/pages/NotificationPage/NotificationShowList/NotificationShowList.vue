@@ -50,7 +50,7 @@ import notificationProvider from "../../../providers/notificationProvider";
 import Snackbar from "@dracul/common-frontend/src/components/Snackbar/Snackbar";
 import notificationShowListContent from "../NotificationshowListContent/NotificationShowListContent";
 import moment from "moment-timezone";
-import {mapGetters} from "vuex";
+import {mapState} from "vuex";
 
 export default {
   components: {
@@ -59,8 +59,6 @@ export default {
   },
   mounted() {
     this.getAndUpdateNotifications();
-    this.pullData();
-   // this.subscribeNotification()
     moment.locale(this.$t("notification.moment"));
   },
   data() {
@@ -79,58 +77,49 @@ export default {
     };
   },
   methods: {
-    pullData() {
+    pollData() {
       setInterval(() => {
         this.getAndUpdateNotifications();
-      }, 3000);
+      }, this.timePolling);
     },
     getAndUpdateNotifications() {
-      this.loading = true;
-      notificationProvider
-        .notificationsPaginateFilter(
-          this.limit,
-          this.page,
-          this.isRead,
-          this.type
-        )
-        .then((response) => {
-          let data = response.data.notificationsPaginateFilter;
-          this.items = data.items;
-          this.totalItems = data.totalItems;
-          this.page = data.page;
-          this.loading = false;
-        })
-        .catch((err) => {
-          this.loading = false;
-          this.snackbarColor = "error";
-          this.snackbarMessage = this.$t(
-            "notification.errorLoadingNotifications"
-          );
-          console.log("Error: ", err);
-        });
+      if(this.activateWebSocket){
+        this.subscribeNotification()
+      }
+      else{
+        this.getNotificationsForPolling()
+        this.pollData()
+      }
     },
     subscribeNotification(){
-      //TODO: Ajustar a esta UI la subscripcion a notificaciones por websocket
       notificationProvider.subscriptionNotification(this.me.id).subscribe(res => {
         this.items.push(res.data.notification)
       })
     },
-    getNotifications() {
+    getNotificationsForPolling() {
       this.loading = true;
       notificationProvider
-        .fetchNotifications(this.limit, this.isRead, this.type)
-        .then((res) => {
-          this.items = res.data.fetchNotifications;
-          this.loading = false;
-        })
-        .catch((err) => {
-          this.loading = false;
-          this.snackbarColor = "error";
-          this.snackbarMessage = this.$t(
-            "notification.errorLoadingNotifications"
-          );
-          console.log("Error: ", err);
-        });
+          .notificationsPaginateFilter(
+              this.limit,
+              this.page,
+              this.isRead,
+              this.type
+          )
+          .then((response) => {
+            let data = response.data.notificationsPaginateFilter;
+            this.items = data.items;
+            this.totalItems = data.totalItems;
+            this.page = data.page;
+            this.loading = false;
+          })
+          .catch((err) => {
+            this.loading = false;
+            this.snackbarColor = "error";
+            this.snackbarMessage = this.$t(
+                "notification.errorLoadingNotifications"
+            );
+            console.log("Error: ", err);
+          });
     },
      markAllRead() {
       notificationProvider
@@ -148,7 +137,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['me']),
+    activateWebSocket(){
+      return process.env.VUE_APP_ACTIVATE_WEB_SOCKET
+    },
+    timePolling(){
+      return process.env.VUE_APP_TIME_POLLING
+    },
     getOrderBy() {
       return Array.isArray(this.orderBy) ? this.orderBy[0] : this.orderBy;
     },
