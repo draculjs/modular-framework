@@ -1,8 +1,14 @@
 import {updateSession} from "../services/SessionService";
 
 const sessionMiddleware = (req, res, next) => {
-    if (req.user) updateSession(req.user)
-    next()
+    try {
+        if (req && req.user) {
+            updateSession(req.user)
+        }
+        next()
+    } catch (e) {
+        next(e)
+    }
 }
 
 export default sessionMiddleware
