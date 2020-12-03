@@ -2,7 +2,6 @@ const {
   createNotificationService,
 } = require("../src/services/NotificationService");
 const assert = require("assert");
-const { AssertionError } = require("assert");
 
 describe("createNotificationService", () => {
  
