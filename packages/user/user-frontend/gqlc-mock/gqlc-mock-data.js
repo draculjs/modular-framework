@@ -11,7 +11,11 @@ import changePasswordAdmin from "./resolves/changePasswordAdmin";
 import roles from "./resolves/roles";
 import groups from "./resolves/groups";
 import permissions from "./resolves/permissions";
+
 import avatarUpload from "./resolves/avatarUpload";
+import avatarUploadValidationMaxFileSize from "./resolves/avatarUploadValidationMaxFileSize";
+
+
 import authSuccessful from "./resolves/auth-successful";
 import authBadCredentials from "./resolves/auth-badCredentials";
 import recoveryByEmail from "./resolves/recoveryByEmail";
@@ -41,7 +45,7 @@ mockGqlClient.setRequestHandler(
     require('../src/providers/gql/avatarUpload.graphql'),
     () => {
         return new Promise((resolve) => {
-            setTimeout(() => resolve(avatarUpload), 2000)
+            setTimeout(() => resolve(avatarUploadValidationMaxFileSize), 2000)
         })
     }
 );

@@ -1,0 +1,31 @@
+{
+  "name": "@dracul/mongoose-queue",
+  "version": "1.0.47",
+  "description": "",
+  "main": "./lib/index.js",
+  "scripts": {
+    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
+    "test": "./node_modules/.bin/mocha --reporter spec --recursive",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --recursive"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dracul/logger-backend": "^1.0.25",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.9.19",
+    "underscore": "^1.11.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "cpx": "^1.5.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^8.2.0",
+    "mongodb-memory-server": "^6.9.2",
+    "sinon": "^9.2.1"
+  },
+  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b"
+}

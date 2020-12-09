@@ -1,4 +1,6 @@
 //Utils
+import {changePassword} from "../../src/services/ProfileService";
+
 const mongoHandler = require('../utils/mongo-handler');
 
 //Init DB
@@ -6,7 +8,6 @@ import {initPermissions,initAdminRole,initRootUser} from "../../src/services/Ini
 
 //Service to Test
 import {
-    changePassword,
     createUser,
     deleteUser,
     findUserByUsername,

@@ -5,9 +5,6 @@ import '../models/GroupModel'
 import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-express'
-import path from 'path'
-import fs from 'fs'
-import createDirIfNotExist from "./utils/createDirIfNotExist";
 
 export const hashPassword = function (password) {
     if (!password) {
@@ -233,109 +230,6 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
             resolve({status: false, message: "Password doesn't match"})
         })
     }
-}
-
-export const changePassword = function (id, {currentPassword, newPassword}, actionBy = null) {
-    return new Promise(async (resolve, rejects) => {
-        let user = await User.findOne({_id: id})
-        if (bcryptjs.compareSync(currentPassword, user.password)) {
-            User.findOneAndUpdate(
-                {_id: id}, {password: hashPassword(newPassword)}, {new: true},
-                (err, doc) => {
-                    if (err) {
-                        winston.error("UserService.changePassword ", err)
-                        rejects(error)
-                    } else {
-                        winston.debug('UserService.changePassword successful')
-                        createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'adminPasswordChange')
-                        resolve({status: true, message: "Password Changed"})
-                    }
-                }
-            );
-        } else {
-            winston.warn("UserService.changePassword: password doesnt match")
-            rejects(new UserInputError('auth.wrongPassword',
-                {
-                    inputErrors: {
-                        currentPassword: {properties: {message: 'auth.wrongPassword'}}
-                    }
-                }));
-        }
-    })
-}
-
-
-const storeFS = (stream, dst) => {
-    return new Promise((resolve, reject) =>
-        stream
-            .on('error', err => {
-                if (stream.truncated) {
-                    fs.unlinkSync(dst)
-                }
-                winston.error("UserService.storeFS: stream error", err)
-                reject(err)
-            })
-            .pipe(fs.createWriteStream(dst))
-            .on('error', err => {
-                winston.error("UserService.storeFS: createWriteStream error: ", err)
-                reject(err)
-            })
-            .on('finish', () => {
-                winston.debug('UserService.storeFS finish successful')
-                resolve(true)
-            })
-    );
-}
-
-
-export const avatarUpload = function (user, file) {
-
-
-    return new Promise(async (resolve, reject) => {
-        //@TODO validate image size, extension
-        const {filename, mimetype, encoding, createReadStream} = await file;
-
-        const parseFileName = path.parse(filename);
-        const finalFileName = user.username + parseFileName.ext
-        const dst = path.join("media", "avatar", finalFileName)
-
-        //Store
-        createDirIfNotExist(dst)
-        let fileResult = await storeFS(createReadStream(), dst)
-
-        if (fileResult) {
-            const rand = randomstring(3)
-            const url = process.env.APP_API_URL + "/media/avatar/" + finalFileName + "?" + rand
-
-            User.findOneAndUpdate(
-                {_id: user.id}, {avatar: finalFileName, avatarurl: url}, {useFindAndModify: false},
-                (error) => {
-                    if (error) {
-                        reject(error)
-                    } else {
-                        winston.debug('UserService.avatarUpload successful')
-                        createUserAudit(user.id, user.id, 'avatarChange')
-                        resolve({filename, mimetype, encoding, url})
-                    }
-                }
-            );
-        } else {
-            winston.error("UserService.avatarUpload: upload fail")
-            reject(new Error("Upload fail"))
-        }
-
-    })
-
-}
-
-function randomstring(length) {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
 }
 
 

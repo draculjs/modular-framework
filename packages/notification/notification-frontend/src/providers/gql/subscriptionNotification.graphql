@@ -1,0 +1,9 @@
+subscription notification($user: ID!){
+    notification(user:$user){
+        id
+        user
+        title
+        content
+        creationDate
+    }
+}

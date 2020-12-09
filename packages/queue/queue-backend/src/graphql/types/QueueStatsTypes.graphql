@@ -1,0 +1,11 @@
+type QueueStats{
+    topic: String!
+    added: Int
+    gotten: Int
+    failed: Int
+    done: Int
+}
+
+type Query {
+    queueStats: [QueueStats]
+}

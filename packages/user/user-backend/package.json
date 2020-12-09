@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.0.21",
+  "version": "1.0.49",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -10,10 +10,10 @@
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files && ./node_modules/.bin/babel emails -d lib/emails --copy-files"
   },
   "keywords": [],
-  "author": "",
+  "author": "Cristian Incarnato & Dracul Team",
   "license": "ISC",
   "dependencies": {
-    "@dracul/logger-backend": "^1.0.15",
+    "@dracul/logger-backend": "^1.0.25",
     "apollo-server-express": "^2.12.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.1.0",
@@ -27,6 +27,7 @@
     "graphql": "^14.5.8",
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.5",
+    "isobject": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "merge-graphql-schemas": "^1.7.0",
     "mongo-cursor-pagination": "^7.2.0",
@@ -44,12 +45,14 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.8.7",
     "@shelf/jest-mongodb": "^1.1.5",
     "babel-jest": "^25.4.0",
     "jest": "^25.4.0",
+    "mime-types": "^2.1.27",
     "mongodb-memory-server": "^6.5.2",
     "nodemon": "^1.19.4"
   },
-  "gitHead": "a1bc03ef4d4075be1b525b93466a96314c5204d5"
+  "gitHead": "0b585638233d846c57d4a8717e3bf91e3d4e34a3"
 }
