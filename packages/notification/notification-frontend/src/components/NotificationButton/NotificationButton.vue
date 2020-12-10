@@ -75,7 +75,7 @@ export default {
       return process.env.VUE_APP_ACTIVATE_WEB_SOCKET ? process.env.VUE_APP_ACTIVATE_WEB_SOCKET : true
     },
     timePolling(){
-      return process.env.VUE_APP_TIME_POLLING ? process.env.VUE_APP_TIME_POLLING : 30000
+      return process.env.VUE_APP_TIME_POLLING ? parseInt(process.env.VUE_APP_TIME_POLLING) : 30000
     },
     totalNotifications() {
       return this.getNotificationsWithoutRead.length
