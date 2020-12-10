@@ -127,7 +127,7 @@ export default {
   },
   computed: {
     timePolling() {
-      return parseInt(process.env.VUE_APP_TIME_POLLING)
+      return process.env.VUE_APP_TIME_POLLING ? parseInt(process.env.VUE_APP_TIME_POLLING) : 30000
     },
     getOrderBy() {
       return Array.isArray(this.orderBy) ? this.orderBy[0] : this.orderBy;
