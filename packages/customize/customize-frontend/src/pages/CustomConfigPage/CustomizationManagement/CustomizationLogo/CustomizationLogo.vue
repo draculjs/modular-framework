@@ -1,5 +1,10 @@
 <template>
     <v-card outlined>
+
+      <v-alert :value="!!errorMessage" color="error" outlined>
+        {{errorMessage}}
+      </v-alert>
+
         <v-card-title>
             <div v-t="'customization.logo.title'"></div>
         </v-card-title>
@@ -83,6 +88,7 @@
     } from "../../../../constants";
     import CustomizationProvider from "../../../../providers/CustomizationProvider";
     import {ClientError} from "@dracul/user-frontend";
+    import ProfileProvider from "../../../../../../../user/user-frontend/src/providers/ProfileProvider";
 
     export default {
         name: 'customization-logo',
@@ -92,6 +98,9 @@
         },
         data(){
             return {
+                errorMessage: null,
+                loading: false,
+                img: null,
                 rules: {
                     required: value => !!value || 'Requerido'
                 },
@@ -110,15 +119,17 @@
         methods:{
             ...mapMutations(['setLogo']),
             saveLogo() {
-                CustomizationProvider.updateLogo(this.formLogo).then(r => {
-                    let logo = r.data.logoUpdate
+            this.loading = true
+            this.errorMessage = null
+                CustomizationProvider.logoUpload(this.formLogo).then(r => {
+                    let logo = r.data.logoUpload.url
                     //STORAGE
                     this.setLogo(logo)
                 }).catch(error => {
                     let clientError = new ClientError(error)
                     this.inputErrors = clientError.inputErrors
-                    this.errorMessage = clientError.showMessage
-                })
+                    this.errorMessage = this.$t('error.'+err.message.replace('GraphQL error:', '').trim())
+                }).finally(() => this.loading = false)
             },
             pickFile() {
                 this.$refs.img.click()
@@ -126,13 +137,7 @@
             onFilePicked: function (e) {
                 let img = e.target.files[0]
                 if (this.$refs.logoForm.validate()) {
-                    CustomizationProvider.logoUpload(img).then(r => {
-                        this.formLogo.url = r.data.logoUpload.url
-                    }).catch(error => {
-                        let clientError = new ClientError(error)
-                        this.inputErrors = clientError.inputErrors
-                        this.errorMessage = clientError.showMessage
-                    })
+                    this.saveLogo(this.img)
                 }
             },
         }

@@ -4,7 +4,7 @@
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest --runInBand",
+    "test": "./node_modules/.bin/mocha --require @babel/register",
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files"
   },
   "repository": {
@@ -39,10 +39,9 @@
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
-    "@shelf/jest-mongodb": "^1.1.5",
-    "babel-jest": "^25.4.0",
-    "jest": "^25.4.0",
+    "mocha": "^8.2.0",
     "mongodb-memory-server": "^6.5.2",
+    "@babel/plugin-transform-runtime": "^7.12.1",
     "nodemon": "^1.19.4"
   },
   "gitHead": "0b585638233d846c57d4a8717e3bf91e3d4e34a3"

@@ -4,7 +4,9 @@
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "keywords": [
     "vue",
@@ -27,5 +29,13 @@
     "vuetify": "^2.2.11",
     "vuex": "^3.4.0"
   },
-  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b"
+  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@storybook/addon-actions": "^6.1.10",
+    "@storybook/addon-essentials": "^6.1.10",
+    "@storybook/addon-links": "^6.1.10",
+    "@storybook/vue": "^6.1.10",
+    "babel-loader": "^8.2.2"
+  }
 }
