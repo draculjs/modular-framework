@@ -87,8 +87,7 @@
         LOGO_MODE_SQUARE
     } from "../../../../constants";
     import CustomizationProvider from "../../../../providers/CustomizationProvider";
-    import {ClientError} from "@dracul/user-frontend";
-    import ProfileProvider from "../../../../../../../user/user-frontend/src/providers/ProfileProvider";
+    //import {ClientError} from "@dracul/user-frontend";
 
     export default {
         name: 'customization-logo',
@@ -112,7 +111,7 @@
                     {id: LOGO_MODE_ROUND, name: this.$t('customization.logo.options.round')},
                     {id: LOGO_MODE_SQUARE, name: this.$t('customization.logo.options.square')},
                     {id: LOGO_MODE_RECTANGLE, name: this.$t('customization.logo.options.rectangle')},
-                    {id: LOGO_MODE_ONLYTITLE, name: this.$t('customization.logo.options.onlytitle')}
+                    {id: LOGO_MODE_ONLYTITLE, name: $t('customization.logo.options.onlytitle')}
                 ]
             },
         },
@@ -126,9 +125,10 @@
                     //STORAGE
                     this.setLogo(logo)
                 }).catch(error => {
-                    let clientError = new ClientError(error)
-                    this.inputErrors = clientError.inputErrors
-                    this.errorMessage = this.$t('error.'+err.message.replace('GraphQL error:', '').trim())
+                    console.log(error);
+                    // let clientError = new ClientError(error)
+                    // this.inputErrors = clientError.inputErrors
+                    // this.errorMessage = this.$t('error.'+err.message.replace('GraphQL error:', '').trim())
                 }).finally(() => this.loading = false)
             },
             pickFile() {
