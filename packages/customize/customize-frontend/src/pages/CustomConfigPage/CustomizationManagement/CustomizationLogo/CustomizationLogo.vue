@@ -79,7 +79,6 @@
 <script>
     import LogoPreview from "../../../../components/LogoPreview"
     import {mapMutations} from 'vuex'
-
     import {
         LOGO_MODE_ONLYTITLE,
         LOGO_MODE_RECTANGLE,
@@ -87,7 +86,7 @@
         LOGO_MODE_SQUARE
     } from "../../../../constants";
     import CustomizationProvider from "../../../../providers/CustomizationProvider";
-    //import {ClientError} from "@dracul/user-frontend";
+    import {ClientError} from "../../../../errors/ClientError";
 
     export default {
         name: 'customization-logo',
@@ -111,7 +110,7 @@
                     {id: LOGO_MODE_ROUND, name: this.$t('customization.logo.options.round')},
                     {id: LOGO_MODE_SQUARE, name: this.$t('customization.logo.options.square')},
                     {id: LOGO_MODE_RECTANGLE, name: this.$t('customization.logo.options.rectangle')},
-                    {id: LOGO_MODE_ONLYTITLE, name: $t('customization.logo.options.onlytitle')}
+                    {id: LOGO_MODE_ONLYTITLE, name: this.$t('customization.logo.options.onlytitle')}
                 ]
             },
         },
@@ -126,9 +125,9 @@
                     this.setLogo(logo)
                 }).catch(error => {
                     console.log(error);
-                    // let clientError = new ClientError(error)
-                    // this.inputErrors = clientError.inputErrors
-                    // this.errorMessage = this.$t('error.'+err.message.replace('GraphQL error:', '').trim())
+                    let clientError = new ClientError(error)
+                    this.inputErrors = clientError.inputErrors
+                    this.errorMessage = this.$t('error.'+err.message.replace('GraphQL error:', '').trim())
                 }).finally(() => this.loading = false)
             },
             pickFile() {
