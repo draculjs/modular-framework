@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.0.49",
+  "version": "1.0.52",
   "author": "Cristian Incarnato",
   "main": "./lib/exports.js",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
-    "@dracul/customize-backend": "^1.0.49",
+    "@dracul/customize-backend": "^1.0.52",
     "@dracul/logger-backend": "^1.0.25",
     "@dracul/user-backend": "^1.0.49",
     "apollo-server-express": "^2.12.0",
