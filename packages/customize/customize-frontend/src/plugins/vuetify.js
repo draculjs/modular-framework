@@ -32,7 +32,16 @@ import Vuetify, {
     VListItemTitle,
     VListItemAction,
     VPicker,
-    VRadioGroup
+    VRadioGroup,
+    VForm,
+    VAlert,
+    VCardTitle,
+    VCardSubtitle,
+    VSelect,
+    VTextField,
+    VAvatar,
+    VToolbarTitle,
+
 } from 'vuetify/lib';
 
 import i18n from '../i18n'
@@ -70,7 +79,15 @@ Vue.use(Vuetify, {
         VListItemTitle,
         VListItemAction,
         VPicker,
-        VRadioGroup
+        VRadioGroup,
+        VForm,
+        VAlert,
+        VCardTitle,
+        VCardSubtitle,
+        VSelect,
+        VTextField,
+        VAvatar,
+        VToolbarTitle
     }
 });
 
@@ -82,7 +99,7 @@ let colors = {
 }
 
 
-export default new Vuetify({
+const vuetify =  new Vuetify({
     lang: {
         t: (key, ...params) => i18n.t(key, params),
     },
@@ -100,3 +117,5 @@ export default new Vuetify({
         }
     },
 });
+
+export { vuetify }

@@ -3,21 +3,24 @@ var mime = require('mime-types')
 
 const uploadFileSimulator = (filePath) => {
 
-    let mimetype = mime.lookup(filePath)
-    let encoding = '7bit'
-    let filePathSplited = filePath.split("/")
-    let filename = filePathSplited[filePathSplited.length - 1]
-    let createReadStream = () => fs.createReadStream(filePath)
+    return new Promise((resolve) => {
 
-    const file = {
-        filename,
-        mimetype,
-        encoding,
-        createReadStream
-    };
+        let mimetype = mime.lookup(filePath)
+        let encoding = '7bit'
+        let filePathSplited = filePath.split("/")
+        let filename = filePathSplited[filePathSplited.length - 1]
+        let createReadStream = () => fs.createReadStream(filePath)
 
+        const file = {
+            filename,
+            mimetype,
+            encoding,
+            createReadStream
+        };
 
-    return file
+        resolve(file)
+    })
+
 }
 
-export default uploadFileSimulator
+module.exports =  uploadFileSimulator

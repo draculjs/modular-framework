@@ -1,14 +1,14 @@
-import path from "path";
-import uploadFileSimulator from "./utils/uploadFileSimulator";
-import { uploadLogo, findCustomization } from "../src/services/CustomizationService";
-import assert from "assert";
+const path = require("path");
+const uploadFileSimulator = require("./utils/uploadFileSimulator");
+const { uploadLogo, findCustomization } = require("../src/services/CustomizationService");
+const assert = require("assert");
 
 describe("createNotificationService", () => {
 
     it('Logo Upload Validation mimetype Not Allowed', async () => {
 
         let filePath = path.join(__dirname,'../test/assets/','Dracul.pdf')
-        let file = uploadFileSimulator(filePath)
+        let file = await uploadFileSimulator(filePath)
 
         return assert.rejects(uploadLogo(file), {
             name: "Error",

@@ -123,10 +123,7 @@
                     let logo = r.data.logoUpload.url
                     //STORAGE
                     this.setLogo(logo)
-                }).catch(error => {
-                    console.log(error);
-                    let clientError = new ClientError(error)
-                    this.inputErrors = clientError.inputErrors
+                }).catch(err => {
                     this.errorMessage = this.$t('error.'+err.message.replace('GraphQL error:', '').trim())
                 }).finally(() => this.loading = false)
             },
