@@ -1,9 +1,10 @@
 import Customization from '../models/CustomizationModel'
 import {UserInputError} from 'apollo-server-express'
-import path from "path";
+const path = require('path');
 import fs from "fs";
 import createDirIfNotExist from "./helpers/createDirIfNotExist";
-
+import { DefaultLogger as winston} from "@dracul/logger-backend";
+import {Transform} from "stream";
 
 export const findCustomization = async function () {
     return new Promise((resolve, reject) => {
@@ -108,59 +109,140 @@ export const updateLang = async function ({language}) {
     })
 }
 
-const storeFS = (stream, dst) => {
-    return new Promise((resolve, reject) =>
-        stream
-            .on('error', error => {
-                if (stream.truncated)
-                    fs.unlinkSync(dst);
-                reject(error);
-            })
-            .pipe(fs.createWriteStream(dst))
-            .on('error', error => reject(error))
-            .on('finish', () => resolve(true))
-    );
+class StreamSizeValidator extends Transform {
+
+    maxFileSize = process.env.LOGO_MAX_SIZE ? process.env.LOGO_MAX_SIZE : 2000000
+    length = 0
+
+    _transform(chunk, encoding, callback) {
+        this.length += chunk.length
+
+        if (this.length > this.maxFileSize) {
+            this.destroy(new Error(`MAX_FILE_SIZE_EXCEEDED`));
+            return;
+        }
+
+        this.push(chunk)
+        callback()
+    }
+}
+
+const storeFS = (sourceStream, dst) => {
+
+    return new Promise((resolve, reject) => {
+
+            const sizeValidator = new StreamSizeValidator()
+            const fileWriteStream = fs.createWriteStream(dst)
+
+            sourceStream
+                .on('error', error => {
+
+                    if (sourceStream.truncated) {
+                        fs.unlinkSync(dst)
+                    }
+
+                    fileWriteStream.destroy(error)
+                    sizeValidator.destroy(error)
+                    sourceStream.destroy()
+
+                    winston.error("CustomizationService.storeFS: sourceStream error: ", error.message)
+                    reject(error)
+                })
+
+
+            sizeValidator
+                .on("error", error => {
+                    winston.error("CustomizationService.storeFS: sizeValidator error: ", error)
+                    sourceStream.destroy(error)
+                    fileWriteStream.destroy(error)
+                    reject(error)
+                })
+
+
+            fileWriteStream
+                .on('error', error => {
+                    winston.error("CustomizationService.storeFS: fileWriteStream error: ", error)
+                    fileWriteStream.destroy()
+                    sourceStream.destroy(error)
+                    sizeValidator.destroy(error)
+                    reject(error)
+                })
+                .on('finish', () => {
+                    winston.info('CustomizationService.storeFS finish successful')
+                    resolve(true)
+                })
+
+            sourceStream
+                .pipe(sizeValidator)
+                .pipe(fileWriteStream)
+        }
+    )
+}
+
+function randomstring(length) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
 
 export const uploadLogo = function (file) {
 
-    function randomstring(length) {
-        let result = '';
-        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    }
+    return new Promise(async (resolve, reject) => {
 
-    return new Promise(async (resolve, rejects) => {
+        const mimetypesAllowed = ['image/jpeg','image/jpg','image/png','image/gif']
 
-        const {filename, mimetype, encoding, createReadStream} = await file;
+        try {
 
-        const dst = path.join("media", "logo", filename)
+            const {filename, mimetype, encoding, createReadStream} = await file;
 
-        //Store
-        createDirIfNotExist(dst)
-        let fileResult = await storeFS(createReadStream(), dst)
+            if(!mimetypesAllowed.includes(mimetype)){
+                reject(new Error("MIMETYPE_NOT_ALLOWED"))
+                return
+            }
 
-        if (fileResult) {
+            const dst = path.join("media", "logo", filename);
 
-            const rand = randomstring(3)
-            const url = process.env.APP_API_URL + "/media/logo/" + filename + "?" + rand
+            //Store
+            createDirIfNotExist(dst)
 
-            let logo = {filename, url}
+            storeFS(createReadStream(), dst).then(() => {
 
-            Customization.findOneAndUpdate(
-                {}, {$set: {'logo.filename': filename, 'logo.url': url}}, {useFindAndModify: false},
-                (error) => {
-                    if (error) rejects(new Error("Save Fail"))
-                    else resolve({filename, mimetype, encoding, url})
-                }
-            );
+                const rand = randomstring(3)
+                const url = process.env.APP_API_URL + "/media/logo/" + filename + "?" + rand
 
-        } else {
-            rejects(new Error("Upload Fail"))
+                let logo = {filename, url}
+
+                Customization.findOneAndUpdate(
+                    {}, {$set: {'logo.filename': filename, 'logo.url': url}}, {useFindAndModify: false},
+                    (error) => {
+                        if (error) {
+                            winston.error("CustomizationService.logoUpload: update fail", error)
+                            reject(new Error("Save Fail"))
+                        }
+                        else {
+                            winston.debug('CustomizationService.logoUpload successful')
+                            resolve({filename, mimetype, encoding, url})
+                        }
+                    }
+                );
+                ////////////////
+
+            }).catch(err => {
+                winston.error("UserService.avatarUpload: store fail", err)
+                reject(new Error(err.message))
+            })
+
+
+
+
+        } catch (e) {
+            winston.error("CustomizationService.logoUpload: store fail", e)
+            console.log("ERRRR",e.message);
+            reject(new Error(e.message))
         }
 
     })
