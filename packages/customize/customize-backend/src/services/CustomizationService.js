@@ -232,7 +232,7 @@ export const uploadLogo = function (file) {
                 ////////////////
 
             }).catch(err => {
-                winston.error("UserService.avatarUpload: store fail", err)
+                winston.error("CustomizationService.logoUpload: store fail", err)
                 reject(new Error(err.message))
             })
 
