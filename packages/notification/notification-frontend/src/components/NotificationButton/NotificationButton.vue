@@ -44,18 +44,19 @@ export default {
   methods: {
     pollData() {
       setInterval(() => {
-        this.getNotificationsForPolling()
+        this.fetchNotifications()
       }, this.timePolling)
     },
     getNotifications() {
       if (this.activateWebSocket) {
+        this.fetchNotifications()
         this.subscribeNotification()
       } else {
-        this.getNotificationsForPolling()
+        this.fetchNotifications()
         this.pollData()
       }
     },
-    getNotificationsForPolling() {
+    fetchNotifications() {
       notificationProvider.fetchNotifications(this.limit, this.isRead, this.type)
           .then(res => {
             this.items = res.data.fetchNotifications
