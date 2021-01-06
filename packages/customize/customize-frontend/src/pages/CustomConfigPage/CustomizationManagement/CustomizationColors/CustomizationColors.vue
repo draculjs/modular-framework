@@ -57,10 +57,10 @@
                         <v-card-text class="text-center">
                             <v-row>
                                 <v-col cols="6" :style="getStyleColor('primary','onPrimary')">
-                                    PRIMARY COLOR
+                                    {{$t('customization.colors.primary')}}
                                 </v-col>
                                 <v-col cols="6" :style="getStyleColor('secondary','onSecondary')">
-                                    SECONDARY COLOR
+                                    {{$t('customization.colors.secondary')}}
                                 </v-col>
                             </v-row>
 

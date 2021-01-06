@@ -1,6 +1,6 @@
 <template>
 
-    <v-form @keyup.enter.native="signIn">
+    <v-form @keyup.enter.native="signIn" v-model="isFormValid">
         <v-alert :value="!!error" type="error" class="mb-3 pa-3">
             {{error}}
         </v-alert>
@@ -10,6 +10,7 @@
                 :label="$t('user.label.username')"
                 :placeholder="$t('user.label.username')"
                 color="secondary"
+                :rules="[v => !!v || ' ']"
         ></v-text-field>
 
         <v-text-field id="password"
@@ -18,9 +19,11 @@
                       :label="$t('user.label.password')"
                       :placeholder="$t('user.label.password')"
                       color="secondary"
+                      :rules="[v => !!v || ' ']"
         />
 
         <v-btn
+                :disabled="!isFormValid"
                 ref="loginBtn"
                 :loading="loading"
                 min-width="100%"
@@ -44,9 +47,10 @@
                 loading: false,
                 error: null,
                 form: {
-                    username: null,
-                    password: null
-                }
+                    username: "",
+                    password: ""
+                },
+                isFormValid: false
             }
         },
 
