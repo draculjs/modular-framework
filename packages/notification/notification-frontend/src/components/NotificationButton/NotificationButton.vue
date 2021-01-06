@@ -30,7 +30,7 @@ export default {
   },
   props: {
     userId: String,
-    colorIcon: {type: String, default: 'primary'},
+    colorIcon: {type: String, default: 'onPrimary'},
   },
   data() {
     return {
