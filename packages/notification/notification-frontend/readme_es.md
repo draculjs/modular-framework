@@ -53,9 +53,10 @@ import {NotificationButton} from '@dracul/notification-frontend'
 
 **Props**
 
-- **userId**: requerido. Tipo de dato ObjectID. El ID de usuario a quien se mostrarán las notificaciones.
-
-- **colorIcon**: requerido. Tipo de dato String. Valor por defecto: 'onPrimary'. Se utilizará como color del icono de la campana.
+|Nombre  |Tipo |Descripción      | 
+|----------|----------|----------------------------------------------------------------------------------------------|
+|`userId`   |ObjectID  | Requerido. El ID de usuario a quien se mostrarán las notificaciones.                                                                    |
+|`colorIcon`  |String   |Requerido. Se utilizará como color del icono de la campana.  Valor por defecto: 'onPrimary'.                                                                    |
 
 ---
 

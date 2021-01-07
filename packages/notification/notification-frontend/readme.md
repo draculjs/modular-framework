@@ -53,9 +53,11 @@ import {NotificationButton} from '@dracul/notification-frontend'
 
 **Props**
 
-- **userId**: required. ObjectID type. The user ID to whom the notifications will be shown.
+|Name  |Type |Description      | 
+|----------|----------|----------------------------------------------------------------------------------------------|
+|`userId`   |ObjectID  | Required. The user ID to whom the notifications will be shown.                                                                   |
+|`colorIcon`  |String   |Required. Will be used as the color of the bell icon. Value default: 'onPrimary'.                                                                    |
 
-- **colorIcon**: required. String type. Value default: 'onPrimary'. Will be used as the color of the bell icon.
 
 ---
 
