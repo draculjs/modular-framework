@@ -23,8 +23,10 @@ This module contains components that allow you to modify the colors, logo, selec
 ![Dracul Module Customize](https://i.imgur.com/TUB5wXi.png "Dracul Module Customize")
 ​
 ## Requeriments
--Graphql (Apollo Server)
--Vuex
+- Graphql (Apollo Server)
+- Vuex
+- Vuetify (i18n)
+- Vue Router
 ​
 ## Installation:
 ​
