@@ -3,6 +3,7 @@
 # Dracul modulo personalizable
 
 El Módulo Personalizable le permite de una manera simple y sencilla poder personalizar su pagina.
+![Preview frontend Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Preview frontend Dracul Module Customize")
 
 ## Este modulo permite:
 

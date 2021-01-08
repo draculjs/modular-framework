@@ -3,14 +3,24 @@
 # Dracul Customize Module
 ​
 This module contains components that allow you to modify the colors, logo, select language and title of the platform from a panel.
+![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
 ​
 ## This module contains the following page and components:
 
-- Visualization of the logo preview.
-- Visualization of the menu toolbar.
-- Visualization of the logo in the toolbar.
 - Page where it contains all the configuration to customize the platform.
+![Dracul Module Customize](https://i.imgur.com/XZST1xB.png "Dracul Module Customize")
 
+- Language selection of the platform.
+![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
+
+- Color edition from the customizable menu (Primary and secondary color).
+![Dracul Module Customize](https://i.imgur.com/VWBQu3G.png "Dracul Module Customize")
+
+- Selection of the logo in the bar from the menu.
+![Dracul Module Customize](https://i.imgur.com/F7ODrmk.png "Dracul Module Customize")
+
+- Visualization of the preview of the logo + title.
+![Dracul Module Customize](https://i.imgur.com/TUB5wXi.png "Dracul Module Customize")
 ​
 ## Requeriments
 -Graphql (Apollo Server)
@@ -74,6 +84,7 @@ export default new Vuex.Store({
 })
 ```
 _An example of using the ** LogoToolbar & TitleTolbar ** components to be displayed._
+![.Tittle Dracul Customize](https://i.imgur.com/l2cbQyb.png ".Tittle Dracul Customize")
 ```
 <template>
         <v-app>
@@ -99,6 +110,11 @@ _An example of using the ** LogoToolbar & TitleTolbar ** components to be displa
 ## Direction to access
 
 You can access the customization panel, for example http://localhost:8080/customization
+​
+## Recommendation
+
+It is recommended to use Scaffold, where you already have all the modules implemented to be able to use it as a project base.
+https://github.com/draculjs/scaffold
 ​
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

@@ -3,18 +3,32 @@
 # Modulo personalizable dracul
 ​
 Este módulo contiene componentes que le permiten desde un panel modificar, los colores, logo, seleccionar idioma y titulo de la plataforma.
+![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
 ​
 ## Este módulo contiene la siguiente pagina y componentes:
 ​
-- Visualizacion de la vista previa del logo.
-- Visualizacion de la barra de herramientas del menú.
-- Visualizacion del logo en la barra de herramientas.
 - Pagina donde contiene toda la configuracion para personalizar la plataforma.
+![Dracul Module Customize](https://i.imgur.com/XZST1xB.png "Dracul Module Customize")
+
+- Seleccion de idioma de la plataforma.
+![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
+
+- Edicion de colores desde el menú personalizable (Color primario y secundario).
+![Dracul Module Customize](https://i.imgur.com/VWBQu3G.png "Dracul Module Customize")
+
+- Seleccion del logo en la barra desde el menu.
+![Dracul Module Customize](https://i.imgur.com/F7ODrmk.png "Dracul Module Customize")
+
+- Visualizacion de la vista previa del logo + titulo.
+![Dracul Module Customize](https://i.imgur.com/TUB5wXi.png "Dracul Module Customize")
 
 ​
 ## Requerimientos
--Graphql (Apollo Server)
--Vuex
+- Graphql (Apollo Server)
+- Vuex
+- Vuetify (i18n)
+- Vue Router
+
 ​
 ## Instalación:
 ​
@@ -32,13 +46,13 @@ import { customizationProvider } from "@dracul/customize-frontend";
 customizationProvider.setGqlc(apolloClient);
 ```
 
-_Para obtener las **rutas** ._
+_Para obtener las **rutas**  mergearlo a su proyecto._
 
 ```js
 import {routes as customRoutes} from '@dracul/customize-frontend'
 ```
 
-_Obtener i18n  **traducciones** ._
+_ Añadir a su proyecto las **traducciones** mediante i18n._
 
 ```js
 import {i18nMessages as i18nMessagesCustom} from '@dracul/customize-frontend'
@@ -99,6 +113,11 @@ _Un ejemplo de uso de los componentes **LogoToolbar & TitleTolbar**  para que se
 ## Dirección de Acceso
 
 Puedes acceder al panel de personalizacion, por ejemplo http://localhost:8080/customization
+​
+## Recomedación
+
+Se recomienda utilizar Scaffold, donde ya tiene todos los modulos implementados para poder utilizarlo como base de proyecto.
+https://github.com/draculjs/scaffold
 ​
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
