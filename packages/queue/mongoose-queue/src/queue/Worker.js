@@ -93,6 +93,7 @@ class Worker {
             await this.work()
             if (!this.running)
                 return
+            //this.runTimeout = setTimeout(() => this.runRecursive(time), time)
         } catch (e) {
             console.error(e)
         } finally {

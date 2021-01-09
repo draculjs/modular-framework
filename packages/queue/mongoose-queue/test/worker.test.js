@@ -258,7 +258,9 @@ describe("Worker", () => {
             })
         }
 
-        let consumer = new Consumer('test', {blockDuration: 10})
+        //blockDuration => 10 (10 miliseconds)
+        //maxRetries => 3 intentos maximo
+        let consumer = new Consumer('test', {blockDuration: 10,   maxRetries: 3})
         let worker = new Worker(consumer, '123', handler)
 
 

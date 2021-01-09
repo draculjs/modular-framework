@@ -60,7 +60,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
         $lt: Date.now()
       },
       retries: {
-        $lte: maxRetries
+        $lt: maxRetries
       },
       done: false
     }, {
