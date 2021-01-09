@@ -43,6 +43,7 @@ class Worker {
         this.working = false
         this.running = false
         this.worksDone = 0
+        this.worksFail = 0
         this.events = new EventEmitter();
     }
 
@@ -92,9 +93,10 @@ class Worker {
             await this.work()
             if (!this.running)
                 return
-            this.runTimeout = setTimeout(() => this.runRecursive(time), time)
         } catch (e) {
             console.error(e)
+        } finally {
+            this.runTimeout = setTimeout(() => this.runRecursive(time), time)
         }
     }
 
@@ -135,7 +137,6 @@ class Worker {
             this.working = true
             this.events.emit('workStart')
             this.consumer.get(this.workerId).then(async (job) => {
-
                 if (!job) {
                     resolve(null)
                     return
@@ -159,6 +160,7 @@ class Worker {
 
                 } catch (e) {
                     //ERROR
+                    this.worksFail++
                     this.events.emit('workError', job, e)
                     this.consumer.error(job.id, e.message)
                         .finally(() => {

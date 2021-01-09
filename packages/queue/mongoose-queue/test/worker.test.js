@@ -239,4 +239,38 @@ describe("Worker", () => {
 
     })
 
+
+    it('should run consumer and get jobs until max retries',  (done) => {
+
+        //1. Add some jobs to queue
+        let producer = new Producer('test',)
+        producer.add({number: 1})
+        producer.add({number: 2})
+        producer.add({number: 3})
+
+        //2. Create HANDLER
+        const handler = (job) => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("Handler Job:", job)
+                    reject(Error("FAIL"))
+                }, 1)
+            })
+        }
+
+        let consumer = new Consumer('test', {blockDuration: 10})
+        let worker = new Worker(consumer, '123', handler)
+
+
+        worker.run(10)
+
+        setTimeout(() => {
+            worker.stop()
+            assert.equal(worker.worksFail, 9)
+            done()
+        }, 2000)
+
+
+    })
+
 })
