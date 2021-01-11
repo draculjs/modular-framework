@@ -23,12 +23,13 @@ npm i @dracul/notification-backend
 
 <div class="toc">
   <ul>
-    <li><a href="#queries-and-mutations">Queries y Mutations</a></li>
+    <li><a href="#queries-and-mutations">GraphQL: queries y mutations</a></li>
       <ul>
         <li><a href="#types">Types</a>
             <ul>
                 <li> <a href="#notification">Notification</a></li>
                 <li> <a href="#notifications-paginated">NotificationsPaginated</a></li>
+                <li> <a href="#response-notification">ResponseNotification</a></li>
             </ul>
         </li>
         <li><a href="#queries">Queries</a>
@@ -81,12 +82,11 @@ type NotificationsPaginated{
 
 Nombre  | Tipo de dato | Descripcion |
 ------- | -------------| --------------|
-totalItems  | Integer | --|
-page  | Integer | --|
-items | Array of Notification type    | -- |
+totalItems  | Integer | El número de items a devolver.|
+page  | Integer | El número de página a devolver. |
+items | Array of Notification type    | Las notificaciones de esa página. |
 
 <h3 id="notification">Notification</h3>
-
 
 ```graphql endpoint
 type Notification{
@@ -104,15 +104,27 @@ type Notification{
 
 Nombre  | Tipo de dato | Descripcion |
 ------- | -------------| --------------|
-id  | ID | --|
-user  | ID| --|
-title | String    | -- |
-content | String    | -- |
-read | Boolean    | -- |
-creationDate | String    | -- |
-type | String    | -- |
-icon | String    | -- |
-readDate | String    | -- |
+id  | ID | ID de la notificación. |
+user  | ID| ID del usuario dueño de la notificación. |
+title | String    | El titulo de la notificación. |
+content | String    | El contenido de la notificación. |
+read | Boolean    | 'true' si la notificación está leida. 'false' si la notificación no está leida. |
+creationDate | String    | Fecha de creación. |
+type | String    | Categoría de la notificación. |
+icon | String    | Icono de la notificación. |
+readDate | String    | Fecha de leido. |
+
+<h3 id="response-notification">ResponseNotification</h3>
+
+```graphql endpoint
+type ResponseNotification{
+    success: Int
+}
+```
+
+Nombre  | Tipo de dato | Descripcion |
+------- | -------------| --------------|
+success  | Integer | Devuelve 0 si la operación fue exitosa, 1 en caso de error.|
 
 --- 
 
@@ -158,7 +170,7 @@ type | String    | No | Sólo en caso de que desee filtrar las notificaciones po
 
 **Datos que retorna el servicio**
 
-Retorna un Array del type Notification. Para más información vaya a la sección Types
+Retorna un Array del type Notification. Para más información vaya a la sección <a href="#types">Types</a>
 
 ---
 
@@ -209,7 +221,7 @@ type | String    | No | Sólo en caso de que desee filtrar las notificaciones po
 
 **Datos que retorna el servicio**
 
-Retorna un Array del type Notification. Para más información vaya a la sección types.
+Retorna un Array del type Notification. Para más información vaya a la sección <a href="#types">Types</a>.
 
 ---
 <h2 id="mutations">Mutations</h2>
@@ -256,7 +268,7 @@ icon | String | Si | Será usado como el icono que represente la notificación.|
 
 **Datos que retorna el servicio**
 
-Retorna los datos de la notificación creada. Para más información vaya a la sección Types
+Retorna los datos de la notificación creada. Para más información vaya a la sección <a href="#types">Types</a>
 
 ---
 <h3 id="mark-all-read-or-not-read">markAllReadOrNotRead</h2>
@@ -271,12 +283,11 @@ markAllReadOrNotReadService. Retorna una promesa._
 ```graphql endpoint
 
 mutation: {
-markAllReadOrNotRead(
-isRead: Boolean):ResponseNotification
+        markAllReadOrNotRead(isRead: Boolean):ResponseNotification
 }
 
 type ResponseNotification{
-
+        success: Int
 }
 
 ```
@@ -290,7 +301,7 @@ readValue  | Boolean| Si| 'true' para marcar todas las notificaciones como leíd
 
 **Datos que retorna el servicio**
 
-Retorna los datos de la notificación modificada. Para más información vaya a la sección Types
+Retorna los datos de la notificación modificada. Para más información vaya a la sección <a href="#types">Types</a>
 
 ---
 <h2 id="subscription">Subscription</h2>
@@ -306,12 +317,20 @@ una promesa._
 
 ```graphql endpoint
 Subscription: {
-notification(user: ID!): Notification
+        notification(user: ID!): Notification
 }
 
 
 type Notification{
-
+        id: ID,
+        user: ID,
+        title: String
+        content: String
+        read: Boolean
+        creationDate: String
+        type: String
+        icon: String
+        readDate: String
 }
 ```
 
