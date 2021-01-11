@@ -77,7 +77,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
             .findOneAndUpdate({
                 topic: topic,
                 blockedUntil: {$lt: Date.now()},
-                retries: {$lte: maxRetries},
+                retries: {$lt: maxRetries},
                 done: false
             }, {
                 $set: {
