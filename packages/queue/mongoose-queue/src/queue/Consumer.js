@@ -17,7 +17,7 @@ class Consumer {
      * @param {string} topic
      * @param {Object} [options={}]
      */
-    constructor(topic, options = {}) {
+    constructor(topic, options = {blockDuration:600000, maxRetries: 3}) {
         if (!topic)
             throw new Error('topic missing.')
         else if (typeof topic !== 'string')
@@ -26,8 +26,8 @@ class Consumer {
         this.topic = topic
 
         this.options = _.defaults(options, {
-            blockDuration: 600000, //Default: 1 Hour
-            maxRetries: 5,
+            blockDuration: 600000, //Default: 10 minutes
+            maxRetries: 3,
         })
     }
 
