@@ -46,6 +46,15 @@ _Un ejemplo de uso del componente **NotificationButton**._
 _Un botón con un icono de campana que muestra la cantidad de notificaciones recibidas.
 Además, si presiona el botón, se desplegará una pequeña lista con notificaciones más detalladas._
 
+**Vista del botón**
+
+![](./exampleImages/notificationButton.png)
+
+**Vista del botón con la lista desplegable**
+
+![](./exampleImages/notificationButtonList.png)
+
+
 **Como importar el componente en su proyecto:**
 ```js
 import {NotificationButton} from '@dracul/notification-frontend'

@@ -18,6 +18,290 @@ Este módulo le permite crear y administrar notificaciones personalizables para 
 npm i @dracul/notification-backend
 ```
 
+## Tabla de contenidos
+
+- Queries y Mutations
+  - Types
+    - Notification
+    - NotificationsPaginated
+  - Queries
+    - fetchNotifications
+    - notificationsPaginateFilter
+  - Mutations
+    - createNotification
+    - markAsReadOrNotRead
+    - markAllReadOrNotRead
+  - Subscription
+    - notification
+- Servicios disponibles
+    - createNotificationService
+    - fetchNotificationsService
+    - notificationsPaginateFilterService
+    - markAsReadOrNotReadService
+    - markAllReadOrNotReadService
+    - deleteNotificationsService
+
+## Queries y Mutations
+
+### Types
+
+**Type NotificationsPaginated**
+
+```graphql endpoint
+type NotificationsPaginated{
+  totalItems: Int
+  page: Int
+  items: [Notification]
+}
+```
+
+Nombre  | Tipo de dato | Descripcion |
+------- | -------------| --------------|
+totalItems  | Integer | --|
+page  | Integer | --|
+items | Array of Notification type    | -- |
+
+
+**Type Notification**
+
+```graphql endpoint
+type Notification{
+  id: ID
+  user: ID
+  title: String
+  content: String
+  read: Boolean
+  creationDate: String
+  type: String
+  icon: String
+  readDate: String
+}
+```
+
+Nombre  | Tipo de dato | Descripcion |
+------- | -------------| --------------|
+id  | ID | --|
+user  | ID| --|
+title | String    | -- |
+content | String    | -- |
+read | Boolean    | -- |
+creationDate | String    | -- |
+type | String    | -- |
+icon | String    | -- |
+readDate | String    | -- |
+
+--- 
+### Queries
+
+#### fetchNotifications
+
+**Definición y uso**
+
+_Obtiene las notificaciones de un determinado usuario.
+Delega la tarea al servicio fetchNotificationsService. Retorna una promesa._
+
+**Sintaxis**
+```graphql endpoint
+
+query: {
+        fetchNotifications( limit: Int, 
+                            isRead: Boolean,
+                            type: String):[Notification]
+}
+
+type Notification{
+            id: ID,
+            user: ID,
+            title: String
+            content: String
+            read: Boolean
+            creationDate: String
+            type: String
+            icon: String
+            readDate: String
+    }
+```
+
+**Parametros**
+
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+limit  | Integer | No | Representa el numero de notificaciones limite que desea obtener. Por defecto obtiene todas las notificaciones del usuario.|
+isRead  | Boolean| Si| 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false' si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin importar en estado de la misma.|
+type | String    | No | Sólo en caso de que desee filtrar las notificaciones por tipo. |
+
+**Datos que retorna el servicio**
+
+Retorna un Array del type Notification. Para más información vaya a la sección Types
+
+---
+
+#### notificationsPaginateFilter
+
+**Definición y uso**
+
+_Obtiene las notificaciones paginadas de un determinado usuario.
+Delega la tarea al servicio notificationsPaginateFilterService. Retorna una promesa._
+
+**Sintaxis**
+```graphql endpoint
+query: {
+        notificationsPaginateFilter(
+                                    limit: Int, 
+                                    pageNumber: Int, 
+                                    isRead: Boolean, 
+                                    type: String): NotificationsPaginated
+}
+
+type NotificationsPaginated{
+                        totalItems: Int
+                        page: Int
+                        items: [Notification]
+}
+
+type Notification{
+                    id: ID,
+                    user: ID,
+                    title: String
+                    content: String
+                    read: Boolean
+                    creationDate: String
+                    type: String
+                    icon: String
+                    readDate: String
+}
+```
+
+**Parametros**
+
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+limit  | Integer | No | Representa el numero de notificaciones limite que desea obtener. Por defecto obtiene todas las notificaciones del usuario.|
+isRead  | Boolean| Si| 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false' si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin importar en estado de la misma.|
+type | String    | No | Sólo en caso de que desee filtrar las notificaciones por tipo. |
+
+**Datos que retorna el servicio**
+
+Retorna un Array del type Notification. Para más información vaya a la sección types.
+
+---
+### Mutations 
+
+
+#### createNotification
+
+**Definición y uso**
+
+_Crea una notificación.
+Delega la tarea al servicio createNotificationService. Retorna una promesa._
+
+**Sintaxis**
+```graphql endpoint
+
+mutation: {
+                createNotification(
+                                    title: String, 
+                                    content: String, 
+                                    type: String, 
+                                    icon: String):Notification
+}
+
+type Notification{
+            id: ID,
+            user: ID,
+            title: String
+            content: String
+            read: Boolean
+            creationDate: String
+            type: String
+            icon: String
+            readDate: String
+    }
+```
+**Parametros**
+
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+title  | String | Si | Será usado como el título de la notificación.|
+content  | String| Si| Será usado como el contenido de la notificación.|
+type | String | Si | Será usado como la categoría de la notificación. |
+icon | String | Si | Será usado como el icono que represente la notificación.|
+**Datos que retorna el servicio**
+
+Retorna los datos de la notificación creada. Para más información vaya a la sección Types
+
+---
+ 
+### markAllReadOrNotRead
+
+**Definición y uso**
+
+_Permite marcar todas las notificaciones de usuario como leídas o no leídas.
+Delega la tarea al servicio markAllReadOrNotReadService. Retorna una promesa._
+
+**Sintaxis**
+```graphql endpoint
+
+mutation: {
+            markAllReadOrNotRead(
+                                isRead: Boolean):ResponseNotification
+}
+
+type ResponseNotification{
+
+}
+
+```
+
+**Parametros**
+
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+idUserAuth  | ID | Si | El ID del usuario a quien todas las notificaciones se marcarán como leídas o no leídas.|
+readValue  | Boolean| Si| 'true' para marcar todas las notificaciones como leídas. 'false' para marcar todas las notificaciones como no leídas.|
+
+**Datos que retorna el servicio**
+
+Retorna los datos de la notificación modificada. Para más información vaya a la sección Types
+
+---
+
+### Subscription
+
+#### notification 
+
+
+**Definición y uso**
+
+_Permite subscribirte a las notificaciones por websocket.
+Delega la tarea al servicio fetchNotificationsService. Retorna una promesa._
+
+**Sintaxis**
+```graphql endpoint
+Subscription: {
+                notification(user: ID!): Notification
+}
+
+
+type Notification{
+
+}
+```
+
+**Parametros**
+
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+user  | ID | Si | El ID del usuario el cual serán "escuchadas" sus notificaciones.|
+
+---
+
+## Servicios disponibles
+
+Los servicios son metodos o funciones que realizan las operaciones de alta, baja y modificacion de notificaciones. Tanto las queries como las mutations 
+delegan sus responsabilidades a estos servicios.
+Si no desea usar las queries y mutations definidas, puede utilizar los servicios de forma independiente.
+
 ## Ejemplos de uso:
 
 _Un ejemplo usando el método **createNotificationService**._
