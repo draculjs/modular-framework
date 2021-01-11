@@ -40,7 +40,7 @@ npm i @dracul/notification-backend
     - markAllReadOrNotReadService
     - deleteNotificationsService
 
-##Queries y Mutations
+## Queries y Mutations
 
 ### Types
 
