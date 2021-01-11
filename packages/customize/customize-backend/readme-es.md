@@ -33,6 +33,140 @@ import {initCustomization, initPermissionsCustomization} from '@dracul/customize
 ```
 _Todo el resto de la funcionalidad se realiza por medio del frontend ._
 
+## Querys & Mutations GraphQl
+
+#### Customization
+Obtiene el logo, colores y idioma.
+```js
+customization: Customization
+```
+
+#### CustomizationCreate
+Crea la configuracion personalisable.
+```js
+customizationCreate (input: CustomizationInput): Customization
+```
+
+#### CustomizationUpdate
+Actualiza la configuracion personalizable, Por ejemplo:
+```js
+customizationUpdate(id: ID!, input: CustomizationInput): Customization
+```
+
+#### ColorsUpdate
+Actualiza el color seleccionado.
+```js
+colorsUpdate(input: ColorInput): Colors
+```
+
+#### LogoUpdate
+Actualiza el logo seleccionado
+```js
+logoUpdate(input: LogoInput): Logo
+```
+
+#### LogoUpload
+Sube el logo seleccionado
+```js
+logoUpload(file: Upload!): LogoFile!
+```
+
+#### LangUpdate
+Actualiza el idioma seleccionado
+```js
+langUpdate(input: LangInput): Lang
+```
+
+
+## Types & Input GraphQl
+_Aquellos campos que contengan **!**, son obligatorios._
+#### Type Customization
+```js
+type Customization{
+    colors: Colors!
+    logo: Logo!
+    language: String!
+}
+```
+
+#### Type Colors
+```js
+type Colors{
+    primary: String!
+    onPrimary: String!
+    secondary: String!
+    onSecondary: String!
+}
+```
+
+#### Type Logo
+```js
+type Logo{
+    mode: String!
+    title: String
+    filename: String
+    url: String
+}
+```
+
+#### Type Lang
+```js
+type Lang {
+    language: String!
+}
+```
+
+#### Input CustomizationInput
+```js
+input CustomizationInput{
+    primary: String!
+    onPrimary: String!
+    secondary: String!
+    onSecondary: String!
+    logo: String!
+    language: String!
+}
+```
+
+#### Input ColorInput
+```js
+input ColorInput{
+    primary: String!
+    onPrimary: String!
+    secondary: String!
+    onSecondary: String!
+}
+```
+
+#### Input LogoInput
+```js
+input LogoInput{
+    mode: String!
+    title: String
+}
+```
+
+#### Type LogoFile
+```js
+type LogoFile {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+    url: String!
+}
+```
+
+#### input LangInput
+```js
+input LangInput{
+    language: String!
+}
+```
+
+## Recomendación
+
+Se recomienda utilizar Scaffold, donde ya contiene todos los módulos implementados para poder usarlo como base de proyecto.
+https://github.com/draculjs/scaffold
 
 
 
