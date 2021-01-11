@@ -1,5 +1,6 @@
 [![Contributors][contributors-shield]][contributors-url]
 [![Stargazers][stars-shield]][stars-url]
+
 # Dracul módulo de notificaciones
 
 Este módulo le permite crear y administrar notificaciones personalizables para cualquier acción de su proyecto.
@@ -19,38 +20,62 @@ npm i @dracul/notification-backend
 ```
 
 ## Tabla de contenidos
-- [Queries y Mutations](https://github.com/draculjs/modular-framework/blob/modulo_notificaciones/packages/notification/notification-backend/readme_es.md#queries-y-mutations/ "Queries y Mutations")
-  - Types
-    - Notification
-    - NotificationsPaginated
-  - Queries
-    - fetchNotifications
-    - notificationsPaginateFilter
-  - Mutations
-    - createNotification
-    - markAsReadOrNotRead
-    - markAllReadOrNotRead
-  - Subscription
-    - notification
-- Servicios disponibles
-    - createNotificationService
-    - fetchNotificationsService
-    - notificationsPaginateFilterService
-    - markAsReadOrNotReadService
-    - markAllReadOrNotReadService
-    - deleteNotificationsService
 
-## Queries y Mutations
+<div class="toc">
+  <ul>
+    <li><a href="#queries-and-mutations">Queries y Mutations</a></li>
+      <ul>
+        <li><a href="#types">Types</a>
+            <ul>
+                <li> <a href="#notification">Notification</a></li>
+                <li> <a href="#notifications-paginated">NotificationsPaginated</a></li>
+            </ul>
+        </li>
+        <li><a href="#queries">Queries</a>
+            <ul>
+                <li> <a href="#fetch-notifications">fetchNotifications</a></li>
+                <li> <a href="#notifications-paginate-filter">notificationsPaginateFilter</a></li>
+            </ul>
+        </li>
+        <li><a href="#mutations">Mutations</a>
+            <ul>
+                <li> <a href="#create-notification">createNotification</a></li>
+                <li> <a href="#mark-as-read-or-not-read">markAsReadOrNotRead</a></li>
+                <li> <a href="#mark-all-read-or-not-read">markAllReadOrNotRead</a></li>
+            </ul>
+        </li>
+        <li><a href="#subscription">Subscription</a>
+            <ul>
+                <li> <a href="#subscription-notification">notification</a></li>
+            </ul>
+        </li>
+      </ul>
+     <li><a href="#services">Servicios</a></li>
+        <ul>
+            <li><a href="#create-notification-service">createNotificationService</a></li>
+            <li><a href="#fetch-notifications-service">fetchNotificationsService</a></li>
+            <li><a href="#notifications-paginate-filter-service">notificationsPaginateFilterService</a></li>
+            <li><a href="#mark-as-read-or-not-read-service">markAsReadOrNotReadService</a></li>
+            <li><a href="#mark-all-read-or-not-read-service">markAllReadOrNotReadService</a></li>
+            <li><a href="#delete-notifications-service">deleteNotificationsService</a></li>
+        </ul>
+  </ul>
+</div>
 
-### Types
+----
 
-**Type NotificationsPaginated**
+<h1 id="queries-and-mutations">Queries y mutations</h1>
+
+<h2 id="types">Types</h2>
+
+<h3 id="notifications-paginated">NotificationsPaginated</h3>
+
 
 ```graphql endpoint
 type NotificationsPaginated{
-  totalItems: Int
-  page: Int
-  items: [Notification]
+    totalItems: Int
+    page: Int
+    items: [Notification]
 }
 ```
 
@@ -60,20 +85,20 @@ totalItems  | Integer | --|
 page  | Integer | --|
 items | Array of Notification type    | -- |
 
+<h3 id="notification">Notification</h3>
 
-**Type Notification**
 
 ```graphql endpoint
 type Notification{
-  id: ID
-  user: ID
-  title: String
-  content: String
-  read: Boolean
-  creationDate: String
-  type: String
-  icon: String
-  readDate: String
+    id: ID
+    user: ID
+    title: String
+    content: String
+    read: Boolean
+    creationDate: String
+    type: String
+    icon: String
+    readDate: String
 }
 ```
 
@@ -90,35 +115,37 @@ icon | String    | -- |
 readDate | String    | -- |
 
 --- 
-### Queries
 
-#### fetchNotifications
+<h2 id="queries">Queries</h2>
+
+<h3 id="fetch-notifications">fetchNotifications</h2>
 
 **Definición y uso**
 
-_Obtiene las notificaciones de un determinado usuario.
-Delega la tarea al servicio fetchNotificationsService. Retorna una promesa._
+_Obtiene las notificaciones de un determinado usuario. Delega la tarea al servicio fetchNotificationsService. Retorna
+una promesa._
 
 **Sintaxis**
+
 ```graphql endpoint
 
 query: {
-        fetchNotifications( limit: Int, 
-                            isRead: Boolean,
-                            type: String):[Notification]
+fetchNotifications( limit: Int,
+isRead: Boolean,
+type: String):[Notification]
 }
 
 type Notification{
-            id: ID,
-            user: ID,
-            title: String
-            content: String
-            read: Boolean
-            creationDate: String
-            type: String
-            icon: String
-            readDate: String
-    }
+id: ID,
+user: ID,
+title: String
+content: String
+read: Boolean
+creationDate: String
+type: String
+icon: String
+readDate: String
+}
 ```
 
 **Parametros**
@@ -135,39 +162,40 @@ Retorna un Array del type Notification. Para más información vaya a la secció
 
 ---
 
-#### notificationsPaginateFilter
+<h3 id="notifications-paginate-filter">notificationsPaginateFilter</h2>
 
 **Definición y uso**
 
-_Obtiene las notificaciones paginadas de un determinado usuario.
-Delega la tarea al servicio notificationsPaginateFilterService. Retorna una promesa._
+_Obtiene las notificaciones paginadas de un determinado usuario. Delega la tarea al servicio
+notificationsPaginateFilterService. Retorna una promesa._
 
 **Sintaxis**
+
 ```graphql endpoint
 query: {
-        notificationsPaginateFilter(
-                                    limit: Int, 
-                                    pageNumber: Int, 
-                                    isRead: Boolean, 
-                                    type: String): NotificationsPaginated
+notificationsPaginateFilter(
+limit: Int,
+pageNumber: Int,
+isRead: Boolean,
+type: String): NotificationsPaginated
 }
 
 type NotificationsPaginated{
-                        totalItems: Int
-                        page: Int
-                        items: [Notification]
+totalItems: Int
+page: Int
+items: [Notification]
 }
 
 type Notification{
-                    id: ID,
-                    user: ID,
-                    title: String
-                    content: String
-                    read: Boolean
-                    creationDate: String
-                    type: String
-                    icon: String
-                    readDate: String
+id: ID,
+user: ID,
+title: String
+content: String
+read: Boolean
+creationDate: String
+type: String
+icon: String
+readDate: String
 }
 ```
 
@@ -184,39 +212,39 @@ type | String    | No | Sólo en caso de que desee filtrar las notificaciones po
 Retorna un Array del type Notification. Para más información vaya a la sección types.
 
 ---
-### Mutations 
+<h2 id="mutations">Mutations</h2>
 
-
-#### createNotification
+<h3 id="create-notification">createNotification</h2>
 
 **Definición y uso**
 
-_Crea una notificación.
-Delega la tarea al servicio createNotificationService. Retorna una promesa._
+_Crea una notificación. Delega la tarea al servicio createNotificationService. Retorna una promesa._
 
 **Sintaxis**
+
 ```graphql endpoint
 
 mutation: {
-                createNotification(
-                                    title: String, 
-                                    content: String, 
-                                    type: String, 
-                                    icon: String):Notification
+createNotification(
+title: String,
+content: String,
+type: String,
+icon: String):Notification
 }
 
 type Notification{
-            id: ID,
-            user: ID,
-            title: String
-            content: String
-            read: Boolean
-            creationDate: String
-            type: String
-            icon: String
-            readDate: String
-    }
+id: ID,
+user: ID,
+title: String
+content: String
+read: Boolean
+creationDate: String
+type: String
+icon: String
+readDate: String
+}
 ```
+
 **Parametros**
 
 Nombre  | Tipo de dato | Requerido | Descripcion |
@@ -225,25 +253,26 @@ title  | String | Si | Será usado como el título de la notificación.|
 content  | String| Si| Será usado como el contenido de la notificación.|
 type | String | Si | Será usado como la categoría de la notificación. |
 icon | String | Si | Será usado como el icono que represente la notificación.|
+
 **Datos que retorna el servicio**
 
 Retorna los datos de la notificación creada. Para más información vaya a la sección Types
 
 ---
- 
-### markAllReadOrNotRead
+<h3 id="mark-all-read-or-not-read">markAllReadOrNotRead</h2>
 
 **Definición y uso**
 
-_Permite marcar todas las notificaciones de usuario como leídas o no leídas.
-Delega la tarea al servicio markAllReadOrNotReadService. Retorna una promesa._
+_Permite marcar todas las notificaciones de usuario como leídas o no leídas. Delega la tarea al servicio
+markAllReadOrNotReadService. Retorna una promesa._
 
 **Sintaxis**
+
 ```graphql endpoint
 
 mutation: {
-            markAllReadOrNotRead(
-                                isRead: Boolean):ResponseNotification
+markAllReadOrNotRead(
+isRead: Boolean):ResponseNotification
 }
 
 type ResponseNotification{
@@ -264,21 +293,20 @@ readValue  | Boolean| Si| 'true' para marcar todas las notificaciones como leíd
 Retorna los datos de la notificación modificada. Para más información vaya a la sección Types
 
 ---
+<h2 id="subscription">Subscription</h2>
 
-### Subscription
-
-#### notification 
-
+<h3 id="subscription-notification">notification</h2>
 
 **Definición y uso**
 
-_Permite subscribirte a las notificaciones por websocket.
-Delega la tarea al servicio fetchNotificationsService. Retorna una promesa._
+_Permite subscribirte a las notificaciones por websocket. Delega la tarea al servicio fetchNotificationsService. Retorna
+una promesa._
 
 **Sintaxis**
+
 ```graphql endpoint
 Subscription: {
-                notification(user: ID!): Notification
+notification(user: ID!): Notification
 }
 
 
@@ -295,11 +323,11 @@ user  | ID | Si | El ID del usuario el cual serán "escuchadas" sus notificacion
 
 ---
 
-## Servicios disponibles
+<h1 id="services">Servicios disponibles</h1>
 
-Los servicios son metodos o funciones que realizan las operaciones de alta, baja y modificacion de notificaciones. Tanto las queries como las mutations 
-delegan sus responsabilidades a estos servicios.
-Si no desea usar las queries y mutations definidas, puede utilizar los servicios de forma independiente.
+Los servicios son metodos o funciones que realizan las operaciones de alta, baja y modificacion de notificaciones. Tanto
+las queries como las mutations delegan sus responsabilidades a estos servicios. Si no desea usar las queries y mutations
+definidas, puede utilizar los servicios de forma independiente.
 
 ## Ejemplos de uso:
 
@@ -312,7 +340,7 @@ let userId = "123" //some userId
 let title = "Notification Title"
 let content = "Notification content"
 let type = "SomeType"
-let icon =  "SomeIcon"
+let icon = "SomeIcon"
 
 createNotificationService(
     userId,
@@ -321,24 +349,24 @@ createNotificationService(
     type,
     icon
 )
-.then(notificationDocument => {
-    console.log("Notification created: ",notificationDocument)
-})
-.catch(error => {
-    console.error(error)
-})
+    .then(notificationDocument => {
+        console.log("Notification created: ", notificationDocument)
+    })
+    .catch(error => {
+        console.error(error)
+    })
 ```
 
-## Métodos disponibles
+<h2>Métodos disponibles</h2>
 
-### createNotificationService
+<h3 id="create-notificationS¿-service">createNotificationService</h3>
 
 **Definición y uso**
 
-_Crea una notificación.
-Retorna una promesa._
+_Crea una notificación. Retorna una promesa._
 
 **Sintaxis**
+
 ```js
 createNotificationService(userId, title, content, type, icon)
 ```
@@ -357,96 +385,108 @@ createNotificationService(userId, title, content, type, icon)
 
 ---
 
-### fetchNotificationsService
+<h3 id="fetch-notifications-service">fetchNotificationsService</h3>
 
 **Definición y uso**
 
-_Obtiene las notificaciones de un determinado usuario.
-Retorna una promesa._
+_Obtiene las notificaciones de un determinado usuario. Retorna una promesa._
 
 **Sintaxis**
+
 ```js
 fetchNotificationsService(userId, limit, isRead, type)
 ```
 
 **Parametros**
 
-- **userId**: requerido. Tipo de dato ObjectID. El identificador del usuario que será usado para obtener sus notificaciones.
-- **limit**: no requerido. Tipo de dato Integer. Representa el numero de notificaciones limite que desea obtener. Por defecto obtiene todas las notificaciones del usuario.
-- **isRead**: requerido. Tipo de dato Boolean. 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false' si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin importar en estado de la misma.
+- **userId**: requerido. Tipo de dato ObjectID. El identificador del usuario que será usado para obtener sus
+  notificaciones.
+- **limit**: no requerido. Tipo de dato Integer. Representa el numero de notificaciones limite que desea obtener. Por
+  defecto obtiene todas las notificaciones del usuario.
+- **isRead**: requerido. Tipo de dato Boolean. 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false'
+  si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin
+  importar en estado de la misma.
 - **type**: no requerido. Tipo de dato String. Sólo en caso de que desee filtrar las notificaciones por tipo.
 
 ---
 
-### notificationsPaginateFilterService
+<h3 id="notifications-paginate-filter-service">notificationsPaginateFilterService</h3>
 
 **Definición y uso**
 
-_Obtiene las notificaciones paginadas de un determinado usuario.
-Retorna una promesa._
+_Obtiene las notificaciones paginadas de un determinado usuario. Retorna una promesa._
 
 **Sintaxis**
+
 ```js
 notificationsPaginateFilterService(userId, limit, pageNumber, isRead, type)
 ```
 
 **Parametros**
 
-- **userId**: Requerido. Tipo de dato ObjectID. El identificador del usuario que será usado para obtener sus notificaciones.
-- **limit**: No requerido. Tipo de dato Integer. Representa el numero de notificaciones limite que desea obtener. Por defecto obtiene todas las notificaciones del usuario.
-- **pageNumber**: No requerido. Tipo de dato Integer. (Úselo para la paginación de notificaciones), el número de página que desea obtener. por defecto devuelve la página 1.
-- **isRead**: Requerido. Tipo de dato Boolean. 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false' si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin importar en estado de la misma.
+- **userId**: Requerido. Tipo de dato ObjectID. El identificador del usuario que será usado para obtener sus
+  notificaciones.
+- **limit**: No requerido. Tipo de dato Integer. Representa el numero de notificaciones limite que desea obtener. Por
+  defecto obtiene todas las notificaciones del usuario.
+- **pageNumber**: No requerido. Tipo de dato Integer. (Úselo para la paginación de notificaciones), el número de página
+  que desea obtener. por defecto devuelve la página 1.
+- **isRead**: Requerido. Tipo de dato Boolean. 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false'
+  si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin
+  importar en estado de la misma.
 - **type**: Requerido. Tipo de dato String. Sólo en caso de que desee filtrar las notificaciones por tipo.
 
 ---
 
-### markAsReadOrNotReadService
+<h3 id="mark-as-read-or-not-read-service">markAsReadOrNotReadService</h3>
 
 **Definición y uso**
 
-_Permite marcar una notificación como leída o no leída.
-Retorna una promesa._
-
+_Permite marcar una notificación como leída o no leída. Retorna una promesa._
 
 **Sintaxis**
+
 ```js
 markAsReadOrNotReadService(idNotification, readValue)
 ```
 
 **Parametros**
 
-- **idNotification**: Requerido. Tipo de dato ObjectID. El identificador de la notificacion que se marcará como leida/no leida.
-- **readValue**: Requerido. Tipo de dato Boolean. "true" para marcar la notificación como leída. 'false' para marcar la notificación como no leída.
+- **idNotification**: Requerido. Tipo de dato ObjectID. El identificador de la notificacion que se marcará como leida/no
+  leida.
+- **readValue**: Requerido. Tipo de dato Boolean. "true" para marcar la notificación como leída. 'false' para marcar la
+  notificación como no leída.
 
 ---
 
-### markAllReadOrNotReadService
+<h3 id="mark-all-read-or-not-read-service">markAllReadOrNotReadService</h3>
 
 **Definición y uso**
 
-_Permite marcar todas las notificaciones de usuario como leídas o no leídas.
-Retorna una promesa._
+_Permite marcar todas las notificaciones de usuario como leídas o no leídas. Retorna una promesa._
 
 **Sintaxis**
+
 ```js
 markAllReadOrNotReadService(idUserAuth, readValue)
 ```
 
 **Parametros**
 
-- **idUserAuth**: requerido. Tipo de dato ObjectID. El ID del usuario a quien todas las notificaciones se marcarán como leídas o no leídas.
-- **readValue**: requerido. Tipo de dato Boolean. 'true' para marcar todas las notificaciones como leídas. 'false' para marcar todas las notificaciones como no leídas.
+- **idUserAuth**: requerido. Tipo de dato ObjectID. El ID del usuario a quien todas las notificaciones se marcarán como
+  leídas o no leídas.
+- **readValue**: requerido. Tipo de dato Boolean. 'true' para marcar todas las notificaciones como leídas. 'false' para
+  marcar todas las notificaciones como no leídas.
 
 ---
 
-### deleteNotificationsService
+<h3 id="delete-notifications-service">deleteNotificationsService</h3>
 
 **Definición y uso**
 
-_Elimina las notificaciones de un determinado usuario.
-Retorna una promesa._
+_Elimina las notificaciones de un determinado usuario. Retorna una promesa._
 
 **Sintaxis**
+
 ```js
 deleteNotificationsService(userId, numberOfDays)
 ```
@@ -454,13 +494,16 @@ deleteNotificationsService(userId, numberOfDays)
 **Parametros**
 
 - **userId**: requerido. Tipo de dato ObjectID. El identificador del usuario cuyas notificaciones seran eliminadas.
-- **numberOfDays**: no requerido. Tipo de dato Integer. La cantidad de días que debe tener una notificación para poder eliminarla. De forma predeterminada, elimina las notificaciones de 30 días o más.
-
+- **numberOfDays**: no requerido. Tipo de dato Integer. La cantidad de días que debe tener una notificación para poder
+  eliminarla. De forma predeterminada, elimina las notificaciones de 30 días o más.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [stars-shield]: https://img.shields.io/github/stars/draculjs/modular-framework.svg?style=flat-square
+
 [stars-url]: https://github.com/draculjs/modular-framework/stargazers
+
 [contributors-shield]: https://img.shields.io/github/contributors/draculjs/modular-framework.svg?style=flat-square
+
 [contributors-url]: https://github.com/draculjs/modular-framework/graphs/contributors
