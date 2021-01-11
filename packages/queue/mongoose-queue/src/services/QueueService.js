@@ -14,7 +14,6 @@ const fetchQueues = function () {
                 reject(err)
             }
             DefaultLogger.debug("QueueService.fetchQueues successful")
-            res.payload.toString()
             resolve(res)
 
         });
