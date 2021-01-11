@@ -19,8 +19,7 @@ npm i @dracul/notification-backend
 ```
 
 ## Tabla de contenidos
-
-- [Queries y Mutations](## Queries y Mutations)
+- [Queries y Mutations](https://github.com/draculjs/modular-framework/blob/modulo_notificaciones/packages/notification/notification-backend/readme_es.md#queries-y-mutations/ "Queries y Mutations")
   - Types
     - Notification
     - NotificationsPaginated
@@ -41,7 +40,7 @@ npm i @dracul/notification-backend
     - markAllReadOrNotReadService
     - deleteNotificationsService
 
-## Queries y Mutations
+##Queries y Mutations
 
 ### Types
 
