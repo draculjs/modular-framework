@@ -149,9 +149,9 @@ export default {
     },
     onFilePicked: function (e) {
       let img = e.target.files[0]
-      this.loadingLogo = true
       this.errorMessageLogo = null
-      if (this.$refs.logoForm.validate()) {
+      if (this.$refs.logoForm.validate() && img) {
+        this.loadingLogo = true
         CustomizationProvider.logoUpload(img).then(r => {
           this.formLogo.url = r.data.logoUpload.url
         }).catch(err => {
