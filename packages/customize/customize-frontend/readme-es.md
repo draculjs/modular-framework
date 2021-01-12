@@ -8,19 +8,11 @@ Este módulo contiene componentes que le permiten desde un panel modificar, los 
 ## Este módulo contiene la siguiente pagina y componentes:
 ​
 - Pagina donde contiene toda la configuracion para personalizar la plataforma.
-![Dracul Module Customize](https://i.imgur.com/XZST1xB.png "Dracul Module Customize")
-
-- Seleccion de idioma de la plataforma.
-![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
-
-- Edicion de colores desde el menú personalizable (Color primario y secundario).
-![Dracul Module Customize](https://i.imgur.com/VWBQu3G.png "Dracul Module Customize")
-
-- Seleccion del logo en la barra desde el menu.
-![Dracul Module Customize](https://i.imgur.com/F7ODrmk.png "Dracul Module Customize")
-
-- Visualizacion de la vista previa del logo + titulo.
-![Dracul Module Customize](https://i.imgur.com/TUB5wXi.png "Dracul Module Customize")
+- Componente de seleccion de idioma.
+- Componente de Edicion de colores (Color primario y secundario).
+- Componente de seleccion del logo en la barra desde el menu.
+- Componente de visualizacion de la vista previa del logo + titulo.
+- Componente de visualizacion de la vista previa de los colores seleccionados.
 
 ​
 ## Requerimientos
@@ -31,13 +23,11 @@ Este módulo contiene componentes que le permiten desde un panel modificar, los 
 
 ​
 ## Instalación:
-​
 ```
 npm i @dracul/customize-frontend
 ```
 ​
 ## Ejemplo de uso:
-​
 _Para utilizar el proveedor de servicios con  **Graphql** ._
 
 ```js
@@ -109,6 +99,23 @@ _Un ejemplo de uso de los componentes **LogoToolbar & TitleTolbar**  para que se
           };
 </script>
 ```
+​
+## Imagenes de muestra
+
+![Dracul Module Customize](https://i.imgur.com/XZST1xB.png "Dracul Module Customize")
+_(Img1: Menu de opciones que contiene 3 botones para poder elegir la opcion correspondiente.)_
+​
+![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
+_(Img2: Componente de seleccion de idioma donde contiene un select y boton de aplicar.)_
+​
+![Dracul Module Customize](https://i.imgur.com/VWBQu3G.png "Dracul Module Customize")
+_(Img3: Componente de seleccion de colores, donde elegis color primario, secundario y boton aplicar, tambien contiene una preview de los colores seleccionados.)_
+​
+![Dracul Module Customize](https://i.imgur.com/F7ODrmk.png "Dracul Module Customize")
+_(Img4: Componente de edicion de titulo, modo de imagen y subir logo, tambien contiene una preview del mismo y boton de aplicar.)_
+​
+![Dracul Module Customize](https://i.imgur.com/TUB5wXi.png "Dracul Module Customize")
+_(Img5: Componente de vista previa del logo y titulo pre cargados.)_
 ​
 ## Dirección de Acceso
 

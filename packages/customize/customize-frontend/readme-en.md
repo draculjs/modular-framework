@@ -8,19 +8,11 @@ This module contains components that allow you to modify the colors, logo, selec
 ## This module contains the following page and components:
 
 - Page where it contains all the configuration to customize the platform.
-![Dracul Module Customize](https://i.imgur.com/XZST1xB.png "Dracul Module Customize")
-
-- Language selection of the platform.
-![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
-
-- Color edition from the customizable menu (Primary and secondary color).
-![Dracul Module Customize](https://i.imgur.com/VWBQu3G.png "Dracul Module Customize")
-
-- Selection of the logo in the bar from the menu.
-![Dracul Module Customize](https://i.imgur.com/F7ODrmk.png "Dracul Module Customize")
-
-- Visualization of the preview of the logo + title.
-![Dracul Module Customize](https://i.imgur.com/TUB5wXi.png "Dracul Module Customize")
+- Language selection component.
+- Color Editing Component (Primary and Secondary Color).
+- Component to select the logo in the bar from the menu.
+- Component of visualization of the preview of the logo + title.
+- Component for displaying the preview of the selected colors.
 ​
 ## Requeriments
 - Graphql (Apollo Server)
@@ -108,6 +100,23 @@ _An example of using the ** LogoToolbar & TitleTolbar ** components to be displa
           };
 </script>
 ```
+​
+## Sample images
+
+![Dracul Module Customize](https://i.imgur.com/XZST1xB.png "Dracul Module Customize")
+_(Img1: Options menu that contains 3 buttons to choose the corresponding option.)_
+​
+![Dracul Module Customize](https://i.imgur.com/oG06ozZ.png "Dracul Module Customize")
+_(Img2: Language selection component where it contains a select and apply button.)_
+​
+![Dracul Module Customize](https://i.imgur.com/VWBQu3G.png "Dracul Module Customize")
+_(Img3: Color selection component, where you choose primary, secondary color and apply button, it also contains a preview of the selected colors.)_
+​
+![Dracul Module Customize](https://i.imgur.com/F7ODrmk.png "Dracul Module Customize")
+_(Img4: Component for title editing, image mode and logo upload, it also contains a preview of it and apply button.)_
+​
+![Dracul Module Customize](https://i.imgur.com/TUB5wXi.png "Dracul Module Customize")
+_(Img5: Preloaded logo and title preview component.)_
 ​
 ## Direction to access
 
