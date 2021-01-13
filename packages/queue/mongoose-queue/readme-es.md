@@ -21,7 +21,7 @@ Sistema de colas de javascript soportado sobre mongodb y mongoose.
 ## Producer
 Permite agregar tareas a la cola
 
-###Metodo: _constructor_
+### Metodo: _constructor_
 Inicializa una instancia de Producer  
 
 **Argumentos**:  
@@ -33,7 +33,7 @@ const {Producer} = require('@dracul/mongoose-queue')
 let producer = new Producer('test')
 ```
     
-###Metodo: _add_
+### Metodo: _add_
 Agregar un trabajo a la cola
 
 **Argumentos**:  
@@ -53,7 +53,7 @@ let jobId = await producer.add( {data: 'somedata'} )
 ## Consumer
 Permite obtener tareas de la cola
 
-###Metodo: _constructor_
+### Metodo: _constructor_
 Inicializa una instancia de Consumer  
 **Argumentos**:  
 - {string} **topic**: nombre del topico que identifica el tipo de tarea
@@ -64,7 +64,7 @@ const {Consumer} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
 ```
 
-###Metodo: _get_  
+### Metodo: _get_  
 Obtener un trabajo de la cola
 
 **Argumentos**:  
@@ -80,7 +80,7 @@ let consumer = new Consumer('test')
 let job = await consumer.get('worker')
 ```
 
-###Metodo: _ack_  
+### Metodo: _ack_  
 Marca un trabajo como terminado
 
 **Argumentos**:  
@@ -98,7 +98,7 @@ let job = await consumer.get('worker')
 job = await consumer.ack(job.id)
 ```
 
-###Metodo: _error_  
+### Metodo: _error_  
 Marca un trabajo con error
 
 **Argumentos**:  
@@ -120,7 +120,7 @@ job = await consumer.error(job.id,"FatalError")
 ## Worker
 Permite crear trabajadores que consuman y procesen tareas de la cola
 
-###Metodo: _constructor_
+### Metodo: _constructor_
 Inicializa una instancia de Worker  
 **Argumentos**:  
 - {Consumer} **consumer**: Instancia de un consumidor
@@ -135,7 +135,7 @@ const handler = (payload)=>{console.log(payload)}
 let worker = new Worker(consumer,'worker1',handler)
 ```
 
-###Metodo: _work_
+### Metodo: _work_
 Obtiene una tarea de la cola y la procesa con la funcion handler
 
 **Argumentos**:  
@@ -151,7 +151,7 @@ worker.work()
 ```
 
 
-###Metodo: _run_
+### Metodo: _run_
 Ejecuta el worker como daemon. El worker ejecutara el metodo "work" continuamente con un intervalo de tiempo
 
 **Argumentos**:  
@@ -167,7 +167,7 @@ worker.run(10000)
 ```
 
 
-###Metodo: _stop_
+### Metodo: _stop_
 Detiene el daemon del worker
 
 **Argumentos**:  
@@ -185,7 +185,7 @@ worker.stop()
 ```
 
 
-###Metodo: _on_
+### Metodo: _on_
 El worker permite suscribirse a un EventEmitter con los siguientes eventos
 
 
