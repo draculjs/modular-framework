@@ -41,7 +41,13 @@ import {routes} from '@dracul/queue-frontend'
 
 Podés acceder las estadisticas de la cola con /queue-stats. For example http://localhost:8080/queue-stats
 
-![ScreenShot](/exampleImages/queues-stats.png)
+![Dracul Module Queue-frontend](https://i.imgur.com/xzypisD.png "Dracul Module Queue-frontend")
+
+### Recomendacion
+Se aconseja utilizar scaffold dónde tenés todos los módulos ya integrados y link de scafold
+
+https://github.com/draculjs/scaffold
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

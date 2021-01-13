@@ -220,3 +220,9 @@ console.log("El worker registra un error en un trabajo", job,  error)
 
 worker.run(10000)
 ```
+
+### Recomendacion
+Se aconseja utilizar scaffold dónde tenés todos los módulos ya integrados y link de scafold
+
+
+

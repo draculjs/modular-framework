@@ -220,3 +220,10 @@ console.log("The worker logs an error in a job", job,  error)
 
 worker.run(10000)
 ```
+
+## Recommendation
+It is recommended to use Scaffold, where you already have all the modules implemented to be able to use it as a project base.
+https://github.com/draculjs/scaffold
+GitHubGitHub
+draculjs/scaffold
+Base project with SPA frontend and API backend with Grahql. - draculjs/scaffold

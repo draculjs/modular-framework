@@ -35,7 +35,7 @@ import {QUEUE_SHOW} from "@dracul/queue-backend/lib/permissions"
 
 - queueStats: devuelve un array de workers con los trabajos en cada estado pertenecientes a una cola
 
-```js
+```graphql endpoint
 queueStats: [QueueStats]
 
 QueueStats{
@@ -47,9 +47,21 @@ QueueStats{
 }
 ```
 
+**Datos que retorna el servicio**
+Retorna un Array del type QueueStats. Este type contiene:
+Nombre  | Tipo de dato | Descripcion |
+------- | -------------| --------------|
+topic   | String       | Topico del worker que esta en proceso|
+added   | Int          | Cantidad de tareas agregadas al worker|
+gotten  | Int          | Cantidad de tareas tomadas en el worker |
+failed  | Int          | Cantidad de tareas que fallaron en el worker |
+done    | Int          | Cantidad de tareas finalizadas en el worker |
+
+---
+
 - queues: devuelve un array de workers con su informacion correspondiente 
 
-```js
+```graphql endpoint
 queues: [Queue]
 
 type Queue{
@@ -63,6 +75,27 @@ type Queue{
     error: String
 }
 ```
+
+**Datos que retorna el servicio**
+Retorna un Array del type Queue. Este type contiene:
+Nombre  | Tipo de dato | Descripcion |
+------- | -------------| --------------|
+blockedUntil  | String | Fecha de retraso de ejecución|
+workerHostname  | String| Nombre del worker que lo procesa|
+workerId | String    | Identificador único del worker |
+retries | Int    | cantidad de reintentos de ejecución |
+topic | String    | topico de la tarea|
+payload | String    | Contenido de la tarea |
+done | Boolean    | 'true' si la tarea fue exitosa, caso contrario la tarea falló |
+icon | String    | icono de la tarea |
+error | String    | descripción del error si ocurre |
+---
+
+
+### Recomendacion
+Se aconseja utilizar scaffold dónde tenés todos los módulos ya integrados y link de scafold
+
+https://github.com/draculjs/scaffold
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
