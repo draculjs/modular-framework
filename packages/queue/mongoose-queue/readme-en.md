@@ -21,7 +21,7 @@ Javascript queuing system supported on mongodb and mongoose.
 ## Producer
 Allows adding tasks to the queue
 
-###Method: _constructor_
+### Method: _constructor_
 Initialize a Producer instance  
 
 **Parameters**:  
@@ -33,7 +33,7 @@ const {Producer} = require('@dracul/mongoose-queue')
 let producer = new Producer('test')
 ```
     
-###Method: _add_
+### Method: _add_
 Add a job to the queue
 
 **Parameters**:  
@@ -53,7 +53,7 @@ let jobId = await producer.add( {data: 'somedata'} )
 ## Consumer
 Get tasks from the queue
 
-###Method: _constructor_
+### Method: _constructor_
 Initialize a Consumer instance  
 **Parameters**:  
 - {string} **topic**: name of the topic that identifies the type of task
@@ -64,7 +64,7 @@ const {Consumer} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
 ```
 
-###Method: _get_  
+### Method: _get_  
 Get a job from the queue
 
 **Parameters**:  
@@ -80,7 +80,7 @@ let consumer = new Consumer('test')
 let job = await consumer.get('worker')
 ```
 
-###Method: _ack_  
+### Method: _ack_  
 Mark a job as done
 
 **Parameters**:  
@@ -98,7 +98,7 @@ let job = await consumer.get('worker')
 job = await consumer.ack(job.id)
 ```
 
-###Method: _error_  
+### Method: _error_  
 Mark a job with error
 
 **Parameters**:  
@@ -120,7 +120,7 @@ job = await consumer.error(job.id,"FatalError")
 ## Worker
 Create workers that consume and process tasks from the queue
 
-###Method: _constructor_
+### Method: _constructor_
 Initialize a Worker instance  
 **Parameters**:  
 - {Consumer} **consumer**: Consumer instance
@@ -135,7 +135,7 @@ const handler = (payload)=>{console.log(payload)}
 let worker = new Worker(consumer,'worker1',handler)
 ```
 
-###Method: _work_
+### Method: _work_
 Get a task from the queue and process it with the handler function
 
 **Parameters**:  
@@ -151,7 +151,7 @@ worker.work()
 ```
 
 
-###Method: _run_
+### Method: _run_
 Run the worker as a daemon. The worker will execute the Method "work" continuously with a time interval
 
 **Parameters**:  
@@ -185,7 +185,7 @@ worker.stop()
 ```
 
 
-###Method: _on_
+### Method: _on_
 The worker allows subscribing to an EventEmitter with the following events
 
 
