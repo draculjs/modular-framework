@@ -40,7 +40,9 @@
             },
             onFilePicked: function (e) {
                 this.img = e.target.files[0]
-                this.uploadAvatar(this.img)
+                if(this.img){
+                    this.uploadAvatar(this.img)
+                }
             }
         }
     }
