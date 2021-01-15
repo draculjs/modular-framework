@@ -89,7 +89,7 @@ _Una página en la que se visualiza el listado de las notificaciones del usuario
 ```js
 import {notificationPage} from '@dracul/notification-frontend'
 ```
-
+---
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

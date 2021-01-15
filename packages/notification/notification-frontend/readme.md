@@ -46,6 +46,10 @@ _An example of using the **NotificationButton** component*._
 _A button with a bell icon showing the number of notifications received. 
 Also, if you press the button, a small list with more detailed notifications will be displayed._
 
+**Button view**
+
+![](./exampleImages/notificationButton.png)
+
 **Import component**
 ```js
 import {NotificationButton} from '@dracul/notification-frontend'
@@ -61,6 +65,28 @@ import {NotificationButton} from '@dracul/notification-frontend'
 
 ---
 
+## Pages that the module exposes.
+
+_This module integrates with Vue Router, the module exports the routes of each page.
+To use these routes you need to merge them with the routes of your project._
+
+### notificationRoutes
+
+**Definition and usage**
+
+_A page where the list of user notifications is displayed._
+
+**Page view**
+
+![](exampleImages/notificationPage_en.png)
+
+**How to import this page into your project:**
+
+```js
+import {notificationPage} from '@dracul/notification-frontend'
+```
+
+---
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
