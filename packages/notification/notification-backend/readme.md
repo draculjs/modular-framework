@@ -421,7 +421,7 @@ createNotificationService(
 
 ## Available methods
 
-### createNotificationService
+<h3 id="create-notification-service">createNotificationService</h3>
 
 **Definition and usage**
 
@@ -445,7 +445,7 @@ icon| String|Yes | Will be used as the notification icon.|
 
 ---
 
-### fetchNotificationsService
+<h3 id="fetch-notifications-service">fetchNotificationsService </h3>
 
 **Definition and usage**
 
@@ -468,7 +468,7 @@ type|String | No | If you want to filter notifications by type field.|
 
 ---
 
-### notificationsPaginateFilterService
+<h3 id="notifications-paginate-filter-service">notificationsPaginateFilterService </h3>
 
 **Definition and usage**
 
@@ -492,7 +492,7 @@ type| String| Yes| If you want to filter notifications by type field.|
 
 ---
 
-### markAsReadOrNotReadService
+<h3 id="mark-as-read-or-not-read-service">markAsReadOrNotReadService </h3>
 
 **Definition and usage**
 
@@ -514,7 +514,7 @@ readValue |Boolean | Yes| 'true' to mark the notification as read. 'false' to ma
 
 ---
 
-### markAllReadOrNotReadService
+<h3 id="mark-all-read-or-not-read-service">markAllReadOrNotReadService </h3>
 
 **Definition and usage**
 
@@ -535,7 +535,7 @@ readValue| Boolean| Yes |'true' to mark all the notifications as read. 'false' t
 
 ---
 
-### deleteNotificationsService
+<h3 id="delete-notifications-service">deleteNotificationsService </h3>
 
 **Definition and usage**
 
