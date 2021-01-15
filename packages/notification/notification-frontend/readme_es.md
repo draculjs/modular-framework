@@ -69,6 +69,27 @@ import {NotificationButton} from '@dracul/notification-frontend'
 
 ---
 
+## Páginas que expone el módulo.
+
+_Este módulo se integra a Vue Router, el módulo exporta las rutas de cada página. 
+Para usar estas rutas es necesario mergearlas con las rutas de su proyecto._
+
+### notificationRoutes
+
+**Definición y uso**
+
+_Una página en la que se visualiza el listado de las notificaciones del usuario._
+
+**Vista de la página**
+
+![](exampleImages/notificationPage_es.png)
+
+**Como importar esta página en su proyecto:**
+
+```js
+import {notificationPage} from '@dracul/notification-frontend'
+```
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
