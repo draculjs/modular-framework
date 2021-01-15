@@ -271,6 +271,48 @@ icon | String | Si | Será usado como el icono que represente la notificación.|
 Retorna los datos de la notificación creada. Para más información vaya a la sección <a href="#types">Types</a>
 
 ---
+<h3 id="mark-as-read-or-not-read">markAsReadOrNotRead</h2>
+
+**Definición y uso**
+
+_Permite marcar una notificacion de usuario como leída o no leída. Delega la tarea al servicio
+markAsReadOrNotReadService. Retorna una promesa._
+
+**Sintaxis**
+
+```graphql endpoint
+
+mutation: {
+        markAsReadOrNotRead(id: ID, isRead: Boolean):Notification
+}
+
+type Notification{
+id: ID,
+user: ID,
+title: String
+content: String
+read: Boolean
+creationDate: String
+type: String
+icon: String
+readDate: String
+}
+
+```
+
+**Parametros**
+
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+id  | ID | Si | El identificador de la notificacion que se marcará como leida/no leida.|
+isRead  | Boolean| Si| "true" para marcar la notificación como leída. 'false' para marcar la notificación como no leída.|
+
+**Datos que retorna el servicio**
+
+Retorna los datos de la notificación modificada. Para más información vaya a la sección <a href="#types">Types</a>
+
+---
+
 <h3 id="mark-all-read-or-not-read">markAllReadOrNotRead</h2>
 
 **Definición y uso**

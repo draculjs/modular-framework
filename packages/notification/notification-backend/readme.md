@@ -271,6 +271,49 @@ icon | String | Yes | It will be used as the icon that represents the notificati
 Returns the data of the created notification. For more information go to the section <a href="#types">Types</a>
 
 ---
+---
+<h3 id="mark-as-read-or-not-read">markAsReadOrNotRead</h2>
+
+**Definition and usage**
+
+_Allows you to mark a user notification as read or unread. Delegate the task to the service
+markAsReadOrNotReadService. Returns a promise._
+
+**Syntax**
+
+```graphql endpoint
+
+mutation: {
+        markAsReadOrNotRead(id: ID, isRead: Boolean):Notification
+}
+
+type Notification{
+id: ID,
+user: ID,
+title: String
+content: String
+read: Boolean
+creationDate: String
+type: String
+icon: String
+readDate: String
+}
+
+```
+
+**Parameters values**
+
+Name  | Type | Required | Description |
+------- | -------------|--------| --------------|
+id  | ID | Yes | ID notification that will be marked as read or unread.|
+isRead  | Boolean| Yes|'true' to mark the notification as read. 'false' to mark the notification as unread.|
+
+**Data returned by the service**
+
+Returns the data of the modified notification. For more information go to the section <a href="#types">Types</a>
+
+---
+
 <h3 id="mark-all-read-or-not-read">markAllReadOrNotRead</h2>
 
 **Definition and usage**
