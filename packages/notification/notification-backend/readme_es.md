@@ -392,15 +392,13 @@ createNotificationService(userId, title, content, type, icon)
 
 **Parametros**
 
-- **userId**: requerido. Tipo de dato ObjectID. El identificador del usuario al cual se le creará la notificación.
-
-- **title**: requerido. Tipo de dato String. Será usado como el título de la notificación.
-
-- **content**: requerido. Tipo de dato String. Será usado como el contenido de la notificación.
-
-- **type**: requerido. Tipo de dato String. Será usado como la categoría de la notificación.
-
-- **icon**: requerido. Tipo de dato String. Será usado como el icono que represente la notificación.
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+userId  | ID | Si | El identificador del usuario al cual se le creará la notificación.|
+title| String| Si| Será usado como el título de la notificación.|
+content| String| Si| Será usado como el contenido de la notificación.|
+type| String| Si| Será usado como la categoría de la notificación.|
+icon| String| Si| Será usado como el icono que represente la notificación.|
 
 ---
 
@@ -418,14 +416,12 @@ fetchNotificationsService(userId, limit, isRead, type)
 
 **Parametros**
 
-- **userId**: requerido. Tipo de dato ObjectID. El identificador del usuario que será usado para obtener sus
-  notificaciones.
-- **limit**: no requerido. Tipo de dato Integer. Representa el numero de notificaciones limite que desea obtener. Por
-  defecto obtiene todas las notificaciones del usuario.
-- **isRead**: requerido. Tipo de dato Boolean. 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false'
-  si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin
-  importar en estado de la misma.
-- **type**: no requerido. Tipo de dato String. Sólo en caso de que desee filtrar las notificaciones por tipo.
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+userId  | ID | Si | El identificador del usuario que será usado para obtener sus notificaciones.|
+limit | Integer| No|Representa el numero de notificaciones limite que desea obtener. Por defecto obtiene todas las notificaciones del usuario. |
+isRead| Boolean| Si|'true' si quiere obtener las notificaciones que ya fueron leidas. 'false' si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin importar en estado de la misma. |
+type|String | No|  Sólo en caso de que desee filtrar las notificaciones por tipo.|
 
 ---
 
@@ -443,16 +439,13 @@ notificationsPaginateFilterService(userId, limit, pageNumber, isRead, type)
 
 **Parametros**
 
-- **userId**: Requerido. Tipo de dato ObjectID. El identificador del usuario que será usado para obtener sus
-  notificaciones.
-- **limit**: No requerido. Tipo de dato Integer. Representa el numero de notificaciones limite que desea obtener. Por
-  defecto obtiene todas las notificaciones del usuario.
-- **pageNumber**: No requerido. Tipo de dato Integer. (Úselo para la paginación de notificaciones), el número de página
-  que desea obtener. por defecto devuelve la página 1.
-- **isRead**: Requerido. Tipo de dato Boolean. 'true' si quiere obtener las notificaciones que ya fueron leidas. 'false'
-  si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin
-  importar en estado de la misma.
-- **type**: Requerido. Tipo de dato String. Sólo en caso de que desee filtrar las notificaciones por tipo.
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+userId  | ID | Si | El identificador del usuario que será usado para obtener sus notificaciones.|
+limit| Integer| No | Representa el numero de notificaciones limite que desea obtener. Por defecto obtiene todas las notificaciones del usuario.|
+pageNumber| Integer| No | (Úselo para la paginación de notificaciones), el número de página que desea obtener. por defecto devuelve la página 1.|
+isRead| Boolean|Si |  'true' si quiere obtener las notificaciones que ya fueron leidas. 'false' si quiere obtener solo las notificaciones no leidas. 'null' en caso de que desee obtener todas las notificaciones sin importar en estado de la misma. |
+type| String| Si| Sólo en caso de que desee filtrar las notificaciones por tipo.|
 
 ---
 
@@ -470,10 +463,10 @@ markAsReadOrNotReadService(idNotification, readValue)
 
 **Parametros**
 
-- **idNotification**: Requerido. Tipo de dato ObjectID. El identificador de la notificacion que se marcará como leida/no
-  leida.
-- **readValue**: Requerido. Tipo de dato Boolean. "true" para marcar la notificación como leída. 'false' para marcar la
-  notificación como no leída.
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+idNotification  | ID | Si | El identificador de la notificacion que se marcará como leida/no leida.|
+readValue| Boolean| Si| "true" para marcar la notificación como leída. 'false' para marcar la notificación como no leída. |
 
 ---
 
@@ -491,10 +484,10 @@ markAllReadOrNotReadService(idUserAuth, readValue)
 
 **Parametros**
 
-- **idUserAuth**: requerido. Tipo de dato ObjectID. El ID del usuario a quien todas las notificaciones se marcarán como
-  leídas o no leídas.
-- **readValue**: requerido. Tipo de dato Boolean. 'true' para marcar todas las notificaciones como leídas. 'false' para
-  marcar todas las notificaciones como no leídas.
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+idUserAuth  | ID | Si |  El ID del usuario a quien todas las notificaciones se marcarán como leídas o no leídas.|
+readValue | Boolean| Si| 'true' para marcar todas las notificaciones como leídas. 'false' para marcar todas las notificaciones como no leídas.|
 
 ---
 
@@ -512,9 +505,12 @@ deleteNotificationsService(userId, numberOfDays)
 
 **Parametros**
 
-- **userId**: requerido. Tipo de dato ObjectID. El identificador del usuario cuyas notificaciones seran eliminadas.
-- **numberOfDays**: no requerido. Tipo de dato Integer. La cantidad de días que debe tener una notificación para poder
-  eliminarla. De forma predeterminada, elimina las notificaciones de 30 días o más.
+Nombre  | Tipo de dato | Requerido | Descripcion |
+------- | -------------|--------| --------------|
+userId  | ID | Si |  El identificador del usuario cuyas notificaciones seran eliminadas.|
+numberOfDays | Integer| No| La cantidad de días que debe tener una notificación para poder eliminarla. De forma predeterminada, elimina las notificaciones de 30 días o más. |
+
+---
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

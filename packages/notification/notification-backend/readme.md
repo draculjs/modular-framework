@@ -392,15 +392,13 @@ createNotificationService(userId, title, content, type, icon)
 
 **Parameters values**
 
-- **userId**: required. ObjectID type. The ID user to whom the notification will be created.
-
-- **title**: required. String type. Will be used as the notification title.
-
-- **content**: required. String type. Will be used as the notification content.
-
-- **type**: required. String type. It will be used to categorize the notifications.
-
-- **icon**: required. String type. Will be used as the notification icon.
+Name  | Type | Required | Description |
+------- | -------------|--------| --------------|
+userId  | ID | Yes | The ID user to whom the notification will be created.|
+title |String |Yes | Will be used as the notification title. |
+content| String| Yes| Will be used as the notification content. |
+type|String |Yes | It will be used to categorize the notifications. |
+icon| String|Yes | Will be used as the notification icon.|
 
 ---
 
@@ -418,10 +416,12 @@ fetchNotificationsService(userId, limit, isRead, type)
 
 **Parameters values**
 
-- **userId**: required. ObjectID type. The user ID to get their notifications.
-- **limit**: not required. Integer type. The number of notifications you want to get. By default it returns all.
-- **isRead**: required. Boolean type. 'true' if you want to get the notifications that have been read. 'false' if you want to get the notifications that were not read. 'null' wants to get all notifications regardless of status.
-- **type**: not required. String type. If you want to filter notifications by type field.
+Name  | Type | Required | Description |
+------- | -------------|--------| --------------|
+userId  | ID | Yes | The user ID to get their notifications.|
+limit|Integer | No |The number of notifications you want to get. By default it returns all. |
+isRead|Boolean | Yes|  'true' if you want to get the notifications that have been read. 'false' if you want to get the notifications that were not read. 'null' wants to get all notifications regardless of status.|
+type|String | No | If you want to filter notifications by type field.|
 
 ---
 
@@ -439,11 +439,13 @@ notificationsPaginateFilterService(userId, limit, pageNumber, isRead, type)
 
 **Parameters values**
 
-- **userId**: required. ObjectID type. The user ID to get their notifications.
-- **limit**: not required. Integer type. The number of notifications you want to get. By default it returns all.
-- **pageNumber**: not required. Integer type. (Use it for the paging of notifications), the page number you want to obtain. by default returns page 1.
-- **isRead**: required. Boolean type. 'true' if you want to get the notifications that have been read. 'false' if you want to get the notifications that were not read. 'null' wants to get all notifications regardless of status.
-- **type**: required. String type. If you want to filter notifications by type field.
+Name  | Type | Required | Description |
+------- | -------------|--------| --------------|
+userId  | ID | Yes | The user ID to get their notifications.|
+limit| Integer| No| The number of notifications you want to get. By default it returns all.|
+pageNumber|Integer | No | (Use it for the paging of notifications), the page number you want to obtain. by default returns page 1.|
+isRead| Boolean| Yes | 'true' if you want to get the notifications that have been read. 'false' if you want to get the notifications that were not read. 'null' wants to get all notifications regardless of status.|
+type| String| Yes| If you want to filter notifications by type field.|
 
 ---
 
@@ -462,8 +464,10 @@ markAsReadOrNotReadService(idNotification, readValue)
 
 **Parameters values**
 
-- **idNotification**: required. ObjectID type. ID notification that will be marked as read or unread.
-- **readValue**: required. Boolean type. 'true' to mark the notification as read. 'false' to mark the notification as unread.
+Name  | Type | Required | Description |
+------- | -------------|--------| --------------|
+idNotification  | ID | Yes | ID notification that will be marked as read or unread.|
+readValue |Boolean | Yes| 'true' to mark the notification as read. 'false' to mark the notification as unread. |
 
 ---
 
@@ -481,8 +485,10 @@ markAllReadOrNotReadService(idUserAuth, readValue)
 
 **Parameters values**
 
-- **idUserAuth**: required. ObjectID type. user ID to whom all notifications will be marked as read or unread.
-- **readValue**: required. Boolean type. 'true' to mark all the notifications as read. 'false' to mark all the notifications as unread.
+Name  | Type | Required | Description |
+------- | -------------|--------| --------------|
+idUserAuth  | ID | Yes | user ID to whom all notifications will be marked as read or unread.|
+readValue| Boolean| Yes |'true' to mark all the notifications as read. 'false' to mark all the notifications as unread. |
 
 ---
 
@@ -500,8 +506,10 @@ deleteNotificationsService(userId, numberOfDays)
 
 **Parameters values**
 
-- **userId**: required. ObjectID type. The ID of the user whose notifications will be removed.
-- **numberOfDays**: not required. Integer type. The number of days old a notification must be in order to be deleted. By default it removes notifications 30 days or more old.
+Name  | Type | Required | Description |
+------- | -------------|--------| --------------|
+userId  | ID | Yes | The ID of the user whose notifications will be removed.|
+numberOfDays|Integer | No|The number of days old a notification must be in order to be deleted. By default it removes notifications 30 days or more old. |
 
 ---
 
