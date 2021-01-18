@@ -6,7 +6,7 @@
                 dark
                 v-if="items.length > 0"
         >
-            <span>Notificaciones</span>
+            <span>{{ this.$t("notification.title") }}</span>
             <v-spacer></v-spacer>
             <v-tooltip left>
                 <template v-slot:activator="{ on, attrs }">

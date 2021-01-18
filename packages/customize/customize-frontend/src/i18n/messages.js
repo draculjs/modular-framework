@@ -99,7 +99,7 @@ const messages = {
         customization: {
             title: 'Costumização',
             preview: 'Vista prévia',
-            applyButton: 'Aplicar',
+            applyButton: 'Aplique',
             colors: {
                 title: 'Cores',
                 subtitle: 'Configurações de cores da plataforma',
