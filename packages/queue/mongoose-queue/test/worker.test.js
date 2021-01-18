@@ -268,7 +268,7 @@ describe("Worker", () => {
 
         setTimeout(() => {
             worker.stop()
-            assert.equal(worker.worksFail, 9)
+            assert.equal(worker.worksFail,   9)
             done()
         }, 2000)
 

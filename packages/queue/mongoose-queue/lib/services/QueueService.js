@@ -22,6 +22,7 @@ const fetchQueues = function () {
         DefaultLogger.error("QueueService.fetchQueues ", err);
         reject(err);
       }
+
       DefaultLogger.debug("QueueService.fetchQueues successful");
       resolve(res);
     });
