@@ -27,7 +27,6 @@ type FilePaginated{
 
 type Query {
     fileFind(id:ID!): File
-    fileFetch: [File]
     filePaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): FilePaginated
 }
 

@@ -1,6 +1,9 @@
 #Dracul modulo: media-frontend
 
-El modulo media de dracul brinda un servicio de almacenamiento de archivos y expone paginas y componentes Vue listo para integrar.
+El modulo media de dracul brinda un servicio de almacenamiento de archivos y expone páginas y componentes Vue listo para integrar.
+
+## Frontend 
+Este modulo provee la interfaz de usuario que permite gestionar el servicio de archivos. Incluye páginas, componentes y providers.
 
 ## Pages
 

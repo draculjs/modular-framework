@@ -18,17 +18,12 @@ export default {
             if(!rbac.isAllowed(user.id, FILE_SHOW)) throw new ForbiddenError("Not Authorized")
             return findFile(id)
         },
-        fileFetch: (_, {}, {user,rbac}) => {
-            if (!user) throw new AuthenticationError("Unauthenticated")
-            if(!rbac.isAllowed(user.id, FILE_SHOW)) throw new ForbiddenError("Not Authorized")
-            return fetchFiles()
-        },
         filePaginate: (_, {pageNumber, itemsPerPage, search, orderBy, orderDesc}, {user,rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if(!rbac.isAllowed(user.id, FILE_SHOW)) throw new ForbiddenError("Not Authorized")
             return paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc)
         },
-        
+
     },
     Mutation: {
         fileUpdate: (_, {id, input}, {user,rbac}) => {

@@ -6,10 +6,8 @@ Dracul media-frontend debe funcionar en conjunto con media-backend
 
 ## Documentation:
 
-Español: [docs-es.md](docs-es.md)
-Ingles: [docs-es.md](docs-en.md)
-
-
+Español: [docs-es.md](docs-es.md)  
+Ingles: [docs-es.md](docs-en.md)  
 
 
 
@@ -28,10 +26,3 @@ npm run serve
 npm run build
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
