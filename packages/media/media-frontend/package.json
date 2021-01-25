@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.0.60",
+  "version": "1.0.61",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
