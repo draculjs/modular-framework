@@ -113,10 +113,8 @@ export default {
   markAllRead() {
     notificationProvider
         .markAllReadOrNotRead(false)
-        .then((res) => {
-          if (res) {
-            this.getNotifications();
-          }
+        .then(res => {
+            this.getNotificationsForPolling();
         })
         .catch((err) => {
           this.snackbarColor = "error";
