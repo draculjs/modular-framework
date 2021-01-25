@@ -21,6 +21,7 @@ const messages = {
                 url: 'URL',
                 createdAt: 'Creation date',
                 createdBy: 'Created by',
+                download: 'download'
 
             }
         }
@@ -47,6 +48,7 @@ const messages = {
                 url: 'URL',
                 createdAt: 'Fecha de creación',
                 createdBy: 'Creado por',
+                download: 'descargar'
 
             }
         }
@@ -73,6 +75,7 @@ const messages = {
                 url: 'URL',
                 createdAt: 'Data de criação',
                 createdBy: 'criado pela',
+                download: 'download'
 
             }
         }
@@ -80,4 +83,3 @@ const messages = {
 }
 
 export default messages
-    

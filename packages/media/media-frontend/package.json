@@ -4,6 +4,12 @@
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
+  "keywords": [
+    "media",
+    "store",
+    "vuejs",
+    "file"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "lint": "vue-cli-service lint",
