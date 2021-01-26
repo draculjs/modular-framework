@@ -14,7 +14,8 @@ const messages = {
         received:"Received",
         moment:"en",
         invalidDate:"Invalid date",
-        content:"Content"
+        content:"Content",
+        downloadButton:"Download file"
     },
   },
   es: {
@@ -32,7 +33,8 @@ const messages = {
         received:"Recibido",
         moment:"es",
         invalidDate:"Fecha invalida",
-        content:"Contenido"
+        content:"Contenido",
+        downloadButton:"Descargar archivo"
     },
   },
   pt: {
@@ -50,7 +52,8 @@ const messages = {
         received:"Recebido",
         moment:"pt",
         invalidDate:"Data inválida",
-        content:"Conteúdo"
+        content:"Conteúdo",
+        downloadButton:"Fazer download do arquivo"
     },
   },
 };
