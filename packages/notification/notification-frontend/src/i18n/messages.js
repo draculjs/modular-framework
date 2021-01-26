@@ -53,7 +53,7 @@ const messages = {
         moment:"pt",
         invalidDate:"Data inválida",
         content:"Conteúdo",
-        downloadButton:"Fazer download do arquivo"
+        downloadButton:"Baixar arquivo"
     },
   },
 };
