@@ -45,6 +45,7 @@ class notificationProvider {
     return this.gqlc.query({
       query: require("./gql/notificationsPaginate.graphql"),
       variables: { limit, pageNumber, isRead, type },
+      fetchPolicy: "network-only",
     });
   }
 
