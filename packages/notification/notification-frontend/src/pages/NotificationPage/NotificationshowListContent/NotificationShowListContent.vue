@@ -1,6 +1,6 @@
 <template>
   <v-list-item
-    :class="{ 'grey lighten-4 ml-n4 mr-n4': item.read, 'white ml-n4 mr-n4': !item.read}"
+    :class="{ 'grey lighten-4 mb-0 ml-n4 mr-n4': item.read, 'white mb-0 ml-n4 mr-n4': !item.read}"
   >
     <v-list-item-avatar color="primary">
       <v-icon
@@ -23,12 +23,22 @@
         v-text="item.title"
       ></v-list-item-title>
       <p class="caption d-inline-block">
-        {{ item.content }}
+        {{ cleanContent(item.content) }}
       </p>
-      <p v-show="item.read" class="caption grey--text">
+      <v-btn
+        v-if="getUrl(item.content) != undefined"
+        outlined
+        small
+        color="green"
+        :href="getUrl(item.content)" 
+      >
+        {{ $t("notification.downloadButton") }}
+        <v-icon>get_app</v-icon>
+      </v-btn>
+      <p v-show="item.read" class="caption grey--text pb-0 mb-0">
         {{ $t("notification.readDate") }}{{ getDate(item.readDate) }}
       </p>
-      <p v-show="!item.read" class="caption grey--text">
+      <p v-show="!item.read" class="caption grey--text  pb-0 mb-0">
         {{ $t("notification.received") }}
         {{ relativeDate(item.creationDate) }}
       </p>
@@ -94,6 +104,16 @@ export default {
       let newDate = moment(num).fromNow();
       return newDate;
     },
+    cleanContent(content){
+      let newArray = content.split(';;');
+      let newContent = newArray[0];
+      return newContent
+    },
+    getUrl(content){
+      let newArray = content.split(';;');
+      let newUrl = newArray[1];
+      return newUrl
+    }
   },
 };
 </script>

@@ -67,7 +67,7 @@ export default {
     },
     subscribeNotification() {
       notificationProvider.subscriptionNotification(this.userId).subscribe(res => {
-        this.items.push(res.data.notification)
+        this.items.unshift(res.data.notification)
       })
     }
   },

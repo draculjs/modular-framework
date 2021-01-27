@@ -55,7 +55,7 @@
                                 {{item.title}}
                             </v-list-item-title>
                             <p class="caption d-inline-block">
-                                {{ item.content }}
+                                {{ cleanContent(item.content) }}
                             </p>
                             <p class="grey--text caption d-inline-block">
                                 {{ getRelativeDate(item.creationDate) }}
@@ -139,6 +139,11 @@
                 let currentDate = parseInt(date);
                 return moment(currentDate).fromNow();
             },
+            cleanContent(content){
+                let newArray = content.split(';;');
+                let newContent = newArray[0];
+                return newContent
+            }
         },
         computed: {
             items: {
