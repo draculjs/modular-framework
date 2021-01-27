@@ -23,14 +23,6 @@ var _default = {
       if (!rbac.isAllowed(user.id, _File.FILE_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       return (0, _FileService.findFile)(id);
     },
-    fileFetch: (_, {}, {
-      user,
-      rbac
-    }) => {
-      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
-      if (!rbac.isAllowed(user.id, _File.FILE_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _FileService.fetchFiles)();
-    },
     filePaginate: (_, {
       pageNumber,
       itemsPerPage,
