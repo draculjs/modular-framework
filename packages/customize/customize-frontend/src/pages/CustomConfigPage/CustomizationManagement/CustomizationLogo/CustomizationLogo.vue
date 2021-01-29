@@ -91,7 +91,7 @@
 </template>
 <script>
 import LogoPreview from "../../../../components/LogoPreview"
-import {mapMutations} from 'vuex'
+import {mapMutations, mapState} from 'vuex'
 import {
   LOGO_MODE_ONLYTITLE,
   LOGO_MODE_RECTANGLE,
@@ -119,7 +119,17 @@ export default {
       },
     }
   },
+  mounted(){
+    this.formLogo.url = this.urlValue;
+    this.formLogo.mode = this.modeValue;
+    this.formLogo.title = this.titleValue;
+  },
   computed: {
+    ...mapState({
+      urlValue: state => state.customization.logo.url,
+      modeValue: (state) => state.customization.logo.mode,
+      titleValue: (state) => state.customization.logo.title
+    }),
     modes() {
       return [
         {id: LOGO_MODE_ROUND, name: this.$t('customization.logo.options.round')},
