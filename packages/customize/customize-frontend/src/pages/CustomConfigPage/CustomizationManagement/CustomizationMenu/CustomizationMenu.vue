@@ -9,6 +9,7 @@
                 <v-list-item
                         v-for="(item, i) in items"
                         :key="i"
+                        :disabled="i == value"
                 >
                     <v-list-item-icon>
                         <v-icon v-text="item.icon"></v-icon>
