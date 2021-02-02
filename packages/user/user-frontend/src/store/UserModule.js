@@ -15,7 +15,7 @@ export default {
         getAvatarUrl: (state) => {
           if(state.avatarurl){
               return state.avatarurl
-          }else if(state.me & state.me.avatarurl){
+          }else if(state.me && state.me.avatarurl){
               return state.me.avatarurl
           }
           return null
