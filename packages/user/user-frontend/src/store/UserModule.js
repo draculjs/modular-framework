@@ -13,7 +13,12 @@ export default {
             return state.me
         },
         getAvatarUrl: (state) => {
-          return state.avatarurl ? state.avatarurl : state.me.avatarurl
+          if(state.avatarurl){
+              return state.avatarurl
+          }else if(state.me & state.me.avatarurl){
+              return state.me.avatarurl
+          }
+          return null
         },
         getToken: (state) => {
             return state.access_token
@@ -56,6 +61,7 @@ export default {
 
 
         logout({commit}) {
+            commit('avatarUpdate', null)
             commit('setMe', null)
             commit('setAccessToken', null)
         },
@@ -108,11 +114,6 @@ export default {
         },
         setMe(state, me) {
             state.me = me
-            if(me && me.avatarurl){
-                state.avatarurl = me.avatarurl
-            }else{
-                state.avatarurl = null
-            }
         },
         avatarUpdate(state, avatarurl) {
             state.avatarurl = avatarurl
