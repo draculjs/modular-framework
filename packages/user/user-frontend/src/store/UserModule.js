@@ -6,10 +6,14 @@ export default {
     state: {
         access_token: null,
         me: null,
+        avatarurl: null,
     },
     getters: {
         me: (state) => {
             return state.me
+        },
+        getAvatarUrl: (state) => {
+          return state.avatarurl ? state.avatarurl : state.me.avatarurl
         },
         getToken: (state) => {
             return state.access_token
@@ -104,8 +108,14 @@ export default {
         },
         setMe(state, me) {
             state.me = me
+            if(me && me.avatarurl){
+                state.avatarurl = me.avatarurl
+            }else{
+                state.avatarurl = null
+            }
         },
         avatarUpdate(state, avatarurl) {
+            state.avatarurl = avatarurl
             state.me.avatarurl = avatarurl
         }
     }

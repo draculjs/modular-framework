@@ -9,7 +9,7 @@
                             :size="avatarSize"
                             color="grey lighten-4"
                     >
-                        <img v-if="me.avatarurl" :src="me.avatarurl"/>
+                        <img v-if="getAvatarUrl" :src="getAvatarUrl"/>
                         <img v-else src="@/assets/user.png">
                     </v-avatar>
                 </v-btn>
@@ -71,7 +71,7 @@
             },
         },
         computed: {
-            ...mapGetters(['isAuth','me']),
+            ...mapGetters(['isAuth','me', 'getAvatarUrl']),
             getSrc: function () {
                 if (this.me && this.me.avatarurl) {
                     return this.me.avatarurl

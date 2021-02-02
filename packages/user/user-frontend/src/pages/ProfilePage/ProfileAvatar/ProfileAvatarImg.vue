@@ -9,7 +9,7 @@
             v-on:mouseleave="hover = false"
 
     >
-        <img v-if="me && me.avatarurl" :src="getSrc"
+        <img v-if="getAvatarUrl" :src="getAvatarUrl"
              style="position: absolute"
         />
         <img v-else
@@ -17,10 +17,10 @@
              :src="src"
         />
 
-        <img v-if="me && me.avatarurl"
+        <img v-if="getAvatarUrl"
              v-show="hover || loading"
              style="position: absolute"
-             :src="me.avatarurl"
+             :src="getAvatarUrl"
         />
 
         <img v-else
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 
     export default {
         name: "ProfileAvatarImg",
@@ -65,16 +65,7 @@
             src: require("../../../assets/user.png")
         }),
         computed: {
-            getSrc: function () {
-                if (this.me && this.me.avatarurl) {
-                    return this.me.avatarurl
-                } else {
-                    return this.src
-                }
-            },
-            ...mapState({
-                me: state => state.user.me,
-            })
+          ...mapGetters(['getAvatarUrl']),
         }
     }
 </script>
