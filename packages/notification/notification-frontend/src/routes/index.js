@@ -7,7 +7,7 @@ const notificationRoutes = [
         component: notificationPage,
         meta: {
             requiresAuth: true,
-            permission: "CUSTOMFIELDS_SHOW"
+            permission: "NOTIFICATION_SHOW"
         }
     }
 ]
