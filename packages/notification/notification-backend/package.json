@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-backend",
-  "version": "1.0.61",
+  "version": "1.0.68",
   "description": "Modulo de notificaciones de usuario",
   "main": "./lib/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.12.5",
-    "@dracul/logger-backend": "^1.0.61",
+    "@dracul/logger-backend": "^1.0.68",
     "apollo-server-express": "^2.15.0",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
