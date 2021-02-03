@@ -36,7 +36,7 @@ export default {
       limit: 0,
       type: null,
       isRead: false,
-      itemsWithoutRead: []
+      loading: false
     }
   },
   mounted() {
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     getNotifications() {
-      if (this.activateWebSocket) {
+      if (this.isWebSocketEnable) {
         this.fetchNotifications()
         this.subscribeNotification()
       } else {
@@ -58,6 +58,7 @@ export default {
       }, this.timePolling)
     },
     fetchNotifications() {
+      this.loading = true
       notificationProvider.fetchNotifications(this.limit, this.isRead, this.type)
           .then(res => {
             this.items = res.data.fetchNotifications
@@ -65,29 +66,32 @@ export default {
           .catch(err => {
             console.log('Error: ', err)
           })
+          .finally(() => this.loading = false)
     },
     subscribeNotification() {
-      if(!this.userId){
+      if (!this.userId) {
         console.error("NotificationButton: imposible subscribe, userId prop is missing")
         return
       }
       notificationProvider.subscriptionNotification(this.userId).subscribe(res => {
-        this.items.unshift(res.data.notification)
+        if(res.data.notification){
+          this.items.unshift(res.data.notification)
+        }
       })
     }
   },
   computed: {
-    activateWebSocket(){
+    isWebSocketEnable() {
       return process.env.VUE_APP_ACTIVATE_WEB_SOCKET ? process.env.VUE_APP_ACTIVATE_WEB_SOCKET : true
     },
-    timePolling(){
+    timePolling() {
       return process.env.VUE_APP_TIME_POLLING ? parseInt(process.env.VUE_APP_TIME_POLLING) : 30000
     },
     totalNotifications() {
       return this.getNotificationsWithoutRead.length
     },
     getNotificationsWithoutRead() {
-      return this.items.filter(item => !item.read);
+      return this.items.filter(item => item && !item.read);
     },
   }
 };
