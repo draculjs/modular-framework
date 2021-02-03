@@ -25,9 +25,7 @@ import notificationProvider from "../../providers/notificationProvider";
 
 export default {
   components: {notificationMiniShow},
-  mounted() {
-    this.getNotifications()
-  },
+
   props: {
     userId: String,
     colorIcon: {type: String, default: 'onPrimary'},
@@ -41,12 +39,10 @@ export default {
       itemsWithoutRead: []
     }
   },
+  mounted() {
+    this.getNotifications()
+  },
   methods: {
-    pollData() {
-      setInterval(() => {
-        this.fetchNotifications()
-      }, this.timePolling)
-    },
     getNotifications() {
       if (this.activateWebSocket) {
         this.fetchNotifications()
@@ -55,6 +51,11 @@ export default {
         this.fetchNotifications()
         this.pollData()
       }
+    },
+    pollData() {
+      setInterval(() => {
+        this.fetchNotifications()
+      }, this.timePolling)
     },
     fetchNotifications() {
       notificationProvider.fetchNotifications(this.limit, this.isRead, this.type)
@@ -66,6 +67,10 @@ export default {
           })
     },
     subscribeNotification() {
+      if(!this.userId){
+        console.error("NotificationButton: imposible subscribe, userId prop is missing")
+        return
+      }
       notificationProvider.subscriptionNotification(this.userId).subscribe(res => {
         this.items.unshift(res.data.notification)
       })
