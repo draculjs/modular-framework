@@ -33,7 +33,6 @@
                         :items="users"
                         :item-text="'name'"
                         :item-value="'id'"
-                        attach
                         chips
                         :label="$t('group.label.users')"
                         :placeholder="$t('group.label.users')"
