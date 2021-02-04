@@ -11,6 +11,7 @@
                     :permissions="permissions"
                     @update="openUpdate"
                     @delete="openDelete"
+                    @copy="openCopy"
             ></role-list>
 
 
@@ -32,6 +33,14 @@
                      v-on:roleUpdated="onRoleUpdated"
         />
 
+        <role-copy v-if="!!roleToCopy"
+                     :open="!!roleToCopy"
+                     :role="roleToCopy"
+                     :permissions="permissions"
+                     v-on:close="roleToCopy=null"
+                     v-on:roleCopied="onRoleCreated"
+        />
+
 
         <role-delete v-if="!!roleToDelete"
                      :open="!!roleToDelete"
@@ -49,6 +58,7 @@
 
 <script>
     import RoleCreate from "./RoleCreate/RoleCreate";
+    import RoleCopy from "./RoleCopy/RoleCopy";
     import RoleDelete from "./RoleDelete/RoleDelete";
     import RoleUpdate from "./RoleUpdate/RoleUpdate";
     import RoleProvider from "../../providers/RoleProvider";
@@ -58,7 +68,7 @@
 
     export default {
         name: "RoleCrud",
-        components: {CrudLayout, Snackbar, Loading, AddButton, RoleList, RoleCreate, RoleDelete, RoleUpdate},
+        components: {CrudLayout, Snackbar, Loading, AddButton, RoleList, RoleCreate, RoleDelete, RoleUpdate, RoleCopy},
         data() {
             return {
                 loadingPermissions: true,
@@ -66,6 +76,7 @@
                 permissions: [],
                 roles: [],
                 roleToUpdate: null,
+                roleToCopy: null,
                 roleToDelete: null,
                 creating: false,
                 flashMessage: null
@@ -93,6 +104,9 @@
             },
             openUpdate(role) {
                 this.roleToUpdate = role
+            },
+            openCopy(role) {
+                this.roleToCopy = role
             },
             openDelete(role) {
                 this.roleToDelete = role

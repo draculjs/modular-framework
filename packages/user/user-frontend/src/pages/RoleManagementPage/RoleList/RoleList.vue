@@ -14,6 +14,9 @@
                     <v-btn v-if="canDelete" :disabled="role.name=='admin'" @click="openDelete(role)" icon x-small>
                         <v-icon color="orange">delete</v-icon>
                     </v-btn>
+                    <v-btn v-if="canCreate" @click="openCopy(role)" icon x-small>
+                        <v-icon color="purple">mdi-content-copy</v-icon>
+                    </v-btn>
 
                 </th>
             </tr>
@@ -54,11 +57,17 @@
             },
             canDelete() {
                 return this.hasPermission('SECURITY_ROLE_DELETE')
+            },
+            canCreate() {
+                return this.hasPermission('SECURITY_ROLE_CREATE')
             }
         },
         methods: {
             openUpdate(role) {
                 this.$emit('update', role)
+            },
+            openCopy(role) {
+                this.$emit('copy', role)
             },
             openDelete(role) {
                 this.$emit('delete', role)
