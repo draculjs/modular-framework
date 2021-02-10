@@ -64,6 +64,16 @@ const messages = {
                 COMPANY_UPDATE:"Company edition",		
                 COMPANY_SHOW:"Company display",		
                 MT_SMS_BY_CMP:"MT by CMP",
+                INTERACTIONS_EXPORT: "Export interactions",			
+                CAMPAIGN_EXPORT: "Export campaigns",				
+                CAMPAIGN_UPLOADAUDIO: "Upload campaign audio",				
+                SHOW_MULTICHANNEL_MSG: "Multichannel message display",				
+                REDMINE_SHOW: "Redmine ticket display",
+                REDMINE_CREATE: "Redmine ticket create",
+                PERSONS_EXPORT: "Export people",
+                SOCIOECONOMICLEVEL_SHOW: "Socioeconomic level display",
+                LIVINGPLACETYPE_SHOW: "Living place type display",
+                COMPANY_EXPORT: "Export companies"
             }
         },
     },
@@ -132,6 +142,16 @@ const messages = {
                 COMPANY_UPDATE:"Edición de empresas",		
                 COMPANY_SHOW:"Visualización de empresas",		
                 MT_SMS_BY_CMP:"MT por CMP",
+                INTERACTIONS_EXPORT: "Exportar interacciones",			
+                CAMPAIGN_EXPORT: "Exportar campañas",				
+                CAMPAIGN_UPLOADAUDIO: "Cargar audio de campaña",				
+                SHOW_MULTICHANNEL_MSG: "Visualización mensaje Multichannel",				
+                REDMINE_SHOW: "Visualización tickets Redmine",
+                REDMINE_CREATE: "Creacion tickets Redmine",
+                PERSONS_EXPORT: "Exportar personas",
+                SOCIOECONOMICLEVEL_SHOW: "Visualización nivel socioeconomico",
+                LIVINGPLACETYPE_SHOW: "Visualización tipo de vivienda",
+                COMPANY_EXPORT: "Exportar empresas"
             }
         },
 
@@ -201,6 +221,16 @@ const messages = {
                 COMPANY_UPDATE:"Edição em empresa",		
                 COMPANY_SHOW:"Visor do empresa",		
                 MT_SMS_BY_CMP:"MT por CMP",
+                INTERACTIONS_EXPORT: "Exportar interações",			
+                CAMPAIGN_EXPORT: "Exportar campanhas",				
+                CAMPAIGN_UPLOADAUDIO: "Carregar áudio da campanha",				
+                SHOW_MULTICHANNEL_MSG: "Exibição de mensagem Multichannel",				
+                REDMINE_SHOW: "Visor de tíquetes do Redmine",
+                REDMINE_CREATE: "Criação de tíquete Redmine",
+                PERSONS_EXPORT: "Exportar pessoa",
+                SOCIOECONOMICLEVEL_SHOW: "Visor de nível socioeconômico",
+                LIVINGPLACETYPE_SHOW: "Exibição do tipo de moradia",
+                COMPANY_EXPORT: "Exportar empresas"
                 }
             }
         },
