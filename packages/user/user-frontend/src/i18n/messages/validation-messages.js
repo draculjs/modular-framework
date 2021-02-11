@@ -13,7 +13,7 @@ const messages = {
             required: 'Campo requerido',
             unique: 'El campo debe ser unico',
             emailFormat: 'El email tiene un formato invalido',
-            onlyLetters:'Only letters',
+            onlyLetters:'Solo letras',
             invalidHexColor: 'Hex invalido'
         }
     },
@@ -22,7 +22,7 @@ const messages = {
             required: 'Campo requerido',
             unique: 'O campo deve ser exclusivo',
             emailFormat: 'O email tem um formato inválido',
-            onlyLetters:'Only letters',
+            onlyLetters:'Apenas letras',
             invalidHexColor: 'Hex invalido'
         }
     }
