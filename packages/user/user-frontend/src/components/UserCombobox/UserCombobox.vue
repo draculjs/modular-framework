@@ -5,9 +5,9 @@
       :items="users"
       :item-text="'username'"
       :item-value="'id'"
-      chips
-      :label="$t('user.label.user')"
-      :placeholder="$t('user.label.user')"
+      :chips="chips"
+      :label="$t('user.user')"
+      :placeholder="$t('user.user')"
       :multiple="multiple"
   ></v-select>
 </template>
@@ -21,7 +21,8 @@ export default {
       value: {
         type: [String, Array]
       },
-      multiple: {type:Boolean, default:false}
+      multiple: {type:Boolean, default:false},
+      chips: {type:Boolean, default:false}
   },
   data() {
     return {
