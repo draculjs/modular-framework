@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import UserProvider from "@/providers/UserProvider";
+import UserProvider from "../../providers/UserProvider";
 
 export default {
   name: "UserCombobox",
