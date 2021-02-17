@@ -1,6 +1,7 @@
 //Components
 import DashboardButton from "./components/DashboardButton";
 import AppBarUserMenu from "./components/AppBarUserMenu";
+import UserCombobox from "./components/UserCombobox";
 
 //Pages
 import UserManagementPage from './pages/UserManagementPage'
@@ -48,6 +49,7 @@ export {
     //Components
     DashboardButton,
     AppBarUserMenu,
+    UserCombobox,
 
     //Pages
     UserManagementPage,
