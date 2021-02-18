@@ -8,8 +8,11 @@ import {isDayjs} from 'dayjs'
  */
 const setTimeToDatetimeHelper = (sourceDate, newTime) => {
 
-    if(!(isDayjs(sourceDate)))
+    if(sourceDate === null || sourceDate === ''){
+        sourceDate = Dayjs()
+    }else if(!(isDayjs(sourceDate))){
         throw new Error("Date is not a Dayjs instance")
+    }
 
     let timeSplit = newTime.split(":")
     let hour = parseInt(timeSplit[0])
