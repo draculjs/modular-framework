@@ -7,19 +7,21 @@ exports.default = void 0;
 
 var _Dayjs = _interopRequireDefault(require("../utils/Dayjs"));
 
+var _setTimeToDatetimeHelper = _interopRequireDefault(require("../helpers/setTimeToDatetimeHelper"));
+
+var _setDateToDatetimeHelper = _interopRequireDefault(require("../helpers/setDateToDatetimeHelper"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = {
   methods: {
-    setTime(field, time) {
-      let timeSplit = time.split(":");
-      let hour = timeSplit[0];
-      let minute = timeSplit[1];
-      this[field].hour(hour);
-      this[field].minute(minute);
+    setTime(field, newTime) {
+      this[field] = (0, _setTimeToDatetimeHelper.default)(this[field], newTime);
     },
 
-    setDate(field, date) {}
+    setDate(field, newDate) {
+      this[field] = (0, _setDateToDatetimeHelper.default)(this[field], newDate);
+    }
 
   },
   computed: {
