@@ -28,6 +28,7 @@ var _default = {
     getDateFormat() {
       return date => {
         if (!date) return null;
+        if (/[0-9]{13}/.test(date)) date = parseInt(date);
         return (0, _Dayjs.default)(date).tz().format("YYYY-MM-DD");
       };
     },
@@ -35,6 +36,7 @@ var _default = {
     getDateTimeFormat() {
       return date => {
         if (!date) return null;
+        if (/[0-9]{13}/.test(date)) date = parseInt(date);
         return (0, _Dayjs.default)(date).tz().format("YYYY-MM-DD HH:mm:ss");
       };
     },
@@ -42,6 +44,7 @@ var _default = {
     getTimeFormat() {
       return date => {
         if (!date) return null;
+        if (/[0-9]{13}/.test(date)) date = parseInt(date);
         return (0, _Dayjs.default)(date).tz().format("HH:mm");
       };
     },
@@ -49,6 +52,7 @@ var _default = {
     getDateTimeCustomFormat() {
       return (date, format = "YYYY-MM-DD HH:mm:ss", tz = "America/Buenos_Aires") => {
         if (!date) return null;
+        if (/[0-9]{13}/.test(date)) date = parseInt(date);
         return (0, _Dayjs.default)(date).tz(tz).format(format);
       };
     }

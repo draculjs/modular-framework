@@ -25,7 +25,7 @@ export default {
             }
         },
         getDateTimeFormat() {
-            return (date) => {
+            return (date, showSeconds = false) => {
 
                 if(!date)
                     return null
@@ -33,11 +33,16 @@ export default {
                 if(/[0-9]{13}/.test(date))
                     date = parseInt(date)
 
-                return dayjs(date).tz().format("YYYY-MM-DD HH:mm:ss")
+                let format = "YYYY-MM-DD HH:mm"
+
+                if(showSeconds)
+                    format += ":ss"
+
+                return dayjs(date).tz().format(format)
             }
         },
         getTimeFormat() {
-            return (date) => {
+            return (date, showSeconds = false) => {
 
                 if(!date)
                     return null
@@ -45,17 +50,28 @@ export default {
                 if(/[0-9]{13}/.test(date))
                     date = parseInt(date)
 
-                return dayjs(date).tz().format("HH:mm")
+                let format = "HH:mm"
+
+                if(showSeconds)
+                    format += ":ss"
+
+                return dayjs(date).tz().format(format)
             }
         },
         getDateTimeCustomFormat() {
-            return (date, format = "YYYY-MM-DD HH:mm:ss", tz = "America/Buenos_Aires") => {
+            return (date, format, tz) => {
 
                 if(!date)
                     return null
 
                 if(/[0-9]{13}/.test(date))
                     date = parseInt(date)
+
+                if(!tz)
+                    tz = dayjs.tz.guess()
+
+                if(!format)
+                    format = "YYYY-MM-DD HH:mm:ss"
 
                 return dayjs(date).tz(tz).format(format)
             }
