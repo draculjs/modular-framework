@@ -18,6 +18,9 @@ export default {
                 if(!date)
                     return null
 
+                if(/[0-9]{13}/.test(date))
+                    date = parseInt(date)
+
                 return dayjs(date).tz().format("YYYY-MM-DD")
             }
         },
@@ -26,6 +29,9 @@ export default {
 
                 if(!date)
                     return null
+
+                if(/[0-9]{13}/.test(date))
+                    date = parseInt(date)
 
                 return dayjs(date).tz().format("YYYY-MM-DD HH:mm:ss")
             }
@@ -36,6 +42,9 @@ export default {
                 if(!date)
                     return null
 
+                if(/[0-9]{13}/.test(date))
+                    date = parseInt(date)
+
                 return dayjs(date).tz().format("HH:mm")
             }
         },
@@ -44,6 +53,9 @@ export default {
 
                 if(!date)
                     return null
+
+                if(/[0-9]{13}/.test(date))
+                    date = parseInt(date)
 
                 return dayjs(date).tz(tz).format(format)
             }
