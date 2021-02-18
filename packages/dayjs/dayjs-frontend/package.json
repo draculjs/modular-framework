@@ -1,0 +1,35 @@
+{
+  "name": "@dracul/dayjs-frontend",
+  "version": "1.0.0",
+  "description": "vue dayjs utils",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draculjs/modular-framework.git"
+  },
+  "keywords": [
+    "dayjs",
+    "vuejs"
+  ],
+  "author": "Cristian Incarnato",
+  "license": "MIT",
+  "dependencies": {
+    "dayjs": "^1.9.6",
+    "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "cpx": "^1.5.0",
+    "mocha": "^8.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/draculjs/modular-framework/issues"
+  },
+  "homepage": "https://github.com/draculjs/modular-framework#readme"
+}
