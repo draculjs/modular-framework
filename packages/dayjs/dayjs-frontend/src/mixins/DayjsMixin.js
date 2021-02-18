@@ -4,10 +4,10 @@ import setDateToDatetimeHelper from "../helpers/setDateToDatetimeHelper";
 
 export default {
     methods: {
-        setTime(field, newTime) {
+        setTimeToFormField(field, newTime) {
             this.form[field] = setTimeToDatetimeHelper(this[field], newTime)
         },
-        setDate(field, newDate) {
+        setDateToFormField(field, newDate) {
             this.form[field] = setDateToDatetimeHelper(this[field], newDate)
         }
     },
