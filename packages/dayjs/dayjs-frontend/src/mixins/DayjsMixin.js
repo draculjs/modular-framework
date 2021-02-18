@@ -14,21 +14,37 @@ export default {
     computed: {
         getDateFormat() {
             return (date) => {
+
+                if(!date)
+                    return null
+
                 return dayjs(date).tz().format("YYYY-MM-DD")
             }
         },
         getDateTimeFormat() {
             return (date) => {
+
+                if(!date)
+                    return null
+
                 return dayjs(date).tz().format("YYYY-MM-DD HH:mm:ss")
             }
         },
         getTimeFormat() {
             return (date) => {
+
+                if(!date)
+                    return null
+
                 return dayjs(date).tz().format("HH:mm")
             }
         },
         getDateTimeCustomFormat() {
             return (date, format = "YYYY-MM-DD HH:mm:ss", tz = "America/Buenos_Aires") => {
+
+                if(!date)
+                    return null
+
                 return dayjs(date).tz(tz).format(format)
             }
         }

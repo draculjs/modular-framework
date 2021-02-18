@@ -16,11 +16,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   methods: {
     setTimeToFormField(field, newTime) {
-      this.form[field] = (0, _setTimeToDatetimeHelper.default)(this[field], newTime);
+      this.form[field] = (0, _setTimeToDatetimeHelper.default)(this.form[field], newTime);
     },
 
     setDateToFormField(field, newDate) {
-      this.form[field] = (0, _setDateToDatetimeHelper.default)(this[field], newDate);
+      this.form[field] = (0, _setDateToDatetimeHelper.default)(this.form[field], newDate);
     }
 
   },
