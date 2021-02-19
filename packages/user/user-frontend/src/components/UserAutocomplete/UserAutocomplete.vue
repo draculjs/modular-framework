@@ -90,7 +90,11 @@ export default {
   methods: {
     remove(id) {
       const index = this.userValue.indexOf(id)
-      if (index >= 0) this.userValue.splice(index, 1)
+      if (index >= 0){
+        let aux = [...this.userValue]
+        aux.splice(index, 1)
+        this.userValue = aux
+      }
     },
     loadUsers() {
       this.loading = true
