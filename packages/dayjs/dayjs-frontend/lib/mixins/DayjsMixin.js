@@ -34,25 +34,31 @@ var _default = {
     },
 
     getDateTimeFormat() {
-      return date => {
+      return (date, showSeconds = false) => {
         if (!date) return null;
         if (/[0-9]{13}/.test(date)) date = parseInt(date);
-        return (0, _Dayjs.default)(date).tz().format("YYYY-MM-DD HH:mm:ss");
+        let format = "YYYY-MM-DD HH:mm";
+        if (showSeconds) format += ":ss";
+        return (0, _Dayjs.default)(date).tz().format(format);
       };
     },
 
     getTimeFormat() {
-      return date => {
+      return (date, showSeconds = false) => {
         if (!date) return null;
         if (/[0-9]{13}/.test(date)) date = parseInt(date);
-        return (0, _Dayjs.default)(date).tz().format("HH:mm");
+        let format = "HH:mm";
+        if (showSeconds) format += ":ss";
+        return (0, _Dayjs.default)(date).tz().format(format);
       };
     },
 
     getDateTimeCustomFormat() {
-      return (date, format = "YYYY-MM-DD HH:mm:ss", tz = "America/Buenos_Aires") => {
+      return (date, format, tz) => {
         if (!date) return null;
         if (/[0-9]{13}/.test(date)) date = parseInt(date);
+        if (!tz) tz = _Dayjs.default.tz.guess();
+        if (!format) format = "YYYY-MM-DD HH:mm:ss";
         return (0, _Dayjs.default)(date).tz(tz).format(format);
       };
     }
