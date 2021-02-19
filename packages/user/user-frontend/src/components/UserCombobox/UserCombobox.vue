@@ -6,8 +6,8 @@
       :item-text="'username'"
       :item-value="'id'"
       :chips="chips"
-      :label="$t('user.user')"
-      :placeholder="$t('user.user')"
+      :label="$t('user.users')"
+      :placeholder="$t('user.users')"
       :multiple="multiple"
   ></v-select>
 </template>
