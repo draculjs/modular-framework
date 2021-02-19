@@ -12,6 +12,7 @@
       :item-text="'username'"
       :item-value="'id'"
       :multiple="multiple"
+      :loading="loading"
   >
     <template v-slot:selection="data">
       <v-chip
