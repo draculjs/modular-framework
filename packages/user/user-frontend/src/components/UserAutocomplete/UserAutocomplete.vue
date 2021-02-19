@@ -87,9 +87,7 @@ export default {
   },
   methods: {
     remove(id) {
-      console.log("REMOVE", id)
       const index = this.userValue.indexOf(id)
-      console.log("index", index)
       if (index >= 0) this.userValue.splice(index, 1)
     },
     loadUsers() {
