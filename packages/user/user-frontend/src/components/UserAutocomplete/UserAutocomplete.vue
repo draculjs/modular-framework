@@ -80,6 +80,7 @@ export default {
       },
       set(val) {
         this.$emit('input', val)
+        this.$emit('usersSelected', this.users.filter(u => val.includes(u.id)))
       }
     }
   },
