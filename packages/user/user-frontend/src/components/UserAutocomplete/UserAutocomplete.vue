@@ -64,8 +64,8 @@ export default {
     chips: {type: Boolean, default: false},
     color: {type:String,default:"blue-grey lighten-2"},
     backgroundColor: {type:String},
-    label: {type:String,default: 'user.user'},
-    placeholder: {type:String,default: 'user.user'}
+    label: {type:String,default: 'user.users'},
+    placeholder: {type:String,default: 'user.users'}
   },
   data() {
     return {
