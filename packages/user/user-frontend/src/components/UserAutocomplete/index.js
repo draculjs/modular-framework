@@ -1,4 +1,4 @@
-import UserCombobox from "./UserAutocomplete";
+import UserAutocomplete from "./UserAutocomplete";
 
-export {UserCombobox}
-export default UserCombobox
+export {UserAutocomplete}
+export default UserAutocomplete
