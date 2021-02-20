@@ -46,7 +46,7 @@ export default {
 
     },
     Mutation: {
-        adminAvatarUpload: async (_, {id, file}, {user}) => {
+        adminAvatarUpload: async (_, {id, file}, {user,rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
             let userDst = await findUser(id)
