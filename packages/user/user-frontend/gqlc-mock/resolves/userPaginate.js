@@ -11,7 +11,7 @@ const resolve = {
                     email: "john.doe@gmail.com",
                     role: {id: 1, name: "admin"},
                     phone: "123",
-                    avatarurl: "",
+                    avatarurl: "https://firebasestorage.googleapis.com/v0/b/fullstack-extraordinary.appspot.com/o/VladDracula.jpg?alt=media&token=8288b458-692a-4630-a331-a89a2292d5b6",
                     active: true,
                     groups: []
                 },
@@ -22,7 +22,7 @@ const resolve = {
                     email: "jane.doe@gmail.com",
                     role: {id: 2, name: "supervisor"},
                     phone: "456",
-                    avatarurl: "",
+                    avatarurl: null,
                     active: true,
                     groups: []
                 }

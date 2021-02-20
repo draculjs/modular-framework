@@ -20,6 +20,8 @@ import {
     SECURITY_USER_SHOW
 } from "../../permissions";
 
+import {avatarUpload} from "../../services/ProfileService";
+
 export default {
     Query: {
 
@@ -44,7 +46,12 @@ export default {
 
     },
     Mutation: {
-
+        adminAvatarUpload: async (_, {id, file}, {user}) => {
+            if (!user) throw new AuthenticationError("UNAUTHENTICATED")
+            if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
+            let userDst = await findUser(id)
+            return avatarUpload(userDst, file)
+        },
         createUser: (_, {input}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_CREATE)) throw new ForbiddenError("Not Authorized")

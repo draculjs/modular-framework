@@ -13,6 +13,7 @@ import groups from "./resolves/groups";
 import permissions from "./resolves/permissions";
 
 import avatarUpload from "./resolves/avatarUpload";
+import adminAvatarUpload from "./resolves/adminAvatarUpload";
 import avatarUploadValidationMaxFileSize from "./resolves/avatarUploadValidationMaxFileSize";
 
 
@@ -49,6 +50,16 @@ mockGqlClient.setRequestHandler(
         })
     }
 );
+
+mockGqlClient.setRequestHandler(
+    require('../src/providers/gql/userAdminChangeAvatar.graphql'),
+    () => {
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(adminAvatarUpload), 2000)
+        })
+    }
+);
+
 
 
 mockGqlClient.setRequestHandler(

@@ -67,6 +67,16 @@ class UserProvider {
             variables: {id: id, password: password, passwordVerify: passwordVerify}
         })
     }
+
+    adminAvatarUpload(id,file) {
+        return this.gqlc.mutate({
+            mutation: require('./gql/userAdminChangeAvatar.graphql'),
+            variables: {
+                id: id,
+                file: file
+            },
+        })
+    }
 }
 
 const userProvider = new UserProvider()

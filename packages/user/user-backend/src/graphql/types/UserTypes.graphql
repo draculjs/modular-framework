@@ -42,6 +42,7 @@ type UserDelete{
 }
 
 type Mutation {
+    adminAvatarUpload(id: ID!, file: Upload!): AvatarFile!
     createUser(input: UserInput): User
     updateUser(id: ID!, input: UserInput): User
     deleteUser(id: ID!): UserDelete!
