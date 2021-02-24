@@ -69,6 +69,11 @@ const customizationStore = {
                 state.vuetifyInstance.framework.theme.themes.light.onPrimary = onPrimary
                 state.vuetifyInstance.framework.theme.themes.light.secondary = secondary
                 state.vuetifyInstance.framework.theme.themes.light.onSecondary = onSecondary
+
+                state.vuetifyInstance.framework.theme.themes.dark.primary = primary
+                state.vuetifyInstance.framework.theme.themes.dark.onPrimary = onPrimary
+                state.vuetifyInstance.framework.theme.themes.dark.secondary = secondary
+                state.vuetifyInstance.framework.theme.themes.dark.onSecondary = onSecondary
             }
 
         },
