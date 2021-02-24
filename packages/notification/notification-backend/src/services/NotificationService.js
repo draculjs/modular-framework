@@ -212,7 +212,7 @@ export const markAllReadOrNotReadService = (idUserAuth, readValue) => {
     let query = getReadDate(readValue);
 
     return new Promise((resolve, reject) => {
-        Notification.updateMany({user: idUserAuth}, query)
+        Notification.updateMany({user: idUserAuth, read: readValue}, query)
             .exec(function (err, documentsNotification) {
                 if (err) {
                     winston.error("Error al marcar las notificaciones, error: ", err);
