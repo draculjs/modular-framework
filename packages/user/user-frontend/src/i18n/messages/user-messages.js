@@ -1,6 +1,8 @@
 const userMessages = {
     en: {
         user: {
+            user: 'User',
+            users: 'Users',
             title: 'Users management',
             description: 'View, search, create, edit and delete Users',
             createTitle: 'Creating user',
@@ -11,10 +13,13 @@ const userMessages = {
             getApikey: 'Get APIKEY',
             deleteConfirm: 'Are you sure you want to delete this user?',
             changePasswordTitle: 'Changing user password',
+            changeAvatarTitle: 'Changing user avatar',
             changeYourPassword: 'Change your password',
             created: 'User created',
             updated: 'User updated',
             deleted: 'User deleted',
+            passwordChanged: 'User password changed',
+            avatarChanged: 'User avatar changed',
             notFound: 'User not found',
             validation: {
                 required: 'Required field',
@@ -41,6 +46,8 @@ const userMessages = {
     },
     es: {
         user: {
+            user: 'Usuario',
+            users: 'Usuarios',
             title: 'Administración de Usuarios',
             description: 'Ver, buscar, crear, editar, y borrar usuarios del sistema ',
             adminTitle: 'Administración de Usuarios',
@@ -52,10 +59,13 @@ const userMessages = {
             getApikey: 'Obtener APIKEY',
             deleteConfirm: '¿Esta seguro que desea eliminar este usuario?',
             changePasswordTitle: 'Cambiando contraseña de usuario',
+            changeAvatarTitle: 'Cambiando avatar de usuario',
             changeYourPassword: 'Cambiar tu contraseña',
             created: 'Usuario creado',
             updated: 'Usuario actualizado',
             deleted: 'Usuario eliminado',
+            passwordChanged: 'Contraseña de usuario modificada',
+            avatarChanged: 'Avatar de usuario modificado',
             notFound: 'Usuario no encontrado',
             validation: {
                 required: 'Campo requerido',
@@ -83,6 +93,8 @@ const userMessages = {
     },
     pt: {
         user: {
+            user: 'Usuário',
+            users: 'Usuários',
             title: 'Administração de Usuários',
             description: 'Ver, buscar, criar, editar e usar empréstimos do sistema',
             createTitle: 'Criando usuário',
@@ -93,10 +105,13 @@ const userMessages = {
             getApikey: 'Obter APIKEY',
             deleteConfirm: 'Tem certeza de que deseja excluir este usuário?',
             changePasswordTitle: 'Alterando a senha do usuário',
+            changeAvatarTitle: 'Alterando avatar do usuário',
             changeYourPassword: 'Mude sua senha',
             created: 'Usuário criado',
             updated: 'Usuário atualizado',
             deleted: 'Usuário removido',
+            passwordChanged: 'Senha de usuário modificada',
+            avatarChanged: 'Avatar de usuário modificado',
             notFound: 'Usuário não encontrado',
             validation: {
                 required: 'Campo obrigatório',

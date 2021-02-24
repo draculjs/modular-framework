@@ -11,6 +11,7 @@ import FileMetricsProvider from './modules/media/providers/FileMetricsProvider'
 import FileUploadExpress from './modules/media/components/FileUploadExpress'
 import FileUpload from './modules/media/components/FileUpload'
 import FileView from './modules/media/components/FileView'
+import MediaField from './modules/media/components/MediaField'
 
 //Pages
 import FileManagementPage from './modules/media/pages/FileManagementPage/index'
@@ -37,6 +38,7 @@ export {
     FileUploadExpress,
     FileUpload,
     FileView,
+    MediaField,
 
     //Pages
     FileManagementPage,

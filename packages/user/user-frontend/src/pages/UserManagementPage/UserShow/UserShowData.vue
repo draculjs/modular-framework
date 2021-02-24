@@ -1,5 +1,9 @@
 <template>
     <v-row>
+      <v-col cols="12" sm="12" md="12" class="text-center">
+        <user-avatar :user="item"></user-avatar>
+      </v-col>
+
         <v-col cols="12" sm="6" md="4">
             <v-list>
                 <user-show-data-item :item="item.name" :label="$t('user.label.fullname')" icon="account_box"/>
@@ -41,10 +45,11 @@
 </template>
 <script>
     import UserShowDataItem from "./UserShowDataItem"
+    import UserAvatar from "../../../components/UserAvatar";
 
     export default {
         name: 'user-show-data',
-        components: {UserShowDataItem},
+        components: {UserAvatar, UserShowDataItem},
         props: {
             item: {}
         }

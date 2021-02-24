@@ -4,7 +4,7 @@ import Vuetify, {
     VCard, VCardText, VCardTitle, VCardActions, VCardSubtitle,
     VContent, VContainer, VRow, VCol, VSpacer,
     VToolbar, VToolbarItems, VToolbarTitle, VProgressLinear, VMenu, VProgressCircular,
-    VAlert, VIcon, VTooltip, VDivider,
+    VAlert, VIcon, VTooltip, VDivider, VImg,
     VDialog, VDataTable, VAvatar, VSimpleTable,
     VColorPicker, VChip, VChipGroup, VSnackbar,
     VList, VListItem, VListGroup, VListItemIcon, VListItemAction, VListItemTitle, VListItemSubtitle, VListItemContent
@@ -38,6 +38,7 @@ Vue.use(Vuetify, {
         VProgressCircular,
         VAlert,
         VIcon,
+        VImg,
         VTooltip,
         VDivider,
         VDialog,

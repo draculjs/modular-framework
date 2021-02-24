@@ -35,8 +35,8 @@
 
         <template v-slot:item.img="{ item }">
           <v-avatar size="36px">
-            <img v-if="item.avatarurl" :src="item.avatarurl"/>
-            <v-icon>user</v-icon>
+            <v-img v-if="item.avatarurl" :src="item.avatarurl"/>
+            <v-icon v-else large >account_circle</v-icon>
           </v-avatar>
         </template>
 
@@ -53,7 +53,7 @@
           <v-icon
               small
               color="info"
-              class="mr-2"
+              class="mr-1"
               @click="$emit('open-show', item)"
           >
             search
@@ -61,7 +61,7 @@
           <v-icon
               small
               color="info"
-              class="mr-2"
+              class="mr-1"
               @click="$emit('open-apikey', item)"
           >
             api
@@ -71,7 +71,7 @@
               v-if="canEdit"
               small
               color="purple"
-              class="mr-2"
+              class="mr-1"
               @click="$emit('open-edit', item)"
           >
             edit
@@ -80,8 +80,18 @@
           <v-icon
               v-if="canEdit"
               small
+              color="orange"
+              class="mr-1"
+              @click="$emit('open-change-avatar', item)"
+          >
+            face
+          </v-icon>
+
+          <v-icon
+              v-if="canEdit"
+              small
               color="purple"
-              class="mr-2"
+              class="mr-1"
               @click="$emit('open-change-password', item)"
           >
             lock
@@ -92,7 +102,7 @@
               v-if="canDelete"
               color="red"
               small
-              class="mr-2"
+              class="mr-1"
               @click="$emit('open-delete', item)"
           >
             delete
@@ -130,7 +140,6 @@ export default {
         {text: this.$t('user.label.fullname'), value: 'name'},
         {text: this.$t('user.label.username'), value: 'username'},
         {text: this.$t('user.label.email'), value: 'email'},
-        {text: this.$t('user.label.phone'), value: 'phone'},
         {text: this.$t('user.label.role'), value: 'role.name'},
         {text: this.$t('user.label.active'), value: 'active'},
         {text: this.$t('user.label.actions'), value: 'action', sortable: false},

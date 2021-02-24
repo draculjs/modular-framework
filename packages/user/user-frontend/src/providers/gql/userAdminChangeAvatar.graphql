@@ -1,0 +1,8 @@
+mutation adminAvatarUpload($id: ID!, $file: Upload!){
+    adminAvatarUpload(id:$id, file: $file){
+        filename
+        mimetype
+        encoding
+        url
+    }
+}
