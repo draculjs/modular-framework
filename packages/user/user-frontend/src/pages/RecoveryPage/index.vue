@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid fill-height class="grey lighten-3">
+    <v-container fluid fill-height >
         <v-row align="center" justify="center">
             <v-col cols="12" sm="8" md="4">
                 <recovery></recovery>
