@@ -2,7 +2,7 @@
   <v-row row wrap>
 
     <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
-      <search-input @search="performSearch" v-model="search"/>
+      <search-input @search="setSearch" v-model="searchInput"/>
     </v-col>
 
     <v-col cols="12">
@@ -85,6 +85,7 @@ export default {
       totalItems: null,
       loading: false,
       search: '',
+      searchInput: "",
       itemsPerPage: 5,
       pageNumber: 1,
       orderBy: null,
@@ -112,8 +113,9 @@ export default {
     this.fetch()
   },
   methods: {
-    performSearch() {
+    setSearch() {
       this.pageNumber = 1
+      this.search = this.searchInput
       this.fetch()
     },
     fetch() {
