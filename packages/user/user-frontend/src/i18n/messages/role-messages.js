@@ -73,7 +73,12 @@ const messages = {
                 PERSONS_EXPORT: "Export people",
                 SOCIOECONOMICLEVEL_SHOW: "Socioeconomic level display",
                 LIVINGPLACETYPE_SHOW: "Living place type display",
-                COMPANY_EXPORT: "Export companies"
+                COMPANY_EXPORT: "Export companies",
+                REDMINE_UPDATE:"Redmine Update",		
+                REDMINE_DELETE:"Redmine Delete",
+                AUDIT_CREATE:"Audit create",
+                AUDIT_DELETE:"Audit delete",
+                AUDIT_SHOW:"Audit display"
             }
         },
     },
@@ -151,7 +156,12 @@ const messages = {
                 PERSONS_EXPORT: "Exportar personas",
                 SOCIOECONOMICLEVEL_SHOW: "Visualización nivel socioeconomico",
                 LIVINGPLACETYPE_SHOW: "Visualización tipo de vivienda",
-                COMPANY_EXPORT: "Exportar empresas"
+                COMPANY_EXPORT: "Exportar empresas",
+                REDMINE_UPDATE:"Edición de Redmine",		
+                REDMINE_DELETE:"Eliminación de Redmine",
+                AUDIT_CREATE:"Creación de Auditoria",
+                AUDIT_DELETE:"Eliminación de Auditoria",
+                AUDIT_SHOW:"Visualización de Auditoria"
             }
         },
 
@@ -230,7 +240,12 @@ const messages = {
                 PERSONS_EXPORT: "Exportar pessoa",
                 SOCIOECONOMICLEVEL_SHOW: "Visor de nível socioeconômico",
                 LIVINGPLACETYPE_SHOW: "Exibição do tipo de moradia",
-                COMPANY_EXPORT: "Exportar empresas"
+                COMPANY_EXPORT: "Exportar empresas",
+                REDMINE_UPDATE:"Edição do Redmine",		
+                REDMINE_DELETE:"Exclusão do Redmine",
+                AUDIT_CREATE:"Criação de Auditoria",
+                AUDIT_DELETE:"Exclusão de Auditoria",
+                AUDIT_SHOW:"Visor de Auditoria"
                 }
             }
         },
