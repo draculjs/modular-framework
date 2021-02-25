@@ -1,6 +1,6 @@
 <template>
 
-    <v-container v-if="isAuth" fluid fill-height class="grey lighten-3">
+    <v-container v-if="isAuth" fluid fill-height>
         <v-card class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 offset-sm-2 col-sm-8 col-xs-12 offset-xs-0 elevation-12" width="100%">
 
             <v-card-text class="text-center">

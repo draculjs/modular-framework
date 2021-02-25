@@ -76,6 +76,7 @@ export default {
       notificationProvider.subscriptionNotification(this.userId).subscribe(res => {
         if(res.data.notification){
           this.items.unshift(res.data.notification)
+          this.fetchNotifications();
         }
       })
     }
