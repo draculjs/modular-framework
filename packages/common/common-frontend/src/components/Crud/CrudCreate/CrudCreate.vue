@@ -1,9 +1,10 @@
 <template>
-    <v-dialog :value="open" persistent fullscreen>
+    <v-dialog :value="open" persistent scrollable fullscreen>
         <v-card>
 
             <toolbar-dialog
                     :title="title"
+                    :danger="toolbarError"
                     @close="$emit('close')"
             />
 
@@ -41,6 +42,7 @@
             open: {type: Boolean, default: false},
             loading: {type: Boolean, default: false},
             errorMessage: {type: String, default: null},
+            toolbarError: {type: Boolean, default: false}
         }
     }
 </script>
