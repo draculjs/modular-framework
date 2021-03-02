@@ -48,11 +48,8 @@ export const createNotificationService = (
 
         saveNotification(newNotification)
             .then((documentNotification) => {
-                winston.info("Notificacion creada con exito: " + documentNotification);
-
-                //Publico
+                winston.info("Notificacion creada con exito: " + documentNotification.id);
                 pubsub.publish('notification', documentNotification)
-
                 resolve(documentNotification);
             })
             .catch((err) => {
@@ -75,7 +72,6 @@ const saveNotification = (documentNotification) => {
                 winston.error("Error al guardar la notificacion. Error: ", error);
                 reject(error);
             }
-            winston.info("Notificacion guardada con exito: " + docNotification);
             resolve(docNotification);
         });
     });
@@ -141,7 +137,6 @@ export const notificationsPaginateFilterService = (
 
         Notification.paginate(query, params)
             .then(result => {
-                winston.info("Notificaciones filtradas y paginadas con exito: " + result.docs);
                 resolve({totalItems: result.totalDocs, page: result.page, items: result.docs})
             })
             .catch(err => {
@@ -190,7 +185,6 @@ export const markAsReadOrNotReadService = (idNotification, readValue) => {
 
         Notification.findOneAndUpdate({_id: idNotification}, query, {new:true})
             .then((documentNotification) => {
-                winston.info("Notificacion marcada con exito: " + documentNotification);
                 resolve(documentNotification);
             })
             .catch((err) => {
@@ -218,7 +212,6 @@ export const markAllReadOrNotReadService = (idUserAuth, readValue) => {
                     winston.error("Error al marcar las notificaciones, error: ", err);
                     reject(err);
                 }
-                winston.info("Notificaciones marcadas con exito", documentsNotification);
                 resolve({success: documentsNotification.ok});
             });
     });
