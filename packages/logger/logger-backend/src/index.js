@@ -16,6 +16,8 @@ import FileErrorTransport from "./transports/FileErrorTransport";
 import FileGqlErrorTransport from "./transports/FileGqlErrorTransport";
 import FileGqlResponseTransport from "./transports/FileGqlResponseTransport";
 import ResponseTimeMiddleware from "./middlewares/ResponseTimeMiddleware";
+import QueueLogger from "./loggers/QueueLogger";
+import FileQueueTransport from "./transports/FileQueueTransport";
 
 
 module.exports = {
@@ -35,6 +37,7 @@ module.exports = {
     GqlErrorLogger,
     GqlResponseLogger,
     RequestLogger,
+    QueueLogger,
 
     //Middlewares
     ResponseTimeMiddleware,
@@ -46,6 +49,7 @@ module.exports = {
     FileCombinedTransport,
     FileErrorTransport,
     FileGqlErrorTransport,
-    FileGqlResponseTransport
+    FileGqlResponseTransport,
+    FileQueueTransport
 
 }
