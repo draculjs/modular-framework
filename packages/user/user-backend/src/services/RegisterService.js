@@ -11,8 +11,7 @@ import {createSession} from "./SessionService";
 
 export const registerUser = async function ({username, password, name, email, phone}) {
 
-    //TODO improve this hardcode role
-    const ROLE_NAME = "operator";
+    const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "operator";
     let roleObject = await findRoleByName(ROLE_NAME)
 
     return new Promise((resolve, rejects) => {
