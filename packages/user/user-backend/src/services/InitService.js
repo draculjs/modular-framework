@@ -155,7 +155,7 @@ const initRoles = async (roles) => {
         const results = await memo;
         console.log(`Creating ${role.name}`)
         let childRoles = []
-        if (role.childRoles) {
+        if (role.childRoles && role.childRoles.length > 0) {
             for (const childRoleName of role.childRoles) {
                 let cr = await findRoleByName(childRoleName)
                 if (cr) {
@@ -182,7 +182,7 @@ const initRoles = async (roles) => {
         let crs = roles.find(r => r.name === role.name).childRoles
 
         let childRoles = []
-        if (role.childRoles) {
+        if (crs && crs.length > 0) {
             for (const childRoleName of crs) {
                 let cr = await findRoleByName(childRoleName)
                 if (cr) {
