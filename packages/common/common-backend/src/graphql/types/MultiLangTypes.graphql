@@ -1,0 +1,12 @@
+type MultiLang{
+    en: String
+    es: String
+    pt: String
+}
+
+
+input MultiLangInput{
+    en: String
+    es: String
+    pt: String
+}
