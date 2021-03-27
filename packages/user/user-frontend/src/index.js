@@ -2,6 +2,7 @@
 import DashboardButton from "./components/DashboardButton";
 import AppBarUserMenu from "./components/AppBarUserMenu";
 import UserCombobox from "./components/UserCombobox";
+import RoleCombobox from "./components/RoleCombobox";
 import UserAutocomplete from "./components/UserAutocomplete";
 
 //Pages
@@ -51,6 +52,7 @@ export {
     DashboardButton,
     AppBarUserMenu,
     UserCombobox,
+    RoleCombobox,
     UserAutocomplete,
 
     //Pages
