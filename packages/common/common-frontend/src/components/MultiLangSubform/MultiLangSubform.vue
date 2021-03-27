@@ -6,8 +6,8 @@
                         prepend-icon="language"
                         name="en"
                         v-model="form.en"
-                        :label="$t('common.multiLang.en')"
-                        :placeholder="$t('common.multiLang.en')"
+                        :label="label + $t('common.multiLang.en')"
+                        :placeholder="placeholder +  $t('common.multiLang.en')"
                         :error="hasInputErrors(field)"
                         :error-messages="getInputErrors(field)"
                         color="secondary"
@@ -19,8 +19,8 @@
                         prepend-icon="language"
                         name="es"
                         v-model="form.es"
-                        :label="$t('common.multiLang.es')"
-                        :placeholder="$t('common.multiLang.es')"
+                        :label="label + $t('common.multiLang.es')"
+                        :placeholder="placeholder +  $t('common.multiLang.es')"
                         :error="hasInputErrors(field)"
                         :error-messages="getInputErrors(field)"
                         color="secondary"
@@ -32,8 +32,8 @@
                         prepend-icon="language"
                         name="pt"
                         v-model="form.pt"
-                        :label="$t('common.multiLang.pt')"
-                        :placeholder="$t('common.multiLang.pt')"
+                        :label="label + $t('common.multiLang.pt')"
+                        :placeholder="placeholder + $t('common.multiLang.pt')"
                         :error="hasInputErrors(field)"
                         :error-messages="getInputErrors(field)"
                         color="secondary"
@@ -59,6 +59,9 @@
             en: {type: Boolean, default: true},
             es: {type: Boolean, default: true},
             pt: {type: Boolean, default: true},
+            label: {type: String},
+            placeholder: {type: String}
+
         },
         computed: {
             form: {
