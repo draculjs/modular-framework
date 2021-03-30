@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :fullscreen="fullscreen" v-model="value">
+  <v-dialog :fullscreen="fullscreen" v-model="value" :width="width">
     <v-card>
       <toolbar-dialog
           :danger="danger"
@@ -27,7 +27,8 @@ export default {
     value: {type: Boolean, default: false},
     title: {type: String, default: ''},
     danger: {type: Boolean, default: false},
-    fullscreen: {type: Boolean, default: false}
+    fullscreen: {type: Boolean, default: false},
+    width: {type: String}
   }
 }
 </script>
