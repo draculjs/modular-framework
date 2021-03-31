@@ -25,7 +25,7 @@
 
         <v-btn
             :color="confirmColor"
-            @click="dialog = false"
+            @click="confirm"
         >
           {{ $t('common.confirm') }}
         </v-btn>
