@@ -12,6 +12,11 @@ query{
         avatar{
             image
         }
+        role{
+            id
+            name
+            permissions
+        }
 
     }
 }
