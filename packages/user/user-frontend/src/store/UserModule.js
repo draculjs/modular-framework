@@ -13,12 +13,12 @@ export default {
             return state.me
         },
         getAvatarUrl: (state) => {
-          if(state.avatarurl){
-              return state.avatarurl
-          }else if(state.me && state.me.avatarurl){
-              return state.me.avatarurl
-          }
-          return null
+            if (state.avatarurl) {
+                return state.avatarurl
+            } else if (state.me && state.me.avatarurl) {
+                return state.me.avatarurl
+            }
+            return null
         },
         getToken: (state) => {
             return state.access_token
@@ -36,15 +36,33 @@ export default {
         },
     },
     actions: {
-        login({commit}, {username, password}) {
+        fetchMe({commit, dispatch}) {
+
+            return new Promise((resolve, reject) => {
+                AuthProvider.me()
+                    .then((response) => {
+                        let me = response.data.me
+                        commit('setMe', me)
+                        resolve(me)
+                    }).catch((err) => {
+
+                    console.error(err)
+                    dispatch('checkAuth')
+
+                })
+            })
+        },
+
+        login({commit, dispatch}, {username, password}) {
 
             return new Promise((resolve, reject) => {
                 AuthProvider.auth(username, password)
                     .then((response) => {
                         commit('setAccessToken', response.data.auth.token)
-                        let me = jwt_decode(response.data.auth.token)
-                        commit('setMe', me)
-                        resolve(me)
+                        dispatch('fetchMe')
+                            .then(me => {
+                                resolve(me)
+                            })
                     }).catch((err) => {
 
                     let error = new ClientError(err)
@@ -66,19 +84,18 @@ export default {
             commit('setAccessToken', null)
         },
 
-        verifyToken({commit}, token) {
+        verifyToken({commit, dispatch}, token) {
             try {
                 let payload = jwt_decode(token)
 
                 if (payload.exp) {
                     let dateNow = new Date();
                     let dateToken = new Date(payload.exp * 1000)
-                    if(dateNow < dateToken){
+                    if (dateNow < dateToken) {
                         commit('setAccessToken', token)
-                        let me = jwt_decode(token)
-                        commit('setMe', me)
+                        dispatch('fetchMe')
                         return true
-                    }else{
+                    } else {
                         return false
                     }
                 }
@@ -90,16 +107,16 @@ export default {
             return false
         },
 
-        checkAuth: ({state, dispatch, commit}) => {
+        checkAuth: ({state, dispatch}) => {
             if (state.access_token) {
                 let payload = jwt_decode(state.access_token)
                 if (payload.exp) {
                     let dateNow = new Date();
                     let dateToken = new Date(payload.exp * 1000)
-                    if (dateNow < dateToken) {
-                        commit('setMe', payload)
-                    } else {
+                    if (dateNow > dateToken) {
                         dispatch('logout')
+                    }else if(state.me === null){
+                        dispatch('fetchMe')
                     }
                 }
             }
