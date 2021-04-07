@@ -36,7 +36,7 @@ export default {
         },
     },
     actions: {
-        fetchMe({commit, dispatch}) {
+        fetchMe({commit}) {
 
             return new Promise((resolve, reject) => {
                 AuthProvider.me()
@@ -45,10 +45,7 @@ export default {
                         commit('setMe', me)
                         resolve(me)
                     }).catch((err) => {
-
                     console.error(err)
-                    dispatch('checkAuth')
-
                 })
             })
         },
@@ -115,7 +112,7 @@ export default {
                     let dateToken = new Date(payload.exp * 1000)
                     if (dateNow > dateToken) {
                         dispatch('logout')
-                    }else if(state.me === null){
+                    } else if (state.me === null) {
                         dispatch('fetchMe')
                     }
                 }

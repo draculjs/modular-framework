@@ -7,7 +7,6 @@
           <v-avatar
               :tile="tile"
               :size="avatarSize"
-              color="grey lighten-4"
           >
             <img v-if="getAvatarUrl" :src="getAvatarUrl"/>
             <img v-else src="@/assets/user.png">

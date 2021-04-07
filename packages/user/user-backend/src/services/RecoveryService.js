@@ -22,6 +22,7 @@ export const recoveryPassword = function (email) {
                 let token = jwt.sign(
                     {
                         id: user.id,
+                        role: {name: user.role.name},
                         operation: 'recovery'
                     },
                     process.env.JWT_SECRET,

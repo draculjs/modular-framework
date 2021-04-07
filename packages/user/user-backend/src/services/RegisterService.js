@@ -9,13 +9,12 @@ import {hashPassword} from "./UserService";
 import {session, tokenSignPayload} from "./AuthService";
 import {createSession} from "./SessionService";
 
-export const registerUser = async function ({username, password, name, email, phone}) {
+export const registerUser = function ({username, password, name, email, phone}) {
 
-    const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "operator";
-    let roleObject = await findRoleByName(ROLE_NAME)
 
-    return new Promise((resolve, rejects) => {
-
+    return new Promise(async (resolve, rejects) => {
+        const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "operator";
+        let roleObject = await findRoleByName(ROLE_NAME)
         let active = false;
 
         const newUser = new User({
@@ -36,7 +35,7 @@ export const registerUser = async function ({username, password, name, email, ph
                 if (error.name == "ValidationError") {
                     winston.warn("RegisterService.registerUser.ValidationError ", error)
                     rejects(new UserInputError(error.message, {inputErrors: error.errors}));
-                }else{
+                } else {
                     winston.error("RegisterService.registerUser ", error)
                 }
                 rejects(error)
@@ -44,6 +43,7 @@ export const registerUser = async function ({username, password, name, email, ph
                 let token = jsonwebtoken.sign(
                     {
                         id: newUser.id,
+                        role: {name: roleObject.name},
                         operation: 'register'
                     },
                     process.env.JWT_SECRET,
