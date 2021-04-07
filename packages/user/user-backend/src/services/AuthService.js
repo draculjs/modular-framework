@@ -13,7 +13,7 @@ export const tokenSignPayload = function (user, session) {
         username: user.username,
         email: user.email,
         phone: user.phone,
-        role: user.role,
+        role: {id: user.role.id, name: user.role.name},
         groups: user.groups,
         avatarurl: user.avatarurl,
         idSession: session.id

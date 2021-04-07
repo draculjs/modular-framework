@@ -32,7 +32,7 @@ export const recoveryPassword = function (email) {
 
                 UserEmailManager.recovery(email, url, user).then(result => {
 
-                    winston.info('RecoveryService.recoveryPassword successful for '+ user.username)
+                    winston.info('RecoveryService.recoveryPassword successful for ' + user.username)
                     createUserAudit(user.id, user.id, 'passwordRecovery')
                     resolve({status: result, message: 'common.operation.success'})
                 }).catch(err => {
@@ -72,43 +72,45 @@ export const recoveryChangePassword = function (token, newPassword, req) {
         User.findOneAndUpdate(
             {_id: userDecoded.id},
             {password: hashPassword(newPassword)},
-            {new: true},
-            (error, user) => {
+            {new: true})
+            .populate('role')
+            .populate('groups')
+            .exec(
+                (error, user) => {
 
-                if (error) {
-                    winston.error("RecoveryService.recoveryChangePassword.findOneAndUpdate ", error)
-                    resolve({status: false, message: "common.operation.fail"})
-                }
-
-                createUserAudit(userDecoded.id, userDecoded.id, 'userRecoveryPasswordChange')
-
-                createSession(user, req).then(session => {
-
-                    const payload = tokenSignPayload(user, session)
-
-                    const options = {
-                        expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1d',
-                        jwtid: user.id
+                    if (error) {
+                        winston.error("RecoveryService.recoveryChangePassword.findOneAndUpdate ", error)
+                        resolve({status: false, message: "common.operation.fail"})
                     }
 
-                    let token = jsonwebtoken.sign(
-                        payload,
-                        process.env.JWT_SECRET,
-                        options
-                    )
+                    createUserAudit(userDecoded.id, userDecoded.id, 'userRecoveryPasswordChange')
 
-                    winston.info('RecoveryService.recoveryChangePassword successful for '+ user.username)
-                    resolve({status: true, token: token, message: "common.operation.success"})
+                    createSession(user, req).then(session => {
 
-                }).catch(err => {
-                    winston.error("RecoveryService.recoveryChangePassword ", err)
-                    reject(err)
-                })
+                        const payload = tokenSignPayload(user, session)
+
+                        const options = {
+                            expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1d',
+                            jwtid: user.id
+                        }
+
+                        let token = jsonwebtoken.sign(
+                            payload,
+                            process.env.JWT_SECRET,
+                            options
+                        )
+
+                        winston.info('RecoveryService.recoveryChangePassword successful for ' + user.username)
+                        resolve({status: true, token: token, message: "common.operation.success"})
+
+                    }).catch(err => {
+                        winston.error("RecoveryService.recoveryChangePassword ", err)
+                        reject(err)
+                    })
 
 
-            }
-        )
-
+                }
+            )
     })
 }
 
