@@ -28,17 +28,41 @@ export const fetchGroups = async function () {
     })
 }
 
-export const paginateGroup = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false) {
+export const fetchMyGroups = async function (userId) {
+    return new Promise((resolve, reject) => {
+        Group.find({users: {$in: [userId]}}).isDeleted(false).exec((err, res) => {
 
-    function qs(search) {
+            if (err) {
+                winston.error("GroupService.fetchMyGroups ", err)
+                reject(err)
+            }
+            winston.debug("GroupService.fetchMyGroups successful")
+            resolve(res)
+
+        });
+    })
+}
+
+export const paginateGroup = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false, includesUser = null) {
+
+    function qs(search, includesUser) {
         let qs = {}
+        let or = []
+
+        if (includesUser) {
+            or.push({users: {$in: [includesUser]}})
+        }
+
         if (search) {
+            or.push({name: {$regex: search, $options: 'i'}})
+        }
+
+        if (search || includesUser) {
             qs = {
-                $or: [
-                    {name: {$regex: search, $options: 'i'}}
-                ]
+                $or: or
             }
         }
+
         return qs
     }
 
@@ -51,7 +75,7 @@ export const paginateGroup = function (limit, pageNumber = 1, search = null, ord
     }
 
 
-    let query = {deleted: false, ...qs(search)}
+    let query = {deleted: false, ...qs(search, includesUser)}
     let populate = null
     let sort = getSort(orderBy, orderDesc)
     let params = {page: pageNumber, limit: limit, populate, sort}

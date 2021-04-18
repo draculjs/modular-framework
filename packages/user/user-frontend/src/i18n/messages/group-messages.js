@@ -10,6 +10,7 @@ const clientMessages = {
             created: 'Group created',
             updated: 'Group updated',
             deleted: 'Group deleted',
+            myGroups: 'My groups',
             label: {
                 avatar: 'Avatar',
                 name: 'Name',
@@ -29,6 +30,7 @@ const clientMessages = {
             created: 'Grupo creado',
             updated: 'Grupo actualizado',
             deleted: 'Grupo eliminado',
+            myGroups: 'Mis grupos',
             label: {
                 avatar: 'Avatar',
                 name: 'Nombre',
@@ -49,6 +51,7 @@ const clientMessages = {
             created: 'Grupo criado',
             updated: 'Grupo atualizado',
             deleted: 'Grupo removido',
+            myGroups: 'Meus grupos',
             label: {
                 avatar: 'Avatar',
                 name: 'Nome',

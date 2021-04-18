@@ -14,11 +14,18 @@ class GroupProvider {
             fetchPolicy: "network-only"
         })
     }
-    
-    paginateGroups(limit, pageNumber, search = null, orderBy = null, orderDesc = false) {
+
+    myGroups() {
+        return this.gqlc.query({
+            query: require('./gql/myGroups.graphql'),
+            fetchPolicy: "network-only"
+        })
+    }
+
+    paginateGroups(limit, pageNumber, search = null, orderBy = null, orderDesc = false, myGroups= false) {
         return this.gqlc.query({
             query: require('./gql/groupsPaginate.graphql'),
-            variables: {limit, pageNumber, search, orderBy, orderDesc},
+            variables: {limit, pageNumber, search, orderBy, orderDesc, myGroups},
             fetchPolicy: "network-only"
         })
     }
@@ -30,8 +37,8 @@ class GroupProvider {
             fetchPolicy: "network-only"
         })
     }
-    
-    
+
+
 
     createGroup(form) {
         return this.gqlc.mutate({
@@ -39,14 +46,14 @@ class GroupProvider {
             variables: form
         })
     }
-    
+
     updateGroup(form) {
         return this.gqlc.mutate({
             mutation: require('./gql/groupUpdate.graphql'),
             variables: form
         })
     }
-    
+
      deleteGroup(id) {
         return this.gqlc.mutate({
             mutation: require('./gql/groupDelete.graphql'),

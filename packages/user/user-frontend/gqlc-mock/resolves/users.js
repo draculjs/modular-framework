@@ -8,7 +8,7 @@ const resolve = {
                 email: "john.doe@gmail.com",
                 role: {id:"1",name:"admin"},
                 phone: "123",
-                avatarurl:"",
+                avatarurl:null,
                 active: true,
                 groups:[]
             },
@@ -19,7 +19,7 @@ const resolve = {
                 email: "jane.doe@gmail.com",
                 role: {id:"2", name:"supervisor"},
                 phone: "456",
-                avatarurl: "",
+                avatarurl: null,
                 active: true,
                 groups:[]
             }

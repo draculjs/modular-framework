@@ -24,7 +24,7 @@
       >
         <v-avatar left>
           <v-img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
-          <v-img v-else src="@/assets/user.png"/>
+          <v-img v-else :src="getDefaultAvatar" />
         </v-avatar>
         {{ data.item.username }}
       </v-chip>
@@ -36,7 +36,7 @@
       <template v-else>
         <v-list-item-avatar>
           <img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
-          <img v-else src="@/assets/user.png"/>
+          <img v-else :src="getDefaultAvatar" />
 
         </v-list-item-avatar>
         <v-list-item-content>
@@ -65,7 +65,8 @@ export default {
     color: {type:String,default:"blue-grey lighten-2"},
     backgroundColor: {type:String},
     label: {type:String,default: 'user.users'},
-    placeholder: {type:String,default: 'user.users'}
+    placeholder: {type:String,default: 'user.users'},
+    defaultAvatar: {type:String}
   },
   data() {
     return {
@@ -74,6 +75,9 @@ export default {
     }
   },
   computed: {
+    getDefaultAvatar(){
+      return this.defaultAvatar ? this.defaultAvatar : require("../../assets/user.png")
+    },
     userValue: {
       get() {
         return this.value

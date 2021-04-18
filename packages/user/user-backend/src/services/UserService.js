@@ -105,13 +105,18 @@ export const deleteUser = function (id, actionBy = null) {
 }
 
 
-export const findUsers = function (roles = []) {
+export const findUsers = function (roles = [], userId = null) {
     return new Promise((resolve, reject) => {
 
         let qs = {}
 
         if (roles && roles.length) {
-            qs.role = {$in: roles}
+            qs  = {
+                $or: [
+                    {role: {$in: roles}},
+                    {_id: userId}
+                ]
+            }
         }
 
         User.find(qs).isDeleted(false).populate('role').populate('groups').exec((err, res) => {

@@ -22,6 +22,9 @@ module.exports = {
     });
 
 
+    // Alternately, for an alias:
+    config.resolve.alias["@"] = path.resolve(__dirname, "..", "src", "assets")
+
 
     // Return the altered config
     return config;

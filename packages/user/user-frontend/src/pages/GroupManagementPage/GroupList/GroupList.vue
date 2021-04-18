@@ -1,7 +1,10 @@
 <template>
   <v-row row wrap>
 
-    <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
+    <v-col cols="12" sm="6" md="4">
+      <v-checkbox :label="$t('group.myGroups')" v-model="myGroups" @change="fetch"/>
+    </v-col>
+    <v-col cols="12" sm="6" md="4" offset-md="4">
       <search-input @search="setSearch" v-model="searchInput"/>
     </v-col>
 
@@ -89,7 +92,8 @@ export default {
       itemsPerPage: 5,
       pageNumber: 1,
       orderBy: null,
-      orderDesc: false
+      orderDesc: false,
+      myGroups: false
     }
   },
   computed: {
@@ -119,14 +123,14 @@ export default {
       this.fetch()
     },
     fetch() {
-
       this.loading = true
       GroupProvider.paginateGroups(
           this.itemsPerPage,
           this.pageNumber,
           this.search,
           this.getOrderBy,
-          this.getOrderDesc
+          this.getOrderDesc,
+          this.myGroups
       )
           .then(r => {
             this.items = r.data.groupsPaginate.items
