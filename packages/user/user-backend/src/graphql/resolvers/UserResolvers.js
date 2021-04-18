@@ -37,27 +37,26 @@ export default {
             return findUser(id)
         },
 
-        paginateUsers: (_, {limit, pageNumber, search, orderBy, orderDesc}, {user, rbac}) => {
+        paginateUsers: async (_, {limit, pageNumber, search, orderBy, orderDesc}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
-            user = findUser(user.id)
+            user = await findUser(user.id)
             return paginateUsers(limit, pageNumber, search, orderBy, orderDesc, user.role.childRoles)
         },
 
     },
     Mutation: {
-        adminAvatarUpload: async (_, {id, file}, {user,rbac}) => {
+        adminAvatarUpload: async (_, {id, file}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
             let userDst = await findUser(id)
             return avatarUpload(userDst, file)
         },
-        createUser: (_, {input}, {user, rbac}) => {
+        createUser: async (_, {input}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_CREATE)) throw new ForbiddenError("Not Authorized")
 
-            user = findUser(user.id)
-
+            user = await findUser(user.id)
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
                 //Check if role is include as a childRole
@@ -67,18 +66,19 @@ export default {
                     throw new ForbiddenError("Not Authorized")
                 }
 
-            //Without childRoles
+                //Without childRoles
             } else {
                 return createUser(input, user)
             }
 
+
         },
 
-        updateUser: (_, {id, input}, {user, rbac}) => {
+        updateUser: async (_, {id, input}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
 
-            user = findUser(user.id)
+            user = await findUser(user.id)
 
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
@@ -89,7 +89,7 @@ export default {
                     throw new ForbiddenError("Not Authorized")
                 }
 
-            //Without childRoles
+                //Without childRoles
             } else {
                 return updateUser(id, input, user)
             }
@@ -97,11 +97,11 @@ export default {
 
         },
 
-        deleteUser:  async (_, {id}, {user, rbac}) => {
+        deleteUser: async (_, {id}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_DELETE)) throw new ForbiddenError("Not Authorized")
 
-            user = findUser(user.id)
+            user = await findUser(user.id)
 
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
@@ -115,7 +115,7 @@ export default {
                     throw new ForbiddenError("Not Authorized")
                 }
 
-            //Without childRoles
+                //Without childRoles
             } else {
                 return deleteUser(id, user)
             }

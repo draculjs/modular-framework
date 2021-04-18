@@ -64,7 +64,7 @@ describe("UserPaginateResolver", () => {
         const rbac = await UserRbacFactory(user)
 
         await expect(() => RoleResolvers.Query.roles(null, {}, {user, rbac}) )
-            .toThrow('Not Authorized');
+            .rejects.toThrow('Not Authorized');
     });
 
 

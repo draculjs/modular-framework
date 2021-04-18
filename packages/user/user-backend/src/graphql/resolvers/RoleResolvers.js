@@ -11,10 +11,10 @@ import {findUser} from "../../services/UserService";
 
 export default {
     Query: {
-        roles: (_, {id}, {user,rbac}) => {
+        roles: async (_, {id}, {user,rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
 
-            user = findUser(user.id)
+            user = await findUser(user.id)
 
             if (rbac.isAllowed(user.id, SECURITY_ROLE_SHOW)){
                 return findRoles()

@@ -105,7 +105,7 @@ describe("UserUpdateResolver", () => {
 
 
         await expect(() => UserResolvers.Mutation.updateUser(null, { id: userToUpdate.id, input}, {user: authUser, rbac}) )
-            .toThrow('Not Authorized');
+            .rejects.toThrow('Not Authorized');
 
     });
 
@@ -127,7 +127,7 @@ describe("UserUpdateResolver", () => {
 
 
         await expect(() => UserResolvers.Mutation.updateUser(null, { id: userToUpdate.id, input}, {user: authUser, rbac}) )
-            .toThrow('Not Authorized');
+            .rejects.toThrow('Not Authorized');
 
     });
 
