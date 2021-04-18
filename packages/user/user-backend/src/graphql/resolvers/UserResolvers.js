@@ -40,7 +40,7 @@ export default {
         paginateUsers: (_, {limit, pageNumber, search, orderBy, orderDesc}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
-
+            user = findUser(user.id)
             return paginateUsers(limit, pageNumber, search, orderBy, orderDesc, user.role.childRoles)
         },
 
@@ -56,6 +56,7 @@ export default {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_CREATE)) throw new ForbiddenError("Not Authorized")
 
+            user = findUser(user.id)
 
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
@@ -76,6 +77,8 @@ export default {
         updateUser: (_, {id, input}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
+
+            user = findUser(user.id)
 
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
@@ -98,6 +101,7 @@ export default {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_DELETE)) throw new ForbiddenError("Not Authorized")
 
+            user = findUser(user.id)
 
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
