@@ -8,10 +8,10 @@ class UserProvider {
         this.gqlc = gqlc
     }
 
-    paginateUsers(limit, pageNumber, search = null, orderBy = null, orderDesc = false) {
+    paginateUsers(limit, pageNumber, search = null, orderBy = null, orderDesc = false, activeUsers = false) {
         return this.gqlc.query({
             query: require('./gql/userPaginate.graphql'),
-            variables: {limit, pageNumber, search, orderBy, orderDesc},
+            variables: {limit, pageNumber, search, orderBy, orderDesc, activeUsers},
             fetchPolicy: "network-only"
         })
     }

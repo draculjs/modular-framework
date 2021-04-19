@@ -170,7 +170,7 @@ export const findUsers = function (roles = [], userId = null) {
 }
 
 
-export const paginateUsers = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false, roles = []) {
+export const paginateUsers = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false, roles = [], activeUsers = false) {
 
     function getQuery(search) {
         let qs = {}
@@ -188,6 +188,11 @@ export const paginateUsers = function (limit, pageNumber = 1, search = null, ord
         if (roles && roles.length) {
             qs.role = {$in: roles}
         }
+
+        if (activeUsers) {
+            qs.active = true
+        }
+
 
         return qs
     }

@@ -33,7 +33,7 @@ type UsersPaginated{
 type Query {
     users: [User!]
     user(id: ID!): User
-    paginateUsers(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean): UsersPaginated
+    paginateUsers(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean, activeUsers: Boolean): UsersPaginated
 }
 
 type UserDelete{

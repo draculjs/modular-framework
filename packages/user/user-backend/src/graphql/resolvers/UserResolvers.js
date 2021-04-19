@@ -37,11 +37,11 @@ export default {
             return findUser(id)
         },
 
-        paginateUsers: async (_, {limit, pageNumber, search, orderBy, orderDesc}, {user, rbac}) => {
+        paginateUsers: async (_, {limit, pageNumber, search, orderBy, orderDesc, activeUsers}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
             user = await findUser(user.id)
-            return paginateUsers(limit, pageNumber, search, orderBy, orderDesc, user.role.childRoles)
+            return paginateUsers(limit, pageNumber, search, orderBy, orderDesc, user.role.childRoles, activeUsers)
         },
 
     },
