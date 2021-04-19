@@ -33,7 +33,7 @@
 
         <template v-slot:item.avatar="{ item }">
           <v-avatar size="36px" :color="item.color?item.color:'grey'">
-            <span class="white--text headline">{{ item.name.charAt(0) }}</span>
+            <h3 class="white--text h3">{{ getAvatar(item) }}</h3>
           </v-avatar>
         </template>
 
@@ -97,6 +97,18 @@ export default {
     }
   },
   computed: {
+    getAvatar(){
+      return item => {
+        if(item.name.length >= 2){
+          return item.name.charAt(0) + item.name.charAt(1)
+        }else if (item.name.length >= 1){
+          return item.name.charAt(0)
+        }else{
+          return ""
+        }
+      }
+
+    },
     headers() {
       return [
         {text: this.$t('group.label.avatar'), value: 'avatar'},
