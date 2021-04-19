@@ -5,7 +5,7 @@
                 <v-list-item >
                 <v-list-item-icon class="mr-5">
                     <v-avatar  size="36px" :color="item.color?item.color:'grey'">
-                        <span class="white--text headline">{{item.name.charAt(0)}}</span>
+                        <h3 class="white--text h3">{{ getAvatar(item) }}</h3>
                     </v-avatar>
                 </v-list-item-icon>
 
@@ -47,7 +47,21 @@
         components: {GroupShowItem},
         props: {
             item: {}
-        }
+        },
+      computed: {
+        getAvatar(){
+          return item => {
+            if(item.name.length >= 2){
+              return item.name.charAt(0) + item.name.charAt(1)
+            }else if (item.name.length >= 1){
+              return item.name.charAt(0)
+            }else{
+              return ""
+            }
+          }
+
+        },
+      }
     }
 </script>
 
