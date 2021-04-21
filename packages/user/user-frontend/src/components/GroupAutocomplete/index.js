@@ -1,4 +1,4 @@
-import UserAutocomplete from "./UserAutocomplete";
+import GroupAutocomplete from "./GroupAutocomplete";
 
-export {UserAutocomplete}
-export default UserAutocomplete
+export {GroupAutocomplete}
+export default GroupAutocomplete
