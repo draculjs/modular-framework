@@ -33,6 +33,8 @@ const baseMessages = {
             subtitle:'Subtitle',
             true: 'True',
             false: 'False',
+            consult: 'Consult',
+            detail: 'Detail',
             operation: {
                 success: 'Operation success',
                 fail: 'Operation fail'
@@ -73,6 +75,8 @@ const baseMessages = {
             subtitle:'Subtitulo',
             true: 'Verdadero',
             false: 'Falso',
+            consult: 'Consultar',
+            detail: 'Detalle',
             operation: {
                 success: 'Operación exitosa',
                 fail: 'Operación fallida'
@@ -114,6 +118,8 @@ const baseMessages = {
             subtitle:'Subtítulo',
             true: 'Verdade',
             false: 'Falso',
+            consult: 'Consultar',
+            detail: 'Detalhe',
             operation: {
                 success: 'Operação bem sucedida',
                 fail: 'Operação falhou'
