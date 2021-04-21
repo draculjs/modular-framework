@@ -63,8 +63,8 @@ export default {
     chips: {type: Boolean, default: false},
     color: {type:String,default:"blue-grey lighten-2"},
     backgroundColor: {type:String},
-    label: {type:String,default: 'user.groups'},
-    placeholder: {type:String,default: 'user.groups'},
+    label: {type:String,default: 'group.groups'},
+    placeholder: {type:String,default: 'group.groups'},
   },
   data() {
     return {

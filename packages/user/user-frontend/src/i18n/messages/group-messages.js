@@ -1,6 +1,8 @@
 const clientMessages = {
     en: {
         group: {
+            group: "Group",
+            groups: "Groups",
             title: 'Groups management',
             description: 'View, search, create, edit and delete Groups',
             createTitle: 'Creating group',
@@ -21,6 +23,8 @@ const clientMessages = {
     },
     es: {
         group: {
+            group: "Grupo",
+            groups: "Grupos",
             title: 'Administración de Grupos',
             description: 'Ver, buscar, crear, editar, y borrar grupos del sistema',
             createTitle: 'Creando grupo',
@@ -42,6 +46,8 @@ const clientMessages = {
     },
     pt: {
         group: {
+            group: "Grupo",
+            groups: "Grupos",
             title: 'Administração de Grupos',
             description: 'Ver, buscar, criar, editar e usar  grupos del sistema',
             createTitle: 'Criando grupo',
