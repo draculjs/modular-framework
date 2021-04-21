@@ -4,7 +4,7 @@
       :items="users"
       :filled="filled"
       :solo="solo"
-      chips
+      :chips="chips"
       :color="color"
       :background-color="backgroundColor"
       :label="$t(label)"
