@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.0.138",
+  "version": "1.0.139",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
