@@ -13,9 +13,11 @@
       :item-value="'id'"
       :multiple="multiple"
       :loading="loading"
+      :clearable="clearable"
   >
     <template v-slot:selection="data">
       <v-chip
+          v-if="chips"
           v-bind="data.attrs"
           :input-value="data.selected"
           close
@@ -24,10 +26,22 @@
       >
         <v-avatar left>
           <v-img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
-          <v-img v-else :src="getDefaultAvatar" />
+          <v-img v-else :src="getDefaultAvatar"/>
         </v-avatar>
         {{ data.item.username }}
       </v-chip>
+
+      <v-list-item v-else>
+        <v-list-item-avatar>
+          <img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
+          <img v-else :src="getDefaultAvatar"/>
+
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title v-html="data.item.username"></v-list-item-title>
+          <v-list-item-subtitle v-html="data.item.name"></v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
     </template>
     <template v-slot:item="data">
       <template v-if="typeof data.item !== 'object'">
@@ -36,7 +50,7 @@
       <template v-else>
         <v-list-item-avatar>
           <img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
-          <img v-else :src="getDefaultAvatar" />
+          <img v-else :src="getDefaultAvatar"/>
 
         </v-list-item-avatar>
         <v-list-item-content>
@@ -62,11 +76,12 @@ export default {
     solo: {type: Boolean, default: false},
     multiple: {type: Boolean, default: false},
     chips: {type: Boolean, default: false},
-    color: {type:String,default:"blue-grey lighten-2"},
-    backgroundColor: {type:String},
-    label: {type:String,default: 'user.users'},
-    placeholder: {type:String,default: 'user.users'},
-    defaultAvatar: {type:String}
+    clearable: {type: Boolean, default: false},
+    color: {type: String, default: "blue-grey lighten-2"},
+    backgroundColor: {type: String},
+    label: {type: String, default: 'user.users'},
+    placeholder: {type: String, default: 'user.users'},
+    defaultAvatar: {type: String}
   },
   data() {
     return {
@@ -75,7 +90,7 @@ export default {
     }
   },
   computed: {
-    getDefaultAvatar(){
+    getDefaultAvatar() {
       return this.defaultAvatar ? this.defaultAvatar : require("../../assets/user.png")
     },
     userValue: {
@@ -84,7 +99,7 @@ export default {
       },
       set(val) {
         this.$emit('input', val)
-        this.$emit('usersSelected', this.users.filter(u => val.includes(u.id)))
+       // this.$emit('usersSelected', this.users.filter(u => val.includes(u.id)))
       }
     }
   },
@@ -93,12 +108,17 @@ export default {
   },
   methods: {
     remove(id) {
-      const index = this.userValue.indexOf(id)
-      if (index >= 0){
-        let aux = [...this.userValue]
-        aux.splice(index, 1)
-        this.userValue = aux
+      if (this.multiple) {
+        const index = this.userValue.indexOf(id)
+        if (index >= 0) {
+          let aux = [...this.userValue]
+          aux.splice(index, 1)
+          this.userValue = aux
+        }
+      } else {
+        this.userValue = null
       }
+
     },
     loadUsers() {
       this.loading = true

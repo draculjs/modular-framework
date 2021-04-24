@@ -13,9 +13,11 @@
       :item-value="'id'"
       :multiple="multiple"
       :loading="loading"
+      :clearable="clearable"
   >
     <template v-slot:selection="data">
       <v-chip
+          v-if="chips"
           v-bind="data.attrs"
           :input-value="data.selected"
           close
@@ -27,6 +29,17 @@
         </v-avatar>
         {{ data.item.name }}
       </v-chip>
+      <v-list-item v-else>
+        <v-list-item-avatar>
+          <v-avatar size="36px" :color="data.item.color?data.item.color:'grey'">
+            <h3 class="white--text h3">{{ getAvatar(data.item) }}</h3>
+          </v-avatar>
+
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title v-html="data.item.name"></v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </template>
     <template v-slot:item="data">
       <template v-if="typeof data.item !== 'object'">
@@ -62,6 +75,7 @@ export default {
     multiple: {type: Boolean, default: false},
     chips: {type: Boolean, default: false},
     color: {type:String,default:"blue-grey lighten-2"},
+    clearable: {type: Boolean, default: false},
     backgroundColor: {type:String},
     label: {type:String,default: 'group.groups'},
     placeholder: {type:String,default: 'group.groups'},
@@ -91,7 +105,7 @@ export default {
       },
       set(val) {
         this.$emit('input', val)
-        this.$emit('groupsSelected', this.groups.filter(u => val.includes(u.id)))
+
       }
     }
   },
@@ -100,12 +114,17 @@ export default {
   },
   methods: {
     remove(id) {
-      const index = this.groupValue.indexOf(id)
-      if (index >= 0){
-        let aux = [...this.groupValue]
-        aux.splice(index, 1)
-        this.groupValue = aux
+      if(this.multiple){
+        const index = this.groupValue.indexOf(id)
+        if (index >= 0){
+          let aux = [...this.groupValue]
+          aux.splice(index, 1)
+          this.groupValue = aux
+        }
+      }else{
+        this.groupValue = null
       }
+
     },
     loadGroups() {
       this.loading = true

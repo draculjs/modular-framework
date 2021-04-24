@@ -2,7 +2,7 @@ const resolve = {
     data: {
         users: [
             {
-                id: 1,
+                id: '1',
                 username: "john.doe",
                 name: "John Doe",
                 email: "john.doe@gmail.com",
@@ -13,7 +13,7 @@ const resolve = {
                 groups:[]
             },
             {
-                id: 2,
+                id: '2',
                 username: "jane.doe",
                 name: "Jane Doe",
                 email: "jane.doe@gmail.com",
