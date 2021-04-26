@@ -4,6 +4,7 @@ import {createSession} from "./SessionService";
 import jsonwebtoken from "jsonwebtoken";
 import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByUsername} from "./UserService";
+import {decodePassword} from "./PasswordService"
 
 
 export const tokenSignPayload = function (user, session) {
@@ -37,7 +38,8 @@ export const auth = async function ({username, password}, req) {
             }
 
             if (user) {
-                if (bcryptjs.compareSync(password, user.password)) {
+                let decodedPassword = decodePassword(password)
+                if (bcryptjs.compareSync(decodedPassword, user.password)) {
 
                     createSession(user, req).then(session => {
 
