@@ -1,4 +1,12 @@
-import {createGroup, updateGroup, deleteGroup, findGroup, fetchGroups, paginateGroup} from '../../services/GroupService'
+import {
+    createGroup,
+    updateGroup,
+    deleteGroup,
+    findGroup,
+    fetchGroups,
+    paginateGroup,
+    fetchMyGroups
+} from '../../services/GroupService'
 import {
     SECURITY_GROUP_CREATE,
     SECURITY_GROUP_DELETE,
@@ -15,14 +23,19 @@ export default {
             if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
             return fetchGroups()
         },
+        myGroups: (_, {}, {user, rbac}) => {
+            if (!user) throw new AuthenticationError("Unauthenticated")
+            if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
+            return fetchMyGroups(user.id)
+        },
         group: (_, {id}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
             return findGroup(id)
         },
-        groupsPaginate: (_, {limit, pageNumber, search, orderBy, orderDesc}, {user, rbac}) => {
+        groupsPaginate: (_, {limit, pageNumber, search, orderBy, orderDesc, myGroups}, {user, rbac}) => {
             if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
-            return paginateGroup(limit, pageNumber, search, orderBy, orderDesc)
+            return paginateGroup(limit, pageNumber, search, orderBy, orderDesc, myGroups ? user.id : null)
         },
 
     },

@@ -71,7 +71,7 @@ describe("UserPaginateResolver", () => {
 
 
         await expect(() => UserResolvers.Query.paginateUsers(null, { input }, {user, rbac}) )
-            .toThrow('Not Authorized');
+            .rejects.toThrow('Not Authorized');
 
     });
 

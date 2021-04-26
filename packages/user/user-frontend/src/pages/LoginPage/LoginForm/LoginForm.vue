@@ -7,6 +7,7 @@
         <v-text-field
                 type="text"
                 v-model="form.username"
+                autocomplete="username"
                 :label="$t('user.label.username')"
                 :placeholder="$t('user.label.username')"
                 color="secondary"
@@ -15,6 +16,7 @@
 
         <v-text-field id="password"
                       type="password"
+                      autocomplete="current-password"
                       v-model="form.password"
                       :label="$t('user.label.password')"
                       :placeholder="$t('user.label.password')"

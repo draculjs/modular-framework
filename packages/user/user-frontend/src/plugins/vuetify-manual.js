@@ -6,8 +6,8 @@ import Vuetify, {
     VToolbar, VToolbarItems, VToolbarTitle, VProgressLinear, VMenu, VProgressCircular,
     VAlert, VIcon, VTooltip, VDivider, VImg,
     VDialog, VDataTable, VAvatar, VSimpleTable,
-    VColorPicker, VChip, VChipGroup, VSnackbar,
-    VList, VListItem, VListGroup, VListItemIcon, VListItemAction, VListItemTitle, VListItemSubtitle, VListItemContent
+    VColorPicker, VChip, VChipGroup, VSnackbar, VAutocomplete,
+    VList, VListItem, VListItemAvatar, VListGroup, VListItemIcon, VListItemAction, VListItemTitle, VListItemSubtitle, VListItemContent
 } from 'vuetify/lib';
 import i18n from '../i18n'
 
@@ -56,7 +56,9 @@ Vue.use(Vuetify, {
         VListItemAction,
         VListItemTitle,
         VListItemSubtitle,
-        VListItemContent
+        VListItemContent,
+        VAutocomplete,
+        VListItemAvatar
     }
 });
 

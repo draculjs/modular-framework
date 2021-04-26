@@ -94,7 +94,7 @@ describe("UserCreateResolver", () => {
         }
 
         await expect(() => UserResolvers.Mutation.createUser(null, {input}, {user, rbac}) )
-            .toThrow('Not Authorized');
+            .rejects.toThrow('Not Authorized');
     });
 
     test('CreateUserByOperatorWhitoutPermissionNotAuthorized', async () => {
@@ -114,6 +114,6 @@ describe("UserCreateResolver", () => {
         }
 
         await expect(() => UserResolvers.Mutation.createUser(null, {input}, {user, rbac}) )
-            .toThrow('Not Authorized');
+            .rejects.toThrow('Not Authorized');
     });
 })

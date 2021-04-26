@@ -1,16 +1,20 @@
 query{
     me{
         id
-        firstName
+        name
         username
-        lastName
         email
+        phone
+        avatarurl
+        active
+        role{
+            id
+            name
+            permissions
+        }
         groups{
             id
             name
-        }
-        avatar{
-            image
         }
 
     }

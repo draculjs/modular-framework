@@ -1,7 +1,10 @@
 <template>
   <v-row row wrap>
 
-    <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
+    <v-col cols="12" sm="6" md="4">
+      <v-checkbox :label="$t('group.myGroups')" v-model="myGroups" @change="fetch"/>
+    </v-col>
+    <v-col cols="12" sm="6" md="4" offset-md="4">
       <search-input @search="setSearch" v-model="searchInput"/>
     </v-col>
 
@@ -30,7 +33,7 @@
 
         <template v-slot:item.avatar="{ item }">
           <v-avatar size="36px" :color="item.color?item.color:'grey'">
-            <span class="white--text headline">{{ item.name.charAt(0) }}</span>
+            <h3 class="white--text h3">{{ getAvatar(item) }}</h3>
           </v-avatar>
         </template>
 
@@ -89,10 +92,23 @@ export default {
       itemsPerPage: 5,
       pageNumber: 1,
       orderBy: null,
-      orderDesc: false
+      orderDesc: false,
+      myGroups: false
     }
   },
   computed: {
+    getAvatar(){
+      return item => {
+        if(item.name.length >= 2){
+          return item.name.charAt(0) + item.name.charAt(1)
+        }else if (item.name.length >= 1){
+          return item.name.charAt(0)
+        }else{
+          return ""
+        }
+      }
+
+    },
     headers() {
       return [
         {text: this.$t('group.label.avatar'), value: 'avatar'},
@@ -119,14 +135,14 @@ export default {
       this.fetch()
     },
     fetch() {
-
       this.loading = true
       GroupProvider.paginateGroups(
           this.itemsPerPage,
           this.pageNumber,
           this.search,
           this.getOrderBy,
-          this.getOrderDesc
+          this.getOrderDesc,
+          this.myGroups
       )
           .then(r => {
             this.items = r.data.groupsPaginate.items

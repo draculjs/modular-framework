@@ -11,11 +11,11 @@
                 <v-row>
                     <v-col cols="12" md="3" lg="3">
                         <v-select
-                                prepend-icon="account_box"
+                                prepend-icon="language"
                                 class="pa-3"
                                 :items="langs"
-                                :item-text="'lang'"
-                                :item-value="'lang'"
+                                :item-text="'text'"
+                                :item-value="'value'"
                                 color="secondary"
                                 item-color="secondary"
                                 v-model="formLang.language"

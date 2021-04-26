@@ -27,17 +27,7 @@
             </v-col>
 
             <v-col cols="12" sm="12">
-                <v-select
-                        v-model="form.users"
-                        :loading="loadingUsers"
-                        :items="users"
-                        :item-text="'name'"
-                        :item-value="'id'"
-                        chips
-                        :label="$t('group.label.users')"
-                        :placeholder="$t('group.label.users')"
-                        multiple
-                ></v-select>
+              <user-autocomplete v-model="form.users" multiple ></user-autocomplete>
             </v-col>
 
         </v-row>
@@ -50,11 +40,12 @@
     import UserProvider from "../../../providers/UserProvider";
     import GroupColorInput from "../GroupColorInput/GroupColorInput";
     import {InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
+    import UserAutocomplete from "../../../components/UserAutocomplete";
 
     export default {
         name: "GroupForm",
         mixins: [InputErrorsByProps, RequiredRule],
-        components: {GroupColorInput},
+        components: {UserAutocomplete, GroupColorInput},
         props:{
             value: {
                 type: Object,

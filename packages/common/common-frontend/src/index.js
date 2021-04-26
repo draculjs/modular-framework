@@ -7,6 +7,8 @@ import SearchInput from "./components/SearchInput";
 import ToolbarDialog from "./components/ToolbarDialog";
 import SimpleDialog from "./components/SimpleDialog";
 import ListCombobox from "./components/ListCombobox";
+import MultiLangSubform from "./components/MultiLangSubform";
+import ConfirmDialog from "./components/ConfirmDialog";
 
 import AddButton from "./components/Crud/AddButton";
 import EditButton from "./components/Crud/EditButton";
@@ -38,6 +40,8 @@ export {
     ToolbarDialog,
     SimpleDialog,
     ListCombobox,
+    MultiLangSubform,
+    ConfirmDialog,
 
     //Crud Buttons
     AddButton,

@@ -4,10 +4,18 @@ import {UserInputError} from 'apollo-server-express'
 import {findUsersGroup, setUsersGroups} from "./UserService";
 
 
-const addUserToGroup = function (groupId, user) {
+export const addUserToGroup = function (groupId, userId) {
     return Group.findByIdAndUpdate(
         groupId,
-        {$push: {users: user._id}},
+        {$push: {users: userId}},
+        {new: true, useFindAndModify: false}
+    );
+};
+
+export const removeUserToGroup = function (groupId, userId) {
+    return Group.findByIdAndUpdate(
+        groupId,
+        {$pull: {users: userId}},
         {new: true, useFindAndModify: false}
     );
 };
@@ -28,17 +36,41 @@ export const fetchGroups = async function () {
     })
 }
 
-export const paginateGroup = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false) {
+export const fetchMyGroups = async function (userId) {
+    return new Promise((resolve, reject) => {
+        Group.find({users: {$in: [userId]}}).isDeleted(false).exec((err, res) => {
 
-    function qs(search) {
+            if (err) {
+                winston.error("GroupService.fetchMyGroups ", err)
+                reject(err)
+            }
+            winston.debug("GroupService.fetchMyGroups successful")
+            resolve(res)
+
+        });
+    })
+}
+
+export const paginateGroup = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false, includesUser = null) {
+
+    function qs(search, includesUser) {
         let qs = {}
+        let or = []
+
+        if (includesUser) {
+            or.push({users: {$in: [includesUser]}})
+        }
+
         if (search) {
+            or.push({name: {$regex: search, $options: 'i'}})
+        }
+
+        if (search || includesUser) {
             qs = {
-                $or: [
-                    {name: {$regex: search, $options: 'i'}}
-                ]
+                $or: or
             }
         }
+
         return qs
     }
 
@@ -51,7 +83,7 @@ export const paginateGroup = function (limit, pageNumber = 1, search = null, ord
     }
 
 
-    let query = {deleted: false, ...qs(search)}
+    let query = {deleted: false, ...qs(search, includesUser)}
     let populate = null
     let sort = getSort(orderBy, orderDesc)
     let params = {page: pageNumber, limit: limit, populate, sort}
@@ -93,7 +125,7 @@ export const findGroup = async function (id) {
 export const createGroup = async function (user, {name, color, users}) {
 
     const doc = new Group({
-        name, color
+        name, color, users
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -122,7 +154,7 @@ export const createGroup = async function (user, {name, color, users}) {
 export const updateGroup = async function (user, id, {name, color, users = []}) {
     return new Promise((resolve, rejects) => {
         Group.findOneAndUpdate({_id: id},
-            {name, color},
+            {name, color, users},
             {new: true, runValidators: true, context: 'query'},
             async (error, doc) => {
 

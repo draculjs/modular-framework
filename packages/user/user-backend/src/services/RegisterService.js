@@ -9,14 +9,12 @@ import {hashPassword} from "./UserService";
 import {session, tokenSignPayload} from "./AuthService";
 import {createSession} from "./SessionService";
 
-export const registerUser = async function ({username, password, name, email, phone}) {
+export const registerUser = function ({username, password, name, email, phone}) {
 
-    //TODO improve this hardcode role
-    const ROLE_NAME = "operator";
-    let roleObject = await findRoleByName(ROLE_NAME)
 
-    return new Promise((resolve, rejects) => {
-
+    return new Promise(async (resolve, rejects) => {
+        const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "operator";
+        let roleObject = await findRoleByName(ROLE_NAME)
         let active = false;
 
         const newUser = new User({
@@ -37,7 +35,7 @@ export const registerUser = async function ({username, password, name, email, ph
                 if (error.name == "ValidationError") {
                     winston.warn("RegisterService.registerUser.ValidationError ", error)
                     rejects(new UserInputError(error.message, {inputErrors: error.errors}));
-                }else{
+                } else {
                     winston.error("RegisterService.registerUser ", error)
                 }
                 rejects(error)
@@ -64,7 +62,6 @@ export const registerUser = async function ({username, password, name, email, ph
 
 export const activationUser = function (token, req) {
 
-
     return new Promise((resolve, rejects) => {
 
         let decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET)
@@ -76,42 +73,46 @@ export const activationUser = function (token, req) {
 
         User.findOneAndUpdate(
             {_id: decoded.id},
-            {active: true},
-            (error, user) => {
+            {active: true}
+        )
+            .populate('role')
+            .populate('groups')
+            .exec(
+                (error, user) => {
 
-                if (error) {
-                    winston.error("RegisterService.activationUser.findOneAndUpdate ", error)
-                    resolve({status: false, message: "common.operation.fail"})
-                }
-
-                createUserAudit(user._id, user._id, 'userActivated')
-
-                createSession(user, req).then(session => {
-
-                    const payload = tokenSignPayload(user, session)
-
-                    const options = {
-                        expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1d',
-                        jwtid: user.id
+                    if (error) {
+                        winston.error("RegisterService.activationUser.findOneAndUpdate ", error)
+                        resolve({status: false, message: "common.operation.fail"})
                     }
 
-                    let token = jsonwebtoken.sign(
-                        payload,
-                        process.env.JWT_SECRET,
-                        options
-                    )
+                    createUserAudit(user._id, user._id, 'userActivated')
+
+                    createSession(user, req).then(session => {
+
+                        const payload = tokenSignPayload(user, session)
+
+                        const options = {
+                            expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1d',
+                            jwtid: user.id
+                        }
+
+                        let token = jsonwebtoken.sign(
+                            payload,
+                            process.env.JWT_SECRET,
+                            options
+                        )
 
 
-                    winston.info("RegisterService.activationUser successful for " + user.username)
-                    resolve({status: true, token: token, message: "common.operation.success"})
+                        winston.info("RegisterService.activationUser successful for " + user.username)
+                        resolve({status: true, token: token, message: "common.operation.success"})
 
-                }).catch(err => {
-                    winston.error("RegisterService.activationUser ", error)
-                    reject(err)
-                })
+                    }).catch(err => {
+                        winston.error("RegisterService.activationUser ", error)
+                        reject(err)
+                    })
 
 
-            })
-
+                }
+            )
     })
 }

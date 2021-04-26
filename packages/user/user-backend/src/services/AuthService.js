@@ -9,13 +9,13 @@ import {findUser, findUserByUsername} from "./UserService";
 export const tokenSignPayload = function (user, session) {
     return {
         id: user.id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        groups: user.groups,
-        avatarurl: user.avatarurl,
+        //name: user.name,
+        //username: user.username,
+        //email: user.email,
+        //phone: user.phone,
+        role: {id: user.role.id, name: user.role.name, childRoles: user.role.childRoles},
+        groups: user.groups.map(g => {id: g.id}),
+        //avatarurl: user.avatarurl,
         idSession: session.id
     };
 }
