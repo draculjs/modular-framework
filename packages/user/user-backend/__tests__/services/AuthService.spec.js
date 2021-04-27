@@ -10,7 +10,7 @@ import {
     apiKey,
     auth
 } from "../../src/services/AuthService";
-
+import {encodePassword} from "../../src/services/PasswordService"
 import {findUserByUsername} from "../../src/services/UserService";
 
 //Service dependencies
@@ -37,7 +37,7 @@ describe("UserService", () => {
     test('LoginOk', async () => {
 
         let user = {username: 'root', password: 'root.123'}
-
+        user.password = encodePassword(user.password)
         await expect(auth(user, null))
             .resolves.toHaveProperty('token')
 
