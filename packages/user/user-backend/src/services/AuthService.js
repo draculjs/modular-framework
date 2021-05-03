@@ -4,18 +4,19 @@ import {createSession} from "./SessionService";
 import jsonwebtoken from "jsonwebtoken";
 import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByUsername} from "./UserService";
+import {decodePassword} from "./PasswordService"
 
 
 export const tokenSignPayload = function (user, session) {
     return {
         id: user.id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        groups: user.groups,
-        avatarurl: user.avatarurl,
+        //name: user.name,
+        //username: user.username,
+        //email: user.email,
+        //phone: user.phone,
+        role: {id: user.role.id, name: user.role.name, childRoles: user.role.childRoles},
+        groups: user.groups.map(g => {id: g.id}),
+        //avatarurl: user.avatarurl,
         idSession: session.id
     };
 }
@@ -37,7 +38,8 @@ export const auth = async function ({username, password}, req) {
             }
 
             if (user) {
-                if (bcryptjs.compareSync(password, user.password)) {
+                let decodedPassword = decodePassword(password)
+                if (bcryptjs.compareSync(decodedPassword, user.password)) {
 
                     createSession(user, req).then(session => {
 

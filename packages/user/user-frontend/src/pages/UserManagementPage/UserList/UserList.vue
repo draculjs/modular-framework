@@ -1,7 +1,10 @@
 <template>
 
   <v-row row wrap>
-    <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
+    <v-col cols="12" sm="6" md="4">
+      <v-checkbox :label="$t('user.onlyActiveUsers')" v-model="activeUsers" @change="fetch"/>
+    </v-col>
+    <v-col cols="12" sm="6" md="4" offset-md="4">
       <search-input @search="setSearch" v-model="searchInput"/>
     </v-col>
 
@@ -131,7 +134,8 @@ export default {
       itemsPerPage: 5,
       pageNumber: 1,
       search: '',
-      searchInput: ""
+      searchInput: "",
+      activeUsers: false
     }
   },
   computed: {
@@ -178,7 +182,8 @@ export default {
           this.pageNumber,
           this.search,
           this.getOrderBy,
-          this.getOrderDesc
+          this.getOrderDesc,
+          this.activeUsers
       )
           .then(r => {
             this.items = r.data.paginateUsers.users

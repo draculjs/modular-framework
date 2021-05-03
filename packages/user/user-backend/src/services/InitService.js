@@ -23,6 +23,7 @@ import {
     SECURITY_ROLE_CREATE,
     SECURITY_ROLE_EDIT,
     SECURITY_ROLE_SHOW,
+    SECURITY_ROLE_SHOW_CHILD,
     SECURITY_ROLE_DELETE,
     SECURITY_USER_CREATE,
     SECURITY_USER_DELETE,
@@ -34,7 +35,7 @@ const initPermissions = async (permissions) => {
     if (!permissions) {
         permissions = [SECURITY_USER_CREATE, SECURITY_USER_EDIT, SECURITY_USER_DELETE, SECURITY_USER_SHOW,
             SECURITY_GROUP_CREATE, SECURITY_GROUP_EDIT, SECURITY_GROUP_DELETE, SECURITY_GROUP_SHOW,
-            SECURITY_ROLE_CREATE, SECURITY_ROLE_SHOW, SECURITY_ROLE_EDIT, SECURITY_ROLE_DELETE,
+            SECURITY_ROLE_CREATE, SECURITY_ROLE_SHOW, SECURITY_ROLE_SHOW_CHILD, SECURITY_ROLE_EDIT, SECURITY_ROLE_DELETE,
             SECURITY_DASHBOARD_SHOW, SECURITY_ADMIN_MENU]
     }
     //Fetch permissions already created
@@ -48,14 +49,14 @@ const initPermissions = async (permissions) => {
     }
 
     //permissions Found
-    if(permissionsFound.length > 0){
+    if (permissionsFound.length > 0) {
         DefaultLogger.debug("Permissions found: " + permissionsFound.map(p => p.name).toString())
     }
 
     // Exec All Create Promises
     let permissionsCreated = await Promise.all(permissionToCreate.map(name => createPermission(name)))
 
-    if(permissionsCreated.length > 0){
+    if (permissionsCreated.length > 0) {
         DefaultLogger.info("Permissions created: " + permissionsCreated.map(p => p.name).toString())
     }
 
@@ -150,17 +151,54 @@ const initRoles = async (roles) => {
         rolesToCreate = roles
     }
 
-    // Exec All Create Promises
-    let rolesCreated = await Promise.all(rolesToCreate.map(role => createRole(role)))
+
+    const rolesCreated = await rolesToCreate.reduce(async (memo, role) => {
+        const results = await memo;
+        console.log(`Creating ${role.name}`)
+        let childRoles = []
+        if (role.childRoles && role.childRoles.length > 0) {
+            for (const childRoleName of role.childRoles) {
+                let cr = await findRoleByName(childRoleName)
+                if (cr) {
+                    childRoles.push(cr.id)
+                }
+            }
+            role.childRoles = childRoles
+        }
+        role = await createRole(role)
+        console.log(`Created ${role.name}`)
+        return [...results, role];
+    }, []);
+
+
     rolesCreated.forEach(r => {
         loggingEvent("created", "role", r.name, r.id)
     })
 
     //Update Roles
-    let rolesUpdated = await Promise.all(rolesFound.map(roleToUpdate => {
-        let p = roles.find(r => r.name === roleToUpdate.name).permissions
-        return updateRole(roleToUpdate.id, {name: roleToUpdate.name, permissions: p})
-    }))
+    const rolesUpdated = await rolesFound.reduce(async (memo, role) => {
+        const results = await memo;
+        console.log(`Updating ${role.name}`)
+        let p = roles.find(r => r.name === role.name).permissions
+        let crs = roles.find(r => r.name === role.name).childRoles
+
+        let childRoles = []
+        if (crs && crs.length > 0) {
+            for (const childRoleName of crs) {
+                let cr = await findRoleByName(childRoleName)
+                if (cr) {
+                    childRoles.push(cr.id)
+                }else{
+                }
+            }
+        }
+        role = await updateRole(role.id, {name: role.name, permissions: p, childRoles: childRoles})
+        console.log(`Updated ${role.name}`)
+
+        return [...results, role];
+    }, []);
+
+
     rolesUpdated.forEach(r => {
         loggingEvent("updated", "role", r.name, r.id)
     })
@@ -183,9 +221,9 @@ const initRootUser = async (user) => {
 
     if (!u) {
         u = await createUser({...user, role: roleAdmin.id})
-        loggingEvent("created", "user",u.username, u.id)
+        loggingEvent("created", "user", u.username, u.id)
     } else {
-        loggingEvent("found", "user",u.username, u.id)
+        loggingEvent("found", "user", u.username, u.id)
     }
 
 }
@@ -205,9 +243,9 @@ const initSupervisorUser = async (user) => {
 
     if (!u) {
         u = await createUser({...user, role: roleSupervisor.id})
-        loggingEvent("created", "user",u.username, u.id)
+        loggingEvent("created", "user", u.username, u.id)
     } else {
-        loggingEvent("found", "user",u.username, u.id)
+        loggingEvent("found", "user", u.username, u.id)
     }
 
 }
@@ -227,9 +265,9 @@ const initOperatorUser = async (user) => {
 
     if (!u) {
         u = await createUser({...user, role: roleOperator.id})
-        loggingEvent("created", "user",u.username, u.id)
+        loggingEvent("created", "user", u.username, u.id)
     } else {
-        loggingEvent("found", "user",u.username, u.id)
+        loggingEvent("found", "user", u.username, u.id)
     }
 
 }
@@ -241,7 +279,7 @@ const rootRecover = async (password = "root.123") => {
             passwordVerify: password
         }, rootUser.id).then(result => {
             DefaultLogger.info(result)
-        }).catch(e => DefaultLogger.error("rootRecover ",e))
+        }).catch(e => DefaultLogger.error("rootRecover ", e))
     })
 }
 

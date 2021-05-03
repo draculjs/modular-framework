@@ -42,7 +42,8 @@ class AuthProvider {
 
     me() {
         return this.gqlc.query({
-            query: require('./gql/me.graphql')
+            query: require('./gql/me.graphql'),
+            fetchPolicy: "network-only"
         })
     }
 

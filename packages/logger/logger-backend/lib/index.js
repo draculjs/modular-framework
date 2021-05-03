@@ -36,6 +36,10 @@ var _FileGqlResponseTransport = _interopRequireDefault(require("./transports/Fil
 
 var _ResponseTimeMiddleware = _interopRequireDefault(require("./middlewares/ResponseTimeMiddleware"));
 
+var _QueueLogger = _interopRequireDefault(require("./loggers/QueueLogger"));
+
+var _FileQueueTransport = _interopRequireDefault(require("./transports/FileQueueTransport"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
@@ -52,6 +56,7 @@ module.exports = {
   GqlErrorLogger: _GqlErrorLogger.default,
   GqlResponseLogger: _GqlResponseLogger.default,
   RequestLogger: _RequestLogger.default,
+  QueueLogger: _QueueLogger.default,
   //Middlewares
   ResponseTimeMiddleware: _ResponseTimeMiddleware.default,
   RequestMiddleware: _RequestMiddleware.default,
@@ -61,5 +66,6 @@ module.exports = {
   FileCombinedTransport: _FileCombinedTransport.default,
   FileErrorTransport: _FileErrorTransport.default,
   FileGqlErrorTransport: _FileGqlErrorTransport.default,
-  FileGqlResponseTransport: _FileGqlResponseTransport.default
+  FileGqlResponseTransport: _FileGqlResponseTransport.default,
+  FileQueueTransport: _FileQueueTransport.default
 };

@@ -65,7 +65,7 @@
                     secondary: false,
                     onSecondary: false,
                 },
-                langs: ['es', 'en', 'pt'],
+                langs: [{value: 'es', text:'Español'},{value: 'en', text: 'English'} ,{value: 'pt', text: 'Português'}],
 
                 formLang: {
                     language: null,

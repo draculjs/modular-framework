@@ -11,6 +11,7 @@ import changePasswordAdmin from "./resolves/changePasswordAdmin";
 import roles from "./resolves/roles";
 import groups from "./resolves/groups";
 import permissions from "./resolves/permissions";
+import me from "./resolves/me";
 
 import avatarUpload from "./resolves/avatarUpload";
 import adminAvatarUpload from "./resolves/adminAvatarUpload";
@@ -30,6 +31,14 @@ import uuidv4 from "./helpers/uuidv4";
 import getRoleById from "./helpers/getRoleById";
 import getUserById from "./helpers/getUserById";
 
+mockGqlClient.setRequestHandler(
+    require('../src/providers/gql/me.graphql'),
+    () => {
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(me), 30)
+        })
+    }
+);
 
 
 mockGqlClient.setRequestHandler(

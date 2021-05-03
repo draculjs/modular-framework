@@ -10,6 +10,7 @@ import {
     initSupervisorUser
 } from "../../src/services/InitService";
 import {auth} from "../../src/services/AuthService";
+import {encodePassword} from "../../src/services/PasswordService"
 
 
 describe("ChildRoles", () => {
@@ -34,6 +35,7 @@ describe("ChildRoles", () => {
 
     test('LoginShowChildRoles', async () => {
         let user = {username: 'supervisor', password: 'supervisor.123'}
+        user.password = encodePassword(user.password)
 
         await expect(auth(user, null))
             .resolves.toHaveProperty('token',)

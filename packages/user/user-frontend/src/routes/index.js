@@ -1,4 +1,3 @@
-import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import DashboardPage from '../pages/DashboardPage'
 import UserManagementPage from '../pages/UserManagementPage'
@@ -11,7 +10,6 @@ import ProfilePage from '../pages/ProfilePage'
 import RegisterPage from '../pages/RegisterPage'
 
 const routes = [
-    {name: "home", path: '/home', component: HomePage},
     {name: "login", path: '/login', component: LoginPage},
     {name: "recovery", path: '/recovery/:token', component: RecoveryPage},
     {name: "recoveryRequest", path: '/recovery', component: RecoveryRequestPage},

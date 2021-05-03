@@ -82,7 +82,7 @@ class RBAC {
 
     isAllowed(userId, permission) {
         if (typeof userId === 'undefined' || typeof permission === 'undefined') {
-            throw new Error('userId or permissionId is not defined, expected 2 arguments');
+            throw new Error('userId or permission is not defined, expected 2 arguments');
         }
 
         const user = this.users[userId];

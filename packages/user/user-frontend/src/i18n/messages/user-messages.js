@@ -21,6 +21,7 @@ const userMessages = {
             passwordChanged: 'User password changed',
             avatarChanged: 'User avatar changed',
             notFound: 'User not found',
+            onlyActiveUsers: 'Only active Users',
             validation: {
                 required: 'Required field',
                 emailVerify: 'Email does not match',
@@ -67,6 +68,7 @@ const userMessages = {
             passwordChanged: 'Contraseña de usuario modificada',
             avatarChanged: 'Avatar de usuario modificado',
             notFound: 'Usuario no encontrado',
+            onlyActiveUsers: 'Solo usuarios activos',
             validation: {
                 required: 'Campo requerido',
                 emailVerify: 'El email no coincide',
@@ -113,6 +115,7 @@ const userMessages = {
             passwordChanged: 'Senha de usuário modificada',
             avatarChanged: 'Avatar de usuário modificado',
             notFound: 'Usuário não encontrado',
+            onlyActiveUsers: 'Apenas usuários ativos',
             validation: {
                 required: 'Campo obrigatório',
                 emailVerify: 'O email não corresponde',

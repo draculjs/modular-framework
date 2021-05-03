@@ -1,5 +1,5 @@
-query paginateUsers($limit:Int!, $pageNumber: Int, $search: String, $orderBy: String, $orderDesc: Boolean){
-    paginateUsers(limit: $limit, pageNumber: $pageNumber, search: $search, orderBy: $orderBy, orderDesc: $orderDesc){
+query paginateUsers($limit:Int!, $pageNumber: Int, $search: String, $orderBy: String, $orderDesc: Boolean, $activeUsers: Boolean){
+    paginateUsers(limit: $limit, pageNumber: $pageNumber, search: $search, orderBy: $orderBy, orderDesc: $orderDesc, activeUsers: $activeUsers){
         totalItems
         page
         users{

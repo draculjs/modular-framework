@@ -7,6 +7,7 @@
         <v-text-field
                 type="text"
                 v-model="form.username"
+                autocomplete="username"
                 :label="$t('user.label.username')"
                 :placeholder="$t('user.label.username')"
                 color="secondary"
@@ -15,6 +16,7 @@
 
         <v-text-field id="password"
                       type="password"
+                      autocomplete="current-password"
                       v-model="form.password"
                       :label="$t('user.label.password')"
                       :placeholder="$t('user.label.password')"
@@ -82,8 +84,19 @@
             b64DecodeUnicode('4pyTIMOgIGxhIG1vZGU='); // "✓ à la mode"
             b64DecodeUnicode('Cg=='); // "\n" */
             signIn() {
-                console.log(encodeLogin(this.form.username))
-                console.log(encodeLogin(this.form.password))
+
+                function b64EncodeUnicode(str) {
+                    // first we use encodeURIComponent to get percent-encoded UTF-8,
+                    // then we convert the percent encodings into raw bytes which
+                    // can be fed into btoa.
+                    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+                        function toSolidBytes(match, p1) {
+                            return String.fromCharCode('0x' + p1);
+                    }));
+                }
+                
+                this.form.password = b64EncodeUnicode(this.form.password)
+                
                 this.loading = true
                 this.login(this.form)
                     .then(() => {

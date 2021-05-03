@@ -2,7 +2,7 @@
     <v-container fluid fill-height >
         <v-container fluid fill-height class="grey lighten-3">
             <v-row align="center" justify="center">
-                <v-col cols="12" sm="7" md="5" lg="4">
+                <v-col cols="12" sm="7" md="6" lg="6">
 
                     <register-successful v-if="!!email" :email="email"></register-successful>
 

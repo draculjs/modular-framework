@@ -33,6 +33,9 @@ const baseMessages = {
             subtitle:'Subtitle',
             true: 'True',
             false: 'False',
+            consult: 'Consult',
+            detail: 'Detail | Details',
+            filter: 'Filter | Filters',
             operation: {
                 success: 'Operation success',
                 fail: 'Operation fail'
@@ -73,6 +76,9 @@ const baseMessages = {
             subtitle:'Subtitulo',
             true: 'Verdadero',
             false: 'Falso',
+            consult: 'Consultar',
+            detail: 'Detalle | Detalles',
+            filter: 'Filtro | Filtros',
             operation: {
                 success: 'Operación exitosa',
                 fail: 'Operación fallida'
@@ -114,6 +120,9 @@ const baseMessages = {
             subtitle:'Subtítulo',
             true: 'Verdade',
             false: 'Falso',
+            consult: 'Consultar',
+            detail: 'Detalhe | Detalhes',
+            filter: 'Filtro | Filtros',
             operation: {
                 success: 'Operação bem sucedida',
                 fail: 'Operação falhou'

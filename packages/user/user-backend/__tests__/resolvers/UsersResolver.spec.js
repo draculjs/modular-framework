@@ -54,7 +54,7 @@ describe("UsersResolver", () => {
         const users = await UserResolvers.Query.users(null, {}, {user, rbac})
 
         //Total items must be 1 for default users: operator
-        expect(users.length).toBe(1)
+        expect(users.length).toBe(2)
 
     });
 

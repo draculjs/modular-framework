@@ -1,39 +1,40 @@
 <template>
-    <v-dialog :value="open" max-width="850" persistent >
-        <v-card>
+  <v-dialog :fullscreen="fullscreen" :value="open" max-width="850" persistent>
+    <v-card>
 
-            <toolbar-dialog
-                    info
-                    :title="title"
-                    @close="$emit('close')"
-            />
+      <toolbar-dialog
+          info
+          :title="title"
+          @close="$emit('close')"
+      />
 
-            <v-card-text>
-                <slot></slot>
-            </v-card-text>
+      <v-card-text>
+        <slot></slot>
+      </v-card-text>
 
-            <v-divider />
+      <v-divider/>
 
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <close-button @click="$emit('close')" ></close-button>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <close-button @click="$emit('close')"></close-button>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-    import ToolbarDialog from "../../ToolbarDialog";
-    import CloseButton from "../../CloseButton/CloseButton";
+import ToolbarDialog from "../../ToolbarDialog";
+import CloseButton from "../../CloseButton/CloseButton";
 
-    export default {
-        name: "CrudShow",
-        components: {CloseButton, ToolbarDialog},
-        props: {
-            title: {type: String, default: 'common.show'},
-            open: {type: Boolean, default: false}
-        }
-    }
+export default {
+  name: "CrudShow",
+  components: {CloseButton, ToolbarDialog},
+  props: {
+    title: {type: String, default: 'common.show'},
+    open: {type: Boolean, default: false},
+    fullscreen: {type: Boolean, default: false}
+  }
+}
 </script>
 
 <style scoped>
