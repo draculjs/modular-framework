@@ -68,21 +68,6 @@
         },
         methods: {
             ...mapActions(['login']),
-            encodeLogin(str){
-                return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-                    return String.fromCharCode('0x' + p1);
-                }));
-            },
-            //FUNCTION FOR DECODE
-                // function b64DecodeUnicode(str) {
-                // Going backwards: from bytestream, to percent-encoding, to original string.
-                /* return decodeURIComponent(atob(str).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-            }
-            
-            b64DecodeUnicode('4pyTIMOgIGxhIG1vZGU='); // "✓ à la mode"
-            b64DecodeUnicode('Cg=='); // "\n" */
             signIn() {
 
                 function b64EncodeUnicode(str) {
