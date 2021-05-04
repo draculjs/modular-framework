@@ -101,15 +101,18 @@
 </template>
 
 <script>
-    import moment from "moment";
     import notificationProvider from "../../providers/notificationProvider";
+    import dayjs from 'dayjs';  
+    import relativeTime from 'dayjs/plugin/relativeTime';
+    import 'dayjs/locale/es'
+    import 'dayjs/locale/pt'
 
     export default {
         props: {
             notificationsItems: Array,
         },
         mounted() {
-            moment.locale(this.$t("notification.moment"));
+            this.$emit("updateNotifications");
         },
         methods: {
             changeStateRead(item) {
@@ -136,8 +139,13 @@
                     });
             },
             getRelativeDate(date) {
-                let currentDate = parseInt(date);
-                return moment(currentDate).fromNow();
+                dayjs.extend(relativeTime)
+                dayjs.locale(this.$t("notification.moment"))
+
+                let dateFormat = parseInt(date)
+                let currentDate = dayjs(dateFormat);
+                
+                return dayjs(currentDate).fromNow();
             },
             cleanContent(content){
                 let newArray = content.split(';;');
