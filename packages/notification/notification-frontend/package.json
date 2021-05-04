@@ -21,6 +21,8 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
+    "@dracul/common-frontend": "^1.0.146",
+    "@dracul/dayjs-frontend": "^1.0.136",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
