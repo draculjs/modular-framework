@@ -22,6 +22,7 @@ const userMessages = {
             avatarChanged: 'User avatar changed',
             notFound: 'User not found',
             onlyActiveUsers: 'Only active Users',
+            mandatoryText:'Required field',
             validation: {
                 required: 'Required field',
                 emailVerify: 'Email does not match',
@@ -69,6 +70,7 @@ const userMessages = {
             avatarChanged: 'Avatar de usuario modificado',
             notFound: 'Usuario no encontrado',
             onlyActiveUsers: 'Solo usuarios activos',
+            mandatoryText: 'Campo obligatorio',
             validation: {
                 required: 'Campo requerido',
                 emailVerify: 'El email no coincide',
@@ -116,6 +118,7 @@ const userMessages = {
             avatarChanged: 'Avatar de usuário modificado',
             notFound: 'Usuário não encontrado',
             onlyActiveUsers: 'Apenas usuários ativos',
+            mandatoryText: 'Campo obrigatório',
             validation: {
                 required: 'Campo obrigatório',
                 emailVerify: 'O email não corresponde',
