@@ -16,7 +16,20 @@
                         :error-messages="getInputErrors('name')"
                         required
                         color="secondary"
-                ></v-text-field>
+                >
+                    <template v-slot:append>
+                        <v-tooltip
+                        bottom
+                        >
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on">
+                            mdi-exclamation-thick
+                            </v-icon>
+                        </template>
+                        {{$t('people.person.mandatoryText')}}
+                        </v-tooltip>
+                    </template>
+                </v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6">
@@ -33,7 +46,20 @@
                               :error-messages="getInputErrors('username')"
                               required
                               color="secondary"
-                ></v-text-field>
+                >
+                    <template v-slot:append>
+                        <v-tooltip
+                        bottom
+                        >
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on">
+                            mdi-exclamation-thick
+                            </v-icon>
+                        </template>
+                        {{$t('people.person.mandatoryText')}}
+                        </v-tooltip>
+                    </template>
+                </v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6">
@@ -49,7 +75,20 @@
                               :error-messages="getInputErrors('email')"
                               required
                               color="secondary"
-                ></v-text-field>
+                >
+                    <template v-slot:append>
+                        <v-tooltip
+                        bottom
+                        >
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on">
+                            mdi-exclamation-thick
+                            </v-icon>
+                        </template>
+                        {{$t('people.person.mandatoryText')}}
+                        </v-tooltip>
+                    </template>
+                </v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6">
@@ -64,9 +103,7 @@
                               :error-messages="getInputErrors('phone')"
                               required
                               color="secondary"
-                >
-
-                </v-text-field>
+                ></v-text-field>
             </v-col>
 
 
@@ -86,7 +123,20 @@
                               :error-messages="getInputErrors('password')"
                               required
                               color="secondary"
-                ></v-text-field>
+                >
+                    <template v-slot:append>
+                        <v-tooltip
+                        bottom
+                        >
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on">
+                            mdi-exclamation-thick
+                            </v-icon>
+                        </template>
+                        {{$t('people.person.mandatoryText')}}
+                        </v-tooltip>
+                    </template>
+                </v-text-field>
             </v-col>
 
             <v-col v-if="enablePassword" cols="12" sm="6">
@@ -105,7 +155,20 @@
                         :error-messages="passwordMatchError"
                         required
                         color="secondary"
-                ></v-text-field>
+                >
+                    <template v-slot:append>
+                        <v-tooltip
+                        bottom
+                        >
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on">
+                            mdi-exclamation-thick
+                            </v-icon>
+                        </template>
+                        {{$t('people.person.mandatoryText')}}
+                        </v-tooltip>
+                    </template>
+                </v-text-field>
             </v-col>
 
             <v-col cols="12" sm="6">
@@ -124,7 +187,20 @@
                         required
                         color="secondary"
                         item-color="secondary"
-                ></v-select>
+                >
+                    <template v-slot:append>
+                        <v-tooltip
+                        bottom
+                        >
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on">
+                            mdi-exclamation-thick
+                            </v-icon>
+                        </template>
+                        {{$t('people.person.mandatoryText')}}
+                        </v-tooltip>
+                    </template>
+                </v-select>
             </v-col>
 
             <v-col cols="12" sm="6">

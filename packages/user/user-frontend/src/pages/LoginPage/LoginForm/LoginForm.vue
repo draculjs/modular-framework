@@ -68,7 +68,6 @@
         },
         methods: {
             ...mapActions(['login']),
-
             signIn() {
 
                 function b64EncodeUnicode(str) {
