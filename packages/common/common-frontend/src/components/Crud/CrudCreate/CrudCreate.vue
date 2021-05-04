@@ -6,13 +6,14 @@
           :title="title"
           :danger="toolbarError"
           @close="$emit('close')"
+          style="height:auto"
       />
 
       <v-card-text v-if="!!errorMessage">
         <error-alert :errorMessage="errorMessage"></error-alert>
       </v-card-text>
 
-      <v-card-text>
+      <v-card-text style="height:100%">
         <slot></slot>
       </v-card-text>
 
