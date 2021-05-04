@@ -49,7 +49,6 @@
 import notificationProvider from "../../../providers/notificationProvider";
 import Snackbar from "@dracul/common-frontend/src/components/Snackbar/Snackbar";
 import notificationShowListContent from "../NotificationshowListContent/NotificationShowListContent";
-import moment from "moment-timezone";
 
 export default {
   components: {
@@ -58,7 +57,6 @@ export default {
   },
   mounted() {
     this.getNotifications();
-    moment.locale(this.$t("notification.moment"));
   },
   data() {
     return {
