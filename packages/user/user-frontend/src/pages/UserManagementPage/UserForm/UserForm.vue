@@ -101,6 +101,7 @@
                               :placeholder="$t('user.label.phone')"
                               :error="hasInputErrors('phone')"
                               :error-messages="getInputErrors('phone')"
+                              :rules="validateNumericRule"
                               required
                               color="secondary"
                 ></v-text-field>
@@ -275,6 +276,11 @@
                 return [
                     v => !!v || this.$t('user.validation.required'),
                     v => /.+@.+/.test(v) || this.$t('user.validation.emailFormat')
+                ]
+            },
+            validateNumericRule() {
+                return [
+                    v => /^[0-9]+$/i.test(v)|| !v || this.$t('base.validation.number')
                 ]
             },
             passwordMatchRules() {
