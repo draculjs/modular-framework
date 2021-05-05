@@ -71,18 +71,28 @@
 </template>
 <script>
 import notificationProvider from "../../../providers/notificationProvider";
-import moment from "moment-timezone";
+import dayjs from 'dayjs';  
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import 'dayjs/locale/es'
+import 'dayjs/locale/pt'
+
 export default {
   props: {
     item: {},
   },
   methods: {
     getDate(date) {
-      let num = parseInt(date);
-      let dateParse = moment(num).format("llll");
+      dayjs.extend(localizedFormat);
+      dayjs.locale(this.$t("notification.moment"))
+
+      let dateFormat = parseInt(date)
+      let currentDate = dayjs(dateFormat);
+      
+      let dateParse = dayjs(currentDate).format('llll');
 
       if (dateParse == this.$t("notification.invalidDate")) {
-        return moment().format("llll");
+        return dayjs().format("llll");
       } else {
         return dateParse;
       }
@@ -100,9 +110,13 @@ export default {
         });
     },
     relativeDate(date) {
-      let num = parseInt(date);
-      let newDate = moment(num).fromNow();
-      return newDate;
+      dayjs.extend(relativeTime)
+      dayjs.locale(this.$t("notification.moment"))
+
+      let dateFormat = parseInt(date)
+      let currentDate = dayjs(dateFormat);
+      
+      return dayjs(currentDate).fromNow();
     },
     cleanContent(content){
       let newArray = content.split(';;');
