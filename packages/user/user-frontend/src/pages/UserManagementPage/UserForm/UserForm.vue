@@ -26,7 +26,7 @@
                             mdi-exclamation-thick
                             </v-icon>
                         </template>
-                        {{$t('people.person.mandatoryText')}}
+                        {{$t('user.mandatoryText')}}
                         </v-tooltip>
                     </template>
                 </v-text-field>
@@ -56,7 +56,7 @@
                             mdi-exclamation-thick
                             </v-icon>
                         </template>
-                        {{$t('people.person.mandatoryText')}}
+                        {{$t('user.mandatoryText')}}
                         </v-tooltip>
                     </template>
                 </v-text-field>
@@ -85,7 +85,7 @@
                             mdi-exclamation-thick
                             </v-icon>
                         </template>
-                        {{$t('people.person.mandatoryText')}}
+                        {{$t('user.mandatoryText')}}
                         </v-tooltip>
                     </template>
                 </v-text-field>
@@ -134,7 +134,7 @@
                             mdi-exclamation-thick
                             </v-icon>
                         </template>
-                        {{$t('people.person.mandatoryText')}}
+                        {{$t('user.mandatoryText')}}
                         </v-tooltip>
                     </template>
                 </v-text-field>
@@ -166,7 +166,7 @@
                             mdi-exclamation-thick
                             </v-icon>
                         </template>
-                        {{$t('people.person.mandatoryText')}}
+                        {{$t('user.mandatoryText')}}
                         </v-tooltip>
                     </template>
                 </v-text-field>
@@ -198,7 +198,7 @@
                             mdi-exclamation-thick
                             </v-icon>
                         </template>
-                        {{$t('people.person.mandatoryText')}}
+                        {{$t('user.mandatoryText')}}
                         </v-tooltip>
                     </template>
                 </v-select>
