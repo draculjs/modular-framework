@@ -25,6 +25,7 @@ const userMessages = {
             mandatoryText:'Required field',
             validation: {
                 required: 'Required field',
+                number: 'Only Numbers',
                 emailVerify: 'Email does not match',
                 emailFormat: 'The email has an invalid format',
                 passwordVerify: 'Password does not match'
@@ -74,6 +75,7 @@ const userMessages = {
             validation: {
                 required: 'Campo requerido',
                 emailVerify: 'El email no coincide',
+                number: 'Sólo Números',
                 emailFormat: 'El email tiene un formato invalido',
                 passwordVerify: 'La contraseña no coincide'
             },
@@ -122,6 +124,7 @@ const userMessages = {
             validation: {
                 required: 'Campo obrigatório',
                 emailVerify: 'O email não corresponde',
+                number: 'Apenas números',
                 emailFormat: 'O email tem um formato inválido',
                 passwordVerify: 'Senha não corresponde'
             },

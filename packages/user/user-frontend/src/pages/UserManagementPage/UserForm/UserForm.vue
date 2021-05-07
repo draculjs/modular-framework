@@ -280,7 +280,7 @@
             },
             validateNumericRule() {
                 return [
-                    v => /^[0-9]+$/i.test(v)|| !v || this.$t('base.validation.number')
+                    v => /^[0-9]+$/i.test(v)|| !v || this.$t('user.validation.number')
                 ]
             },
             passwordMatchRules() {
