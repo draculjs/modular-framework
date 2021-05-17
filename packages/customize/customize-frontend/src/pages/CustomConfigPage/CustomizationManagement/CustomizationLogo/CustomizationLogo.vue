@@ -90,7 +90,7 @@
   </v-card>
 </template>
 <script>
-import LogoPreview from "../../../../components/LogoPreview"
+import LogoPreview from "../../../../components/LogoPreview/LogoPreview"
 import {mapMutations, mapState} from 'vuex'
 import {
   LOGO_MODE_ONLYTITLE,

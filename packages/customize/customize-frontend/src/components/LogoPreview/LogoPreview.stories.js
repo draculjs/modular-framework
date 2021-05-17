@@ -1,5 +1,5 @@
 import LogoPreview from './LogoPreview';
-import i18n from '../i18n'
+import i18n from '../../i18n'
 
 export default {
     title: 'Components/LogoPreview',
@@ -7,7 +7,7 @@ export default {
     argTypes: {
         mode:"Square",
         title:"APP TITULO",
-        src:"http://localhost:5000/media/logo/preview-eliminar.png?3ji" 
+        src:"http://localhost:5000/media/logo/preview-eliminar.png?3ji"
     }
 }
 

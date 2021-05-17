@@ -8,14 +8,14 @@
         <template v-if="mode === LOGO_MODE_SQUARE">
             <v-avatar tile size="50" color="grey lighten-2">
                 <img v-if="src" :src="src"/>
-                <img v-else src="../assets/logo.png"/>
+                <img v-else src="src/assets/logo.png"/>
             </v-avatar>
         </template>
 
         <template v-else-if="mode === LOGO_MODE_ROUND">
             <v-avatar size="50" color="grey lighten-2">
                 <img v-if="src" :src="src"/>
-                <img v-else src="../assets/logo.png"/>
+                <img v-else src="src/assets/logo.png"/>
             </v-avatar>
         </template>
 
@@ -29,7 +29,7 @@
     </v-toolbar>
 </template>
 <script>
-    import {LOGO_MODE_SQUARE, LOGO_MODE_ROUND, LOGO_MODE_RECTANGLE} from '../constants'
+    import {LOGO_MODE_SQUARE, LOGO_MODE_ROUND, LOGO_MODE_RECTANGLE} from '../../constants'
 
     export default {
         name: 'LogoPreview',

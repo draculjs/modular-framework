@@ -5,7 +5,7 @@
         <v-toolbar-title v-if="getLogo.mode === 'Round' " >
             <v-avatar :size="avatarSize">
                 <img v-if="getLogo.url" :src="getLogo.url"/>
-                <img v-else src="../assets/logo.png"/>
+                <img v-else src="src/assets/logo.png"/>
             </v-avatar>
 
         </v-toolbar-title>
@@ -13,7 +13,7 @@
         <v-toolbar-title v-if="getLogo.mode === 'Square' ">
             <v-avatar tile :size="avatarSize">
                 <img v-if="getLogo.url" :src="getLogo.url"/>
-                <img v-else src="../assets/logo.png"/>
+                <img v-else src="src/assets/logo.png"/>
             </v-avatar>
         </v-toolbar-title>
 
