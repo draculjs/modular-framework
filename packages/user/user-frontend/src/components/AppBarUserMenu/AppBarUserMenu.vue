@@ -2,17 +2,15 @@
 
   <v-menu v-if="isAuth && me" offset-y left>
     <template v-slot:activator="{on}">
-      <v-toolbar-items>
-        <v-btn icon large v-on="on">
-          <v-avatar
-              :tile="tile"
-              :size="avatarSize"
-          >
-            <img v-if="getAvatarUrl" :src="getAvatarUrl"/>
-            <img v-else src="@/assets/user.png">
-          </v-avatar>
-        </v-btn>
-      </v-toolbar-items>
+      <v-btn class="ml-1 onPrimary--text" icon large v-on="on">
+        <v-avatar
+            :tile="tile"
+            :size="avatarSize"
+        >
+          <img v-if="getAvatarUrl" :src="getAvatarUrl"/>
+          <img v-else src="@/assets/user.png">
+        </v-avatar>
+      </v-btn>
     </template>
 
     <v-list subheader>

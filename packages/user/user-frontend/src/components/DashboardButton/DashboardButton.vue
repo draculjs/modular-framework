@@ -1,11 +1,11 @@
 <template>
-    <v-btn v-if="mustShow"
-           icon
-           :to="{name:'userDashboard'}"
-           class="mr-3 onPrimary--text"
-    >
-        <v-icon>security</v-icon>
-    </v-btn>
+  <v-btn v-if="mustShow"
+         icon
+         :to="{name:'userDashboard'}"
+         class="onPrimary--text"
+  >
+    <v-icon>security</v-icon>
+  </v-btn>
 </template>
 
 <script>
