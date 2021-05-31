@@ -50,13 +50,7 @@
 
 <script>
 
-    import {InputErrorsByProps, RequiredRule } from 'packages/common/common-frontend/src'
-
-
-
-
-
-    import {MultiLangSubform} from "packages/common/common-frontend/src";
+    import {InputErrorsByProps, RequiredRule, MultiLangSubform } from '@dracul/common-frontend'
 
     export default {
         name: "SettingsForm",

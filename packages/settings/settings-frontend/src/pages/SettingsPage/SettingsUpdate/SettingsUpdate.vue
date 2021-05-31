@@ -14,7 +14,7 @@
 
 import SettingsProvider from "../../../providers/SettingsProvider";
 
-import {CrudUpdate, ClientError} from 'packages/common/common-frontend/src'
+import {CrudUpdate, ClientError} from '@dracul/common-frontend'
 
 import SettingsForm from "../SettingsForm";
 

@@ -51,10 +51,8 @@
 
 <script>
 import SettingsProvider from "../../../providers/SettingsProvider";
-
-import {EditButton, ShowButton, SearchInput} from "packages/common/common-frontend/src"
+import {EditButton, ShowButton, SearchInput} from '@dracul/common-frontend'
 import {mapGetters} from "vuex";
-
 
 export default {
   name: "SettingsList",

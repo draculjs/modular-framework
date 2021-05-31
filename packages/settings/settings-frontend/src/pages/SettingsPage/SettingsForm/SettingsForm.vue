@@ -22,7 +22,7 @@
 
 <script>
 
-    import {InputErrorsByProps, RequiredRule } from 'packages/common/common-frontend/src'
+    import {InputErrorsByProps, RequiredRule } from '@dracul/common-frontend'
     import {mapGetters} from "vuex";
 
     export default {

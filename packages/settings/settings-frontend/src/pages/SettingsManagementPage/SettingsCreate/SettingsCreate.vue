@@ -14,12 +14,9 @@
 
     import SettingsProvider from "../../../providers/SettingsProvider";
 
-    import {CrudCreate, ClientError} from 'packages/common/common-frontend/src'
+    import {CrudCreate, ClientError} from '@dracul/common-frontend'
 
     import SettingsForm from "../SettingsForm";
-
-
-
 
     export default {
         name: "SettingsCreate",

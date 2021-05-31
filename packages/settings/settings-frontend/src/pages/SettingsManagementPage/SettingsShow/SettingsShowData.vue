@@ -23,7 +23,7 @@
     </v-row>
 </template>
 <script>
-    import {ShowField} from 'packages/common/common-frontend/src'
+    import {ShowField} from '@dracul/common-frontend'
 
 
     export default {

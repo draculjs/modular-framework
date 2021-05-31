@@ -10,7 +10,7 @@
 
 <script>
     import SettingsShowData from "./SettingsShowData";
-    import {CrudShow} from 'packages/common/common-frontend/src'
+    import {CrudShow} from '@dracul/common-frontend'
 
     export default {
         name: "SettingsShow",

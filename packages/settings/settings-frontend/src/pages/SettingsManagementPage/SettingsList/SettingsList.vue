@@ -52,7 +52,7 @@
 <script>
    import SettingsProvider from "../../../providers/SettingsProvider";
 
-   import {DeleteButton, EditButton, ShowButton, SearchInput} from "packages/common/common-frontend/src"
+   import {DeleteButton, EditButton, ShowButton, SearchInput} from '@dracul/common-frontend'
 
 
     export default {

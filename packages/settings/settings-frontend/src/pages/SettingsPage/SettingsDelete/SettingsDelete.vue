@@ -28,7 +28,7 @@
     import SettingsShowData from "../SettingsShow/SettingsShowData";
 
     //Common
-    import {CrudDelete, ClientError} from 'packages/common/common-frontend/src'
+    import {CrudDelete, ClientError} from '@dracul/common-frontend'
 
     export default {
         name: "SettingsDelete",

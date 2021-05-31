@@ -52,7 +52,7 @@
     import SettingsShow from "../SettingsShow";
     import SettingsList from "../SettingsList";
 
-     import {CrudLayout, AddButton, Snackbar} from "packages/common/common-frontend/src"
+     import {CrudLayout, AddButton, Snackbar} from '@dracul/common-frontend'
 
     export default {
         name: "SettingsCrud",
