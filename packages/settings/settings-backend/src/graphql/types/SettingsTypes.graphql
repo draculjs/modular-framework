@@ -1,0 +1,39 @@
+type Settings{
+    id: ID!
+    key: String!
+    value: String
+    label: MultiLang!
+}
+
+type SettingsPaginated{
+    totalItems: Int!
+    page: Int!
+    items: [Settings!]
+}
+
+type Query {
+    settingsFind(id:ID!): Settings
+    settingsFindByKey(key:String!): Settings
+    settingsFetch: [Settings]
+    settingsPaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): SettingsPaginated
+
+
+}
+
+input SettingsInput{
+    key: String!
+    value: String
+    label: MultiLangInput!
+}
+
+type SettingsDelete{
+    id: ID!
+    success: Boolean!
+}
+
+
+type Mutation {
+    settingsCreate(input: SettingsInput): Settings
+    settingsUpdate(id: ID!, input: SettingsInput): Settings
+    settingsDelete(id: ID!): SettingsDelete!
+}

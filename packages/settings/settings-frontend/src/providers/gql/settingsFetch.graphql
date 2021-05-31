@@ -1,0 +1,13 @@
+query settingsFetch{
+    settingsFetch{
+        id
+        key
+        value
+        label{
+                en
+                es
+                pt
+            }
+    }
+}
+

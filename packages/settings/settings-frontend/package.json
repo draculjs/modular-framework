@@ -1,0 +1,42 @@
+{
+  "name": "@dracul/settings-frontend",
+  "version": "1.0.0",
+  "description": "vue settings",
+  "main": "./lib/index.js",
+  "scripts": {
+    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draculjs/modular-framework.git"
+  },
+  "keywords": [
+    "settings",
+    "vuejs",
+    "dracul"
+  ],
+  "author": "Cristian Incarnato",
+  "license": "MIT",
+  "dependencies": {
+    "@dracul/common-frontend": "^1.1.2",
+    "vue": "^2.6.12",
+    "vue-i18n": "^8.18.1",
+    "vue-router": "^3.4.9",
+    "vuetify": "^2.2.11",
+    "vuex": "^3.6.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/register": "^7.12.13",
+    "cpx": "^1.5.0",
+    "mocha": "^8.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/draculjs/modular-framework/issues"
+  },
+  "homepage": "https://github.com/draculjs/modular-framework#readme"
+}
