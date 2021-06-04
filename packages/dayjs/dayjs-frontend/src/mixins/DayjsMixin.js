@@ -22,6 +22,11 @@ export default {
                     return date.format("YYYY-MM-DD")
                 }
 
+                if(/(\d{4})-(\d{2})-(\d{2})/.test(date)){
+                    return date
+                }
+
+
                 return dayjs(parseInt(date)).tz().format("YYYY-MM-DD")
             }
         },
@@ -32,6 +37,7 @@ export default {
                     return null
 
 
+
                 let format = "YYYY-MM-DD HH:mm"
 
                 if(showSeconds)
@@ -39,6 +45,10 @@ export default {
 
                 if(dayjs.isDayjs(date)){
                     return date.format(format)
+                }
+
+                if(/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)){
+                    return date
                 }
 
                 return dayjs(parseInt(date)).tz().format(format)
@@ -59,6 +69,10 @@ export default {
                     return date.format(format)
                 }
 
+                if(/(\d{2}):(\d{2})(:(\d{2}))?/.test(date)){
+                    return date
+                }
+
                 return dayjs(parseInt(date)).tz().format(format)
             }
         },
@@ -68,6 +82,8 @@ export default {
                 if(!date)
                     return null
 
+
+
                 if(!tz)
                     tz = dayjs.tz.guess()
 
@@ -76,6 +92,10 @@ export default {
 
                 if(dayjs.isDayjs(date)){
                     return date.tz(tz).format(format)
+                }
+
+                if(/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)){
+                    return date
                 }
 
                 return dayjs(parseInt(date)).tz(tz).format(format)

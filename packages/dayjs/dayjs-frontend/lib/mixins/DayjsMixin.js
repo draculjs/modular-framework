@@ -28,38 +28,54 @@ var _default = {
     getDateFormat() {
       return date => {
         if (!date) return null;
-        if (/[0-9]{13}/.test(date)) date = parseInt(date);
-        return (0, _Dayjs.default)(date).tz().format("YYYY-MM-DD");
+
+        if (_Dayjs.default.isDayjs(date)) {
+          return date.format("YYYY-MM-DD");
+        }
+
+        return (0, _Dayjs.default)(parseInt(date)).tz().format("YYYY-MM-DD");
       };
     },
 
     getDateTimeFormat() {
       return (date, showSeconds = false) => {
         if (!date) return null;
-        if (/[0-9]{13}/.test(date)) date = parseInt(date);
         let format = "YYYY-MM-DD HH:mm";
         if (showSeconds) format += ":ss";
-        return (0, _Dayjs.default)(date).tz().format(format);
+
+        if (_Dayjs.default.isDayjs(date)) {
+          return date.format(format);
+        }
+
+        return (0, _Dayjs.default)(parseInt(date)).tz().format(format);
       };
     },
 
     getTimeFormat() {
       return (date, showSeconds = false) => {
         if (!date) return null;
-        if (/[0-9]{13}/.test(date)) date = parseInt(date);
         let format = "HH:mm";
         if (showSeconds) format += ":ss";
-        return (0, _Dayjs.default)(date).tz().format(format);
+
+        if (_Dayjs.default.isDayjs(date)) {
+          return date.format(format);
+        }
+
+        return (0, _Dayjs.default)(parseInt(date)).tz().format(format);
       };
     },
 
     getDateTimeCustomFormat() {
       return (date, format, tz) => {
         if (!date) return null;
-        if (/[0-9]{13}/.test(date)) date = parseInt(date);
         if (!tz) tz = _Dayjs.default.tz.guess();
         if (!format) format = "YYYY-MM-DD HH:mm:ss";
-        return (0, _Dayjs.default)(date).tz(tz).format(format);
+
+        if (_Dayjs.default.isDayjs(date)) {
+          return date.tz(tz).format(format);
+        }
+
+        return (0, _Dayjs.default)(parseInt(date)).tz(tz).format(format);
       };
     }
 
