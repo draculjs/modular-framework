@@ -33,6 +33,10 @@ var _default = {
           return date.format("YYYY-MM-DD");
         }
 
+        if (/(\d{4})-(\d{2})-(\d{2})/.test(date)) {
+          return date;
+        }
+
         return (0, _Dayjs.default)(parseInt(date)).tz().format("YYYY-MM-DD");
       };
     },
@@ -45,6 +49,10 @@ var _default = {
 
         if (_Dayjs.default.isDayjs(date)) {
           return date.format(format);
+        }
+
+        if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) {
+          return date;
         }
 
         return (0, _Dayjs.default)(parseInt(date)).tz().format(format);
@@ -61,6 +69,10 @@ var _default = {
           return date.format(format);
         }
 
+        if (/(\d{2}):(\d{2})(:(\d{2}))?/.test(date)) {
+          return date;
+        }
+
         return (0, _Dayjs.default)(parseInt(date)).tz().format(format);
       };
     },
@@ -73,6 +85,10 @@ var _default = {
 
         if (_Dayjs.default.isDayjs(date)) {
           return date.tz(tz).format(format);
+        }
+
+        if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) {
+          return date;
         }
 
         return (0, _Dayjs.default)(parseInt(date)).tz(tz).format(format);
