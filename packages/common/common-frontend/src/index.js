@@ -9,6 +9,7 @@ import SimpleDialog from "./components/SimpleDialog";
 import ListCombobox from "./components/ListCombobox";
 import MultiLangSubform from "./components/MultiLangSubform";
 import ConfirmDialog from "./components/ConfirmDialog";
+import ColorInput from "./components/ColorInput";
 
 import AddButton from "./components/Crud/AddButton";
 import EditButton from "./components/Crud/EditButton";
@@ -42,6 +43,7 @@ export {
     ListCombobox,
     MultiLangSubform,
     ConfirmDialog,
+    ColorInput,
 
     //Crud Buttons
     AddButton,
