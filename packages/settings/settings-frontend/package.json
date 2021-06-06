@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-frontend",
-  "version": "1.1.6",
+  "version": "1.1.10",
   "description": "vue settings",
   "main": "./lib/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "author": "Cristian Incarnato",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.1.2",
+    "@dracul/common-frontend": "^1.1.10",
     "vue": "^2.6.12",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.4.9",
