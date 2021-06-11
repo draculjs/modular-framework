@@ -1,5 +1,12 @@
 const messages = {
   en: {
+    role: {
+      permissions: {
+        NOTIFICATION_CREATE: "Notification creation",
+        NOTIFICATION_SHOW: "Notification display",
+        NOTIFICATION_UPDATE: "Notification edition",
+      }
+    },
     notification: {
         title:"Notifications",
         markAllRead:"Mark all read",
@@ -19,6 +26,13 @@ const messages = {
     },
   },
   es: {
+    role: {
+      permissions: {
+        NOTIFICATION_CREATE: "Creación de notificaciones",
+        NOTIFICATION_SHOW: "Visualización de notificaciones",
+        NOTIFICATION_UPDATE: "Edición de notificaciones",
+      }
+    },
     notification: {
         title:"Notificaciones",
         markAllRead:"Marcar todos como leidos",
@@ -38,6 +52,13 @@ const messages = {
     },
   },
   pt: {
+    role: {
+      permissions: {
+        NOTIFICATION_CREATE: "Criação do notificação",
+        NOTIFICATION_SHOW: "Visor do notificação",
+        NOTIFICATION_UPDATE: "Edição do notificação",
+      }
+    },
     notification: {
         title:"Notificações",
         markAllRead:"Marcar tudo como lido",
