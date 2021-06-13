@@ -2,7 +2,8 @@ import SettingsProvider from "../providers/SettingsProvider";
 
 export default {
     state: {
-        settings: []
+        settings: [],
+        settingsReady: false
     },
     getters: {
         getSetting: (state) => (key) => {
@@ -14,11 +15,15 @@ export default {
             }
             return null
         },
+        isSettingsReady(state){
+            return state.settingsReady
+        }
     },
     actions: {
         loadSettings({commit}){
             SettingsProvider.fetchSettings().then(r => {
                 commit('setSettings',r.data.settingsFetch)
+                commit('setSettingsReady')
             })
         }
     },
@@ -26,7 +31,9 @@ export default {
         setSettings(state, val) {
             state.settings = val
         },
-
+        setSettingsReady(state) {
+            state.settingsReady = true
+        },
 
     }
 }
