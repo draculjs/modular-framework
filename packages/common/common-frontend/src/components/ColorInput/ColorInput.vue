@@ -17,7 +17,13 @@
           :error="hasErrors"
           :error-messages="getMessageErrors"
           :color="color"
-      ></v-text-field>
+      >
+        <template v-slot:append>
+          <v-chip :color="colorValue" small>
+            {{colorValue}}
+          </v-chip>
+        </template>
+      </v-text-field>
     </template>
     <v-color-picker v-model="colorValue" class="ma-2" flat
                     mode="hexa"></v-color-picker>
