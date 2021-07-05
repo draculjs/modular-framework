@@ -19,7 +19,7 @@
           :color="color"
       >
         <template v-slot:append>
-          <v-chip :color="colorValue" small>
+          <v-chip :class="colorValue" small>
             {{colorValue}}
           </v-chip>
         </template>
