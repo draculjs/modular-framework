@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-frontend",
-  "version": "1.1.10",
+  "version": "1.1.14",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
-    "@dracul/common-frontend": "^1.1.10",
+    "@dracul/common-frontend": "^1.1.14",
     "@dracul/dayjs-frontend": "^1.1.9",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
