@@ -1,6 +1,8 @@
 import {
     recoveryChangePassword,
-    recoveryPassword
+    recoveryPassword,
+    recoveryPasswordByCode,
+    recoveryChangePasswordCode
 } from "../../services/RecoveryService";
 
 export default {
@@ -10,6 +12,12 @@ export default {
         },
         recoveryByEmail: (_, {email}) => {
             return recoveryPassword(email)
+        },
+        recoveryByCode: (_, {email}) => {
+            return recoveryPasswordByCode(email)
+        },
+        recoveryChangePasswordCode: (_, {code, newPassword}, {user, req}) => {
+            return recoveryChangePasswordCode(code, newPassword)
         },
     }
 

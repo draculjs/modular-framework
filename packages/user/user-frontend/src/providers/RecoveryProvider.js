@@ -22,10 +22,24 @@ class RecoveryProvider {
         })
     }
 
+    recoveryByCode(email) {
+        return this.gqlc.mutate({
+            mutation: require('./gql/recoveryByCode.graphql'),
+            variables: {email: email}
+        })
+    }
+
     recoveryChangePassword(token, newPassword) {
         return this.gqlc.mutate({
             mutation: require('./gql/recoveryChangePassword.graphql'),
             variables: {token: token, newPassword: newPassword}
+        })
+    }
+
+    recoveryChangePasswordCode(code, newPassword) {
+        return this.gqlc.mutate({
+            mutation: require('./gql/recoveryChangePasswordCode.graphql'),
+            variables: {code: code, newPassword: newPassword}
         })
     }
 

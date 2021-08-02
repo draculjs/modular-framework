@@ -1,0 +1,6 @@
+mutation ( $email: String!){
+    recoveryByCode(email: $email){
+        status
+        message
+    }
+}
