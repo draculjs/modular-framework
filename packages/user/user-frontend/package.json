@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.0.148",
+  "version": "1.1.16",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.0.146"
+    "@dracul/common-frontend": "^1.1.14"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",

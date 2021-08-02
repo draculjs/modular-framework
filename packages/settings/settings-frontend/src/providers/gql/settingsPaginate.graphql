@@ -1,0 +1,16 @@
+query settingsPaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $orderBy: String, $orderDesc: Boolean){
+    settingsPaginate( pageNumber: $pageNumber, itemsPerPage: $itemsPerPage, search: $search, orderBy: $orderBy, orderDesc: $orderDesc){
+        totalItems
+        page
+        items{
+          id
+          key
+        value
+        label{
+                en
+                es
+                pt
+            }
+        }
+    }
+}

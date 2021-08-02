@@ -2,6 +2,7 @@
   <v-dialog
       v-model="value"
       max-width="290"
+      persistent
   >
     <v-card>
       <v-card-title class="headline">
@@ -49,6 +50,7 @@ export default {
     },
     confirm(){
       this.$emit('confirmed')
+      this.$emit('input', false)
     }
   }
 }

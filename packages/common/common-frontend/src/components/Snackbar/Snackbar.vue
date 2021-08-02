@@ -19,7 +19,7 @@
     export default {
         name: "Snackbar",
         props: {
-            value: String,
+            value: String|Boolean,
             message: String,
             color: {type: String, default: "success"},
             timeout: {type: Number, default: 4000}

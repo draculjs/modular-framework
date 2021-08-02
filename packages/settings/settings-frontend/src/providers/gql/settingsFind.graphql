@@ -1,0 +1,12 @@
+query settingsFind($id:ID!){
+    settingsFind(id:$id){
+        id
+        key
+        value
+        label{
+                en
+                es
+                pt
+            }
+    }
+}

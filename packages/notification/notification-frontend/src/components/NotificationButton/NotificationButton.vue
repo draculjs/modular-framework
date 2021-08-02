@@ -1,22 +1,24 @@
 <template>
-  <div class="text-center">
-    <v-menu offset-y left open-on-hover :close-on-content-click="false">
-      <template v-slot:activator="{ on, attrs }">
-        <v-badge
-            :content="totalNotifications"
-            :value="totalNotifications"
-            color="secondary"
-            overlap
+  <v-menu offset-y left open-on-hover :close-on-content-click="false">
+    <template v-slot:activator="{ on, attrs }">
+      <v-badge
+          :content="totalNotifications"
+          :value="totalNotifications"
+          color="secondary"
+          overlap
+      >
+        <v-btn v-on="on"
+               v-bind="attrs"
+               icon
+               class="onPrimary--text"
         >
-          <v-icon v-bind="attrs" v-on="on" :color="colorIcon">
-            notifications
-          </v-icon>
-        </v-badge>
-      </template>
-      <notificationMiniShow :notificationsItems="getNotificationsWithoutRead"
-                            v-on:updateNotifications="getNotifications"/>
-    </v-menu>
-  </div>
+          <v-icon >notifications</v-icon>
+        </v-btn>
+      </v-badge>
+    </template>
+    <notificationMiniShow :notificationsItems="getNotificationsWithoutRead"
+                          v-on:updateNotifications="getNotifications"/>
+  </v-menu>
 </template>
 
 <script>
@@ -28,7 +30,7 @@ export default {
 
   props: {
     userId: String,
-    colorIcon: {type: String, default: 'onPrimary'},
+    colorIcon: {type: String, default: 'onPrimary--text'},
   },
   data() {
     return {

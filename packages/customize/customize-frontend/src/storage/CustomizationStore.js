@@ -3,7 +3,6 @@ import CustomizationProvider from "../providers/CustomizationProvider";
 const customizationStore = {
     state: {
         vuetifyInstance: null,
-        i18nInstance: null,
         colors: {
             primary: '#3F51B5',
             onPrimary: '#FFFFFF',
@@ -30,10 +29,17 @@ const customizationStore = {
     },
     actions: {
         loadCustomizations({commit}) {
-            CustomizationProvider.customization().then(r => {
-                commit('setColors', r.data.customization.colors)
-                commit('setLogo', r.data.customization.logo)
-                commit('setLanguage', r.data.customization.language)
+            return new Promise((resolve, reject) => {
+
+                CustomizationProvider.customization()
+                    .then(r => {
+                        commit('setColors', r.data.customization.colors)
+                        commit('setLogo', r.data.customization.logo)
+                        commit('setLanguage', r.data.customization.language)
+                        resolve(r.data.customization)
+                    })
+                    .catch(e => reject(e))
+
             })
         },
         setLogo({commit}, logo) {
@@ -49,9 +55,6 @@ const customizationStore = {
     mutations: {
         setVuetifyInstance(state, vuetifyInstance) {
             state.vuetifyInstance = vuetifyInstance
-        },
-        setI18nInstance(state, i18nInstance) {
-            state.i18nInstance = i18nInstance
         },
         setLogo(state, {mode, title, url}) {
             state.logo.mode = mode
@@ -79,10 +82,6 @@ const customizationStore = {
         },
         setLanguage(state, language) {
             state.language = language
-            if (state.i18nInstance) {
-                state.i18nInstance.locale = language
-
-            }
         }
     }
 }

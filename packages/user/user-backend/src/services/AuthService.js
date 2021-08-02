@@ -11,7 +11,7 @@ export const tokenSignPayload = function (user, session) {
     return {
         id: user.id,
         //name: user.name,
-        //username: user.username,
+        username: user.username,
         //email: user.email,
         //phone: user.phone,
         role: {id: user.role.id, name: user.role.name, childRoles: user.role.childRoles},

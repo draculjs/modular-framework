@@ -31,7 +31,7 @@ import DayjsMixin from "../../mixins/DayjsMixin";
 export default {
   name: "TimeInput",
   props: {
-    value: {type:String},
+    value: {type:[String,Object]},
     closeOnContentClick: {type: Boolean, default: false},
     error: {type: Boolean},
     errorMessages: {type:Array},

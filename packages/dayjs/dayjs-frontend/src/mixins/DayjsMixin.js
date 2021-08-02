@@ -18,10 +18,16 @@ export default {
                 if(!date)
                     return null
 
-                if(/[0-9]{13}/.test(date))
-                    date = parseInt(date)
+                if(dayjs.isDayjs(date)){
+                    return date.format("YYYY-MM-DD")
+                }
 
-                return dayjs(date).tz().format("YYYY-MM-DD")
+                if(/(\d{4})-(\d{2})-(\d{2})/.test(date)){
+                    return date
+                }
+
+
+                return dayjs(parseInt(date)).tz().format("YYYY-MM-DD")
             }
         },
         getDateTimeFormat() {
@@ -30,15 +36,22 @@ export default {
                 if(!date)
                     return null
 
-                if(/[0-9]{13}/.test(date))
-                    date = parseInt(date)
+
 
                 let format = "YYYY-MM-DD HH:mm"
 
                 if(showSeconds)
                     format += ":ss"
 
-                return dayjs(date).tz().format(format)
+                if(dayjs.isDayjs(date)){
+                    return date.format(format)
+                }
+
+                if(/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)){
+                    return date
+                }
+
+                return dayjs(parseInt(date)).tz().format(format)
             }
         },
         getTimeFormat() {
@@ -47,15 +60,20 @@ export default {
                 if(!date)
                     return null
 
-                if(/[0-9]{13}/.test(date))
-                    date = parseInt(date)
-
                 let format = "HH:mm"
 
                 if(showSeconds)
                     format += ":ss"
 
-                return dayjs(date).tz().format(format)
+                if(dayjs.isDayjs(date)){
+                    return date.format(format)
+                }
+
+                if(/(\d{2}):(\d{2})(:(\d{2}))?/.test(date)){
+                    return date
+                }
+
+                return dayjs(parseInt(date)).tz().format(format)
             }
         },
         getDateTimeCustomFormat() {
@@ -64,8 +82,7 @@ export default {
                 if(!date)
                     return null
 
-                if(/[0-9]{13}/.test(date))
-                    date = parseInt(date)
+
 
                 if(!tz)
                     tz = dayjs.tz.guess()
@@ -73,7 +90,15 @@ export default {
                 if(!format)
                     format = "YYYY-MM-DD HH:mm:ss"
 
-                return dayjs(date).tz(tz).format(format)
+                if(dayjs.isDayjs(date)){
+                    return date.tz(tz).format(format)
+                }
+
+                if(/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)){
+                    return date
+                }
+
+                return dayjs(parseInt(date)).tz(tz).format(format)
             }
         }
     }

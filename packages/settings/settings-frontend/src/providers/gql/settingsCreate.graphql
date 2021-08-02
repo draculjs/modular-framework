@@ -1,0 +1,13 @@
+mutation settingsCreate($key:String!, $value:String, $label:MultiLangInput!){
+    settingsCreate(input: {key: $key, value: $value, label: $label }){
+        id
+        key
+        value
+        label{
+                en
+                es
+                pt
+            }
+    }
+}
+

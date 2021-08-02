@@ -16,6 +16,14 @@ class UserProvider {
         })
     }
 
+    user(id) {
+        return this.gqlc.query({
+            query: require('./gql/user.graphql'),
+            fetchPolicy: "network-only",
+            variables: {id: id}
+        })
+    }
+
     users() {
         return this.gqlc.query({
             query: require('./gql/users.graphql'),

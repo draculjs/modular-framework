@@ -23,7 +23,7 @@ export default {
   name: "DateTimeInput",
   components: {TimeInput, DateInput},
   props: {
-    value: {type: String},
+    value: {type: [String,Object]},
     closeOnContentClick: {type: Boolean, default: false},
     error: {type: Boolean},
     errorMessages: {type: Array},

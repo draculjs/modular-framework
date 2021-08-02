@@ -1,0 +1,12 @@
+query settingsFindByKey($key:String!){
+    settingsFindByKey(key:$key){
+        id
+        key
+        value
+        label{
+            en
+            es
+            pt
+        }
+    }
+}
