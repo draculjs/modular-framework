@@ -68,11 +68,11 @@ describe("ProfileServiceTest", () => {
     });
 
 
-    test('Current password and new password are not null or empty', async () => {
+    test('Current password and new password are null or empty', async () => {
       let currentPass = ''
       let newPass = null
       let user = await findUserByUsername('root')
-      expect(changePassword(user.id, currentPass, newPass)).rejects.toThrow({status: false, message: "Current password and new password must not be null or empty"})
+      expect(changePassword(user.id, currentPass, newPass)).rejects.toThrow({message: "Current password and new password must not be null or empty"})
     })
     
     test('Current password equal new password', async () => {
