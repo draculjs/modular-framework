@@ -8,7 +8,7 @@ import validatePasswordLength from "./utils/validatePasswordLength";
 import {tokenSignPayload} from "./AuthService";
 import {createSession} from "./SessionService";
 import jsonwebtoken from "jsonwebtoken";
-import randomString from '../../../../common/common-backend/src/helpers/randomString';
+import {randomString} from '@dracul/common-backend'
 
 
 /*
@@ -83,7 +83,7 @@ export const recoveryPasswordByCode = function (email) {
             ).catch(err => {
                 winston.error("RecoveryService.recoveryPassword ", err)
                 rejects(new Error('common.operation.fail'))
-            })                     
+            })
     })
 }
 
