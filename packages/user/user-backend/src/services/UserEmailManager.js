@@ -57,6 +57,43 @@ class UserEmailManager {
 
     }
 
+    recoveryCode(to, code, user) {
+
+        return new Promise((resolve, reject) => {
+
+            var email = new Email({
+                transport: this.transporter,
+                send: true,
+                preview: false,
+            });
+
+            email.send({
+                template: 'codeRecovery',
+                message: {
+                    from: process.env.APP_NAME + "<" + process.env.SMTP_USER + ">",
+                    to: to,
+                },
+                locals: {
+                    appName: process.env.APP_NAME,
+                    name: user.name,
+                    url:"",
+                    username: user.username,
+                    title: "Recuperacion de Contraseña",
+                    description: "Hemos recibido tu solicitud para recuperar tu contraseña, podras hacerlo con el siguiente codigo:",
+                    btnText: code,
+                    copyright: "Copyright @ " + process.env.APP_NAME + " " + new Date().getFullYear()
+                },
+            }).then(() => {
+                resolve(true)
+            }).catch(error => {
+                winston.error('UserEmailManager.recoveryCode ', error)
+                reject(error)
+            })
+
+        })
+
+    }
+
     activation(to, url, user) {
         return new Promise((resolve, reject) => {
             var email = new Email({

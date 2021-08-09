@@ -4,8 +4,14 @@ type RecoveryResponse{
     message: String
 }
 
+type CodeResponse{
+    status: Boolean!
+    message: String
+}
+
 type Mutation {
     recoveryByEmail(email:String!):OperationResponse!
     recoveryChangePassword(token: String!, newPassword:String!): RecoveryResponse!
-
+    recoveryByCode(email:String!):CodeResponse!
+    recoveryChangePasswordCode(code: String!, newPassword:String!): CodeResponse!
 }
