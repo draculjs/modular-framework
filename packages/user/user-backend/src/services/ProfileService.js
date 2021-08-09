@@ -153,7 +153,21 @@ function randomstring(length) {
 }
 
 export const changePassword = function (id, {currentPassword, newPassword}, actionBy = null) {
+    
     return new Promise(async (resolve, rejects) => {
+
+        if (!currentPassword || !newPassword) {
+            return rejects(new Error('Current password and new password must not be null or empty'))
+        }
+
+        if(currentPassword === newPassword) {
+            rejects(new UserInputError('auth.messagePasswordIsEqual', {
+              inputErrors: {
+                newPassword: {properties: {message: 'auth.messagePasswordIsEqual'}}
+              }
+            }));
+        }
+          
         let user = await User.findOne({_id: id})
         if (bcryptjs.compareSync(currentPassword, user.password)) {
             User.findOneAndUpdate(

@@ -19,7 +19,7 @@
                             :rules="requiredRule"
                             :label="$t('user.label.currentPassword')"
                             :placeholder="$t('user.label.currentPassword')"
-                            autocomplete="current-password"
+                            autocomplete="new-password"
                             :error="hasInputErrors('currentPassword')"
                             :error-messages="getInputErrors('currentPassword')"
                             required
@@ -43,6 +43,7 @@
                             :error-messages="getInputErrors('newPassword')"
                             required
                             color="secondary"
+                            @change="clearNewPasswordInputError"
                     />
                 </v-col>
 
@@ -56,7 +57,7 @@
                                   :rules="passwordMatchRules"
                                   :label="$t('user.label.repeatPassword')"
                                   :placeholder="$t('user.label.repeatPassword')"
-                                  autocomplete="off"
+                                  autocomplete="new-password"
                     />
                 </v-col>
             </v-form>
@@ -113,6 +114,11 @@
             clearCurrentPasswordInputError() {
                 if(this.inputErrors['currentPassword']){
                     this.inputErrors['currentPassword'] = null
+                }
+            },
+            clearNewPasswordInputError() {
+                if(this.inputErrors['newPassword']){
+                    this.inputErrors['newPassword'] = null
                 }
             },
             resetValidation: function () {

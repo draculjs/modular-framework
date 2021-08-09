@@ -19,7 +19,8 @@ export const messages = {
             recoverySuccess: 'Password recovery successful',
             changePasswordSuccessfully: "Password changed successfully",
             wrongPassword: 'Wrong Password',
-            validatingToken: 'Validating Token'
+            validatingToken: 'Validating Token',
+            messagePasswordEqual: 'New password must be different from the current password'
         }
     },
     es: {
@@ -42,7 +43,8 @@ export const messages = {
             recoverySuccess: 'Recuperación de contraseña exitosa',
             changePasswordSuccessfully: "contraseña modificada con exito",
             wrongPassword: 'Contraseña incorrecta',
-            validatingToken: 'Validando Token'
+            validatingToken: 'Validando Token',
+            messagePasswordEqual: 'La contraseña nueva debe ser diferente de la actual'
         }
     },
     pt: {
@@ -65,7 +67,8 @@ export const messages = {
             recoverySuccess: 'Recuperação de senha bem-sucedida',
             changePasswordSuccessfully: "Senha modificada com sucesso",
             wrongPassword: 'Senha incorreta',
-            validatingToken: 'Token de validação'
+            validatingToken: 'Token de validação',
+            messagePasswordEqual: 'A nova senha deve ser diferente da senha atual'
         }
     }
 

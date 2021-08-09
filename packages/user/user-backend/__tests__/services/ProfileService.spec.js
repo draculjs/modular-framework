@@ -1,7 +1,7 @@
 //Utils
 import {initAdminRole, initPermissions, initRootUser} from "../../src/services/InitService";
 
-import {avatarUpload} from "../../src/services/ProfileService";
+import {avatarUpload, changePassword} from "../../src/services/ProfileService";
 
 const mongoHandler = require('../utils/mongo-handler');
 
@@ -68,5 +68,24 @@ describe("ProfileServiceTest", () => {
     });
 
 
-
+    test('Current password and new password are null or empty', async () => {
+      let currentPass = ''
+      let newPass = null
+      let user = await findUserByUsername('root')
+      expect(changePassword(user.id, currentPass, newPass)).rejects.toThrow({message: "Current password and new password must not be null or empty"})
+    })
+    
+    test('Current password equal new password', async () => {
+      let currentPass = 'root.123'
+      let newPass = 'root.123'
+      let user = await findUserByUsername('root')
+      expect(changePassword(user.id, currentPass, newPass)).rejects.toThrow(Error)
+    })
+    
+    test('Current password unequal new password', async () => {
+      let currentPass = 'root.123'
+      let newPass = '12345'
+      let user = await findUserByUsername('root')
+      expect(changePassword(user.id, currentPass, newPass)).resolves.toBe({status: true, message: "Password Changed"})
+    })
 })
