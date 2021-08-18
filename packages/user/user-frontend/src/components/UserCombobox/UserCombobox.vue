@@ -9,6 +9,7 @@
       :label="$t('user.users')"
       :placeholder="$t('user.users')"
       :multiple="multiple"
+      :hide-details="hideDetails"
   ></v-select>
 </template>
 
@@ -23,6 +24,7 @@ export default {
     },
     multiple: {type: Boolean, default: false},
     chips: {type: Boolean, default: false},
+    hideDetails: {type: Boolean, default: false},
     roleName: {type: String}
   },
   data() {
