@@ -178,7 +178,6 @@ export const findUsersByRole = function (roleName) {
 
         if(!role) return resolve([])
 
-
         User.find({role: role.id}).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
             if (err) {
                 winston.error("UserService.findUsersByRole ", err)
