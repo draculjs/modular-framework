@@ -6,6 +6,7 @@ import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-express'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
+import {findRole, findRoleByName} from "./RoleService";
 
 export const hashPassword = function (password) {
     if (!password) {
@@ -163,6 +164,27 @@ export const findUsers = function (roles = [], userId = null) {
                 reject(err)
             } else {
                 winston.debug('UserService.findUsers successful')
+                resolve(res)
+            }
+        });
+    })
+}
+
+
+export const findUsersByRole = function (roleName) {
+    return new Promise(async (resolve, reject) => {
+
+        let role = await findRoleByName(roleName)
+
+        if(!role) return resolve([])
+
+
+        User.find({role: role.id}).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
+            if (err) {
+                winston.error("UserService.findUsersByRole ", err)
+                reject(err)
+            } else {
+                winston.debug('UserService.findUsersByRole successful')
                 resolve(res)
             }
         });

@@ -18,11 +18,12 @@ import UserProvider from "../../providers/UserProvider";
 export default {
   name: "UserCombobox",
   props: {
-      value: {
-        type: [String, Array]
-      },
-      multiple: {type:Boolean, default:false},
-      chips: {type:Boolean, default:false}
+    value: {
+      type: [String, Array]
+    },
+    multiple: {type: Boolean, default: false},
+    chips: {type: Boolean, default: false},
+    roleName: {type: String}
   },
   data() {
     return {
@@ -32,22 +33,32 @@ export default {
   },
   computed: {
     userValue: {
-      get() { return this.value },
-      set(val) {this.$emit('input', val)}
+      get() {
+        return this.value
+      },
+      set(val) {
+        this.$emit('input', val)
+      }
     }
   },
   mounted() {
     this.loadUsers()
   },
-  methods:{
-    loadUsers(){
+  methods: {
+    loadUsers() {
       this.loading = true
-      UserProvider.users().then(r => {
-            this.users = r.data.users
-          }
-      ).catch(err => {
-        console.error(err)
-      }).finally(() => this.loading = false)
+      if(this.roleName){
+        UserProvider.usersByRole(this.roleName)
+            .then(r => {this.users = r.data.usersByRole})
+            .catch(err => {console.error(err)})
+            .finally(() => this.loading = false)
+      }else{
+        UserProvider.users()
+            .then(r => {this.users = r.data.users})
+            .catch(err => {console.error(err)})
+            .finally(() => this.loading = false)
+      }
+
     }
   }
 }

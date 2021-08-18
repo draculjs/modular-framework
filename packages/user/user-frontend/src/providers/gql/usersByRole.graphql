@@ -1,0 +1,19 @@
+query usersByRole($roleName: String!){
+    usersByRole(roleName: $roleName){
+        id
+        name
+        username
+        email
+        phone
+        active
+        avatarurl
+        role{
+            id
+            name
+        }
+        groups{
+            id
+            name
+        }
+    }
+}

@@ -3,6 +3,7 @@ import {
     updateUser,
     deleteUser,
     findUsers,
+    findUsersByRole,
     findUser,
     changePasswordAdmin,
     paginateUsers
@@ -30,7 +31,11 @@ export default {
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
             return findUsers(user.role.childRoles, user.id)
         },
-
+        usersByRole: (_, {roleName}, {user, rbac}) => {
+            if (!user) throw new AuthenticationError("UNAUTHENTICATED")
+            if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
+            return findUsersByRole(roleName)
+        },
         user: (_, {id}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
