@@ -6,10 +6,11 @@
       :item-text="'username'"
       :item-value="'id'"
       :chips="chips"
-      :label="$t('user.users')"
-      :placeholder="$t('user.users')"
+      :label="multiple ? $t('user.users') : $t('user.user')"
+      :placeholder="multiple ? $t('user.users') : $t('user.user')"
       :multiple="multiple"
       :hide-details="hideDetails"
+      :dense="dense"
   ></v-select>
 </template>
 
@@ -25,6 +26,7 @@ export default {
     multiple: {type: Boolean, default: false},
     chips: {type: Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
+    dense: {type: Boolean, default: false},
     roleName: {type: String}
   },
   data() {
