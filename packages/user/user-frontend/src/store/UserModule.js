@@ -44,15 +44,27 @@ export default {
                         let me = response.data.me
                         commit('setMe', me)
                         resolve(me)
-                    }).catch((err) => {
-                    console.error(err)
-                })
+                    })
+                    .catch((err) => {
+                        reject(err)
+                    })
             })
         },
 
         login({commit, dispatch}, {username, password}) {
 
             return new Promise((resolve, reject) => {
+
+                function errorHandler(err) {
+                    let error = new ClientError(err)
+
+                    if (error.code === 'UNAUTHENTICATED' && error.errorMessage === 'BadCredentials') {
+                        return reject('auth.badCredentials')
+                    }
+
+                    return reject(error.i18nMessage)
+                }
+
                 AuthProvider.auth(username, password)
                     .then((response) => {
                         commit('setAccessToken', response.data.auth.token)
@@ -60,16 +72,12 @@ export default {
                             .then(me => {
                                 resolve(me)
                             })
+                            .catch(err => {
+                                dispatch('logout')
+                                errorHandler(err)
+                            })
                     }).catch((err) => {
-
-                    let error = new ClientError(err)
-
-                    if (error.code === 'UNAUTHENTICATED' && error.errorMessage === 'BadCredentials') {
-                        reject('auth.badCredentials')
-                    }
-
-                    reject(error.i18nMessage)
-
+                    errorHandler(err)
                 })
             })
         },
@@ -131,7 +139,7 @@ export default {
         },
         avatarUpdate(state, avatarurl) {
             state.avatarurl = avatarurl
-            if(state.me != null){
+            if (state.me != null) {
                 state.me.avatarurl = avatarurl
             }
         }
