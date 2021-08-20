@@ -38,11 +38,15 @@ export default {
       limit: 0,
       type: null,
       isRead: false,
-      loading: false
+      loading: false,
+      interval: null
     }
   },
   mounted() {
     this.getNotifications()
+  },
+  beforeDestroy(){
+    clearInterval(this.interval)
   },
   methods: {
     getNotifications() {
@@ -55,7 +59,7 @@ export default {
       }
     },
     pollData() {
-      setInterval(() => {
+      this.interval = setInterval(() => {
         this.fetchNotifications()
       }, this.timePolling)
     },
