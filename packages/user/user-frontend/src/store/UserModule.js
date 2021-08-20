@@ -131,7 +131,9 @@ export default {
         },
         avatarUpdate(state, avatarurl) {
             state.avatarurl = avatarurl
-            state.me.avatarurl = avatarurl
+            if(state.me){
+                state.me.avatarurl = avatarurl
+            }
         }
     }
 }
