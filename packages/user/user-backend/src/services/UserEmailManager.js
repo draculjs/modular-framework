@@ -13,10 +13,11 @@ class UserEmailManager {
             port: process.env.SMTP_PORT,
             secure: /true/i.test(process.env.SMTP_SECURE) ? true : false,
             ignoreTLS: /true/i.test(process.env.SMTP_IGNORE_TLS) ? true : false,
-            auth: {
+            auth: (process.env.SMTP_USER && process.env.SMTP_PASS) ? {
+                type: process.env.AUTH_TYPE ? process.env.AUTH_TYPE : 'login',
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS
-            }
+            } : null
         });
     }
 
