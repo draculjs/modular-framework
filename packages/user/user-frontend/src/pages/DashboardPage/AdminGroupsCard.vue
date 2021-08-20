@@ -1,6 +1,6 @@
 <template>
     <v-card :to="{name:'groupManagement'}">
-        <v-row class="ma-0" align-content="left" align="center">
+        <v-row class="ma-0" align="center">
             <v-col cols="3" >
                 <v-icon size="72" color="indigo">supervised_user_circle</v-icon>
             </v-col>

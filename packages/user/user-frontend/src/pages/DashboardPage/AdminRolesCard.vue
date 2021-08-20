@@ -1,6 +1,6 @@
 <template>
     <v-card :to="{name:'roleManagement'}">
-        <v-row class="ma-0" align-content="left" align="center" >
+        <v-row class="ma-0" align="center" >
             <v-col cols="3" >
                 <v-icon size="68" color="purple">verified_user</v-icon>
             </v-col>
