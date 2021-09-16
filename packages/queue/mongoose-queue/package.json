@@ -1,6 +1,6 @@
 {
   "name": "@dracul/mongoose-queue",
-  "version": "1.1.15",
+  "version": "1.1.32",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
