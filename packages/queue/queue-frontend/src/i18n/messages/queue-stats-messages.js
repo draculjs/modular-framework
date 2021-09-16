@@ -1,7 +1,6 @@
-const messages = {
+const queueStatsMessages = {
     en: {
         queue: {
-            queue: 'Queue',
             stats: {
                 added: 'Added',
                 gotten: 'Gotten',
@@ -15,7 +14,6 @@ const messages = {
     },
     es: {
         queue: {
-            queue: 'Cola',
             stats: {
                 added: 'Agregados',
                 gotten: 'Obtenidos',
@@ -44,4 +42,4 @@ const messages = {
 }
 
 
-export default messages
+export default queueStatsMessages

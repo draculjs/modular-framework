@@ -18,6 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@dracul/common-frontend": "^1.1.14",
+    "@dracul/dayjs-frontend": "^1.1.9",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",

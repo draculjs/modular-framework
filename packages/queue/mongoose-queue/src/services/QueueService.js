@@ -22,7 +22,7 @@ const fetchQueues = function () {
 }
 
 
-const addJob = function (topic, payload, delay) {
+const addJob = function (topic, payload, delay, maxRetries) {
 
 
     if (!topic)
@@ -46,7 +46,8 @@ const addJob = function (topic, payload, delay) {
         new QueueModel({
             topic: topic,
             payload: payload,
-            blockedUntil:  new Date(Date.now() + delay)
+            blockedUntil: new Date(Date.now() + delay),
+            maxRetries: maxRetries
         }).save(function (err, job) {
             if (err) {
                 reject(err)
@@ -77,12 +78,13 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
             .findOneAndUpdate({
                 topic: topic,
                 blockedUntil: {$lt: Date.now()},
-                retries: {$lt: maxRetries},
+                $expr: {$lt: ["$retries", "$maxRetries"]},
                 done: false
             }, {
                 $set: {
                     blockedUntil: new Date(Date.now() + blockDuration),
-                    workerId: workerId
+                    workerId: workerId,
+                    ...(maxRetries && {maxRetries})
                 },
                 $inc: {
                     retries: 1

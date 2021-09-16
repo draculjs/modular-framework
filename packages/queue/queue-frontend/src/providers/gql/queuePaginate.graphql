@@ -1,0 +1,20 @@
+query queuePaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $orderBy: String, $orderDesc: Boolean){
+    queuePaginate( pageNumber: $pageNumber, itemsPerPage: $itemsPerPage, search: $search, orderBy: $orderBy, orderDesc: $orderDesc){
+        totalItems
+        page
+        items{
+          id
+          blockedUntil
+        workerId
+        maxRetries
+        retries
+        progress
+        progressDetail
+        state
+        topic
+        payload
+        done
+        error
+        }
+    }
+}

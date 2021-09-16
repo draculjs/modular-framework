@@ -1,0 +1,17 @@
+query queueFetch{
+    queueFetch{
+        id
+        blockedUntil
+        workerId
+        maxRetries
+        retries
+        progress
+        progressDetail
+        state
+        topic
+        payload
+        done
+        error
+    }
+}
+

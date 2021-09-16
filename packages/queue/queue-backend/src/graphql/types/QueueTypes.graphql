@@ -1,14 +1,54 @@
 type Queue{
+    id: ID!
     blockedUntil: String
-    workerHostname: String
     workerId: String
+    maxRetries: Int
     retries: Int
+    progress: Int
+    progressDetail: String
+    state: String
     topic: String!
-    payload: String
-    done: Boolean
+    payload: PAYLOAD!
+    done: Boolean!
     error: String
 }
 
+type QueuePaginated{
+    totalItems: Int!
+    page: Int!
+    items: [Queue!]
+}
+
 type Query {
-    queues: [Queue]
+    queueFind(id:ID!): Queue
+    queueFetch: [Queue]
+    queuePaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): QueuePaginated
+
+
+}
+
+input QueueInput{
+    blockedUntil: String
+    workerId: String
+    maxRetries: Int
+    retries: Int
+    progress: Int
+    progressDetail: String
+    state: String
+    topic: String!
+    payload: PAYLOAD!
+    done: Boolean!
+    error: String
+}
+
+type QueueDelete{
+    id: ID!
+    success: Boolean!
+}
+
+
+type Mutation {
+    queueCreate(input: QueueInput): Queue
+    queueUpdate(id: ID!, input: QueueInput): Queue
+    queueDelete(id: ID!): QueueDelete!
 }

@@ -1,6 +1,7 @@
 import QueueStatsPage from '../pages/QueueStatsPage'
+import QueueManagementPage from '../pages/QueueManagementPage'
 
- const routes = [
+const routes = [
     {
         name: "queueStats",
         path: '/queue-stats',
@@ -10,7 +11,19 @@ import QueueStatsPage from '../pages/QueueStatsPage'
             permission: "QUEUE_SHOW"
         }
     },
+    {
+        name: 'QueueManagementPage',
+        path: '/queues',
+        component: QueueManagementPage,
+        meta: {
+            requiresAuth: true,
+            permission: "QUEUE_SHOW"
+        }
+    },
+
 
 ]
 
 export default routes
+
+

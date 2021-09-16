@@ -37,7 +37,7 @@ class Producer {
      * @param {number} delay      - The delay duration of the task
      * @return {Promise}
      */
-    add(payload, delay) {
+    add(payload, delay, maxRetries = 3) {
 
         return new Promise((resolve, reject) => {
 

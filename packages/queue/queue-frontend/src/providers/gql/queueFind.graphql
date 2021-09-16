@@ -1,0 +1,16 @@
+query queueFind($id:ID!){
+    queueFind(id:$id){
+        id
+        blockedUntil
+        workerId
+        maxRetries
+        retries
+        progress
+        progressDetail
+        state
+        topic
+        payload
+        done
+        error
+    }
+}
