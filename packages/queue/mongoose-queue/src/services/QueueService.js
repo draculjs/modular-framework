@@ -47,7 +47,8 @@ const addJob = function (topic, payload, delay, maxRetries) {
             topic: topic,
             payload: payload,
             blockedUntil: new Date(Date.now() + delay),
-            maxRetries: maxRetries
+            maxRetries: maxRetries,
+            state: 'PENDING'
         }).save(function (err, job) {
             if (err) {
                 reject(err)
@@ -84,6 +85,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
                 $set: {
                     blockedUntil: new Date(Date.now() + blockDuration),
                     workerId: workerId,
+                    state: 'WORKING',
                     ...(maxRetries && {maxRetries})
                 },
                 $inc: {
@@ -123,7 +125,8 @@ const ackJob = function (jobId) {
             _id: jobId
         }, {
             $set: {
-                done: true
+                done: true,
+                state: 'DONE',
             }
         }, {
             new: true
@@ -163,7 +166,8 @@ const errorJob = function (jobId, errorMessage, done = false) {
         }, {
             $set: {
                 done: done,
-                error: errorMessage
+                error: errorMessage,
+                state: 'ERROR',
             }
         }, {
             new: true

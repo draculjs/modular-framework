@@ -43,6 +43,7 @@ const QueueSchema = new Schema({
     //State info about the job
     state: {
         type: String,
+        default: 'PENDING',
         required: false,
     },
     // Topic is way to diferenciate types of jobs

@@ -73,5 +73,6 @@ const QueueSchema = new Schema({
 }, {
   timestamps: true
 });
+QueueSchema.plugin(mongoosePaginate);
 const Queue = mongoose.model('Queue', QueueSchema);
 module.exports = Queue;
