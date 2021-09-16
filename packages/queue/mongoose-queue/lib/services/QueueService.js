@@ -29,7 +29,7 @@ const fetchQueues = function () {
   });
 };
 
-const addJob = function (topic, payload, delay) {
+const addJob = function (topic, payload, delay, maxRetries) {
   if (!topic) return Promise.reject(new Error('Topic missing.'));else if (!topic instanceof String) return Promise.reject(new Error('Topic is not a String.'));
   if (!payload) return Promise.reject(new Error('Payload missing.'));else if (!isPlainObject(payload)) return Promise.reject(new Error('Payload is not a plain object.'));
   if (delay === null || delay === undefined) return Promise.reject(new Error('delay missing.'));else if (!delay instanceof Number) return Promise.reject(new Error('delay is not a number.'));
@@ -37,7 +37,8 @@ const addJob = function (topic, payload, delay) {
     new QueueModel({
       topic: topic,
       payload: payload,
-      blockedUntil: new Date(Date.now() + delay)
+      blockedUntil: new Date(Date.now() + delay),
+      maxRetries: maxRetries
     }).save(function (err, job) {
       if (err) {
         reject(err);
@@ -59,14 +60,17 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
       blockedUntil: {
         $lt: Date.now()
       },
-      retries: {
-        $lt: maxRetries
+      $expr: {
+        $lt: ["$retries", "$maxRetries"]
       },
       done: false
     }, {
       $set: {
         blockedUntil: new Date(Date.now() + blockDuration),
-        workerId: workerId
+        workerId: workerId,
+        ...(maxRetries && {
+          maxRetries
+        })
       },
       $inc: {
         retries: 1
