@@ -60,4 +60,4 @@ Base project with SPA frontend and API backend with Grahql. - draculjs/scaffold.
 [contributors-shield]: https://img.shields.io/github/contributors/draculjs/modular-framework.svg?style=flat-square
 [contributors-url]: https://github.com/draculjs/modular-framework/graphs/contributors
 
-#
+##
