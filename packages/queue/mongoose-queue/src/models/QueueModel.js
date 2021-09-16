@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const QueueSchema = new Schema({
     // time until the job is blocked for processing
@@ -67,6 +68,7 @@ const QueueSchema = new Schema({
     }
 }, {timestamps: true})
 
+QueueSchema.plugin(mongoosePaginate);
 const Queue = mongoose.model('Queue', QueueSchema);
 
 module.exports = Queue;
