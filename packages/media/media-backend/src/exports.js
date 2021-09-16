@@ -4,11 +4,25 @@ import fileUpload from './modules/media/services/UploadService'
 import InitMediaPermissions from './modules/media/services/InitMediaPermissions'
 import * as filePermissions from './modules/media/permissions/File'
 
+import {
+    findFile,
+    fetchFiles,
+    deleteFile,
+    paginateFiles,
+    updateFile
+} from './modules/media/services/FileService'
+
 export {
     types,
     resolvers,
     FileService,
     fileUpload,
     InitMediaPermissions,
-    filePermissions
+    filePermissions,
+    //Services
+    findFile,
+    fetchFiles,
+    deleteFile,
+    paginateFiles,
+    updateFile
 }
