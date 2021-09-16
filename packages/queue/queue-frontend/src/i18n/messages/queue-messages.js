@@ -46,7 +46,7 @@ const messages = {
                     state: 'Estado',
                     topic: 'Topico',
                     payload: 'Carga útil',
-                    done: 'Hecho',
+                    done: 'Listo',
                     error: 'Error'
                 },
 

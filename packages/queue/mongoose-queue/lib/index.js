@@ -117,6 +117,36 @@ Object.defineProperty(exports, "incrementDoneStat", {
     return _QueueStatsService.incrementDoneStat;
   }
 });
+Object.defineProperty(exports, "findQueue", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.findQueue;
+  }
+});
+Object.defineProperty(exports, "paginateQueues", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.paginateQueues;
+  }
+});
+Object.defineProperty(exports, "createQueue", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.createQueue;
+  }
+});
+Object.defineProperty(exports, "updateQueue", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.updateQueue;
+  }
+});
+Object.defineProperty(exports, "deleteQueue", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.deleteQueue;
+  }
+});
 
 var _QueueModel = _interopRequireDefault(require("./models/QueueModel"));
 
@@ -135,5 +165,7 @@ var _WorkerManager = _interopRequireDefault(require("./queue/WorkerManager"));
 var _QueueService = require("./services/QueueService");
 
 var _QueueStatsService = require("./services/QueueStatsService");
+
+var _QueueCrudService = require("./services/QueueCrudService");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

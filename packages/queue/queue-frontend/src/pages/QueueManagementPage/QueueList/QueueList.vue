@@ -35,6 +35,11 @@
           {{ item.progress }}%
         </template>
 
+        <template v-slot:item.retries="{ item }">
+          {{ item.retries }}/{{item.maxRetries}}
+        </template>
+
+
         <template v-slot:item.done="{ item }">
           <div v-if="item.done">
             <v-icon color="success">check_circle</v-icon>
@@ -89,15 +94,14 @@ export default {
     headers() {
       return [
         //Entity Headers
-        {text: this.$t('queue.queue.labels.blockedUntil'), value: 'blockedUntil'},
-        {text: this.$t('queue.queue.labels.workerId'), value: 'workerId'},
-        {text: this.$t('queue.queue.labels.maxRetries'), value: 'maxRetries'},
-        {text: this.$t('queue.queue.labels.retries'), value: 'retries'},
-        {text: this.$t('queue.queue.labels.progress'), value: 'progress'},
-        {text: this.$t('queue.queue.labels.progressDetail'), value: 'progressDetail'},
-        {text: this.$t('queue.queue.labels.state'), value: 'state'},
         {text: this.$t('queue.queue.labels.topic'), value: 'topic'},
         {text: this.$t('queue.queue.labels.done'), value: 'done'},
+        {text: this.$t('queue.queue.labels.state'), value: 'state'},
+        {text: this.$t('queue.queue.labels.progress'), value: 'progress'},
+        {text: this.$t('queue.queue.labels.progressDetail'), value: 'progressDetail'},
+        {text: this.$t('queue.queue.labels.retries'), value: 'retries'},
+        {text: this.$t('queue.queue.labels.blockedUntil'), value: 'blockedUntil'},
+        {text: this.$t('queue.queue.labels.workerId'), value: 'workerId'},
         {text: this.$t('queue.queue.labels.error'), value: 'error'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},

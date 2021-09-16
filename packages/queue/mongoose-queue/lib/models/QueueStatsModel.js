@@ -30,5 +30,5 @@ const QueueStatsSchema = new Schema({
     default: 0
   }
 });
-const QueueStats = mongoose.model('QueueStats', QueueStatsSchema);
-module.exports = QueueStats;
+const QueueStatsModel = mongoose.model('QueueStats', QueueStatsSchema);
+module.exports = QueueStatsModel;
