@@ -13,7 +13,7 @@ const routes = [
     },
     {
         name: 'QueueManagementPage',
-        path: '/queues',
+        path: '/jobs',
         component: QueueManagementPage,
         meta: {
             requiresAuth: true,

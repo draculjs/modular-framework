@@ -3,8 +3,8 @@ const messages = {
         queue: {
             queue: {
                 queue: "Queue",
-                title: 'Queue management',
-                subtitle: 'View, search, create, edit and delete Queue',
+                title: 'Queue jobs',
+                subtitle: '',
                 creating: 'Creating Queue',
                 editing: 'Editing Queue',
                 deleting: 'Deleting Queue',
@@ -30,8 +30,8 @@ const messages = {
         queue: {
             queue: {
                 queue: "Cola",
-                title: 'Administración de Queue',
-                subtitle: 'Ver, buscar, crear, editar, y borrar Queue',
+                title: 'Trabajos en cola',
+                subtitle: '',
                 creating: 'Creando Queue',
                 editing: 'Modificando Queue',
                 deleting: 'Eliminando Queue',
@@ -57,8 +57,8 @@ const messages = {
         queue: {
             queue: {
                 queue: "Queue",
-                title: 'Administração de Queue',
-                subtitle: 'Ver, buscar, criar, editar e usar Queue',
+                title: 'Trabajos en cola',
+                subtitle: '',
                 creating: 'Criando Queue',
                 editing: 'Edição Queue',
                 deleting: 'Apagando Queue',
