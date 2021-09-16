@@ -1,4 +1,4 @@
-import {QueueModel} from '@dracul/mongoose-queue'
+const QueueModel = require('../models/QueueModel');
 import {UserInputError} from 'apollo-server-express'
 
 export const findQueue = async function (id) {
@@ -9,13 +9,6 @@ export const findQueue = async function (id) {
     })
 }
 
-export const fetchQueues = async function () {
-    return new Promise((resolve, reject) => {
-        QueueModel.find({}).exec((err, res) => (
-            err ? reject(err) : resolve(res)
-        ));
-    })
-}
 
 export const paginateQueues = function ( pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
 

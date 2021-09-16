@@ -1,5 +1,12 @@
 
-import { createQueue, updateQueue, deleteQueue,  findQueue, fetchQueues, paginateQueues} from '../../services/QueueService'
+import {
+    createQueue,
+    updateQueue,
+    deleteQueue,
+    findQueue,
+    fetchQueues,
+    paginateQueues
+} from '@dracul/mongoose-queue'
 
 import {AuthenticationError, ForbiddenError} from "apollo-server-express";
 

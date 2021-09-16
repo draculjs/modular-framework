@@ -24,6 +24,14 @@ import {
     incrementDoneStat
 } from './services/QueueStatsService'
 
+import {
+    findQueue,
+    paginateQueues,
+    createQueue,
+    updateQueue,
+    deleteQueue
+} from './services/QueueCrudService'
+
 
 export {
     //Queue Services
@@ -40,6 +48,12 @@ export {
     incrementGottenStat,
     incrementFailedStat,
     incrementDoneStat,
+    //Queue Crud Services
+    findQueue,
+    paginateQueues,
+    createQueue,
+    updateQueue,
+    deleteQueue,
     //Classes
     Queue,
     Producer,
