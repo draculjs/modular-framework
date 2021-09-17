@@ -10,9 +10,11 @@ import {InitService} from '@dracul/user-backend'
 import {initPermissionsCustomization} from '@dracul/customize-backend'
 import {initCustomization} from './custom/initCustomization'
 import operatorRole from './custom/initOperatorRole'
+import { FILE_SHOW, FILE_UPDATE, FILE_CREATE, FILE_DELETE } from '../modules/media/permissions/File'
 
 const initService = async () => {
     await InitService.initPermissions()
+    await InitService.initPermissions([FILE_SHOW, FILE_UPDATE, FILE_CREATE, FILE_DELETE])
     await initPermissionsCustomization()
 
     await InitService.initAdminRole()

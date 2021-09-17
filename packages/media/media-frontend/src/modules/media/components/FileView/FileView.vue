@@ -1,7 +1,7 @@
 <template>
   <v-row dense>
 
-    <v-col cols="12" sm="6">
+    <v-col cols="12" sm="6" align="center" justify="center">
       <v-img v-if="isImage" contain :src="getSrc"/>
 
       <audio v-if="isAudio" controls>

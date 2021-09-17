@@ -17,6 +17,8 @@ var _initCustomization = require("./custom/initCustomization");
 
 var _initOperatorRole = _interopRequireDefault(require("./custom/initOperatorRole"));
 
+var _File = require("../modules/media/permissions/File");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _dotenv.default.config();
@@ -32,6 +34,7 @@ _mongoose.default.set('useCreateIndex', true);
 
 const initService = async () => {
   await _userBackend.InitService.initPermissions();
+  await _userBackend.InitService.initPermissions([_File.FILE_SHOW, _File.FILE_UPDATE, _File.FILE_CREATE, _File.FILE_DELETE]);
   await (0, _customizeBackend.initPermissionsCustomization)();
   await _userBackend.InitService.initAdminRole();
   await _userBackend.InitService.initOperatorRole();
