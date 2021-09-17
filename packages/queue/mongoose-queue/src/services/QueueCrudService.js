@@ -33,7 +33,7 @@ export const paginateQueues = function (pageNumber = 1, itemsPerPage = 5, search
         if (orderBy) {
             return (orderDesc ? '-' : '') + orderBy
         } else {
-            return null
+            return '-_id'
         }
     }
 
