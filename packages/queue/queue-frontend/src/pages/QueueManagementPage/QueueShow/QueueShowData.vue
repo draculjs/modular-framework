@@ -1,5 +1,9 @@
 <template>
   <v-row>
+
+    <v-col cols="12">
+      <h3>Job:  {{ item.id }}</h3>
+    </v-col>
     <v-col cols="12" sm="6" md="4">
       <v-list>
         <show-field :value="item.topic" :label="$t('queue.queue.labels.topic')" icon="topic"/>
@@ -29,6 +33,7 @@
 
     <v-col cols="12">
       <h3>Payload</h3>
+      <v-divider></v-divider>
       {{ item.payload }}
     </v-col>
   </v-row>

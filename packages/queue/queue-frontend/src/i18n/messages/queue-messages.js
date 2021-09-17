@@ -8,7 +8,7 @@ const messages = {
                 creating: 'Creating Queue',
                 editing: 'Editing Queue',
                 deleting: 'Deleting Queue',
-                showing: 'Showing Queue',
+                showing: 'Showing Job',
                 labels: {
                     blockedUntil: 'BlockedUntil',
                     workerId: 'Worker Id',
@@ -36,7 +36,7 @@ const messages = {
                 creating: 'Creando Queue',
                 editing: 'Modificando Queue',
                 deleting: 'Eliminando Queue',
-                showing: 'Detalles de Queue',
+                showing: 'Detalles del Job',
                 labels: {
                     blockedUntil: 'Bloqueado Hasta',
                     workerId: 'Worker Id',
@@ -64,7 +64,7 @@ const messages = {
                 creating: 'Criando Queue',
                 editing: 'Edição Queue',
                 deleting: 'Apagando Queue',
-                showing: 'Detalhes do Queue',
+                showing: 'Detalhes do Job',
                 labels: {
                     blockedUntil: 'Bloqueado até',
                     workerId: 'Worker Id',

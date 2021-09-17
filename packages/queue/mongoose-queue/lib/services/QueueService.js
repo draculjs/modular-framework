@@ -96,7 +96,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
   });
 };
 
-const ackJob = function (jobId) {
+const ackJob = function (jobId, output) {
   if (!jobId) return Promise.reject(new Error('jobId missing.'));else if (!jobId instanceof String) return Promise.reject(new Error('jobId is not a String.'));
   return new Promise((resolve, reject) => {
     QueueModel.findOneAndUpdate({
@@ -104,7 +104,10 @@ const ackJob = function (jobId) {
     }, {
       $set: {
         done: true,
-        state: 'DONE'
+        state: 'DONE',
+        ...(output && {
+          output
+        })
       }
     }, {
       new: true

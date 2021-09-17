@@ -1,5 +1,6 @@
 const QueueModel = require('../models/QueueModel');
 import {UserInputError} from 'apollo-server-express'
+import mongoose from 'mongoose'
 
 export const findQueue = async function (id) {
     return new Promise((resolve, reject) => {
@@ -10,7 +11,7 @@ export const findQueue = async function (id) {
 }
 
 
-export const paginateQueues = function ( pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
+export const paginateQueues = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
 
     function qs(search) {
         let qs = {}
@@ -21,13 +22,14 @@ export const paginateQueues = function ( pageNumber = 1, itemsPerPage = 5, searc
                     {state: {$regex: search, $options: 'i'}},
                     {info: {$regex: search, $options: 'i'}},
                     {workerId: {$regex: search, $options: 'i'}},
+                    {_id: {$eq: mongoose.Types.ObjectId(search)}}
                 ]
             }
         }
         return qs
     }
 
-     function getSort(orderBy, orderDesc) {
+    function getSort(orderBy, orderDesc) {
         if (orderBy) {
             return (orderDesc ? '-' : '') + orderBy
         } else {
@@ -47,9 +49,6 @@ export const paginateQueues = function ( pageNumber = 1, itemsPerPage = 5, searc
         ).catch(err => reject(err))
     })
 }
-
-
-
 
 
 export const createQueue = async function (authUser, {blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error}) {
@@ -76,21 +75,21 @@ export const createQueue = async function (authUser, {blockedUntil, workerId, ma
 export const updateQueue = async function (authUser, id, {blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error}) {
     return new Promise((resolve, rejects) => {
         QueueModel.findOneAndUpdate({_id: id},
-        {blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error},
-        {new: true, runValidators: true, context: 'query'},
-        (error,doc) => {
+            {blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error},
+            {new: true, runValidators: true, context: 'query'},
+            (error, doc) => {
 
-            if (error) {
-                if (error.name == "ValidationError") {
-                 return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                if (error) {
+                    if (error.name == "ValidationError") {
+                        return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+
+                    }
+                    return rejects(error)
 
                 }
-                return rejects(error)
 
-            }
-
-            resolve(doc)
-        })
+                resolve(doc)
+            })
     })
 }
 

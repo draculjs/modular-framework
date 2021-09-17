@@ -40,7 +40,12 @@ const QueueSchema = new Schema({
     max: [100, 'Max progress is 100']
   },
   //Add info to the progress state
-  progressDetail: {
+  info: {
+    type: String,
+    required: false
+  },
+  //Final output. Ex: A link to result file
+  output: {
     type: String,
     required: false
   },
