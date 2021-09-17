@@ -1,5 +1,6 @@
 import QueueStatsPage from "./pages/QueueStatsPage/QueueStatsPage";
-import QueueManagementPage from "./pages/QueueManagementPage";
+import JobsPage from "./pages/JobsPage";
+import JobPage from "./pages/JobPage";
 import QueueStatsTable from "./components/QueueStatsTable";
 import routes from './routes'
 import i18nMessages from './i18n/messages'
@@ -9,7 +10,8 @@ import QueueProvider from "./providers/QueueProvider";
 export {
     //Pages
     QueueStatsPage,
-    QueueManagementPage,
+    JobsPage,
+    JobPage,
 
     //Components
     QueueStatsTable,
