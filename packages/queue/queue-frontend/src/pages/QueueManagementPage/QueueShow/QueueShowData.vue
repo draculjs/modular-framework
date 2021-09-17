@@ -12,7 +12,7 @@
       <v-list>
         <show-field :value="item.workerId" :label="$t('queue.queue.labels.workerId')" icon="badge"/>
         <show-field :value="String(item.progress)" :label="$t('queue.queue.labels.progress')" icon="pending"/>
-        <show-field :value="item.progressDetail" :label="$t('queue.queue.labels.progressDetail')" icon="info"/>
+        <show-field :value="item.info" :label="$t('queue.queue.labels.info')" icon="info"/>
 
       </v-list>
     </v-col>
@@ -22,6 +22,7 @@
         <show-field :value="(String(item.retries)+'/'+String(item.maxRetries))" :label="$t('queue.queue.labels.retries')" icon="double_arrow"/>
         <show-field :value="getDateTimeFormat(item.blockedUntil)" :label="$t('queue.queue.labels.blockedUntil')"
                     icon="event"/>
+        <show-field :value="item.output" :label="$t('queue.queue.labels.output')" icon="logout"/>
         <show-field :value="item.error" :label="$t('queue.queue.labels.error')" icon="error"/>
       </v-list>
     </v-col>

@@ -1,7 +1,7 @@
 <template>
     <v-form ref="form" autocomplete="off" @submit.prevent="save" >
         <v-row>
-           
+
                    <v-col cols="12" sm="6">
                      <v-row>
                        <v-col  sm="6">
@@ -15,13 +15,13 @@
                           >
                             <template v-slot:activator="{ on }">
                                 <v-text-field
-                                        
+
                                         :value="getDateFormat(form.blockedUntil)"
                                         :label="$t('queue.queue.labels.blockedUntil')"
                                         prepend-icon="event"
                                         readonly
                                         v-on="on"
-                                        
+
                                         :error="hasInputErrors('blockedUntil')"
                                         :error-messages="getInputErrors('blockedUntil')"
                                         color="secondary"
@@ -31,7 +31,7 @@
                             </v-date-picker>
                           </v-menu>
                        </v-col>
-                   
+
                        <v-col sm="6">
                        <v-menu
                                 v-model="blockedUntilTimeMenu"
@@ -48,7 +48,7 @@
                                         prepend-icon="query_builder"
                                         readonly
                                         v-on="on"
-                                        
+
                                         :error="hasInputErrors('blockedUntil')"
                                         :error-messages="getInputErrors('blockedUntil')"
                                         color="secondary"
@@ -58,15 +58,15 @@
                             </v-time-picker>
                           </v-menu>
                        </v-col>
-                       
+
                      </v-row>
 
                    </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="badge"
                                 name="workerId"
                                 v-model="form.workerId"
@@ -75,14 +75,14 @@
                                 :error="hasInputErrors('workerId')"
                                 :error-messages="getInputErrors('workerId')"
                                 color="secondary"
-                                
+
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="last_page"
                                 name="maxRetries"
                                 v-model.number="form.maxRetries"
@@ -92,14 +92,14 @@
                                 :error="hasInputErrors('maxRetries')"
                                 :error-messages="getInputErrors('maxRetries')"
                                 color="secondary"
-                                
+
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="double_arrow"
                                 name="retries"
                                 v-model.number="form.retries"
@@ -109,14 +109,14 @@
                                 :error="hasInputErrors('retries')"
                                 :error-messages="getInputErrors('retries')"
                                 color="secondary"
-                                
+
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="pending"
                                 name="progress"
                                 v-model.number="form.progress"
@@ -126,30 +126,30 @@
                                 :error="hasInputErrors('progress')"
                                 :error-messages="getInputErrors('progress')"
                                 color="secondary"
-                                
+
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="info"
-                                name="progressDetail"
-                                v-model="form.progressDetail"
-                                :label="$t('queue.queue.labels.progressDetail')"
-                                :placeholder="$t('queue.queue.labels.progressDetail')"
-                                :error="hasInputErrors('progressDetail')"
-                                :error-messages="getInputErrors('progressDetail')"
+                                name="info"
+                                v-model="form.info"
+                                :label="$t('queue.queue.labels.info')"
+                                :placeholder="$t('queue.queue.labels.info')"
+                                :error="hasInputErrors('info')"
+                                :error-messages="getInputErrors('info')"
                                 color="secondary"
-                                
+
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="fact_check"
                                 name="state"
                                 v-model="form.state"
@@ -158,14 +158,14 @@
                                 :error="hasInputErrors('state')"
                                 :error-messages="getInputErrors('state')"
                                 color="secondary"
-                                
+
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="topic"
                                 name="topic"
                                 v-model="form.topic"
@@ -177,11 +177,11 @@
                                 :rules="required"
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="note_add"
                                 name="payload"
                                 v-model="form.payload"
@@ -193,8 +193,8 @@
                                 :rules="required"
                         ></v-text-field>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-checkbox
                                 prepend-icon="done"
@@ -207,11 +207,11 @@
                                 :rules="required"
                         ></v-checkbox>
                     </v-col>
-    
- 
+
+
                     <v-col cols="12" sm="6">
                         <v-text-field
-                                
+
                                 prepend-icon="error"
                                 name="error"
                                 v-model="form.error"
@@ -220,10 +220,10 @@
                                 :error="hasInputErrors('error')"
                                 :error-messages="getInputErrors('error')"
                                 color="secondary"
-                                
+
                         ></v-text-field>
                     </v-col>
-    
+
         </v-row>
     </v-form>
 </template>
@@ -231,17 +231,17 @@
 <script>
 
     import {InputErrorsByProps, RequiredRule } from '@dracul/common-frontend'
-    
-    
-    
+
+
+
     import {DayjsMixin} from "@dracul/dayjs-frontend";
 
-    
+
 
     export default {
         name: "QueueForm",
         mixins: [InputErrorsByProps, RequiredRule , DayjsMixin   ],
-        
+
         props:{
             value: {
                 type: Object,

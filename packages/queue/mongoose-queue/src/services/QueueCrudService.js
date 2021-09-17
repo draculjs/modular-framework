@@ -17,7 +17,10 @@ export const paginateQueues = function ( pageNumber = 1, itemsPerPage = 5, searc
         if (search) {
             qs = {
                 $or: [
-
+                    {topic: {$regex: search, $options: 'i'}},
+                    {state: {$regex: search, $options: 'i'}},
+                    {info: {$regex: search, $options: 'i'}},
+                    {workerId: {$regex: search, $options: 'i'}},
                 ]
             }
         }
@@ -49,10 +52,10 @@ export const paginateQueues = function ( pageNumber = 1, itemsPerPage = 5, searc
 
 
 
-export const createQueue = async function (authUser, {blockedUntil, workerId, maxRetries, retries, progress, progressDetail, state, topic, payload, done, error}) {
+export const createQueue = async function (authUser, {blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error}) {
 
     const doc = new QueueModel({
-        blockedUntil, workerId, maxRetries, retries, progress, progressDetail, state, topic, payload, done, error
+        blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -70,10 +73,10 @@ export const createQueue = async function (authUser, {blockedUntil, workerId, ma
     })
 }
 
-export const updateQueue = async function (authUser, id, {blockedUntil, workerId, maxRetries, retries, progress, progressDetail, state, topic, payload, done, error}) {
+export const updateQueue = async function (authUser, id, {blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error}) {
     return new Promise((resolve, rejects) => {
         QueueModel.findOneAndUpdate({_id: id},
-        {blockedUntil, workerId, maxRetries, retries, progress, progressDetail, state, topic, payload, done, error},
+        {blockedUntil, workerId, maxRetries, retries, progress, info, output, state, topic, payload, done, error},
         {new: true, runValidators: true, context: 'query'},
         (error,doc) => {
 

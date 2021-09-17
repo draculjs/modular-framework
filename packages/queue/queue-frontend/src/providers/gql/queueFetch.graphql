@@ -6,7 +6,8 @@ query queueFetch{
         maxRetries
         retries
         progress
-        progressDetail
+        info
+        output
         state
         topic
         payload

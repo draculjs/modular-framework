@@ -112,7 +112,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
 }
 
 
-const ackJob = function (jobId) {
+const ackJob = function (jobId, output) {
 
     if (!jobId)
         return Promise.reject(new Error('jobId missing.'))
@@ -127,6 +127,7 @@ const ackJob = function (jobId) {
             $set: {
                 done: true,
                 state: 'DONE',
+                ...(output && {output})
             }
         }, {
             new: true

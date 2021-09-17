@@ -1,8 +1,21 @@
 <template>
   <v-row row wrap>
 
-    <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
-      <search-input @search="performSearch" v-model="search"/>
+    <v-col cols="12">
+      <v-row justify="space-between">
+        <v-col cols="12" sm="6" md="2">
+          <v-switch
+              prepend-icon="autorenew"
+              v-model="autoRefresh"
+              @change="doAutoRefresh"
+          ></v-switch>
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <search-input @search="performSearch" v-model="search"/>
+        </v-col>
+
+      </v-row>
+
     </v-col>
 
     <v-col cols="12">
@@ -36,7 +49,7 @@
         </template>
 
         <template v-slot:item.retries="{ item }">
-          {{ item.retries }}/{{item.maxRetries}}
+          {{ item.retries }}/{{ item.maxRetries }}
         </template>
 
 
@@ -87,7 +100,8 @@ export default {
       orderDesc: false,
       itemsPerPage: 5,
       pageNumber: 1,
-      search: ''
+      search: '',
+      autoRefresh: false
     }
   },
   computed: {
@@ -98,11 +112,12 @@ export default {
         {text: this.$t('queue.queue.labels.done'), value: 'done'},
         {text: this.$t('queue.queue.labels.state'), value: 'state'},
         {text: this.$t('queue.queue.labels.progress'), value: 'progress'},
-        {text: this.$t('queue.queue.labels.progressDetail'), value: 'progressDetail'},
         {text: this.$t('queue.queue.labels.retries'), value: 'retries'},
         {text: this.$t('queue.queue.labels.blockedUntil'), value: 'blockedUntil'},
-        {text: this.$t('queue.queue.labels.workerId'), value: 'workerId'},
+        //{text: this.$t('queue.queue.labels.workerId'), value: 'workerId'},
+        {text: this.$t('queue.queue.labels.info'), value: 'info'},
         {text: this.$t('queue.queue.labels.error'), value: 'error'},
+        {text: this.$t('queue.queue.labels.output'), value: 'output'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},
       ]
@@ -122,20 +137,33 @@ export default {
       this.pageNumber = 1
       this.fetch()
     },
+    doAutoRefresh() {
+      this.fetch().then(() => {
+        if(this.autoRefresh){
+          setTimeout(this.doAutoRefresh,3000)
+        }
+      })
+    },
     fetch() {
-      this.loading = true
-      QueueProvider.paginateQueues(
-          this.pageNumber,
-          this.itemsPerPage,
-          this.search,
-          this.getOrderBy,
-          this.getOrderDesc
-      ).then(r => {
-        this.items = r.data.queuePaginate.items
-        this.totalItems = r.data.queuePaginate.totalItems
-      }).catch(err => {
-        console.error(err)
-      }).finally(() => this.loading = false)
+      return new Promise((resolve) => {
+        this.loading = true
+        QueueProvider.paginateQueues(
+            this.pageNumber,
+            this.itemsPerPage,
+            this.search,
+            this.getOrderBy,
+            this.getOrderDesc
+        ).then(r => {
+          this.items = r.data.queuePaginate.items
+          this.totalItems = r.data.queuePaginate.totalItems
+        }).catch(err => {
+          console.error(err)
+        }).finally(() => {
+          this.loading = false
+          resolve()
+        })
+      })
+
     }
   }
 

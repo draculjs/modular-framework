@@ -5,7 +5,8 @@ type Queue{
     maxRetries: Int
     retries: Int
     progress: Int
-    progressDetail: String
+    info: String
+    output: String
     state: String
     topic: String!
     payload: PAYLOAD!
@@ -33,7 +34,8 @@ input QueueInput{
     maxRetries: Int
     retries: Int
     progress: Int
-    progressDetail: String
+    info: String
+    output: String
     state: String
     topic: String!
     payload: PAYLOAD!

@@ -6,7 +6,8 @@ query queueFind($id:ID!){
         maxRetries
         retries
         progress
-        progressDetail
+        info
+        output
         state
         topic
         payload

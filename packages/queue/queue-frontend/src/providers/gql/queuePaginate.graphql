@@ -9,7 +9,8 @@ query queuePaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $orde
         maxRetries
         retries
         progress
-        progressDetail
+        info
+        output
         state
         topic
         payload
