@@ -12,7 +12,8 @@ class QueueProvider {
     findQueue(id) {
         return this.gqlc.query({
             query: require('./gql/queueFind.graphql'),
-            variables: {id:id}
+            variables: {id:id},
+            fetchPolicy: "network-only"
         })
     }
 

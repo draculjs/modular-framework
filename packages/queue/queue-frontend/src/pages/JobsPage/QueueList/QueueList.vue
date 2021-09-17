@@ -73,6 +73,10 @@
 
         <template v-slot:item.action="{ item }">
           <show-button @click="$emit('show', item)"/>
+          <v-btn icon small class="mx-1" color="indigo" :to="{name: 'JobPage', params: {id:item.id}}">
+            <v-icon small>preview</v-icon>
+          </v-btn>
+
           <delete-button @click="$emit('delete', item)"/>
         </template>
 
@@ -139,8 +143,8 @@ export default {
     },
     doAutoRefresh() {
       this.fetch().then(() => {
-        if(this.autoRefresh){
-          setTimeout(this.doAutoRefresh,3000)
+        if (this.autoRefresh) {
+          setTimeout(this.doAutoRefresh, 3000)
         }
       })
     },

@@ -11,7 +11,7 @@
 <script>
     import QueueCrud from "./QueueCrud";
     export default {
-        name: "Queue",
+        name: "JobsPage",
         components: {QueueCrud}
     }
 </script>

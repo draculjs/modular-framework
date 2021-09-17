@@ -4,7 +4,7 @@
     <v-col cols="12">
       <h3>Job:  {{ item.id }}</h3>
     </v-col>
-    <v-col cols="12" sm="6" md="4">
+    <v-col cols="12" sm="8" md="6">
       <v-list>
         <show-field :value="item.topic" :label="$t('queue.queue.labels.topic')" icon="topic"/>
         <show-field :value="item.state" :label="$t('queue.queue.labels.state')" icon="fact_check"/>

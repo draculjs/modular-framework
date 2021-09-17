@@ -1,5 +1,6 @@
 import QueueStatsPage from '../pages/QueueStatsPage'
-import QueueManagementPage from '../pages/QueueManagementPage'
+import JobsPage from '../pages/JobsPage'
+import JobPage from '../pages/JobPage'
 
 const routes = [
     {
@@ -12,9 +13,18 @@ const routes = [
         }
     },
     {
-        name: 'QueueManagementPage',
+        name: 'JobsPage',
         path: '/jobs',
-        component: QueueManagementPage,
+        component: JobsPage,
+        meta: {
+            requiresAuth: true,
+            permission: "QUEUE_SHOW"
+        }
+    },
+    {
+        name: 'JobPage',
+        path: '/jobs/:id',
+        component: JobPage,
         meta: {
             requiresAuth: true,
             permission: "QUEUE_SHOW"
