@@ -1,5 +1,6 @@
 import {types, resolvers} from './graphql'
 import * as permissions from './permissions'
+import {fetchQueues,paginateQueues,findQueue,deleteQueue} from './services/QueueService'
 
 export {
     //permissions
@@ -9,4 +10,6 @@ export {
     types,
     resolvers,
 
+    //Services
+    fetchQueues,paginateQueues,findQueue,deleteQueue
 }

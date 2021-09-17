@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-frontend",
-  "version": "1.1.14",
+  "version": "1.2.7",
   "description": "Dracul Vue Queue",
   "main": "src/index.js",
   "scripts": {
@@ -18,6 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@dracul/common-frontend": "^1.1.14",
+    "@dracul/dayjs-frontend": "^1.1.9",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
@@ -52,5 +53,5 @@
     "vue-cli-plugin-vuetify": "^2.0.6",
     "vue-template-compiler": "^2.6.11"
   },
-  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b"
+  "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"
 }

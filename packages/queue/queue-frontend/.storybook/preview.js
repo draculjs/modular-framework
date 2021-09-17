@@ -18,6 +18,8 @@ import mockGqlClient from '../gqlc-mock/gqlc-mock'
 
 //MOCK GQLC PROVIDERS
 import queueStatsProvider from '../src/providers/QueueStatsProvider'
+import QueueProvider from '../src/providers/QueueProvider'
 
 
 queueStatsProvider.setGqlc(mockGqlClient)
+QueueProvider.setGqlc(mockGqlClient)

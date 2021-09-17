@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-backend",
-  "version": "1.1.28",
+  "version": "1.2.4",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "scripts": {
@@ -26,12 +26,13 @@
   "homepage": "https://github.com/cincarnato/ci-custom-module#readme",
   "dependencies": {
     "@dracul/logger-backend": "^1.0.105",
-    "@dracul/mongoose-queue": "^1.1.15",
+    "@dracul/mongoose-queue": "^1.2.4",
     "@dracul/user-backend": "^1.1.28",
     "apollo-server-express": "^2.15.0",
     "graphql": "^14.5.8",
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.5",
+    "graphql-type-json": "^0.3.2",
     "mongoose": "^5.9.19",
     "winston": "^3.3.3"
   },
@@ -46,5 +47,5 @@
     "mongodb-memory-server": "^6.5.2",
     "nodemon": "^1.19.4"
   },
-  "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b"
+  "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"
 }

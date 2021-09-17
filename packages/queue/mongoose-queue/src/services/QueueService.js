@@ -22,7 +22,7 @@ const fetchQueues = function () {
 }
 
 
-const addJob = function (topic, payload, delay) {
+const addJob = function (topic, payload, delay, maxRetries) {
 
 
     if (!topic)
@@ -46,7 +46,9 @@ const addJob = function (topic, payload, delay) {
         new QueueModel({
             topic: topic,
             payload: payload,
-            blockedUntil:  new Date(Date.now() + delay)
+            blockedUntil: new Date(Date.now() + delay),
+            maxRetries: maxRetries,
+            state: 'PENDING'
         }).save(function (err, job) {
             if (err) {
                 reject(err)
@@ -77,12 +79,14 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
             .findOneAndUpdate({
                 topic: topic,
                 blockedUntil: {$lt: Date.now()},
-                retries: {$lt: maxRetries},
+                $expr: {$lt: ["$retries", "$maxRetries"]},
                 done: false
             }, {
                 $set: {
                     blockedUntil: new Date(Date.now() + blockDuration),
-                    workerId: workerId
+                    workerId: workerId,
+                    state: 'WORKING',
+                    ...(maxRetries && {maxRetries})
                 },
                 $inc: {
                     retries: 1
@@ -108,7 +112,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
 }
 
 
-const ackJob = function (jobId) {
+const ackJob = function (jobId, output) {
 
     if (!jobId)
         return Promise.reject(new Error('jobId missing.'))
@@ -121,7 +125,9 @@ const ackJob = function (jobId) {
             _id: jobId
         }, {
             $set: {
-                done: true
+                done: true,
+                state: 'DONE',
+                ...(output && {output})
             }
         }, {
             new: true
@@ -161,7 +167,8 @@ const errorJob = function (jobId, errorMessage, done = false) {
         }, {
             $set: {
                 done: done,
-                error: errorMessage
+                error: errorMessage,
+                state: 'ERROR',
             }
         }, {
             new: true

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.1.28",
+  "version": "1.1.40",
   "author": "Cristian Incarnato",
   "main": "./lib/exports.js",
   "scripts": {
@@ -71,5 +71,5 @@
     "mongodb-memory-server": "^6.5.2",
     "nodemon": "^1.19.4"
   },
-  "gitHead": "0b585638233d846c57d4a8717e3bf91e3d4e34a3"
+  "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"
 }

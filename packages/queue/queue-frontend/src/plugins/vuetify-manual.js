@@ -5,7 +5,11 @@ import Vuetify, {
     VMain,
     VProgressLinear,
     VRow,
-    VCol
+    VCol,
+    VDataTable,
+    VIcon,
+    VTextField,
+    VSwitch
 } from 'vuetify/lib';
 import i18n from '../i18n'
 
@@ -16,7 +20,11 @@ Vue.use(Vuetify, {
         VMain,
         VProgressLinear,
         VRow,
-        VCol
+        VCol,
+        VDataTable,
+        VIcon,
+        VTextField,
+        VSwitch
     }
 });
 

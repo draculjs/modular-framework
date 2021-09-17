@@ -3,6 +3,9 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 const QueueSchema = new Schema({
   // time until the job is blocked for processing
   blockedUntil: {
@@ -16,10 +19,41 @@ const QueueSchema = new Schema({
     required: false
   },
   // number of retries
+  maxRetries: {
+    type: Number,
+    default: 3,
+    required: true,
+    min: [1, 'Min maxRetries is 1']
+  },
+  // number of max retries
   retries: {
     type: Number,
     default: 0,
     required: true
+  },
+  // Show % job progress 0-100
+  progress: {
+    type: Number,
+    default: 0,
+    required: false,
+    min: [0, 'Min progress is 0'],
+    max: [100, 'Max progress is 100']
+  },
+  //Add info to the progress state
+  info: {
+    type: String,
+    required: false
+  },
+  //Final output. Ex: A link to result file
+  output: {
+    type: String,
+    required: false
+  },
+  //State info about the job
+  state: {
+    type: String,
+    default: 'PENDING',
+    required: false
   },
   // Topic is way to diferenciate types of jobs
   topic: {
@@ -45,5 +79,6 @@ const QueueSchema = new Schema({
 }, {
   timestamps: true
 });
-const Queue = mongoose.model('Queue', QueueSchema);
-module.exports = Queue;
+QueueSchema.plugin(mongoosePaginate);
+const QueueModel = mongoose.model('Queue', QueueSchema);
+module.exports = QueueModel;

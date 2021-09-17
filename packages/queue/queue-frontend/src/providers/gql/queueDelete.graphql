@@ -1,0 +1,7 @@
+mutation queueDelete($id: ID!){
+    queueDelete(id: $id){
+        id
+        success
+    }
+}
+

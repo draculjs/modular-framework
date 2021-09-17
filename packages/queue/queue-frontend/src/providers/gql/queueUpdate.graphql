@@ -1,0 +1,18 @@
+mutation queueUpdate($id: ID!, $blockedUntil:String, $workerId:String, $maxRetries:Int, $retries:Int, $progress:Int, $info:String, $output:String, $state:String, $topic:String!, $payload:JSON!, $done:Boolean!, $error:String){
+    queueUpdate(id: $id, input: {blockedUntil: $blockedUntil, workerId: $workerId, maxRetries: $maxRetries, retries: $retries, progress: $progress, info: $info, output:$output, state: $state, topic: $topic, payload: $payload, done: $done, error: $error }){
+        id
+        blockedUntil
+        workerId
+        maxRetries
+        retries
+        progress
+        info
+        output
+        state
+        topic
+        payload
+        done
+        error
+    }
+}
+

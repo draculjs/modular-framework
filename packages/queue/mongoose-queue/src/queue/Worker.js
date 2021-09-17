@@ -148,7 +148,7 @@ class Worker {
 
                 try {
                     //HANDLER WORK
-                    await this.handler(job.payload)
+                    await this.handler(job)
 
                     //ACK
                     this.consumer.ack(job.id)
