@@ -4,7 +4,7 @@
     <v-col cols="12">
       <h3>Job:  {{ item.id }}</h3>
     </v-col>
-    <v-col cols="12" sm="8" md="6">
+    <v-col cols="12" sm="8" md="4">
       <v-list>
         <show-field :value="item.topic" :label="$t('queue.queue.labels.topic')" icon="topic"/>
         <show-field :value="item.state" :label="$t('queue.queue.labels.state')" icon="fact_check"/>
@@ -26,8 +26,8 @@
         <show-field :value="(String(item.retries)+'/'+String(item.maxRetries))" :label="$t('queue.queue.labels.retries')" icon="double_arrow"/>
         <show-field :value="getDateTimeFormat(item.blockedUntil)" :label="$t('queue.queue.labels.blockedUntil')"
                     icon="event"/>
-        <show-field :value="item.output" :label="$t('queue.queue.labels.output')" icon="logout"/>
-        <show-field :value="item.error" :label="$t('queue.queue.labels.error')" icon="error"/>
+        <show-field v-if="item.output" :value="item.output" :label="$t('queue.queue.labels.output')" icon="logout"/>
+        <show-field v-if="item.error" :value="item.error" :label="$t('queue.queue.labels.error')" icon="error"/>
       </v-list>
     </v-col>
 
