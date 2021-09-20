@@ -18,11 +18,12 @@ export const paginateQueues = function (pageNumber = 1, itemsPerPage = 5, search
         if (search) {
             qs = {
                 $or: [
+                    ...(mongoose.isValidObjectId(search) && {_id: {$eq: mongoose.Types.ObjectId(search)}}),
                     {topic: {$regex: search, $options: 'i'}},
                     {state: {$regex: search, $options: 'i'}},
                     {info: {$regex: search, $options: 'i'}},
                     {workerId: {$regex: search, $options: 'i'}},
-                    {_id: {$eq: mongoose.Types.ObjectId(search)}}
+
                 ]
             }
         }
