@@ -15,7 +15,10 @@
     "dotenv": "^8.2.0",
     "mongoose": "^5.9.19",
     "mongoose-paginate-v2": "^1.4.2",
-    "underscore": "^1.11.0"
+    "underscore": "^1.11.0",
+    "apollo-server-express": "^3.3.0",
+    "graphql": "^15.5.3",
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

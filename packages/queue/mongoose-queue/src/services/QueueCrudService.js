@@ -11,14 +11,16 @@ export const findQueue = async function (id) {
 }
 
 
-export const paginateQueues = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
-
-    function qs(search) {
-        let qs = {}
-        if (search) {
+export const qs = function (search) {
+    let qs = {}
+    if (search) {
+        if(mongoose.isValidObjectId(search)){
+            qs = {
+                _id: {$eq: mongoose.Types.ObjectId(search)}
+            }
+        }else{
             qs = {
                 $or: [
-                    ...(mongoose.isValidObjectId(search) && {_id: {$eq: mongoose.Types.ObjectId(search)}}),
                     {topic: {$regex: search, $options: 'i'}},
                     {state: {$regex: search, $options: 'i'}},
                     {info: {$regex: search, $options: 'i'}},
@@ -27,8 +29,14 @@ export const paginateQueues = function (pageNumber = 1, itemsPerPage = 5, search
                 ]
             }
         }
-        return qs
+
     }
+    return qs
+}
+
+export const paginateQueues = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
+
+
 
     function getSort(orderBy, orderDesc) {
         if (orderBy) {
