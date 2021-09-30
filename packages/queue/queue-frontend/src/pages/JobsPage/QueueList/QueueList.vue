@@ -39,6 +39,9 @@
           @update:items-per-page="fetch"
       >
 
+        <template v-slot:item.state="{ item }">
+          {{ $t(`queue.queue.state.${item.state}`) }}
+        </template>
 
         <template v-slot:item.blockedUntil="{ item }">
           {{ getDateTimeFormat(item.blockedUntil) }}
