@@ -84,3 +84,5 @@ initService().then(() => {
 }).catch(err => {
     DefaultLogger.error(err.message, err)
 })
+
+export default app;

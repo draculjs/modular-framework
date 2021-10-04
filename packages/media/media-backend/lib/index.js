@@ -1,5 +1,10 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _loggerBackend = require("@dracul/logger-backend");
 
 var _express = _interopRequireDefault(require("express"));
@@ -93,3 +98,5 @@ app.get('/status', function (req, res) {
 }).catch(err => {
   _loggerBackend.DefaultLogger.error(err.message, err);
 });
+var _default = app;
+exports.default = _default;

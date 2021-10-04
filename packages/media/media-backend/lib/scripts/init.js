@@ -6,7 +6,7 @@ var _mongoose = _interopRequireDefault(require("mongoose"));
 
 var _userBackend = require("@dracul/user-backend");
 
-var _api = require("@ci-custom-module/api");
+var _customizeBackend = require("@dracul/customize-backend");
 
 var _InitMediaPermissions = require("../modules/media/services/InitMediaPermissions");
 
@@ -25,12 +25,12 @@ _mongoose.default.set('useCreateIndex', true);
 
 const init = async () => {
   await _userBackend.InitService.initPermissions();
-  await (0, _api.initPermissionsCustomization)();
+  await (0, _customizeBackend.initPermissionsCustomization)();
   await (0, _InitMediaPermissions.initMediaPermissions)();
   await _userBackend.InitService.initAdminRole();
   await _userBackend.InitService.initRoles();
   await _userBackend.InitService.initRootUser();
-  await (0, _api.initCustomization)();
+  await (0, _customizeBackend.initCustomization)();
   console.log("Done");
   process.exit();
 };

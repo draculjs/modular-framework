@@ -17,7 +17,7 @@ var _File = require("../../permissions/File");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var router = _express.default.Router();
+const router = _express.default.Router();
 
 exports.router = router;
 
@@ -28,32 +28,48 @@ const upload = multer();
 const streamifier = require('streamifier');
 
 router.get('/file/:id', function (req, res) {
-  if (!req.user) res.status(403).send("Not Authorized");
-  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) res.status(403).send("Not Authorized");
-  let id = req.params.id;
+  if (!req.user) res.status(401).json({
+    message: "Not Authorized"
+  });
+  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) res.status(403).json({
+    message: "Not Authorized"
+  });
+  const {
+    id
+  } = req.params;
   (0, _FileService.findFile)(id).then(file => {
-    res.json(file);
+    res.status(200).json(file);
   }).catch(err => {
     res.status(500).send(err.message);
   });
 });
 router.get('/file', function (req, res) {
-  if (!req.user) res.status(403).send("Not Authorized");
-  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) res.status(403).send("Not Authorized");
-  let pageNumber = req.query.pageNumber;
-  let itemsPerPage = req.query.itemsPerPage;
-  let search = req.query.search;
-  let orderBy = req.query.orderBy;
-  let orderDesc = req.query.orderDesc;
+  if (!req.user) res.status(401).json({
+    message: "Not Authorized"
+  });
+  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) res.status(403).json({
+    message: "Not Authorized"
+  });
+  const {
+    pageNumber,
+    itemsPerPage,
+    search,
+    orderBy,
+    orderDesc
+  } = req.query;
   (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc).then(result => {
-    res.json(result);
+    res.status(200).json(result);
   }).catch(err => {
     res.status(500).send(err.message);
   });
 });
 router.post('/file', upload.single('file'), function (req, res) {
-  if (!req.user) res.status(403).send("Not Authorized");
-  if (!req.rbac.isAllowed(req.user.id, _File.FILE_CREATE)) res.status(403).send("Not Authorized");
+  if (!req.user) res.status(401).json({
+    message: "Not Authorized"
+  });
+  if (!req.rbac.isAllowed(req.user.id, _File.FILE_CREATE)) res.status(403).json({
+    message: "Not Authorized"
+  });
   let file = {
     filename: req.file.originalname,
     mimetype: req.file.mimetype,

@@ -8,7 +8,7 @@ mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopolo
 mongoose.set('useCreateIndex', true)
 
 import {InitService} from '@dracul/user-backend'
-import {initCustomization,initPermissionsCustomization} from '@ci-custom-module/api'
+import {initCustomization,initPermissionsCustomization} from '@dracul/customize-backend'
 
 //FILES
 import {initMediaPermissions} from "../modules/media/services/InitMediaPermissions";
