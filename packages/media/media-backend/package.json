@@ -57,7 +57,10 @@
     "nodemailer-pug-engine": "^1.0.1",
     "saslprep": "^1.0.3",
     "streamifier": "^0.1.1",
-    "winston": "^3.2.1"
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6",
+    "winston": "^3.2.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
