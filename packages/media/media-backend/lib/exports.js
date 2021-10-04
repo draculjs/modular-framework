@@ -15,6 +15,36 @@ Object.defineProperty(exports, "types", {
     return _graphql.types;
   }
 });
+Object.defineProperty(exports, "findFile", {
+  enumerable: true,
+  get: function () {
+    return FileService.findFile;
+  }
+});
+Object.defineProperty(exports, "fetchFiles", {
+  enumerable: true,
+  get: function () {
+    return FileService.fetchFiles;
+  }
+});
+Object.defineProperty(exports, "deleteFile", {
+  enumerable: true,
+  get: function () {
+    return FileService.deleteFile;
+  }
+});
+Object.defineProperty(exports, "paginateFiles", {
+  enumerable: true,
+  get: function () {
+    return FileService.paginateFiles;
+  }
+});
+Object.defineProperty(exports, "updateFile", {
+  enumerable: true,
+  get: function () {
+    return FileService.updateFile;
+  }
+});
 Object.defineProperty(exports, "fileUpload", {
   enumerable: true,
   get: function () {

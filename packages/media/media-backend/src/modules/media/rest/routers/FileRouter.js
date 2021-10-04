@@ -1,14 +1,13 @@
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import { AuthenticationError, ForbiddenError } from "apollo-server-express";
 
 import express from 'express';
 var router = express.Router();
 const multer = require('multer')
 const upload = multer()
 const streamifier = require('streamifier');
-import {findFile, paginateFiles} from "../../services/FileService";
-import {fileUpload} from "../../services/UploadService";
-import {FILE_CREATE, FILE_SHOW} from "../../permissions/File";
-
+import { findFile, paginateFiles } from "../../services/FileService";
+import { fileUpload } from "../../services/UploadService";
+import { FILE_CREATE, FILE_SHOW } from "../../permissions/File";
 
 router.get('/file/:id', function (req, res) {
 
@@ -63,5 +62,5 @@ router.post('/file', upload.single('file'), function (req, res) {
 
 })
 
-export {router}
+export { router }
 export default router
