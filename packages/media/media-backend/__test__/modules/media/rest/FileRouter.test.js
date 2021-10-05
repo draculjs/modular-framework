@@ -9,16 +9,11 @@ import fileUpload from "../../../../src/modules/media/services/UploadService";
 
 describe("media routes", () => {
 
-    let token;
-
     beforeAll(async () => {
         await mongoHandler.connect()
-        await InitService.initPermissions()
+        await InitService.initPermissions(['FILE_SHOW', 'FILE_CREATE', 'FILE_UPDATE'])
         await InitService.initAdminRole()
         await InitService.initRootUser()
-        let user = await UserService.findUserByUsername("root")
-        token = AuthService.apiKey(user._id)
-
     })
 
     afterAll(async () => {
@@ -28,10 +23,9 @@ describe("media routes", () => {
 
     describe("/api/file method GET", () => {
 
-        it("get all files OK", async (done) => {
+        beforeAll(async () => {
 
             let user = await UserService.findUserByUsername("root")
-            token = AuthService.apiKey(user._id)
 
             let filesPath = ['../../../assets/imageone.png','../../../assets/imagetwo.png',
                 '../../../assets/imagethree.jpeg',
@@ -48,63 +42,70 @@ describe("media routes", () => {
                 await fileUpload(user, file)
                 index++
             }
+        })
+
+        it("get all files OK", async (done) => {
+
+            let user = await UserService.findUserByUsername("root")
+            let {token} = await AuthService.apiKey(user._id)
 
             let pageNumber = 1
-            let itemsPerPage = 10
+            let itemsPerPage = 6
             let search = null
             let orderBy = null
             let orderDesc = null
 
             const res = await request(app)
                 .get("/api/file")
-                .auth(token, { type: 'Bearer' })
+                .set('Authorization','Bearer '+token)
                 .query({pageNumber,itemsPerPage,search,orderBy,orderDesc})
-
-            console.log("RESPONSE : ",res.body)
 
             expect(res.type).toEqual("application/json")
             expect(res.body).not.toBeNull()
-            expect(res.body.length).toEqual(itemsPerPage)
-            expect(res.body[0]).toEqual(expect.objectContaining({
-                filename: expect.any(String),
-                mimetype: expect.any(String),
-                encoding: expect.any(String),
-                extension: expect.any(String),
-                type: expect.any(String),
-                relativePath: expect.any(String),
-                url: expect.any(String),
-                createdAt: expect.any(Date)
+            expect(res.body).toHaveProperty("items")
+            expect(res.body.items.length).toEqual(itemsPerPage)
+            expect(res.body).toEqual(expect.objectContaining({
+                items: expect.any(Array),
+                totalItems: expect.any(Number),
+                page: expect.any(Number)
             }));
             expect(res.status).toBe(200)
             done()
 
         },12000);
 
-        /*it("get 5 items per page when itemsPerPage not given" , async (done) => {
+        it("get 5 items per page when itemsPerPage not given" , async (done) => {
+
+            let user = await UserService.findUserByUsername("root")
+            let {token} = await AuthService.apiKey(user._id)
 
             let pageNumber = 1
 
             const res = await request(app)
                 .get("/api/file")
-                .set("x-access-token", "Bearer "+token)
+                .set('Authorization','Bearer '+token)
                 .query({pageNumber})
 
             expect(res.type).toEqual("application/json")
-            expect(res.body.length).toEqual(5);
+            expect(res.body).not.toBeNull()
+            expect(res.body).toHaveProperty("items")
+            expect(res.body.items.length).toEqual(5);
             expect(res.status).toBe(200);
-            expect(res.body[0]).toEqual(expect.objectContaining({
-                filename: expect.any(String)}));
             done();
         }, 12000)
 
         it("get 5 items, one page, order asc, when not receive any parameters",  async(done) => {
 
+            let user = await UserService.findUserByUsername("root")
+            let {token} = await AuthService.apiKey(user._id)
+
             const res = await request(app)
                 .get("/api/file")
-                .set("x-access-token", "Bearer "+token)
+                .set('Authorization','Bearer '+token)
 
             expect(res.type).toEqual("application/json")
-            expect(res.body.length).toEqual(5);
+            expect(res.body).toHaveProperty("items")
+            expect(res.body.items.length).toEqual(5);
             expect(res.status).toBe(200);
             done();
         })
@@ -124,7 +125,9 @@ describe("media routes", () => {
             expect(res.body).toEqual({"message": "Not Authorized"})
             done();
 
-        }, 15000)*/
+        }, 15000)
     })
+
+    
 
 })
