@@ -8,7 +8,7 @@
     "init": "BABEL_DISABLE_CACHE=1 babel-node  src/scripts/init.js",
     "build": "./node_modules/.bin/babel src -d dist --copy-files && ./node_modules/.bin/babel emails -d dist/emails --copy-files && cp .env.example dist/.env  && cp package.json dist/package.json",
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand --testTimeout=15000"
   },
   "repository": {
     "type": "git",
@@ -68,6 +68,8 @@
     "@shelf/jest-mongodb": "^1.1.5",
     "babel-jest": "^25.4.0",
     "jest": "^25.4.0",
+    "mime-types": "^2.1.33",
+    "mock-express-request": "^0.2.2",
     "mockingoose": "^2.13.2",
     "mongodb-memory-server": "^6.5.2",
     "nodemon": "^1.19.4",

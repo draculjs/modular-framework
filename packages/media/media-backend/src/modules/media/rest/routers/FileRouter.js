@@ -21,21 +21,21 @@ router.get('/file/:id', function (req, res) {
     findFile(id).then(file => {
         res.status(200).json(file);
     }).catch(err => {
-        res.status(500).send(err.message)
+        res.status(500).json({message: err.message})
     })
 });
 
 router.get('/file', function (req, res) {
 
-    if (!req.user) res.status(401).json({message: "Not Authorized"})
-    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW)) res.status(403).json({message: "Not Authorized"})
+    if (!req.user) return res.status(401).json({message: "Not Authorized"})
+    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW)) return res.status(403).json({message: "not allower"})
 
     const {pageNumber, itemsPerPage, search, orderBy, orderDesc} = req.query
 
     paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc).then(result => {
-        res.status(200).json(result);
+        return res.status(200).json(result);
     }).catch(err => {
-        res.status(500).send(err.message)
+        return res.status(500).json({message: err.message})
     })
 });
 
@@ -52,9 +52,9 @@ router.post('/file', upload.single('file'), function (req, res) {
     }
 
     fileUpload(req.user, file).then(result => {
-        res.json(result)
+        res.status(201).json(result)
     }).catch(err => {
-        res.status(500).send(err.message)
+        res.status(500).json({message: err.message})
     })
 
 })
