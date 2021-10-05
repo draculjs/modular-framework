@@ -1,17 +1,20 @@
 require('dotenv').config();
-import {DefaultLogger} from "@dracul/logger-backend";
+import { DefaultLogger } from "@dracul/logger-backend";
 DefaultLogger.info("Starting APP")
 
 import express from 'express';
 import './mongo-db'
-import {ApolloServer, GraphQLExtension} from 'apollo-server-express'
-import {resolvers, typeDefs} from './modules-merge'
+import { ApolloServer, GraphQLExtension } from 'apollo-server-express'
+import { resolvers, typeDefs } from './modules-merge'
 import path from 'path'
-import {jwtMiddleware, corsMiddleware, rbacMiddleware, sessionMiddleware} from '@dracul/user-backend'
+import { jwtMiddleware, corsMiddleware, rbacMiddleware, sessionMiddleware } from '@dracul/user-backend'
 
-import {router as fileRouter} from './modules/media/rest/routers/FileRouter'
+import { router as fileRouter } from './modules/media/rest/routers/FileRouter'
 import initService from "./init/init-service";
-import {ResponseTimeMiddleware,RequestMiddleware, GqlErrorLog, GqlResponseLog} from '@dracul/logger-backend'
+import { ResponseTimeMiddleware, RequestMiddleware, GqlErrorLog, GqlResponseLog } from '@dracul/logger-backend'
+
+import swaggerUi from 'swagger-ui-express'
+const YAML = require('yamljs');
 
 DefaultLogger.info(`Starting app`)
 
@@ -28,13 +31,25 @@ app.use(sessionMiddleware)
 
 app.use('/api', fileRouter)
 
+const swaggerDocument = YAML.load('./swagger.yaml');
+
+let PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000"
+let API_URL = process.env.APP_API_URL ? process.env.APP_API_URL + "/api" : "http://localhost" + PORT + "/api"
+
+API_URL = API_URL.includes('https://') ? API_URL.split('https://')[1] : API_URL
+API_URL = API_URL.includes('http://') ? API_URL.split('http://')[1] : API_URL
+
+swaggerDocument.host = API_URL;
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 GraphQLExtension.didEncounterErrors
 
 const apolloServer = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({req}) => {
-        return {user: req.user, rbac: req.rbac, req}
+    context: ({ req }) => {
+        return { user: req.user, rbac: req.rbac, req }
     },
     plugins: [
         {
@@ -53,13 +68,13 @@ const apolloServer = new ApolloServer({
 });
 
 
-apolloServer.applyMiddleware({app})
+apolloServer.applyMiddleware({ app })
 
 //STATIC IMG
 app.use('/media/avatar', express.static('media/avatar'));
 app.use('/media/logo', express.static('media/logo'));
 app.use('/media/files', express.static('media/files'));
-app.use('/', express.static('web', {index: "index.html"}));
+app.use('/', express.static('web', { index: "index.html" }));
 
 app.get('*', function (request, response) {
     response.sendFile(path.resolve(__dirname, 'web/index.html'));
