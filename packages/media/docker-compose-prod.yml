@@ -1,12 +1,44 @@
 version: "3.5"
 
 services:
-  draculmedia:
-    image: cincarnato/dracul-media
-    container_name: draculmedia
+  draculMedia:
+    image: sndregistry.sondeosglobal.com/dracul/dracul-media:1.0.1
     volumes:
-      - ./media:/app/media
-      - ./logs:/app/logs
-      - ./.env:/app/.env
+      - ./media:/deploy/dist/media
+      - ./logs:/deploy/dist/logs
     ports:
-      - "80:5000"
+      - "7070:7070"
+    environment:
+      NODE_ENV: "development"
+      MONGO_URI: "mongodb://ip:27017/draculMedia"
+      JWT_SECRET: "V8wzw4iL9H40oxXAVj9u"
+      JWT_LOGIN_EXPIRED_IN: "1d"
+      JWT_REGISTER_EXPIRED_IN: "30d"
+      APP_NAME: "MEDIA"
+      APP_PORT: 7070
+      APP_API_URL: "http://url:puerto"
+      APP_WEB_URL: "http://url:puerto"
+      SMTP_HOST: "smtp.xxxx.com.ar"
+      SMTP_PORT: 25
+      SMTP_SECURE: "false"
+      SMTP_USER: "user@domain.com.ar"
+      SMTP_PASS: "xxxxxx"
+      LOG_LEVEL: "debug"
+      LOG_REQUEST: "ON"
+      LOG_RESPONSE_TIME: "ON"
+      LOG_GQL_ERRORS: "ON"
+      LOG_TRANSPORT_CONSOLE: "ON"
+      LOG_TRANSPORT_COMBINED: "ON"
+      LOG_TRANSPORT_ERROR: "ON"
+      LOG_TRANSPORT_ACCESS: "ON"
+      LOG_TRANSPORT_GQL_ERROR: "ON"
+      LOG_TRANSPORT_GQL_RESPONSE: "ON"
+      LOG_COLORIZE: "ON"
+      LOG_FILE_MAX_SIZE: 10000000
+      LOG_FILE_MAX_FILES: 3
+      LOG_MODE: "TEXT"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == worker]
