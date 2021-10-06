@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const softDelete = require('mongoose-softdelete')
 const mongoosePaginate = require('mongoose-paginate-v2');
-
+require('mongoose-long')(mongoose);
+const {Types: {Long}} = mongoose;
 const Schema = mongoose.Schema;
 
 const FileSchema = new Schema({
@@ -15,7 +16,7 @@ const FileSchema = new Schema({
     type: {type: String, required: true},
     relativePath: {type: String, required: true},
     absolutePath: {type: String, required: true},
-    size: {type: Number, required: true},
+    size: {type: Long, required: true},
     url: {type: String, required: true},
     createdAt: {type: Date, required: true, default: Date.now},
     createdBy: {

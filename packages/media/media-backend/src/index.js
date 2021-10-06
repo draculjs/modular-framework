@@ -24,7 +24,8 @@ app.use(RequestMiddleware)
 app.use(ResponseTimeMiddleware)
 
 app.use(corsMiddleware)
-app.use(express.json());
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(jwtMiddleware)
 app.use(rbacMiddleware)
 app.use(sessionMiddleware)
@@ -99,3 +100,5 @@ initService().then(() => {
 }).catch(err => {
     DefaultLogger.error(err.message, err)
 })
+
+export default app;
