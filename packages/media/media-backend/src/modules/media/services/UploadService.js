@@ -1,5 +1,4 @@
 import path from "path";
-import fs from "fs";
 import file from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
@@ -22,7 +21,6 @@ const fileUpload = function (user, inputFile) {
 
     return new Promise(async (resolve, rejects) => {
 
-        console.log("inputFile",inputFile)
         const {filename, mimetype, encoding, createReadStream} = await inputFile;
 
         let type = mimetype.split("/")[0]
