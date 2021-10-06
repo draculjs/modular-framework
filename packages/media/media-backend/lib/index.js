@@ -23,6 +23,10 @@ var _FileRouter = require("./modules/media/rest/routers/FileRouter");
 
 var _initService = _interopRequireDefault(require("./init/init-service"));
 
+var _swaggerJsdoc = _interopRequireDefault(require("swagger-jsdoc"));
+
+var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 require('dotenv').config();
@@ -31,7 +35,8 @@ _loggerBackend.DefaultLogger.info("Starting APP");
 
 _loggerBackend.DefaultLogger.info(`Starting app`);
 
-const app = (0, _express.default)();
+const app = (0, _express.default)(); // const swaggerDocument = require('./swagger.json');
+
 app.use(_loggerBackend.RequestMiddleware);
 app.use(_loggerBackend.ResponseTimeMiddleware);
 app.use(_userBackend.corsMiddleware);
@@ -78,7 +83,34 @@ app.use('/media/logo', _express.default.static('media/logo'));
 app.use('/media/files', _express.default.static('media/files'));
 app.use('/', _express.default.static('web', {
   index: "index.html"
-}));
+})); //Endoint for swagger
+
+let PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000";
+let URL = process.env.APP_API_URL ? process.env.APP_API_URL : "http://localhost" + PORT;
+const urlBackend = URL;
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'API Scaffold',
+      description: 'Documentando API con Swagger',
+      contact: {
+        name: "Scaffold",
+        url: "#",
+        email: "-"
+      },
+      license: {
+        name: "-",
+        url: "-"
+      },
+      servers: [urlBackend]
+    }
+  },
+  //  ['.routes/*.js']
+  apis: ["./index.js", './src/modules/media/rest/routers/FileRouter.js']
+};
+const swaggerDocs = (0, _swaggerJsdoc.default)(swaggerOptions);
+app.use('/api-docs', _swaggerUiExpress.default.serve, _swaggerUiExpress.default.setup(swaggerDocs)); // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.get('*', function (request, response) {
   response.sendFile(_path.default.resolve(__dirname, 'web/index.html'));
 }); //Endpoint for monitoring
