@@ -46,10 +46,10 @@ router.get('/file/:id', function (req, res) {
   });
 });
 router.get('/file', function (req, res) {
-  if (!req.user) return res.status(401).json({
+  if (!req.user) res.status(401).json({
     message: "Not Authorized"
   });
-  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) return res.status(403).json({
+  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) res.status(403).json({
     message: "Not Authorized"
   });
   const {
@@ -60,9 +60,9 @@ router.get('/file', function (req, res) {
     orderDesc
   } = req.query;
   (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc).then(result => {
-    return res.status(200).json(result);
+    res.status(200).json(result);
   }).catch(err => {
-    return res.status(500).json({
+    res.status(500).json({
       message: err.message
     });
   });
