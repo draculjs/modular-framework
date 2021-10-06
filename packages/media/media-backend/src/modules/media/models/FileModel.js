@@ -20,7 +20,7 @@ const FileSchema = new Schema({
     url: {type: String, required: true},
     createdAt: {type: Date, required: true, default: Date.now},
     createdBy: {
-        user: {type: mongoose.Schema.ObjectId, ref: "User", required: false},
+        user: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: false},
         username: {type: String, required: true}
     }
 

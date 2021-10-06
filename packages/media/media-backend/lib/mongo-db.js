@@ -14,9 +14,11 @@ _mongoose.default.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
-/**
-const { ObjectId } = mongoose.Types;
+
+const {
+  ObjectId
+} = _mongoose.default.Types;
+
 ObjectId.prototype.valueOf = function () {
-    return this.toString();
+  return this.toString();
 };
-**/

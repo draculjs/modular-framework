@@ -7,8 +7,6 @@ exports.default = exports.fileUpload = void 0;
 
 var _path = _interopRequireDefault(require("path"));
 
-var _fs = _interopRequireDefault(require("fs"));
-
 var _FileModel = _interopRequireDefault(require("../models/FileModel"));
 
 var _storeFile = _interopRequireDefault(require("./helpers/storeFile"));
@@ -33,7 +31,6 @@ const baseUrl = function () {
 
 const fileUpload = function (user, inputFile) {
   return new Promise(async (resolve, rejects) => {
-    console.log("inputFile", inputFile);
     const {
       filename,
       mimetype,
