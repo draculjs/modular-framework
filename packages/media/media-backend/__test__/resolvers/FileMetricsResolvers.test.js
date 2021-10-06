@@ -1,4 +1,4 @@
-const mongoHandler = require('../utils/mongo-handler');
+const mongoHandler = require('../../__test__/utils/mongo-handler');
 
 import initService from '../../src/init/init-service';
 import {UserService} from "@dracul/user-backend";

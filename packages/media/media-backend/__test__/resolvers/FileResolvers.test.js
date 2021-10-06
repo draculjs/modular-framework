@@ -1,4 +1,4 @@
-const mongoHandler = require('../utils/mongo-handler');
+const mongoHandler = require('../../__test__/utils/mongo-handler');
 
 import initService from '../../src/init/init-service';
 import {UserService} from "@dracul/user-backend";
@@ -7,7 +7,7 @@ import { rbac } from '@dracul/user-backend';
 import FileResolvers from "../../src/modules/media/graphql/resolvers/FileResolvers";
 import fileUpload from '../../src/modules/media/services/UploadService';
 import path from 'path'
-import uploadFileSimulator from '../utils/uploadFileSimulator'
+import uploadFileSimulator from '../../__test__/utils/uploadFileSimulator'
 
 describe("FileResolvers", () => {
 
