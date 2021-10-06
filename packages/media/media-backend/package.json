@@ -8,7 +8,7 @@
     "init": "BABEL_DISABLE_CACHE=1 babel-node  src/scripts/init.js",
     "build": "./node_modules/.bin/babel src -d dist --copy-files && ./node_modules/.bin/babel emails -d dist/emails --copy-files && cp .env.example dist/.env  && cp package.json dist/package.json",
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
-    "test": "jest --runInBand --testTimeout=15000"
+    "test": "jest --runInBand"
   },
   "repository": {
     "type": "git",

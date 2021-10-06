@@ -28,7 +28,7 @@ router.get('/file/:id', function (req, res) {
 router.get('/file', function (req, res) {
 
     if (!req.user) return res.status(401).json({message: "Not Authorized"})
-    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW)) return res.status(403).json({message: "not allower"})
+    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW)) return res.status(403).json({message: "Not Authorized"})
 
     const {pageNumber, itemsPerPage, search, orderBy, orderDesc} = req.query
 
@@ -38,7 +38,6 @@ router.get('/file', function (req, res) {
         return res.status(500).json({message: err.message})
     })
 });
-
 
 router.post('/file', upload.single('file'), function (req, res) {
     if (!req.user) res.status(401).json({message: "Not Authorized"})

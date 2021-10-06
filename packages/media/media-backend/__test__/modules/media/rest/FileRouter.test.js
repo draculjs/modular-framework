@@ -2,12 +2,13 @@ import request from 'supertest'
 import app from '../../../../src/index'
 import mongoHandler from "../../../utils/mongo-handler"
 import {AuthService, UserService,InitService} from "@dracul/user-backend";
+import uploadMultiFiles from "../../../utils/uploadMultiFilesSimulator";
+import {fetchFiles} from "../../../../src/modules/media/services/FileService";
 import path from "path";
 import uploadFileSimulator from "../../../utils/uploadFileSimulator";
 import fileUpload from "../../../../src/modules/media/services/UploadService";
 
-
-describe("media routes", () => {
+describe("media routes",  () => {
 
     beforeAll(async () => {
         await mongoHandler.connect()
@@ -21,27 +22,11 @@ describe("media routes", () => {
         await mongoHandler.closeDatabase();
     })
 
-    describe("/api/file method GET", () => {
+    describe("GET /api/file", () => {
 
         beforeAll(async () => {
-
             let user = await UserService.findUserByUsername("root")
-
-            let filesPath = ['../../../assets/imageone.png','../../../assets/imagetwo.png',
-                '../../../assets/imagethree.jpeg',
-                '../../../assets/imagefour.jpg',
-                '../../../assets/imagefive.jpg',
-                '../../../assets/imagesix.jpg']
-            let index = 0
-            let filePath;
-            let file;
-
-            while(index < filesPath.length){
-                filePath = path.join(__dirname,filesPath[index])
-                file = uploadFileSimulator(filePath)
-                await fileUpload(user, file)
-                index++
-            }
+            await uploadMultiFiles(user)
         })
 
         it("get all files OK", async (done) => {
@@ -72,7 +57,7 @@ describe("media routes", () => {
             expect(res.status).toBe(200)
             done()
 
-        },12000);
+        });
 
         it("get 5 items per page when itemsPerPage not given" , async (done) => {
 
@@ -92,9 +77,9 @@ describe("media routes", () => {
             expect(res.body.items.length).toEqual(5);
             expect(res.status).toBe(200);
             done();
-        }, 12000)
+        })
 
-        it("get 5 items, one page, order asc, when not receive any parameters",  async(done) => {
+        it("get 5 items, one page, when not receive any parameters",  async(done) => {
 
             let user = await UserService.findUserByUsername("root")
             let {token} = await AuthService.apiKey(user._id)
@@ -106,17 +91,19 @@ describe("media routes", () => {
             expect(res.type).toEqual("application/json")
             expect(res.body).toHaveProperty("items")
             expect(res.body.items.length).toEqual(5);
+            expect(res.body).toEqual(expect.objectContaining({
+                items: expect.any(Array),
+                totalItems: expect.any(Number),
+                page: expect.any(Number)
+            }));
             expect(res.status).toBe(200);
             done();
         })
 
-        it("token expired", async (done) => {
-
-            let tokenFake = "asdkjaslkewaedasdaw"
+        it("invalid or non-existent token", async (done) => {
 
             const res = await request(app)
                 .get("/api/file")
-                .set("x-access-token", tokenFake)
 
             expect(res.type).toEqual("application/json")
             expect(res.status).toBe(401);
@@ -125,9 +112,116 @@ describe("media routes", () => {
             expect(res.body).toEqual({"message": "Not Authorized"})
             done();
 
-        }, 15000)
+        })
+
     })
 
-    
+    describe("GET /api/file/:id",  () => {
+
+        beforeAll(async () => {
+            let user = await UserService.findUserByUsername("root")
+            await uploadMultiFiles(user)
+        })
+
+        it("get a file by id OK", async (done) => {
+
+            let user = await UserService.findUserByUsername("root")
+            let {token} = await AuthService.apiKey(user._id)
+
+            let files = await fetchFiles()
+            let id = files[0]._id
+
+            const res = await request(app)
+                .get("/api/file/"+id)
+                .set('Authorization','Bearer '+token)
+
+            expect(res.type).toEqual("application/json")
+            expect(res.body).not.toBeNull()
+            expect(res.body).toHaveProperty("_id")
+            expect(res.status).toBe(200);
+            done();
+        })
+
+        it("id doesn't belong to any file, so it doesn't return anything", async (done) => {
+
+            let id = "sdfsdfsde454"
+
+            let user = await UserService.findUserByUsername("root")
+            let {token} = await AuthService.apiKey(user._id)
+
+            const res = await request(app)
+                .get("/api/file/"+id)
+                .set('Authorization','Bearer '+token)
+
+            expect(res.type).toEqual("application/json")
+            expect(res.status).toBe(200);
+            expect(res.body).toBe(null);
+            done()
+        })
+
+        it("invalid or non-existent token", async (done) => {
+
+            let id = "asdasdasr45"
+
+            const res = await request(app)
+                .get("/api/file/"+id)
+
+            expect(res.type).toEqual("application/json")
+            expect(res.status).toBe(401);
+            expect(res.body).not.toBeNull();
+            expect(res.body).toHaveProperty("message")
+            expect(res.body).toEqual({"message": "Not Authorized"})
+            done();
+        })
+
+    });
+
+    describe("POST /api/file", () => {
+
+        it("file upload successfully", async (done) => {
+
+            let user = await UserService.findUserByUsername("root")
+            let {token} = await AuthService.apiKey(user._id)
+
+            let filePath = path.join(__dirname,"../../../assets/imageone.png")
+
+            const res = await request(app)
+                .post("/api/file")
+                .attach("file",filePath)
+                .set('Authorization','Bearer '+token)
+
+            expect(res.type).toEqual("application/json")
+            expect(res.status).toBe(201);
+            expect(res.body).not.toBeNull();
+            expect(res.body).toEqual(expect.objectContaining({
+                _id: expect.any(String),
+                filename: expect.any(String),
+                type: expect.any(String),
+                extension: expect.any(String),
+                relativePath: expect.any(String),
+                absolutePath: expect.any(String),
+                size: expect.any(String),
+                url: expect.any(String),
+                createdBy: expect.any(Object),
+            }));
+
+            done()
+
+        })
+
+        it("invalid or non-existent token", async (done) => {
+
+            const res = await request(app)
+                .post("/api/file")
+
+            expect(res.type).toEqual("application/json")
+            expect(res.status).toBe(401);
+            expect(res.body).not.toBeNull();
+            expect(res.body).toHaveProperty("message")
+            expect(res.body).toEqual({"message": "Not Authorized"})
+            done();
+        })
+
+    })
 
 })
