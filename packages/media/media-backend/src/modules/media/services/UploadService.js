@@ -1,3 +1,4 @@
+import {DefaultLogger as winston} from '@dracul/logger-backend';
 import path from "path";
 import file from '../models/FileModel'
 import storeFile from './helpers/storeFile'
@@ -64,7 +65,8 @@ const fileUpload = function (user, inputFile) {
         rejects(new Error("Upload Fail"))
       }
 
-    } catch (error) {
+    } catch (err) {
+      winston.error('UploadService: ', err)
       rejects(new Error("Upload Fail"))
     }
   })
