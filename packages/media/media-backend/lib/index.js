@@ -36,14 +36,21 @@ const YAML = require('yamljs');
 _loggerBackend.DefaultLogger.info(`Starting app`);
 
 const app = (0, _express.default)();
-app.use(_loggerBackend.RequestMiddleware);
-app.use(_loggerBackend.ResponseTimeMiddleware);
 app.use(_userBackend.corsMiddleware);
 app.use(_express.default.json());
 app.use(_express.default.urlencoded({
   extended: true
 }));
 app.use(_userBackend.jwtMiddleware);
+app.use(function (err, req, res, next) {
+  if (err && err.name === 'UnauthorizedError') {
+    _loggerBackend.DefaultLogger.warn(err.message);
+  }
+
+  next();
+});
+app.use(_loggerBackend.RequestMiddleware);
+app.use(_loggerBackend.ResponseTimeMiddleware);
 app.use(_userBackend.rbacMiddleware);
 app.use(_userBackend.sessionMiddleware);
 app.use('/api', _FileRouter.router);

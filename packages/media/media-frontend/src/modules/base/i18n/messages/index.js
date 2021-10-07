@@ -1,27 +1,7 @@
+import BaseMessages from './BaseMessages'
+import ErrorMessages from './ErrorMessages'
+import merge from 'deepmerge'
 
-const messages = {
-   en: {
-      base: {
-         home: 'Home',
-         about: 'About',
-         welcome: "Welcome"
-      }
-   },
-   es: {
-      base: {
-         home: 'Principal',
-         about: 'Acerca de',
-         welcome: "Bienvenido"
-      }
-   },
-   pt: {
-      base: {
-         home: 'Principal',
-         about: 'Acerca de',
-         welcome: "Welcome"
-      }
-   }
-}
+const messages = merge.all([BaseMessages, ErrorMessages])
 
 export default messages
-    

@@ -16,7 +16,7 @@ const FileSchema = new Schema({
     type: {type: String, required: true},
     relativePath: {type: String, required: true},
     absolutePath: {type: String, required: true},
-    size: {type: Long, required: true},
+    size: {type: Number, required: true},
     url: {type: String, required: true},
     createdAt: {type: Date, required: true, default: Date.now},
     createdBy: {

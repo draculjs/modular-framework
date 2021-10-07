@@ -21,9 +21,16 @@ FileMetricsProvider.setGqlc(apolloClient)
 Vue.config.productionTip = false
 
 //Customization instances inject
+//Customization instances inject
 store.commit('setVuetifyInstance', vuetify)
-store.commit('setI18nInstance',i18n)
+
+//1. Load from localstore
+i18n.locale = store.state.customization.language
+//2. Load from backend
 store.dispatch('loadCustomizations')
+    .then(r => {
+      i18n.locale = r.language
+    })
 
 new Vue({
   vuetify,
