@@ -21,6 +21,16 @@ var _default = {
 
     setDateToFormField(field, newDate) {
       this.form[field] = (0, _setDateToDatetimeHelper.default)(this.form[field], newDate);
+    },
+
+    convertStringDateToDayjs(date, timezone) {
+      if (!date) return null;
+
+      if (timezone) {
+        return _Dayjs.default.tz(date, timezone);
+      } else {
+        return _Dayjs.default.tz(date);
+      }
     }
 
   },
