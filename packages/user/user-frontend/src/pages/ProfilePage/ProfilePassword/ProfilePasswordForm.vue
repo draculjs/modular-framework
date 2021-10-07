@@ -58,6 +58,7 @@
                                   :label="$t('user.label.repeatPassword')"
                                   :placeholder="$t('user.label.repeatPassword')"
                                   autocomplete="new-password"
+                                  ref="passwordVerify"
                     />
                 </v-col>
             </v-form>
@@ -117,6 +118,7 @@
                 }
             },
             clearNewPasswordInputError() {
+              this.$refs.passwordVerify.validate()
                 if(this.inputErrors['newPassword']){
                     this.inputErrors['newPassword'] = null
                 }
