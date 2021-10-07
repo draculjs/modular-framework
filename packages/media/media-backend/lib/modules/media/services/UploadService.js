@@ -54,7 +54,7 @@ const fileUpload = function (user, inputFile) {
       const absolutePath = _path.default.resolve(relativePath); //Store
 
 
-      var storeResult = await (0, _storeFile.default)(createReadStream(), relativePath);
+      let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath);
       let url = baseUrl() + relativePath;
 
       if (storeResult && storeResult.finish) {
