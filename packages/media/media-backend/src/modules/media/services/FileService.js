@@ -2,11 +2,15 @@ import File from './../models/FileModel'
 import {UserInputError} from 'apollo-server-express'
 
 export const findFile = async function (id) {
-    return new Promise((resolve, reject) => {
+    if (id) {
+      return new Promise((resolve, reject) => {
         File.findOne({_id: id}).populate('createdBy.user').exec((err, res) => (
-            err ? reject(err) : resolve(res)
+          err ? reject(err) : resolve(res)
         ));
-    })
+      })
+    } else {
+      throw new Error({message: 'id field is required'})
+    } 
 }
 
 export const fetchFiles = async function () {

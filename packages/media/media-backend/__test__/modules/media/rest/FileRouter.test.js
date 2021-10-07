@@ -194,16 +194,23 @@ describe("media routes",  () => {
             expect(res.status).toBe(201);
             expect(res.body).not.toBeNull();
             expect(res.body).toEqual(expect.objectContaining({
+                __v: expect.any(Number),
                 _id: expect.any(String),
                 filename: expect.any(String),
                 type: expect.any(String),
                 extension: expect.any(String),
                 relativePath: expect.any(String),
                 absolutePath: expect.any(String),
-                size: expect.any(String),
+                size: expect.any(Number),
                 url: expect.any(String),
                 createdBy: expect.any(Object),
-            }));
+                createdAt: expect.any(String),
+                deleted: expect.any(Boolean),
+                deletedAt: null,
+                encoding: expect.any(String),
+                mimetype: expect.any(String),
+                tags: expect.any(Array)
+            }))
 
             done()
 
