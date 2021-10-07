@@ -1,4 +1,4 @@
-const mongoHandler = require('../utils/mongo-handler')
+const mongoHandler = require('../../__tests__/utils/mongo-handler')
 
 import {InitService} from "@dracul/user-backend"
 import {initMediaPermissions} from '../../src/modules/media/services/InitMediaPermissions'
