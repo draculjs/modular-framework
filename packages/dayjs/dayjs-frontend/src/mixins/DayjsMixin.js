@@ -9,20 +9,30 @@ export default {
         },
         setDateToFormField(field, newDate) {
             this.form[field] = setDateToDatetimeHelper(this.form[field], newDate)
+        },
+        convertStringDateToDayjs(date, timezone) {
+            if (!date)
+                return null
+
+            if(timezone){
+                return dayjs.tz(date,timezone)
+            }else{
+                return dayjs.tz(date)
+            }
         }
     },
     computed: {
         getDateFormat() {
             return (date) => {
 
-                if(!date)
+                if (!date)
                     return null
 
-                if(dayjs.isDayjs(date)){
+                if (dayjs.isDayjs(date)) {
                     return date.format("YYYY-MM-DD")
                 }
 
-                if(/(\d{4})-(\d{2})-(\d{2})/.test(date)){
+                if (/(\d{4})-(\d{2})-(\d{2})/.test(date)) {
                     return date
                 }
 
@@ -33,21 +43,20 @@ export default {
         getDateTimeFormat() {
             return (date, showSeconds = false) => {
 
-                if(!date)
+                if (!date)
                     return null
-
 
 
                 let format = "YYYY-MM-DD HH:mm"
 
-                if(showSeconds)
+                if (showSeconds)
                     format += ":ss"
 
-                if(dayjs.isDayjs(date)){
+                if (dayjs.isDayjs(date)) {
                     return date.format(format)
                 }
 
-                if(/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)){
+                if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) {
                     return date
                 }
 
@@ -57,19 +66,19 @@ export default {
         getTimeFormat() {
             return (date, showSeconds = false) => {
 
-                if(!date)
+                if (!date)
                     return null
 
                 let format = "HH:mm"
 
-                if(showSeconds)
+                if (showSeconds)
                     format += ":ss"
 
-                if(dayjs.isDayjs(date)){
+                if (dayjs.isDayjs(date)) {
                     return date.format(format)
                 }
 
-                if(/(\d{2}):(\d{2})(:(\d{2}))?/.test(date)){
+                if (/(\d{2}):(\d{2})(:(\d{2}))?/.test(date)) {
                     return date
                 }
 
@@ -79,22 +88,21 @@ export default {
         getDateTimeCustomFormat() {
             return (date, format, tz) => {
 
-                if(!date)
+                if (!date)
                     return null
 
 
-
-                if(!tz)
+                if (!tz)
                     tz = dayjs.tz.guess()
 
-                if(!format)
+                if (!format)
                     format = "YYYY-MM-DD HH:mm:ss"
 
-                if(dayjs.isDayjs(date)){
+                if (dayjs.isDayjs(date)) {
                     return date.tz(tz).format(format)
                 }
 
-                if(/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)){
+                if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) {
                     return date
                 }
 

@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.fileUpload = void 0;
 
+var _loggerBackend = require("@dracul/logger-backend");
+
 var _path = _interopRequireDefault(require("path"));
 
 var _FileModel = _interopRequireDefault(require("../models/FileModel"));
@@ -78,9 +80,13 @@ const fileUpload = function (user, inputFile) {
           doc.populate('createdBy.user').execPopulate(() => resolve(doc));
         });
       } else {
+        _loggerBackend.DefaultLogger.error("Upload Fail");
+
         rejects(new Error("Upload Fail"));
       }
-    } catch (error) {
+    } catch (err) {
+      _loggerBackend.DefaultLogger.error('UploadService: ', err);
+
       rejects(new Error("Upload Fail"));
     }
   });

@@ -43,7 +43,7 @@ export default {
       get() {
         return this.getDateFormat(this.value)
       },
-      set(val) {this.$emit('input', val)}
+      set(val) {this.$emit('input', this.convertStringDateToDayjs(val))}
     }
   },
   data(){
