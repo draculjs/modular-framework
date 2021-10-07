@@ -12,7 +12,7 @@
                     <v-text-field
                             id="current-password"
                             prepend-icon="lock"
-                            :append-icon="showNewPassword ? 'visibility' : 'visibility_off'"
+                            :append-icon="showCurrentPassword ? 'visibility' : 'visibility_off'"
                             :type="showCurrentPassword ? 'text' : 'password'"
                             @click:append="showCurrentPassword = !showCurrentPassword"
                             v-model="form.currentPassword"

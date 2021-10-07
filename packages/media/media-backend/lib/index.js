@@ -1,5 +1,10 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _loggerBackend = require("@dracul/logger-backend");
 
 var _express = _interopRequireDefault(require("express"));
@@ -18,23 +23,44 @@ var _FileRouter = require("./modules/media/rest/routers/FileRouter");
 
 var _initService = _interopRequireDefault(require("./init/init-service"));
 
+var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 require('dotenv').config();
 
 _loggerBackend.DefaultLogger.info("Starting APP");
 
+const YAML = require('yamljs');
+
 _loggerBackend.DefaultLogger.info(`Starting app`);
 
 const app = (0, _express.default)();
-app.use(_loggerBackend.RequestMiddleware);
-app.use(_loggerBackend.ResponseTimeMiddleware);
 app.use(_userBackend.corsMiddleware);
 app.use(_express.default.json());
+app.use(_express.default.urlencoded({
+  extended: true
+}));
 app.use(_userBackend.jwtMiddleware);
+app.use(function (err, req, res, next) {
+  if (err && err.name === 'UnauthorizedError') {
+    _loggerBackend.DefaultLogger.warn(err.message);
+  }
+
+  next();
+});
+app.use(_loggerBackend.RequestMiddleware);
+app.use(_loggerBackend.ResponseTimeMiddleware);
 app.use(_userBackend.rbacMiddleware);
 app.use(_userBackend.sessionMiddleware);
 app.use('/api', _FileRouter.router);
+const swaggerDocument = YAML.load('./swagger.yaml');
+let PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000";
+let API_URL = process.env.APP_API_URL ? process.env.APP_API_URL + "/api" : "http://localhost" + PORT + "/api";
+API_URL = API_URL.includes('https://') ? API_URL.split('https://')[1] : API_URL;
+API_URL = API_URL.includes('http://') ? API_URL.split('http://')[1] : API_URL;
+swaggerDocument.host = API_URL;
+app.use('/api-docs', _swaggerUiExpress.default.serve, _swaggerUiExpress.default.setup(swaggerDocument));
 _apolloServerExpress.GraphQLExtension.didEncounterErrors;
 const apolloServer = new _apolloServerExpress.ApolloServer({
   typeDefs: _modulesMerge.typeDefs,
@@ -93,3 +119,5 @@ app.get('/status', function (req, res) {
 }).catch(err => {
   _loggerBackend.DefaultLogger.error(err.message, err);
 });
+var _default = app;
+exports.default = _default;

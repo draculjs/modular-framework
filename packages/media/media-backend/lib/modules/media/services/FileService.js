@@ -12,11 +12,17 @@ var _apolloServerExpress = require("apollo-server-express");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const findFile = async function (id) {
-  return new Promise((resolve, reject) => {
-    _FileModel.default.findOne({
-      _id: id
-    }).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
-  });
+  if (id) {
+    return new Promise((resolve, reject) => {
+      _FileModel.default.findOne({
+        _id: id
+      }).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
+    });
+  } else {
+    throw new Error({
+      message: 'id field is required'
+    });
+  }
 };
 
 exports.findFile = findFile;

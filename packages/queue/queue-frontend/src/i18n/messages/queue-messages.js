@@ -9,6 +9,12 @@ const messages = {
                 editing: 'Editing Queue',
                 deleting: 'Deleting Queue',
                 showing: 'Showing Job',
+                state:{
+                    DONE:'DONE',
+                    PENDING:'PENDING',
+                    WORKING:'WORKING',
+                    ERROR:'ERROR',
+                },
                 labels: {
                     blockedUntil: 'BlockedUntil',
                     workerId: 'Worker Id',
@@ -37,6 +43,12 @@ const messages = {
                 editing: 'Modificando Queue',
                 deleting: 'Eliminando Queue',
                 showing: 'Detalles del Job',
+                state:{
+                    DONE:'FINALIZADO',
+                    PENDING:'PENDIENTE',
+                    WORKING:'PROCESANDO',
+                    ERROR:'ERROR',
+                },
                 labels: {
                     blockedUntil: 'Bloqueado Hasta',
                     workerId: 'Worker Id',
@@ -65,6 +77,12 @@ const messages = {
                 editing: 'Edição Queue',
                 deleting: 'Apagando Queue',
                 showing: 'Detalhes do Job',
+                state:{
+                    DONE:'FEITO',
+                    PENDING:'PENDENTE',
+                    WORKING:'EM PROCESSAMENTO',
+                    ERROR:'ERRO',
+                },
                 labels: {
                     blockedUntil: 'Bloqueado até',
                     workerId: 'Worker Id',

@@ -6,6 +6,13 @@ const softDelete = require('mongoose-softdelete');
 
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+require('mongoose-long')(mongoose);
+
+const {
+  Types: {
+    Long
+  }
+} = mongoose;
 const Schema = mongoose.Schema;
 const FileSchema = new Schema({
   filename: {

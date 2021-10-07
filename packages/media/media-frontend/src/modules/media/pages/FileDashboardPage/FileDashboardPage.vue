@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <h5 class="text-h5">    {{$t('media.file.dashboardTitle')}}</h5>
-        <v-row>
+        <v-row v-if="fileGlobalMetrics">
             <v-col cols="12" sm="4" offset-sm="2">
                 <v-card color="blue" dark>
                     <v-row>

@@ -79,7 +79,9 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
             .findOneAndUpdate({
                 topic: topic,
                 blockedUntil: {$lt: Date.now()},
-                $expr: {$lt: ["$retries", "$maxRetries"]},
+                //Fix MongoDB 3.6+
+                ...(!process.env.MONGO_OLD && {$expr: {$lt: ["$retries", "$maxRetries"]}}),
+                ...(process.env.MONGO_OLD && {"$where":"this.retries > this.maxRetries"}),
                 done: false
             }, {
                 $set: {

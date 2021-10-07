@@ -7,8 +7,6 @@ exports.default = exports.fileUpload = void 0;
 
 var _path = _interopRequireDefault(require("path"));
 
-var _fs = _interopRequireDefault(require("fs"));
-
 var _FileModel = _interopRequireDefault(require("../models/FileModel"));
 
 var _storeFile = _interopRequireDefault(require("./helpers/storeFile"));
@@ -33,53 +31,56 @@ const baseUrl = function () {
 
 const fileUpload = function (user, inputFile) {
   return new Promise(async (resolve, rejects) => {
-    console.log("inputFile", inputFile);
-    const {
-      filename,
-      mimetype,
-      encoding,
-      createReadStream
-    } = await inputFile;
-    let type = mimetype.split("/")[0];
+    try {
+      const {
+        filename,
+        mimetype,
+        encoding,
+        createReadStream
+      } = await inputFile;
+      let type = mimetype.split("/")[0];
 
-    const parseFileName = _path.default.parse(filename);
+      const parseFileName = _path.default.parse(filename);
 
-    const extension = parseFileName.ext;
-    const name = parseFileName.name;
-    const hash = '-' + (0, _randomString.default)(6);
-    const finalFileName = name + hash + extension;
-    const year = new Date().getFullYear().toString();
-    const month = (new Date().getMonth() + 1).toString();
+      const extension = parseFileName.ext;
+      const name = parseFileName.name;
+      const hash = '-' + (0, _randomString.default)(6);
+      const finalFileName = name + hash + extension;
+      const year = new Date().getFullYear().toString();
+      const month = (new Date().getMonth() + 1).toString();
 
-    const relativePath = _path.default.join("media", "files", user.username, year, month, finalFileName);
+      const relativePath = _path.default.join("media", "files", user.username, year, month, finalFileName);
 
-    const absolutePath = _path.default.resolve(relativePath); //Store
+      const absolutePath = _path.default.resolve(relativePath); //Store
 
 
-    let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath);
-    let url = baseUrl() + relativePath;
+      var storeResult = await (0, _storeFile.default)(createReadStream(), relativePath);
+      let url = baseUrl() + relativePath;
 
-    if (storeResult && storeResult.finish) {
-      _FileModel.default.create({
-        filename: finalFileName,
-        mimetype: mimetype,
-        encoding: encoding,
-        type: type,
-        extension: extension,
-        relativePath: relativePath,
-        absolutePath: absolutePath,
-        size: storeResult.bytesWritten,
-        url: url,
-        createdBy: {
-          user: user.id,
-          username: user.username
-        }
-      }, function (err, doc) {
-        if (err) return rejects(err); // saved!
+      if (storeResult && storeResult.finish) {
+        _FileModel.default.create({
+          filename: finalFileName,
+          mimetype: mimetype,
+          encoding: encoding,
+          type: type,
+          extension: extension,
+          relativePath: relativePath,
+          absolutePath: absolutePath,
+          size: storeResult.bytesWritten,
+          url: url,
+          createdBy: {
+            user: user.id,
+            username: user.username
+          }
+        }, function (err, doc) {
+          if (err) return rejects(err); // saved!
 
-        doc.populate('createdBy.user').execPopulate(() => resolve(doc));
-      });
-    } else {
+          doc.populate('createdBy.user').execPopulate(() => resolve(doc));
+        });
+      } else {
+        rejects(new Error("Upload Fail"));
+      }
+    } catch (error) {
       rejects(new Error("Upload Fail"));
     }
   });

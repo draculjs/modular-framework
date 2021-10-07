@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuetify, {
-    VApp, VForm, VTextField, VBtn, VSelect, VCheckbox, VSwitch,
+    VApp, VMain, VForm, VTextField, VBtn, VSelect, VCheckbox, VSwitch,
     VCard, VCardText, VCardTitle, VCardActions, VCardSubtitle,
     VContent, VContainer, VRow, VCol, VSpacer,
     VToolbar, VToolbarItems, VToolbarTitle, VProgressLinear, VMenu, VProgressCircular,
@@ -14,6 +14,7 @@ import i18n from '../i18n'
 Vue.use(Vuetify, {
     components: {
         VApp,
+        VMain,
         VForm,
         VTextField,
         VBtn,

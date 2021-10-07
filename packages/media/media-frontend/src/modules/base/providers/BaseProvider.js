@@ -15,7 +15,11 @@ class BaseProvider {
         })
     }
 
-
+    pingTimeout(){
+        return this.gqlc.query({
+            query: require('./gql/pingTimeout.graphql')
+        })
+    }
 }
 const baseProvider = new BaseProvider()
 baseProvider.setGqlc(apolloClient)
