@@ -83,7 +83,10 @@ type File{
 <h3 id="CreatedBy">CreatedBy</h3>
 
 ```graphql
-
+type CreatedBy{
+  user: User
+  username: String
+}
 
 ``` 
 
@@ -99,7 +102,6 @@ type FilePaginated{
 ### Inputs
 
 ```graphql
-#Tipo usado para editar descripcion y etiquetas de Files
 input FileUpdateInput{
     description: String
     tags: [String]
