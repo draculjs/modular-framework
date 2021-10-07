@@ -2,44 +2,44 @@
 <crud-layout :title="title" :subtitle="subtitle">
 
         <template v-slot:list>
-            <file-list 
+            <file-list
                        ref="list"
                        @update="update"
                        @delete="remove"
                        @show="show"
-            
+
             />
         </template>
-        
+
          <add-button @click="create"></add-button>
-      
+
         <file-create v-if="creating"
                         :open="creating"
-                        v-on:itemCreated="onItemCreated" 
-                        v-on:close="creating=false" 
+                        v-on:itemCreated="onItemCreated"
+                        v-on:close="creating=false"
         />
-        
-        <file-update v-if="updating" 
+
+        <file-update v-if="updating"
                         :open="updating"
-                        :item="itemToEdit" 
-                        v-on:itemUpdated="onItemUpdated" 
-                        v-on:close="updating=false" 
+                        :item="itemToEdit"
+                        v-on:itemUpdated="onItemUpdated"
+                        v-on:close="updating=false"
         />
-          
-        <file-show v-if="showing" 
-                           :open="showing" 
-                           :item="itemToShow"  
-                           v-on:close="showing=false" 
+
+        <file-show v-if="showing"
+                           :open="showing"
+                           :item="itemToShow"
+                           v-on:close="showing=false"
          />
 
-        <file-delete v-if="deleting" 
+        <file-delete v-if="deleting"
                          :open="deleting"
-                         :item="itemToDelete"  
-                         v-on:itemDeleted="onItemDeleted" 
-                         v-on:close="deleting=false" 
+                         :item="itemToDelete"
+                         v-on:itemDeleted="onItemDeleted"
+                         v-on:close="deleting=false"
         />
 
-        <snackbar :message="flash"/>
+        <snackbar v-model="flash"/>
 
 </crud-layout>
 </template>
@@ -49,7 +49,7 @@
     import FileDelete from "../FileDelete";
     import FileShow from "../FileShow";
     import FileList from "../FileList";
-    
+
      import {CrudLayout, AddButton, Snackbar} from "@dracul/common-frontend"
     import FileCreate from "../FileCreate/FileCreate";
 
@@ -58,8 +58,8 @@
         components: {
             FileCreate,
             CrudLayout, AddButton, Snackbar,
-            FileUpdate, 
-            FileDelete, 
+            FileUpdate,
+            FileDelete,
             FileShow,
             FileList
         },
@@ -81,15 +81,15 @@
             //On
             onItemCreated() {
                 this.$refs.list.fetch()
-                this.flash= "common.created"
+                this.flash=  this.$t("common.created")
             },
             onItemUpdated() {
                 this.$refs.list.fetch()
-                this.flash= "common.updated"
+                this.flash= this.$t("common.updated")
             },
             onItemDeleted() {
                 this.$refs.list.fetch()
-                this.flash= "common.deleted"
+                this.flash=  this.$t("common.deleted")
             },
             //Open
             create() {
@@ -108,7 +108,7 @@
                 this.itemToDelete = item
             }
         }
-        
+
     }
 </script>
 

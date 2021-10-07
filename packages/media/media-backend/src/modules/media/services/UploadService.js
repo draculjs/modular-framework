@@ -62,6 +62,7 @@ const fileUpload = function (user, inputFile) {
         });
 
       } else {
+        winston.error("Upload Fail")
         rejects(new Error("Upload Fail"))
       }
 

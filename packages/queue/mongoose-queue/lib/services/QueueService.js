@@ -68,7 +68,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
         }
       }),
       ...(process.env.MONGO_OLD && {
-        "$where": "this.retries > this.maxRetries"
+        "$where": "this.retries < this.maxRetries"
       }),
       done: false
     }, {
