@@ -14,13 +14,14 @@ const baseUrl = function () {
     if (!/\/$/.test(url)) {
         url += "/"
     }
-
+    
     return url
-}
-
-const fileUpload = function (user, inputFile) {
-
+  }
+  
+  const fileUpload = function (user, inputFile) {
+    
     return new Promise(async (resolve, rejects) => {
+      try {
 
         console.log("inputFile",inputFile)
         const {filename, mimetype, encoding, createReadStream} = await inputFile;
@@ -38,10 +39,10 @@ const fileUpload = function (user, inputFile) {
         const absolutePath = path.resolve(relativePath);
 
         //Store
-        let storeResult = await storeFile(createReadStream(), relativePath)
+        var storeResult = await storeFile(createReadStream(), relativePath)
 
         let url = baseUrl() + relativePath
-
+        
         if (storeResult && storeResult.finish) {
 
             file.create({
@@ -60,11 +61,14 @@ const fileUpload = function (user, inputFile) {
                 // saved!
                 doc.populate('createdBy.user').execPopulate(() => (resolve(doc)))
             });
-
+            
         } else {
             rejects(new Error("Upload Fail"))
         }
-
+          
+        } catch (error) {
+            rejects(new Error("Upload Fail"))
+        }
     })
 
 }
