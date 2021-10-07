@@ -81,7 +81,7 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
                 blockedUntil: {$lt: Date.now()},
                 //Fix MongoDB 3.6+
                 ...(!process.env.MONGO_OLD && {$expr: {$lt: ["$retries", "$maxRetries"]}}),
-                ...(process.env.MONGO_OLD && {"$where":"this.retries > this.maxRetries"}),
+                ...(process.env.MONGO_OLD && {"$where":"this.retries < this.maxRetries"}),
                 done: false
             }, {
                 $set: {
