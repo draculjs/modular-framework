@@ -52,7 +52,7 @@ const FileSchema = new Schema({
     required: true
   },
   size: {
-    type: Long,
+    type: Number,
     required: true
   },
   url: {
