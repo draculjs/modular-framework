@@ -17,6 +17,8 @@ var _initCustomization = require("./custom/initCustomization");
 
 var _initOperatorRole = _interopRequireDefault(require("./custom/initOperatorRole"));
 
+var _InitMediaPermissions = _interopRequireDefault(require("../modules/media/services/InitMediaPermissions"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _dotenv.default.config();
@@ -33,6 +35,7 @@ _mongoose.default.set('useCreateIndex', true);
 const initService = async () => {
   await _userBackend.InitService.initPermissions();
   await (0, _customizeBackend.initPermissionsCustomization)();
+  await (0, _InitMediaPermissions.default)();
   await _userBackend.InitService.initAdminRole();
   await _userBackend.InitService.initOperatorRole();
   await _userBackend.InitService.initSupervisorRole();

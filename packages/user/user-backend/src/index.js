@@ -19,8 +19,13 @@ import {
 
 import * as permissions from './permissions'
 
+import rbac from './rbac/index'
 
 export {
+
+    //rbac
+    rbac,
+
     //Graphql
     securityResolvers,
     securityTypes,
