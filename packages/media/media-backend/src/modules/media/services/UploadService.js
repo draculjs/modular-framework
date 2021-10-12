@@ -4,6 +4,7 @@ import file from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
+import FileModel from "../models/FileModel";
 
 const fileUpload = function (user, inputFile) {
 
@@ -31,11 +32,13 @@ const fileUpload = function (user, inputFile) {
       //Store
       let storeResult = await storeFile(createReadStream(), relativePath)
 
+      winston.info("fileUploadAnonymous store result: ", storeResult)
+
       let url = baseUrl() + relativePath
 
       if (storeResult && storeResult.finish) {
 
-        file.create({
+        let doc = new FileModel({
           filename: finalFileName,
           mimetype: mimetype,
           encoding: encoding,
@@ -46,14 +49,13 @@ const fileUpload = function (user, inputFile) {
           size: storeResult.bytesWritten,
           url: url,
           createdBy: { user: user.id, username: user.username }
-        }, function (err, doc) {
-          if (err){
-            winston.error("Upload Fail on file.create",err)
-            return rejects(err);
-          }
-          // saved!
-          doc.populate('createdBy.user').execPopulate(() => (resolve(doc)))
-        });
+        })
+
+        winston.info("fileUploadAnonymous saving file")
+        await doc.save()
+        winston.info("fileUploadAnonymous file saved: " + doc._id)
+
+        doc.populate('createdBy.user').execPopulate(() => (resolve(doc)))
 
       } else {
         winston.error("Upload Fail")
