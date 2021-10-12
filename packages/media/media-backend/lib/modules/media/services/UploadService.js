@@ -15,25 +15,17 @@ var _storeFile = _interopRequireDefault(require("./helpers/storeFile"));
 
 var _randomString = _interopRequireDefault(require("./helpers/randomString"));
 
+var _baseUrl = _interopRequireDefault(require("./helpers/baseUrl"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const baseUrl = function () {
-  let url = process.env.APP_API_URL;
-
-  if (!/^http:\/\//.test(url)) {
-    url = "http://" + baseUrl;
-  }
-
-  if (!/\/$/.test(url)) {
-    url += "/";
-  }
-
-  return url;
-};
 
 const fileUpload = function (user, inputFile) {
   return new Promise(async (resolve, rejects) => {
     try {
+      if (!user) {
+        return rejects(new Error("user is required"));
+      }
+
       const {
         filename,
         mimetype,
@@ -57,7 +49,7 @@ const fileUpload = function (user, inputFile) {
 
 
       let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath);
-      let url = baseUrl() + relativePath;
+      let url = (0, _baseUrl.default)() + relativePath;
 
       if (storeResult && storeResult.finish) {
         _FileModel.default.create({
@@ -75,7 +67,12 @@ const fileUpload = function (user, inputFile) {
             username: user.username
           }
         }, function (err, doc) {
-          if (err) return rejects(err); // saved!
+          if (err) {
+            _loggerBackend.DefaultLogger.error("Upload Fail on file.create", err);
+
+            return rejects(err);
+          } // saved!
+
 
           doc.populate('createdBy.user').execPopulate(() => resolve(doc));
         });

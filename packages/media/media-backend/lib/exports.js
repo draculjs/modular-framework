@@ -51,6 +51,12 @@ Object.defineProperty(exports, "fileUpload", {
     return _UploadService.default;
   }
 });
+Object.defineProperty(exports, "fileUploadAnonymous", {
+  enumerable: true,
+  get: function () {
+    return _UploadAnonymousService.default;
+  }
+});
 Object.defineProperty(exports, "InitMediaPermissions", {
   enumerable: true,
   get: function () {
@@ -66,6 +72,8 @@ var FileService = _interopRequireWildcard(require("./modules/media/services/File
 exports.FileService = FileService;
 
 var _UploadService = _interopRequireDefault(require("./modules/media/services/UploadService"));
+
+var _UploadAnonymousService = _interopRequireDefault(require("./modules/media/services/UploadAnonymousService"));
 
 var _InitMediaPermissions = _interopRequireDefault(require("./modules/media/services/InitMediaPermissions"));
 
