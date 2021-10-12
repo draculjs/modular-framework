@@ -1,3 +1,4 @@
 type Mutation {
     fileUpload(file: Upload!): File!
+    fileUploadAnonymous(file: Upload!): File!
 }

@@ -30,7 +30,7 @@ const fileUploadAnonymous = function (inputFile) {
       let storeResult = await storeFile(createReadStream(), relativePath)
 
       let url = baseUrl() + relativePath
-
+      winston.info("fileUploadAnonymous saving file")
       if (storeResult && storeResult.finish) {
 
         file.create({
@@ -46,20 +46,21 @@ const fileUploadAnonymous = function (inputFile) {
           createdBy: { user: null, username: USERNAME }
         }, function (err, doc) {
           if (err){
-            winston.error("Upload Fail on file.create",err)
+            winston.error("fileUploadAnonymous fail on file.create",err)
             return rejects(err);
           }
           // saved!
-          doc.execPopulate(() => (resolve(doc)))
+          winston.info("fileUploadAnonymous file saved")
+          return resolve(doc)
         });
 
       } else {
-        winston.error("Upload Fail")
+        winston.error("fileUploadAnonymous store fail")
         rejects(new Error("Upload Fail"))
       }
 
     } catch (err) {
-      winston.error('UploadService: ', err)
+      winston.error('fileUploadAnonymous', err)
       rejects(new Error("Upload Fail"))
     }
   })
