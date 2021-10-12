@@ -49,10 +49,13 @@ const fileUpload = function (user, inputFile) {
 
 
       let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath);
+
+      _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: ", storeResult);
+
       let url = (0, _baseUrl.default)() + relativePath;
 
       if (storeResult && storeResult.finish) {
-        _FileModel.default.create({
+        let doc = new _FileModel.default({
           filename: finalFileName,
           mimetype: mimetype,
           encoding: encoding,
@@ -66,16 +69,15 @@ const fileUpload = function (user, inputFile) {
             user: user.id,
             username: user.username
           }
-        }, function (err, doc) {
-          if (err) {
-            _loggerBackend.DefaultLogger.error("Upload Fail on file.create", err);
-
-            return rejects(err);
-          } // saved!
-
-
-          doc.populate('createdBy.user').execPopulate(() => resolve(doc));
         });
+
+        _loggerBackend.DefaultLogger.info("fileUploadAnonymous saving file");
+
+        await doc.save();
+
+        _loggerBackend.DefaultLogger.info("fileUploadAnonymous file saved: " + doc._id);
+
+        doc.populate('createdBy.user').execPopulate(() => resolve(doc));
       } else {
         _loggerBackend.DefaultLogger.error("Upload Fail");
 

@@ -1,10 +1,9 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import path from "path";
-import file from '../models/FileModel'
+import File from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
-import FileModel from "../models/FileModel";
 
 const fileUpload = function (user, inputFile) {
 
@@ -32,13 +31,13 @@ const fileUpload = function (user, inputFile) {
       //Store
       let storeResult = await storeFile(createReadStream(), relativePath)
 
-      winston.info("fileUploadAnonymous store result: ", storeResult)
+      winston.info("fileUploadAnonymous store result: " + storeResult)
 
       let url = baseUrl() + relativePath
 
       if (storeResult && storeResult.finish) {
 
-        let doc = new FileModel({
+        let doc = new File({
           filename: finalFileName,
           mimetype: mimetype,
           encoding: encoding,
