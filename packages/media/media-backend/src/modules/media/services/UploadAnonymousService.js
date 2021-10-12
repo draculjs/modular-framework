@@ -5,14 +5,12 @@ import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
 
-const fileUpload = function (user, inputFile) {
+const fileUploadAnonymous = function (inputFile) {
 
   return new Promise(async (resolve, rejects) => {
     try {
 
-      if(!user){
-        return rejects(new Error("user is required"))
-      }
+      const USERNAME = 'system'
 
       const { filename, mimetype, encoding, createReadStream } = await inputFile;
 
@@ -25,7 +23,7 @@ const fileUpload = function (user, inputFile) {
       const finalFileName = name + hash + extension
       const year = new Date().getFullYear().toString()
       const month = (new Date().getMonth() + 1).toString()
-      const relativePath = path.join("media", "files", user.username, year, month, finalFileName)
+      const relativePath = path.join("media", "files", USERNAME, year, month, finalFileName)
       const absolutePath = path.resolve(relativePath);
 
       //Store
@@ -45,14 +43,14 @@ const fileUpload = function (user, inputFile) {
           absolutePath: absolutePath,
           size: storeResult.bytesWritten,
           url: url,
-          createdBy: { user: user.id, username: user.username }
+          createdBy: { user: null, username: USERNAME }
         }, function (err, doc) {
           if (err){
             winston.error("Upload Fail on file.create",err)
             return rejects(err);
           }
           // saved!
-          doc.populate('createdBy.user').execPopulate(() => (resolve(doc)))
+          doc.execPopulate(() => (resolve(doc)))
         });
 
       } else {
@@ -68,5 +66,5 @@ const fileUpload = function (user, inputFile) {
 
 }
 
-export { fileUpload }
-export default fileUpload
+export { fileUploadAnonymous }
+export default fileUploadAnonymous

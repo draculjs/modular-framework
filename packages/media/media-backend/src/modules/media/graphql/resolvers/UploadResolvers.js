@@ -1,5 +1,6 @@
 
 import {fileUpload } from '../../services/UploadService'
+import fileUploadAnonymous from "../../services/UploadAnonymousService";
 
 import {AuthenticationError, ForbiddenError} from "apollo-server-express";
 
@@ -11,10 +12,15 @@ export default {
 
     Mutation: {
         fileUpload: (_, {file}, {user,rbac}) => {
-            console.log("resolver file:",file)
             if (!user) throw new AuthenticationError("Unauthenticated")
             if(!rbac.isAllowed(user.id, FILE_CREATE)) throw new ForbiddenError("Not Authorized")
             return fileUpload(user,file)
+        },
+        fileUploadAnonymous: (_, {file}) => {
+            if(process.env.MEDIA_UPLOAD_ANONYMOUS === 'enable' || process.env.MEDIA_UPLOAD_ANONYMOUS === 'true'){
+                return fileUploadAnonymous(file)
+            }
+            return Promise.reject("Anonymous upload disable")
         },
     }
 
