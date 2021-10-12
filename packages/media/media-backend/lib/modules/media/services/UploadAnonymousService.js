@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.fileUpload = void 0;
+exports.default = exports.fileUploadAnonymous = void 0;
 
 var _loggerBackend = require("@dracul/logger-backend");
 
@@ -19,13 +19,10 @@ var _baseUrl = _interopRequireDefault(require("./helpers/baseUrl"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fileUpload = function (user, inputFile) {
+const fileUploadAnonymous = function (inputFile) {
   return new Promise(async (resolve, rejects) => {
     try {
-      if (!user) {
-        return rejects(new Error("user is required"));
-      }
-
+      const USERNAME = 'system';
       const {
         filename,
         mimetype,
@@ -43,7 +40,7 @@ const fileUpload = function (user, inputFile) {
       const year = new Date().getFullYear().toString();
       const month = (new Date().getMonth() + 1).toString();
 
-      const relativePath = _path.default.join("media", "files", user.username, year, month, finalFileName);
+      const relativePath = _path.default.join("media", "files", USERNAME, year, month, finalFileName);
 
       const absolutePath = _path.default.resolve(relativePath); //Store
 
@@ -52,9 +49,8 @@ const fileUpload = function (user, inputFile) {
 
       _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: " + storeResult);
 
-      let url = (0, _baseUrl.default)() + relativePath;
-
       if (storeResult && storeResult.finish) {
+        let url = (0, _baseUrl.default)() + relativePath;
         let doc = new _FileModel.default({
           filename: finalFileName,
           mimetype: mimetype,
@@ -66,8 +62,8 @@ const fileUpload = function (user, inputFile) {
           size: storeResult.bytesWritten,
           url: url,
           createdBy: {
-            user: user.id,
-            username: user.username
+            user: null,
+            username: USERNAME
           }
         });
 
@@ -77,20 +73,20 @@ const fileUpload = function (user, inputFile) {
 
         _loggerBackend.DefaultLogger.info("fileUploadAnonymous file saved: " + doc._id);
 
-        doc.populate('createdBy.user').execPopulate(() => resolve(doc));
+        return resolve(doc);
       } else {
-        _loggerBackend.DefaultLogger.error("Upload Fail");
+        _loggerBackend.DefaultLogger.error("fileUploadAnonymous store fail");
 
         rejects(new Error("Upload Fail"));
       }
     } catch (err) {
-      _loggerBackend.DefaultLogger.error('UploadService: ', err);
+      _loggerBackend.DefaultLogger.error('fileUploadAnonymous', err);
 
       rejects(new Error("Upload Fail"));
     }
   });
 };
 
-exports.fileUpload = fileUpload;
-var _default = fileUpload;
+exports.fileUploadAnonymous = fileUploadAnonymous;
+var _default = fileUploadAnonymous;
 exports.default = _default;
