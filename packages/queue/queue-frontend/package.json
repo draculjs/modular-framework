@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-frontend",
-  "version": "1.2.26",
+  "version": "1.2.27",
   "description": "Dracul Vue Queue",
   "main": "src/index.js",
   "scripts": {
