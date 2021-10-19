@@ -1,18 +1,18 @@
 import request from 'supertest'
 import app from '../../../../src/index'
 import mongoHandler from "../../../utils/mongo-handler"
-import {AuthService, UserService,InitService} from "@dracul/user-backend";
+import { AuthService, UserService, InitService } from "@dracul/user-backend";
 import uploadMultiFiles from "../../../utils/uploadMultiFilesSimulator";
-import {fetchFiles} from "../../../../src/modules/media/services/FileService";
+import { fetchFiles } from "../../../../src/modules/media/services/FileService";
 import path from "path";
 import uploadFileSimulator from "../../../utils/uploadFileSimulator";
 import fileUpload from "../../../../src/modules/media/services/UploadService";
 
-describe("media routes",  () => {
+describe("media routes", () => {
 
     beforeAll(async () => {
         await mongoHandler.connect()
-        await InitService.initPermissions(['FILE_SHOW', 'FILE_CREATE', 'FILE_UPDATE'])
+        await InitService.initPermissions(['FILE_SHOW_ALL', 'FILE_CREATE_ALL', 'FILE_UPDATE_ALL'])
         await InitService.initAdminRole()
         await InitService.initRootUser()
     })
@@ -32,7 +32,7 @@ describe("media routes",  () => {
         it("get all files OK", async (done) => {
 
             let user = await UserService.findUserByUsername("root")
-            let {token} = await AuthService.apiKey(user._id)
+            let { token } = await AuthService.apiKey(user._id)
 
             let pageNumber = 1
             let itemsPerPage = 6
@@ -42,8 +42,8 @@ describe("media routes",  () => {
 
             const res = await request(app)
                 .get("/api/file")
-                .set('Authorization','Bearer '+token)
-                .query({pageNumber,itemsPerPage,search,orderBy,orderDesc})
+                .set('Authorization', 'Bearer ' + token)
+                .query({ pageNumber, itemsPerPage, search, orderBy, orderDesc })
 
             expect(res.type).toEqual("application/json")
             expect(res.body).not.toBeNull()
@@ -59,17 +59,17 @@ describe("media routes",  () => {
 
         });
 
-        it("get 5 items per page when itemsPerPage not given" , async (done) => {
+        it("get 5 items per page when itemsPerPage not given", async (done) => {
 
             let user = await UserService.findUserByUsername("root")
-            let {token} = await AuthService.apiKey(user._id)
+            let { token } = await AuthService.apiKey(user._id)
 
             let pageNumber = 1
 
             const res = await request(app)
                 .get("/api/file")
-                .set('Authorization','Bearer '+token)
-                .query({pageNumber})
+                .set('Authorization', 'Bearer ' + token)
+                .query({ pageNumber })
 
             expect(res.type).toEqual("application/json")
             expect(res.body).not.toBeNull()
@@ -79,14 +79,14 @@ describe("media routes",  () => {
             done();
         })
 
-        it("get 5 items, one page, when not receive any parameters",  async(done) => {
+        it("get 5 items, one page, when not receive any parameters", async (done) => {
 
             let user = await UserService.findUserByUsername("root")
-            let {token} = await AuthService.apiKey(user._id)
+            let { token } = await AuthService.apiKey(user._id)
 
             const res = await request(app)
                 .get("/api/file")
-                .set('Authorization','Bearer '+token)
+                .set('Authorization', 'Bearer ' + token)
 
             expect(res.type).toEqual("application/json")
             expect(res.body).toHaveProperty("items")
@@ -109,14 +109,14 @@ describe("media routes",  () => {
             expect(res.status).toBe(401);
             expect(res.body).not.toBeNull();
             expect(res.body).toHaveProperty("message")
-            expect(res.body).toEqual({"message": "Not Authorized"})
+            expect(res.body).toEqual({ "message": "Not Authorized" })
             done();
 
         })
 
     })
 
-    describe("GET /api/file/:id",  () => {
+    describe("GET /api/file/:id", () => {
 
         beforeAll(async () => {
             let user = await UserService.findUserByUsername("root")
@@ -126,14 +126,14 @@ describe("media routes",  () => {
         it("get a file by id OK", async (done) => {
 
             let user = await UserService.findUserByUsername("root")
-            let {token} = await AuthService.apiKey(user._id)
+            let { token } = await AuthService.apiKey(user._id)
 
             let files = await fetchFiles()
             let id = files[0]._id
 
             const res = await request(app)
-                .get("/api/file/"+id)
-                .set('Authorization','Bearer '+token)
+                .get("/api/file/" + id)
+                .set('Authorization', 'Bearer ' + token)
 
             expect(res.type).toEqual("application/json")
             expect(res.body).not.toBeNull()
@@ -147,11 +147,11 @@ describe("media routes",  () => {
             let id = "sdfsdfsde454"
 
             let user = await UserService.findUserByUsername("root")
-            let {token} = await AuthService.apiKey(user._id)
+            let { token } = await AuthService.apiKey(user._id)
 
             const res = await request(app)
-                .get("/api/file/"+id)
-                .set('Authorization','Bearer '+token)
+                .get("/api/file/" + id)
+                .set('Authorization', 'Bearer ' + token)
 
             expect(res.type).toEqual("application/json")
             expect(res.status).toBe(200);
@@ -164,13 +164,13 @@ describe("media routes",  () => {
             let id = "asdasdasr45"
 
             const res = await request(app)
-                .get("/api/file/"+id)
+                .get("/api/file/" + id)
 
             expect(res.type).toEqual("application/json")
             expect(res.status).toBe(401);
             expect(res.body).not.toBeNull();
             expect(res.body).toHaveProperty("message")
-            expect(res.body).toEqual({"message": "Not Authorized"})
+            expect(res.body).toEqual({ "message": "Not Authorized" })
             done();
         })
 
@@ -181,14 +181,14 @@ describe("media routes",  () => {
         it("file upload successfully", async (done) => {
 
             let user = await UserService.findUserByUsername("root")
-            let {token} = await AuthService.apiKey(user._id)
+            let { token } = await AuthService.apiKey(user._id)
 
-            let filePath = path.join(__dirname,"../../../assets/imageone.png")
+            let filePath = path.join(__dirname, "../../../assets/imageone.png")
 
             const res = await request(app)
                 .post("/api/file")
-                .attach("file",filePath)
-                .set('Authorization','Bearer '+token)
+                .attach("file", filePath)
+                .set('Authorization', 'Bearer ' + token)
 
             expect(res.type).toEqual("application/json")
             expect(res.status).toBe(201);
@@ -225,7 +225,7 @@ describe("media routes",  () => {
             expect(res.status).toBe(401);
             expect(res.body).not.toBeNull();
             expect(res.body).toHaveProperty("message")
-            expect(res.body).toEqual({"message": "Not Authorized"})
+            expect(res.body).toEqual({ "message": "Not Authorized" })
             done();
         })
 

@@ -1,6 +1,8 @@
 
-export const FILE_SHOW = "FILE_SHOW"
-export const FILE_UPDATE = "FILE_UPDATE"
+export const FILE_SHOW_ALL = "FILE_SHOW_ALL"
+export const FILE_SHOW_OWN = "FILE_SHOW_OWN"
+export const FILE_UPDATE_ALL = "FILE_UPDATE_ALL"
+export const FILE_UPDATE_OWN = "FILE_UPDATE_OWN"
 export const FILE_CREATE = "FILE_CREATE"
-export const FILE_DELETE = "FILE_DELETE"
-    
+export const FILE_DELETE_ALL = "FILE_DELETE_ALL"
+export const FILE_DELETE_OWN = "FILE_DELETE_OWN"

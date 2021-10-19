@@ -20,6 +20,7 @@ const init = async () => {
     await initMediaPermissions()
 
     await InitService.initAdminRole()
+    await updateAdminRole()
     await InitService.initRoles()
     await InitService.initRootUser()
     await initCustomization()
