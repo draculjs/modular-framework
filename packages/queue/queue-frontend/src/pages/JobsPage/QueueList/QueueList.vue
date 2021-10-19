@@ -136,7 +136,7 @@ export default {
       return (Array.isArray(this.orderDesc)) ? this.orderDesc[0] : this.orderDesc
     },
     canDelete() {
-      return this.hasPermission('QUEUE_DELETE')
+      return this.$store.getters.hasPermission('QUEUE_DELETE')
     }
   },
   created() {
