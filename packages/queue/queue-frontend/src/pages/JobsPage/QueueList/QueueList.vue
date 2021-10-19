@@ -80,7 +80,7 @@
             <v-icon small>preview</v-icon>
           </v-btn>
 
-          <delete-button @click="$emit('delete', item)"/>
+          <delete-button v-if="canDelete" @click="$emit('delete', item)"/>
         </template>
 
       </v-data-table>
@@ -134,6 +134,9 @@ export default {
     },
     getOrderDesc() {
       return (Array.isArray(this.orderDesc)) ? this.orderDesc[0] : this.orderDesc
+    },
+    canDelete() {
+      return this.hasPermission('QUEUE_DELETE')
     }
   },
   created() {
