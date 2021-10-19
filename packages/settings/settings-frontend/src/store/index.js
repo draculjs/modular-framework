@@ -15,16 +15,31 @@ export default {
             }
             return null
         },
-        isSettingsReady(state){
+        getSettingValue: (state) => (key) => {
+            if (key) {
+                let item = state.settings.find(s => s.key === key)
+                if (item) {
+                    return item.value
+                }
+            }
+            return null
+        },
+        isSettingsReady(state) {
             return state.settingsReady
         }
     },
     actions: {
-        loadSettings({commit}){
-            SettingsProvider.fetchSettings().then(r => {
-                commit('setSettings',r.data.settingsFetch)
-                commit('setSettingsReady')
+        loadSettings({commit}) {
+            return new Promise((resolve, reject) => {
+                SettingsProvider.fetchSettings()
+                    .then(r => {
+                        commit('setSettings', r.data.settingsFetch)
+                        commit('setSettingsReady')
+                        resolve(r.data.settingsFetch)
+                    })
+                    .catch(e => reject(e))
             })
+
         }
     },
     mutations: {
