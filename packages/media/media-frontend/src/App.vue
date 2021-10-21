@@ -29,7 +29,9 @@ import {mapGetters} from 'vuex'
 
 export default {
   name: 'App',
-  components: {Layout, DashboardButton, AppBarUserMenu, LogoToolbar, TitleToolbar,ErrorSnackbar},
+  components: {
+    Layout, DashboardButton, AppBarUserMenu, LogoToolbar, TitleToolbar, ErrorSnackbar
+  },
   data() {
     return {
       menu: menuConfig

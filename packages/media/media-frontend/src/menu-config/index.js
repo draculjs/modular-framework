@@ -8,15 +8,23 @@ export default [
         panel: false
     },
     {
-        icon: 'description',
+        icon: 'file_present',
         text: i18n.t('media.file.title'),
         link: {name: "FileManagementPage"},
         panel: false,
+        requiresAuth: true,
     },
     {
         icon: 'dashboard',
         text: i18n.t('media.file.dashboardTitle'),
         link: {name: "FileDashboardPage"},
+        panel: false,
+        permission: "FILE_SHOW_ALL"
+    },
+    {
+        icon: 'description',
+        text: i18n.t('menu.docs'),
+        link: {name: "DocsPage"},
         panel: false,
     },
     {
@@ -62,12 +70,6 @@ export default [
             },
 
         ]
-    },
-    {
-        icon: 'perm_phone_msg',
-        text: i18n.t('base.about'),
-        link: {name: "about"},
-        panel: false,
     },
 
 
