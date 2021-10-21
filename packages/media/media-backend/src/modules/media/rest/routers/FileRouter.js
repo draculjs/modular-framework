@@ -23,11 +23,11 @@ router.get('/file/:id', function (req, res) {
 
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
-    let fileShowType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
+    let permissionType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
 
     const { id } = req.params
 
-    findFile(id, fileShowType, req.user.id).then(file => {
+    findFile(id, permissionType, req.user.id).then(file => {
         if (file) {
             res.status(200).json(file);
         } else {
@@ -42,11 +42,11 @@ router.get('/file', function (req, res) {
 
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
-    let fileShowType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
+    let permissionType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
 
     const { pageNumber, itemsPerPage, search, orderBy, orderDesc } = req.query
 
-    paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc, fileShowType, req.user.id).then(result => {
+    paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, req.user.id).then(result => {
         if (result) {
             res.status(200).json(result);
         } else {
