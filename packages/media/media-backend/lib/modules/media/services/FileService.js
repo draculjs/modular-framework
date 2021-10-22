@@ -9,13 +9,16 @@ var _FileModel = _interopRequireDefault(require("./../models/FileModel"));
 
 var _apolloServerExpress = require("apollo-server-express");
 
+var _File = require("../../media/permissions/File");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const findFile = async function (id) {
+const findFile = async function (id, permissionType = null, userId = null) {
   if (id) {
     return new Promise((resolve, reject) => {
       _FileModel.default.findOne({
-        _id: id
+        _id: id,
+        ...filterByFileOwner(permissionType, userId)
       }).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
     });
   } else {
@@ -35,7 +38,7 @@ const fetchFiles = async function () {
 
 exports.fetchFiles = fetchFiles;
 
-const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
+const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false, permissionType = null, userId = null) {
   function qs(search) {
     let qs = {};
 
@@ -63,7 +66,8 @@ const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null,
 
   let query = {
     deleted: false,
-    ...qs(search)
+    ...qs(search),
+    ...filterByFileOwner(permissionType, userId)
   };
   let populate = ['createdBy.user'];
   let sort = getSort(orderBy, orderDesc);
@@ -89,10 +93,11 @@ exports.paginateFiles = paginateFiles;
 const updateFile = async function (authUser, id, {
   description,
   tags
-}) {
+}, permissionType, userId) {
   return new Promise((resolve, rejects) => {
     _FileModel.default.findOneAndUpdate({
-      _id: id
+      _id: id,
+      ...filterByFileOwner(permissionType, userId)
     }, {
       description,
       tags
@@ -111,24 +116,52 @@ const updateFile = async function (authUser, id, {
         rejects(error);
       }
 
-      doc.populate('createdBy.user').execPopulate(() => resolve(doc));
+      if (doc) {
+        doc.populate('createdBy.user').execPopulate(() => resolve(doc));
+      } else {
+        rejects('File not found');
+      }
     });
   });
 };
 
 exports.updateFile = updateFile;
 
-const deleteFile = function (id) {
+const deleteFile = function (id, permissionType, userId) {
   return new Promise((resolve, rejects) => {
-    findFile(id).then(doc => {
-      doc.softdelete(function (err) {
-        err ? rejects(err) : resolve({
-          id: id,
-          success: true
+    findFile(id, permissionType, userId).then(doc => {
+      if (doc) {
+        doc.softdelete(function (err) {
+          err ? rejects(err) : resolve({
+            id: id,
+            success: true
+          });
         });
-      });
+      } else {
+        rejects('File not found');
+      }
     });
   });
 };
 
 exports.deleteFile = deleteFile;
+
+function filterByFileOwner(permissionType, userId) {
+  let query;
+
+  switch (permissionType) {
+    // Si el user es dueño del archivo (o es admin), puede encontrarlo, actualizarlo o borrarlo
+    case _File.FILE_SHOW_OWN:
+    case _File.FILE_UPDATE_OWN:
+    case _File.FILE_DELETE_OWN:
+      query = {
+        'createdBy.user': userId
+      };
+      break;
+
+    default:
+      break;
+  }
+
+  return query;
+}

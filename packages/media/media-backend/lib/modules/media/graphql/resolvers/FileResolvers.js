@@ -20,8 +20,9 @@ var _default = {
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
-      if (!rbac.isAllowed(user.id, _File.FILE_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _FileService.findFile)(id);
+      if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL) && !rbac.isAllowed(user.id, _File.FILE_SHOW_OWN)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      let permissionType = rbac.isAllowed(user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : rbac.isAllowed(user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null;
+      return (0, _FileService.findFile)(id, permissionType, user.id);
     },
     filePaginate: (_, {
       pageNumber,
@@ -34,8 +35,9 @@ var _default = {
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
-      if (!rbac.isAllowed(user.id, _File.FILE_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc);
+      if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL) && !rbac.isAllowed(user.id, _File.FILE_SHOW_OWN)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      let permissionType = rbac.isAllowed(user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : rbac.isAllowed(user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null;
+      return (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, user.id);
     }
   },
   Mutation: {
@@ -47,8 +49,9 @@ var _default = {
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
-      if (!rbac.isAllowed(user.id, _File.FILE_UPDATE)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _FileService.updateFile)(user, id, input);
+      if (!rbac.isAllowed(user.id, _File.FILE_UPDATE_ALL) && !rbac.isAllowed(user.id, _File.FILE_UPDATE_OWN)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      let permissionType = rbac.isAllowed(user.id, _File.FILE_UPDATE_ALL) ? _File.FILE_UPDATE_ALL : rbac.isAllowed(user.id, _File.FILE_UPDATE_OWN) ? _File.FILE_UPDATE_OWN : null;
+      return (0, _FileService.updateFile)(user, id, input, permissionType, user.id);
     },
     fileDelete: (_, {
       id
@@ -57,8 +60,9 @@ var _default = {
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
-      if (!rbac.isAllowed(user.id, _File.FILE_DELETE)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _FileService.deleteFile)(id);
+      if (!rbac.isAllowed(user.id, _File.FILE_DELETE_ALL) && !rbac.isAllowed(user.id, _File.FILE_DELETE_OWN)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      let permissionType = rbac.isAllowed(user.id, _File.FILE_DELETE_ALL) ? _File.FILE_DELETE_ALL : rbac.isAllowed(user.id, _File.FILE_DELETE_OWN) ? _File.FILE_DELETE_OWN : null;
+      return (0, _FileService.deleteFile)(id, permissionType, user.id);
     }
   }
 };

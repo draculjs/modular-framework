@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   draculMedia:
-    image: sndregistry.sondeosglobal.com/dracul/dracul-media:1.0.1
+    image: sndregistry.sondeosglobal.com/dracul/dracul-media:1.0.2
     volumes:
       - ./media:/deploy/dist/media
       - ./logs:/deploy/dist/logs
