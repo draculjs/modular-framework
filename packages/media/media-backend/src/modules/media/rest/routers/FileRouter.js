@@ -1,52 +1,65 @@
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import { AuthenticationError, ForbiddenError } from "apollo-server-express";
 
 import express from 'express';
-var router = express.Router();
+
+const router = express.Router();
 const multer = require('multer')
 const upload = multer()
 const streamifier = require('streamifier');
-import {findFile, paginateFiles} from "../../services/FileService";
-import {fileUpload} from "../../services/UploadService";
-import {FILE_CREATE, FILE_SHOW} from "../../permissions/File";
+import { findFile, paginateFiles } from "../../services/FileService";
+import { fileUpload } from "../../services/UploadService";
+import {
+    FILE_SHOW_ALL,
+    FILE_SHOW_OWN,
+    FILE_UPDATE_ALL,
+    FILE_UPDATE_OWN,
+    FILE_DELETE_ALL,
+    FILE_DELETE_OWN,
+    FILE_CREATE
+} from "../../permissions/File";
 
 
 router.get('/file/:id', function (req, res) {
 
-    if (!req.user) res.status(403).send("Not Authorized")
-    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW)) res.status(403).send("Not Authorized")
+    if (!req.user) res.status(401).json({ message: "Not Authorized" })
+    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
+    let permissionType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
 
-    let id = req.params.id
-    findFile(id).then(file => {
-        res.json(file);
+    const { id } = req.params
+
+    findFile(id, permissionType, req.user.id).then(file => {
+        if (file) {
+            res.status(200).json(file);
+        } else {
+            res.status(404).json({ message: 'File not found' })
+        }
     }).catch(err => {
-        res.status(500).send(err.message)
+        res.status(500).json({ message: err.message })
     })
 });
 
 router.get('/file', function (req, res) {
 
-    if (!req.user) res.status(403).send("Not Authorized")
-    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW)) res.status(403).send("Not Authorized")
+    if (!req.user) res.status(401).json({ message: "Not Authorized" })
+    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
+    let permissionType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
 
+    const { pageNumber, itemsPerPage, search, orderBy, orderDesc } = req.query
 
-    let pageNumber = req.query.pageNumber
-    let itemsPerPage = req.query.itemsPerPage
-    let search = req.query.search
-    let orderBy = req.query.orderBy
-    let orderDesc = req.query.orderDesc
-    paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc).then(result => {
-        res.json(result);
+    paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, req.user.id).then(result => {
+        if (result) {
+            res.status(200).json(result);
+        } else {
+            res.status(404).json({ message: 'File not found' })
+        }
     }).catch(err => {
-        res.status(500).send(err.message)
+        res.status(500).json({ message: err.message })
     })
 });
 
-
 router.post('/file', upload.single('file'), function (req, res) {
-    if (!req.user) res.status(403).send("Not Authorized")
-    if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).send("Not Authorized")
-
-
+    if (!req.user) res.status(401).json({ message: "Not Authorized" })
+    if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
 
     let file = {
         filename: req.file.originalname,
@@ -56,12 +69,12 @@ router.post('/file', upload.single('file'), function (req, res) {
     }
 
     fileUpload(req.user, file).then(result => {
-        res.json(result)
+        res.status(201).json(result)
     }).catch(err => {
-        res.status(500).send(err.message)
+        res.status(500).json({ message: err.message })
     })
 
 })
 
-export {router}
+export { router }
 export default router

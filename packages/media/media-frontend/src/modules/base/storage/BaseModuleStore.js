@@ -5,9 +5,14 @@ export default {
         title: "App Name",
         serverStatus: false,
         serverTime: null,
-        serverError: null
+        serverError: null,
+        graphqlErrors: [],
+        graphqlErrorsCounter: 0
     },
     getters: {
+        getGraphqlErrors: (state) => {
+            return state.graphqlErrors
+        },
         getTitle: (state) => {
             return state.title
         },
@@ -31,6 +36,17 @@ export default {
         }
     },
     mutations: {
+        addGraphqlError(state,error){
+            error.key = state.graphqlErrorsCounter
+            state.graphqlErrors.push(error)
+            state.graphqlErrorsCounter++
+        },
+        removeGraphqlError(state){
+            state.graphqlErrors.shift()
+        },
+        clearGraphqlError(state){
+            state.graphqlErrors = []
+        },
         setServerStatus(state, status) {
             state.serverStatus = status
         },

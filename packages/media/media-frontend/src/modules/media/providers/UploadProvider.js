@@ -16,7 +16,12 @@ class UploadProvider {
         })
     }
 
-
+    uploadFileAnonymous(file) {
+        return this.gqlc.mutate({
+            mutation: require('./gql/fileUploadAnonymous.graphql'),
+            variables: {file: file}
+        })
+    }
 }
 
 const uploadProvider =  new UploadProvider()

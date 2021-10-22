@@ -1,40 +1,44 @@
 
-import { createFile, updateFile, deleteFile,  findFile, fetchFiles, paginateFiles} from '../../services/FileService'
+import { createFile, updateFile, deleteFile, findFile, fetchFiles, paginateFiles } from '../../services/FileService'
 
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import { AuthenticationError, ForbiddenError } from "apollo-server-express";
 
 import {
-
-    FILE_SHOW,
-    FILE_UPDATE,
-    FILE_CREATE,
-    FILE_DELETE
+    FILE_SHOW_ALL,
+    FILE_SHOW_OWN,
+    FILE_UPDATE_ALL,
+    FILE_UPDATE_OWN,
+    FILE_DELETE_ALL,
+    FILE_DELETE_OWN
 } from "../../permissions/File";
 
 export default {
     Query: {
-        fileFind: (_, {id}, {user,rbac}) => {
+        fileFind: (_, { id }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
-            if(!rbac.isAllowed(user.id, FILE_SHOW)) throw new ForbiddenError("Not Authorized")
-            return findFile(id)
+            if (!rbac.isAllowed(user.id, FILE_SHOW_ALL) && !rbac.isAllowed(user.id, FILE_SHOW_OWN)) throw new ForbiddenError("Not Authorized")
+            let permissionType = (rbac.isAllowed(user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (rbac.isAllowed(user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
+            return findFile(id, permissionType, user.id)
         },
-        filePaginate: (_, {pageNumber, itemsPerPage, search, orderBy, orderDesc}, {user,rbac}) => {
+        filePaginate: (_, { pageNumber, itemsPerPage, search, orderBy, orderDesc }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
-            if(!rbac.isAllowed(user.id, FILE_SHOW)) throw new ForbiddenError("Not Authorized")
-            return paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc)
+            if (!rbac.isAllowed(user.id, FILE_SHOW_ALL) && !rbac.isAllowed(user.id, FILE_SHOW_OWN)) throw new ForbiddenError("Not Authorized")
+            let permissionType = (rbac.isAllowed(user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (rbac.isAllowed(user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
+            return paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, user.id)
         },
-
     },
     Mutation: {
-        fileUpdate: (_, {id, input}, {user,rbac}) => {
+        fileUpdate: (_, { id, input }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
-            if(!rbac.isAllowed(user.id, FILE_UPDATE)) throw new ForbiddenError("Not Authorized")
-            return updateFile(user, id, input)
+            if (!rbac.isAllowed(user.id, FILE_UPDATE_ALL) && !rbac.isAllowed(user.id, FILE_UPDATE_OWN)) throw new ForbiddenError("Not Authorized")
+            let permissionType = (rbac.isAllowed(user.id, FILE_UPDATE_ALL)) ? FILE_UPDATE_ALL : (rbac.isAllowed(user.id, FILE_UPDATE_OWN)) ? FILE_UPDATE_OWN : null;
+            return updateFile(user, id, input, permissionType, user.id)
         },
-        fileDelete: (_, {id}, {user,rbac}) => {
+        fileDelete: (_, { id }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
-            if(!rbac.isAllowed(user.id, FILE_DELETE)) throw new ForbiddenError("Not Authorized")
-            return deleteFile(id)
+            if (!rbac.isAllowed(user.id, FILE_DELETE_ALL) && !rbac.isAllowed(user.id, FILE_DELETE_OWN)) throw new ForbiddenError("Not Authorized")
+            let permissionType = (rbac.isAllowed(user.id, FILE_DELETE_ALL)) ? FILE_DELETE_ALL : (rbac.isAllowed(user.id, FILE_DELETE_OWN)) ? FILE_DELETE_OWN : null;
+            return deleteFile(id, permissionType, user.id)
         },
     }
 

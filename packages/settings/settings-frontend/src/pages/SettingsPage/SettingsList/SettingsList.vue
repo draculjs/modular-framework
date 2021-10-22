@@ -65,7 +65,7 @@ export default {
       loading: false,
       orderBy: null,
       orderDesc: false,
-      itemsPerPage: 5,
+      itemsPerPage: 10,
       pageNumber: 1,
       search: ''
     }

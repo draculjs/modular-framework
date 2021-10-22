@@ -30,11 +30,13 @@ const data = {
     groups: []
 }
 
+
+
 export const adminChangePassword = () => ({
     components: {AdminChangePassword},
     props: {
         data: {default: data}
     },
-    template: '<AdminChangePassword :user="data" />',
+    template: '<AdminChangePassword :user="data" :open="true" />',
     i18n, router, store
 })

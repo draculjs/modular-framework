@@ -15,10 +15,46 @@ Object.defineProperty(exports, "types", {
     return _graphql.types;
   }
 });
+Object.defineProperty(exports, "findFile", {
+  enumerable: true,
+  get: function () {
+    return FileService.findFile;
+  }
+});
+Object.defineProperty(exports, "fetchFiles", {
+  enumerable: true,
+  get: function () {
+    return FileService.fetchFiles;
+  }
+});
+Object.defineProperty(exports, "deleteFile", {
+  enumerable: true,
+  get: function () {
+    return FileService.deleteFile;
+  }
+});
+Object.defineProperty(exports, "paginateFiles", {
+  enumerable: true,
+  get: function () {
+    return FileService.paginateFiles;
+  }
+});
+Object.defineProperty(exports, "updateFile", {
+  enumerable: true,
+  get: function () {
+    return FileService.updateFile;
+  }
+});
 Object.defineProperty(exports, "fileUpload", {
   enumerable: true,
   get: function () {
     return _UploadService.default;
+  }
+});
+Object.defineProperty(exports, "fileUploadAnonymous", {
+  enumerable: true,
+  get: function () {
+    return _UploadAnonymousService.default;
   }
 });
 Object.defineProperty(exports, "InitMediaPermissions", {
@@ -36,6 +72,8 @@ var FileService = _interopRequireWildcard(require("./modules/media/services/File
 exports.FileService = FileService;
 
 var _UploadService = _interopRequireDefault(require("./modules/media/services/UploadService"));
+
+var _UploadAnonymousService = _interopRequireDefault(require("./modules/media/services/UploadAnonymousService"));
 
 var _InitMediaPermissions = _interopRequireDefault(require("./modules/media/services/InitMediaPermissions"));
 

@@ -13,7 +13,15 @@
         <source :src="getSrc" :type="file.mimetype">
       </video>
 
-      <a v-if="!isImage && !isAudio && !isVideo" target="_blank" :href="getSrc">
+      <object v-if="isPdf"
+              :data="getSrc"
+              type="application/pdf" width="300"
+              height="200"
+      >
+        <a :href="getSrc" target="_blank" class="text-uppercase"> {{$t('media.file.download')}}</a>
+      </object>
+
+      <a v-if="!isImage && !isAudio && !isVideo && !isPdf" target="_blank" :href="getSrc" class="text-uppercase">
             {{$t('media.file.download')}}
       </a>
     </v-col>
@@ -80,6 +88,9 @@ export default {
     },
     isVideo() {
       return (this.file && this.file.type === 'video') ? true : false
+    },
+    isPdf() {
+      return (this.file && this.file.mimetype === 'application/pdf') ? true : false
     },
     getSrc() {
       if (this.file && this.file.url) {

@@ -8,14 +8,30 @@ import {onError} from "apollo-link-error";
 
 const errorLink = onError(({graphQLErrors, networkError}) => {
     if (graphQLErrors)
-        graphQLErrors.map(({message, locations, path}) =>
-            console.error(
-                `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-            ),
+        graphQLErrors.forEach(
+            (graphQlError,index) => {
+
+                const { message, locations, path, extensions} = graphQlError
+
+                //Show error on console
+                console.error(`[GraphQL error]: Message: ${message}, Code: ${extensions.code}, Path: ${path}, Location ${locations}`)
+
+                //Add error for errorSnackbar
+                setTimeout(() => store.commit('addGraphqlError',graphQlError),100* (index+1) )
+
+                //Handle UNAUTHENTICATED errors
+                if(extensions.code === 'UNAUTHENTICATED'){
+                    store.dispatch('checkAuth')
+                }
+
+            }
         );
 
     if (networkError) {
-        console.error(`[Network error]: ${networkError}`);
+        console.error(`[Network error]: ${networkError}, message: ${networkError.message}`);
+        //Add error for errorSnackbar
+        setTimeout(() => store.commit('addGraphqlError',networkError),10 )
+
     }
 });
 

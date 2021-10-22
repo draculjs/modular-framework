@@ -8,7 +8,7 @@
       <v-list>
         <show-field :value="item.topic" :label="$t('queue.queue.labels.topic')" icon="topic"/>
         <show-field :value="item.state" :label="$t('queue.queue.labels.state')" icon="fact_check"/>
-        <show-field :value="item.done" :label="$t('queue.queue.labels.done')" icon="done"/>
+        <show-field :value="String(item.done)" :label="$t('queue.queue.labels.done')" icon="done"/>
       </v-list>
     </v-col>
 

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/mongoose-queue",
-  "version": "1.2.4",
+  "version": "1.2.15",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -12,7 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@dracul/logger-backend": "^1.0.105",
+    "apollo-server-express": "^3.3.0",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.5.3",
     "mongoose": "^5.9.19",
     "mongoose-paginate-v2": "^1.4.2",
     "underscore": "^1.11.0"
@@ -28,5 +31,5 @@
     "mongodb-memory-server": "^6.9.2",
     "sinon": "^9.2.1"
   },
-  "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"
+  "gitHead": "80d422e8ae9934dbb34fefb7efddacf21200e548"
 }

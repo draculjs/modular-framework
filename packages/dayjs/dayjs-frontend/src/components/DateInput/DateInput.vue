@@ -15,6 +15,7 @@
           prepend-icon="date_range"
           readonly
           v-on="on"
+          :rules="rules"
           :error="error"
           :error-messages="errorMessages"
           color="secondary"
@@ -35,7 +36,8 @@ export default {
     closeOnContentClick: {type: Boolean, default: false},
     error: {type: Boolean},
     errorMessages: {type:Array},
-    label: { type: String}
+    label: { type: String},
+    rules: {type: Array, default: ()=>[]}
   },
   mixins: [DayjsMixin],
   computed: {
@@ -43,7 +45,7 @@ export default {
       get() {
         return this.getDateFormat(this.value)
       },
-      set(val) {this.$emit('input', val)}
+      set(val) {this.$emit('input', this.convertStringDateToDayjs(val))}
     }
   },
   data(){
