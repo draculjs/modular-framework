@@ -5,7 +5,7 @@
         </v-list-item-icon>
 
         <v-list-item-content class="mr-0">
-            <v-list-item-title>{{value}}</v-list-item-title>
+            <v-list-item-title v-html="value"></v-list-item-title>
             <v-list-item-subtitle>{{label}}</v-list-item-subtitle>
         </v-list-item-content>
     </v-list-item>
