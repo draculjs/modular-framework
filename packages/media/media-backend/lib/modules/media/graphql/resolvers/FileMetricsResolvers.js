@@ -18,7 +18,7 @@ var _default = {
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
-      if (!rbac.isAllowed(user.id, _File.FILE_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       return (0, _FileMetricsService.fileUserMetrics)();
     },
     fileGlobalMetrics: (_, {}, {
@@ -26,7 +26,7 @@ var _default = {
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
-      if (!rbac.isAllowed(user.id, _File.FILE_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       return (0, _FileMetricsService.fileGlobalMetrics)();
     }
   }

@@ -31,14 +31,21 @@ router.get('/file/:id', function (req, res) {
   if (!req.user) res.status(401).json({
     message: "Not Authorized"
   });
-  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) res.status(403).json({
+  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN)) res.status(403).json({
     message: "Not Authorized"
   });
+  let permissionType = req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null;
   const {
     id
   } = req.params;
-  (0, _FileService.findFile)(id).then(file => {
-    res.status(200).json(file);
+  (0, _FileService.findFile)(id, permissionType, req.user.id).then(file => {
+    if (file) {
+      res.status(200).json(file);
+    } else {
+      res.status(404).json({
+        message: 'File not found'
+      });
+    }
   }).catch(err => {
     res.status(500).json({
       message: err.message
@@ -49,9 +56,10 @@ router.get('/file', function (req, res) {
   if (!req.user) res.status(401).json({
     message: "Not Authorized"
   });
-  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW)) res.status(403).json({
+  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN)) res.status(403).json({
     message: "Not Authorized"
   });
+  let permissionType = req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null;
   const {
     pageNumber,
     itemsPerPage,
@@ -59,8 +67,14 @@ router.get('/file', function (req, res) {
     orderBy,
     orderDesc
   } = req.query;
-  (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc).then(result => {
-    res.status(200).json(result);
+  (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, req.user.id).then(result => {
+    if (result) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).json({
+        message: 'File not found'
+      });
+    }
   }).catch(err => {
     res.status(500).json({
       message: err.message

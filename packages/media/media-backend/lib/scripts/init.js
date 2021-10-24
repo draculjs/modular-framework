@@ -28,6 +28,7 @@ const init = async () => {
   await (0, _customizeBackend.initPermissionsCustomization)();
   await (0, _InitMediaPermissions.initMediaPermissions)();
   await _userBackend.InitService.initAdminRole();
+  await updateAdminRole();
   await _userBackend.InitService.initRoles();
   await _userBackend.InitService.initRootUser();
   await (0, _customizeBackend.initCustomization)();

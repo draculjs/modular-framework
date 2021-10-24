@@ -15,7 +15,7 @@ var _customizeBackend = require("@dracul/customize-backend");
 
 var _initCustomization = require("./custom/initCustomization");
 
-var _initOperatorRole = _interopRequireDefault(require("./custom/initOperatorRole"));
+var _initUploaderRole = _interopRequireDefault(require("./custom/initUploaderRole"));
 
 var _InitMediaPermissions = _interopRequireDefault(require("../modules/media/services/InitMediaPermissions"));
 
@@ -37,12 +37,8 @@ const initService = async () => {
   await (0, _customizeBackend.initPermissionsCustomization)();
   await (0, _InitMediaPermissions.default)();
   await _userBackend.InitService.initAdminRole();
-  await _userBackend.InitService.initOperatorRole();
-  await _userBackend.InitService.initSupervisorRole();
-  await _userBackend.InitService.initRoles([_initOperatorRole.default]);
+  await _userBackend.InitService.initRoles([_initUploaderRole.default]);
   await _userBackend.InitService.initRootUser();
-  await _userBackend.InitService.initSupervisorUser();
-  await _userBackend.InitService.initOperatorUser();
   await (0, _initCustomization.initCustomization)();
 };
 
