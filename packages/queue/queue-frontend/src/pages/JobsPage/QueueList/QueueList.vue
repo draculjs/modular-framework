@@ -65,6 +65,17 @@
           </div>
         </template>
 
+        <template v-slot:item.output="{ item }" >
+          <span v-html="item.output"></span>
+        </template>
+
+        <template v-slot:item.error="{ item }" >
+          <span v-html="item.error"></span>
+        </template>
+
+        <template v-slot:item.info="{ item }" >
+          <span v-html="item.info"></span>
+        </template>
 
         <template slot="no-data">
           <div class="text-xs-center" v-t="'common.noData'"></div>
