@@ -19,7 +19,7 @@
           // Si estoy en entorno local, reemplazo el link de Swagger porque el puerto es distinto.
           if (item.title == 'Swagger') {
             if (window.location.host.includes('localhost')) {
-              this.dataList[5].link = process.env.VUE_APP_APIHOST + '/api-docs';
+              item.link = process.env.VUE_APP_APIHOST + '/api-docs';
             }
           }
         })
@@ -39,23 +39,3 @@
 <style scoped>
 
 </style>
-
-
-
-
-
-
-
-
-
-
-
-computed: {
-        getSwaggerLink() {
-          if (window.location.origin.contains('localhost')) {
-            return window.location.origin;
-          } else {
-            return 'algo'
-          }
-        }
-      }
