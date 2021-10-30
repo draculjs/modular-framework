@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.2.10",
+  "version": "1.2.32",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "Cristian Incarnato & Dracul Team",
   "license": "ISC",
   "dependencies": {
-    "@dracul/common-backend": "^1.0.112",
+    "@dracul/common-backend": "^1.2.32",
     "@dracul/logger-backend": "^1.0.105",
     "apollo-server-express": "^2.12.0",
     "bcryptjs": "^2.4.3",
