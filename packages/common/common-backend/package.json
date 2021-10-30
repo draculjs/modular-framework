@@ -22,6 +22,9 @@
     "url": "https://github.com/cincarnato/ci-common-module/issues"
   },
   "homepage": "https://github.com/cincarnato/ci-common-module#readme",
+  "dependencies": {
+    "merge-graphql-schemas": "^1.7.8"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
