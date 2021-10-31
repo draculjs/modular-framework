@@ -9,6 +9,7 @@
   >
     <template v-slot:activator="{ on }">
       <v-text-field
+          ref="time"
           v-on="on"
           :value="item"
           :label="label"
@@ -32,12 +33,12 @@ import DayjsMixin from "../../mixins/DayjsMixin";
 export default {
   name: "TimeInput",
   props: {
-    value: {type:[String,Object]},
+    value: {type: [String, Object]},
     closeOnContentClick: {type: Boolean, default: false},
     error: {type: Boolean},
-    errorMessages: {type:Array},
-    label: { type: String},
-    rules: {type: Array, default: ()=>[]}
+    errorMessages: {type: Array},
+    label: {type: String},
+    rules: {type: Array, default: () => []}
   },
   mixins: [DayjsMixin],
   computed: {
@@ -45,12 +46,19 @@ export default {
       get() {
         return this.getTimeFormat(this.value)
       },
-      set(val) {this.$emit('input', val)}
+      set(val) {
+        this.$emit('input', val)
+      }
     }
   },
-  data(){
+  data() {
     return {
       menu: false
+    }
+  },
+  methods: {
+    validate() {
+      this.$refs.time.validate()
     }
   }
 

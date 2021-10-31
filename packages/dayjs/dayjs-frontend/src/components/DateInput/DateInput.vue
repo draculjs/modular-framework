@@ -9,7 +9,7 @@
   >
     <template v-slot:activator="{ on }">
       <v-text-field
-
+          ref="date"
           v-model="item"
           :label="label"
           prepend-icon="date_range"
@@ -51,6 +51,11 @@ export default {
   data(){
     return {
       menu: false
+    }
+  },
+  methods:{
+    validate(){
+      this.$refs.date.validate()
     }
   }
 
