@@ -1,18 +1,31 @@
-import {DefaultLogger as winston} from '@dracul/logger-backend';
+import { DefaultLogger as winston } from '@dracul/logger-backend';
 import path from "path";
+import fs from "fs";
 import File from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
+import convertGigabytesToBytes from "./helpers/convertGigabytesToBytes"
 
-const fileUpload = function (user, inputFile) {
+
+const fileUpload = function (user, inputFile, fileSize = null) {
+
+  const validateMaxFileSize = function (fileSize) {
+    const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES : 4;
+    return convertGigabytesToBytes(maxFileSize) > fileSize;
+  }
 
   return new Promise(async (resolve, rejects) => {
     try {
 
-      if(!user){
+      if (!user) {
         return rejects(new Error("user is required"))
       }
+
+      if (fileSize && !validateMaxFileSize(fileSize)) {
+        return rejects(new Error("error.maxSizeExceeded"))
+      }
+
       const { filename, mimetype, encoding, createReadStream } = await inputFile;
 
       let type = mimetype.split("/")[0]
@@ -48,7 +61,6 @@ const fileUpload = function (user, inputFile) {
           url: url,
           createdBy: { user: user.id, username: user.username }
         })
-
         winston.info("fileUploadAnonymous saving file")
         await doc.save()
         winston.info("fileUploadAnonymous file saved: " + doc._id)
@@ -62,7 +74,7 @@ const fileUpload = function (user, inputFile) {
 
     } catch (err) {
       winston.error('UploadService: ', err)
-      rejects(new Error("Upload Fail"))
+      rejects(new Error(err))
     }
   })
 

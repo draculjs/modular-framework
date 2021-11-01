@@ -5,25 +5,25 @@ class UploadProvider {
         this.gqlc = null
     }
 
-    setGqlc(gqlc){
+    setGqlc(gqlc) {
         this.gqlc = gqlc
     }
 
-    uploadFile(file) {
+    uploadFile(file, fileSize) {
         return this.gqlc.mutate({
             mutation: require('./gql/fileUpload.graphql'),
-            variables: {file: file}
+            variables: { file: file, fileSize: fileSize }
         })
     }
 
     uploadFileAnonymous(file) {
         return this.gqlc.mutate({
             mutation: require('./gql/fileUploadAnonymous.graphql'),
-            variables: {file: file}
+            variables: { file: file }
         })
     }
 }
 
-const uploadProvider =  new UploadProvider()
+const uploadProvider = new UploadProvider()
 
 export default uploadProvider

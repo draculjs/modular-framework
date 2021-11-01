@@ -130,14 +130,15 @@ export default {
       this.file = e.target.files[0]
       console.log("SIZE",e.target.files[0].size)
       this.state = SELECTED
+      const fileSize = e.target.files[0].size;
       if (this.autoSubmit) {
-        this.upload()
+        this.upload(fileSize)
       }
     },
-    upload() {
+    upload(fileSize) {
       if (this.file && this.state != UPLOADED) {
         this.loading = true
-        uploadProvider.uploadFile(this.file).then(result => {
+        uploadProvider.uploadFile(this.file, fileSize.toString()).then(result => {
           this.state = UPLOADED
           this.uploadedFile = result.data.fileUpload
           this.$emit('fileUploaded', result.data.fileUpload)
