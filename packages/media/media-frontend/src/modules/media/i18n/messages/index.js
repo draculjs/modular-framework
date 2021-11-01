@@ -23,6 +23,19 @@ const messages = {
                 createdBy: 'Created by',
                 download: 'download'
 
+            },
+            userStorage:{
+                title:"User Storage",
+                subtitle:"Manage users storage capacity",
+                title2:"",
+                user:"User",
+                capacity:"Capacity",
+                percentage:"Percentage",
+                actions:"Actions",
+                edit:"Edit",
+                editTitle:"Edit User Storage",
+                cliente:"Client",
+                usedPercentage:"Percentage used: "
             }
         }
     },
@@ -50,6 +63,19 @@ const messages = {
                 createdBy: 'Creado por',
                 download: 'descargar'
 
+            },
+            userStorage:{
+                title:"Almacenamiento usuarios",
+                subtitle:"Administrar el almacenaminto de los usuarios",
+                title2:"",
+                user:"Usuario",
+                capacity:"Capacidad",
+                percentage:"Porcentaje",
+                actions:"Acciones",
+                edit:"Editar",
+                editTitle:"Edit Almacenamiento de Usuario",
+                cliente:"Cliente",
+                usedPercentage:"Porcentaje en uso: "
             }
         }
     },
@@ -77,6 +103,19 @@ const messages = {
                 createdBy: 'criado pela',
                 download: 'download'
 
+            },
+            userStorage:{
+                title:"Armazenamento do usuário",
+                subtitle:"Gerenciar armazenamento do usuário",
+                title2:"",
+                user:"Usuário",
+                capacity:"Capacidade",
+                percentage:"Porcentagem",
+                actions:"Ações",
+                edit:"Editar",
+                editTitle:"Editar Armazenamento do Usuário",
+                cliente:"Cliente",
+                usedPercentage:"Porcentagem em uso: "
             }
         }
     }

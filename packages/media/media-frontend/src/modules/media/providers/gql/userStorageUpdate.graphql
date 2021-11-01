@@ -1,0 +1,8 @@
+mutation userStorageUpdate($id: ID!, $name:String!, $capacity:String!, $usedSpace:String){
+    userStorageUpdate(id: $id, input: { name: $name, capacity: $capacity, usedSpace: $usedSpace}){
+        id
+        name
+        capacity
+        usedSpace
+    }
+}

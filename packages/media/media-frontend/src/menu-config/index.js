@@ -22,6 +22,12 @@ export default [
         permission: "FILE_SHOW_ALL"
     },
     {
+        icon: 'dashboard',
+        text: "UserStorage(cambiar)",
+        link: {name: "UserStoragePage"},
+        panel: false,
+    },
+    {
         icon: 'description',
         text: i18n.t('menu.docs'),
         link: {name: "DocsPage"},

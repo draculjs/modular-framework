@@ -13,7 +13,6 @@ const fileUpload = function (user, inputFile) {
       if(!user){
         return rejects(new Error("user is required"))
       }
-
       const { filename, mimetype, encoding, createReadStream } = await inputFile;
 
       let type = mimetype.split("/")[0]

@@ -128,6 +128,7 @@ export default {
     },
     onFilePicked: function (e) {
       this.file = e.target.files[0]
+      console.log("SIZE",e.target.files[0].size)
       this.state = SELECTED
       if (this.autoSubmit) {
         this.upload()
