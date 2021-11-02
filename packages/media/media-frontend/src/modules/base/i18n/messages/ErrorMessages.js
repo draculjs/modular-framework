@@ -2,6 +2,7 @@ const messages = {
     en: {
         error: {
             general: 'Unexpected failure',
+            maxSizeExceeded: 'Max file size exceeded',
             code: {
                 FORBIDDEN: 'Forbidden',
                 UNAUTHENTICATED: 'Unauthenticated',
@@ -10,12 +11,12 @@ const messages = {
                 NETWORK_ERROR: "Network error",
                 GRAPHQL_VALIDATION_FAILED: "GRAPHQL_VALIDATION_FAILED"
             }
-
         }
     },
     es: {
         error: {
             general: 'Fallo inesperado',
+            maxSizeExceeded: 'Tamaño máximo de archivo excedido',
             code: {
                 FORBIDDEN: 'No Autorizado',
                 UNAUTHENTICATED: 'No Autenticado',
@@ -29,6 +30,7 @@ const messages = {
     pt: {
         error: {
             general: 'Falha inesperada',
+            maxSizeExceeded: 'Tamanho máximo do arquivo excedido',
             code: {
                 FORBIDDEN: 'Proibido',
                 UNAUTHENTICATED: 'Não autenticado',

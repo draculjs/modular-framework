@@ -8,6 +8,7 @@ const upload = multer()
 const streamifier = require('streamifier');
 import { findFile, paginateFiles } from "../../services/FileService";
 import { fileUpload } from "../../services/UploadService";
+import convertGigabytesToBytes from "../../services/helpers/convertGigabytesToBytes"
 import {
     FILE_SHOW_ALL,
     FILE_SHOW_OWN,
@@ -60,6 +61,9 @@ router.get('/file', function (req, res) {
 router.post('/file', upload.single('file'), function (req, res) {
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
+
+    const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES : 4;
+    if (req.file.size > convertGigabytesToBytes(maxFileSize)) res.status(500).json({ message: "Maximum file size exceeded" })
 
     let file = {
         filename: req.file.originalname,

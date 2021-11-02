@@ -1,11 +1,11 @@
 <template>
   <v-row>
     <v-col cols="12" sm="6">
-      <date-input :value="item"  :rules="dateRules" @input="setDate"></date-input>
+      <date-input ref="date" :value="item" :rules="dateRules" @input="setDate"></date-input>
     </v-col>
 
     <v-col cols="12" sm="6">
-      <time-input :value="item" :rules="timeRules" @input="setTime" ></time-input>
+      <time-input ref="time" :value="item" :rules="timeRules" @input="setTime"></time-input>
     </v-col>
 
   </v-row>
@@ -23,13 +23,13 @@ export default {
   name: "DateTimeInput",
   components: {TimeInput, DateInput},
   props: {
-    value: {type: [String,Object]},
+    value: {type: [String, Object]},
     closeOnContentClick: {type: Boolean, default: false},
     error: {type: Boolean},
     errorMessages: {type: Array},
     label: {type: String},
-    dateRules: {type: Array, default: ()=>[]},
-    timeRules: {type: Array, default: ()=>[]},
+    dateRules: {type: Array, default: () => []},
+    timeRules: {type: Array, default: () => []},
   },
   mixins: [DayjsMixin],
   computed: {
@@ -42,12 +42,16 @@ export default {
       }
     }
   },
-  methods:{
-    setDate(val){
-      this.$emit('input', setDateToDatetimeHelper(this.item,val))
+  methods: {
+    setDate(val) {
+      this.$emit('input', setDateToDatetimeHelper(this.item, val))
     },
-    setTime(val){
-      this.$emit('input', setTimeToDatetimeHelper(this.item,val))
+    setTime(val) {
+      this.$emit('input', setTimeToDatetimeHelper(this.item, val))
+    },
+    validate() {
+      this.$refs.date.validate()
+      this.$refs.time.validate()
     }
   },
   data() {

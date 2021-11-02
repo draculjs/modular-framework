@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(jwtMiddleware)
 app.use(function (err, req, res, next) {
-    if(err && err.name === 'UnauthorizedError'){
+    if (err && err.name === 'UnauthorizedError') {
         DefaultLogger.warn(err.message)
     }
     next()

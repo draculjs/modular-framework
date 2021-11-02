@@ -63,7 +63,7 @@ export const createPermission = function (name) {
         name
     })
     newPermission.id = newPermission._id;
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         newPermission.save(
             (err) => {
 
@@ -81,7 +81,7 @@ export const createPermission = function (name) {
 
 
 export const updatePermission = async function (id, name) {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         PermissionModel.findOneAndUpdate({ _id: id },
             { name, permissions },
             { new: true, runValidators: true, context: 'query' },
@@ -92,7 +92,7 @@ export const updatePermission = async function (id, name) {
                         rejects(new UserInputError(error.message, { inputErrors: error.errors }));
                     }
                     winston.error("PermissionService.updatePermission ", err)
-                    rejects(error)
+                    reject(error)
                 }
                 resolve(doc)
             })
@@ -100,7 +100,7 @@ export const updatePermission = async function (id, name) {
 }
 
 export const deletePermission = function (id) {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         findPermission(id).then((doc) => {
             doc.softdelete(
                 function (err) {
