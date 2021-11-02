@@ -1,5 +1,6 @@
 import {mergeTypes, mergeResolvers} from 'merge-graphql-schemas';
 import {securityResolvers,securityTypes} from '@dracul/user-backend'
+import {commonTypes} from '@dracul/common-backend'
 
 import {types as customTypes,resolvers as customResolvers} from '@dracul/customize-backend'
 
@@ -18,6 +19,7 @@ export const resolvers = mergeResolvers([
 ])
 
 export const typeDefs = mergeTypes([
+    commonTypes,
     baseTypes,
     securityTypes,
     customTypes,
