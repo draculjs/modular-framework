@@ -1,5 +1,5 @@
-query filePaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $orderBy: String, $orderDesc: Boolean){
-    filePaginate( pageNumber: $pageNumber, itemsPerPage: $itemsPerPage, search: $search, orderBy: $orderBy, orderDesc: $orderDesc){
+query filePaginate($input: FilterPaginateInput){
+    filePaginate(input: $input){
         totalItems
         page
         items{

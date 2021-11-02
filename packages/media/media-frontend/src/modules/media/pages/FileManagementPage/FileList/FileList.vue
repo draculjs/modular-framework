@@ -1,6 +1,12 @@
 <template>
   <v-row row wrap>
 
+    <file-filters
+      v-on:updateFilters="setFilters"
+      v-on:clearFilter="clearFilters"
+      v-model="filters"
+    />
+
     <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
       <search-input @search="performSearch" v-model="search"/>
     </v-col>
@@ -59,11 +65,12 @@ import FileProvider from "../../../providers/FileProvider";
 import {DeleteButton, EditButton, ShowButton, SearchInput} from "@dracul/common-frontend"
 import redeableBytesMixin from "../../../mixins/readableBytesMixin";
 import moment from "moment-timezone"
+import FileFilters from "../FileFilters/FileFilters"
 
 export default {
   name: "FileList",
   mixins: [redeableBytesMixin],
-  components: {DeleteButton, EditButton, ShowButton, SearchInput},
+  components: {DeleteButton, EditButton, ShowButton, SearchInput, FileFilters},
   data() {
     return {
       items: [],
@@ -73,7 +80,39 @@ export default {
       orderDesc: false,
       itemsPerPage: 5,
       pageNumber: 1,
-      search: ''
+      search: '',
+      filters: [
+        {
+          field: 'dateFrom',
+          operator: 'eq', // puede ser eq|contain|regex|gt|lt|gte|lte
+          value: ''
+        },
+        {
+          field: 'dateTo',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'filename',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'createdBy',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'type',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'size',
+          operator: 'eq',
+          value: ''
+        }
+      ]
     }
   },
   computed: {
@@ -114,6 +153,7 @@ export default {
           this.pageNumber,
           this.itemsPerPage,
           this.search,
+          this.filters,
           this.getOrderBy,
           this.getOrderDesc
       ).then(r => {
@@ -122,6 +162,44 @@ export default {
       }).catch(err => {
         console.error(err)
       }).finally(() => this.loading = false)
+    },
+    setFilters(fileFilters) {
+      this.filters = fileFilters
+      this.fetch()
+    },
+    clearFilters() {
+      this.filters = [
+        {
+          field: 'dateFrom',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'dateTo',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'filename',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'createdBy',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'type',
+          operator: 'eq',
+          value: ''
+        },
+        {
+          field: 'size',
+          operator: 'eq',
+          value: ''
+        }
+      ]
     }
   }
 

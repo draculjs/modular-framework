@@ -23,8 +23,8 @@ export const fetchFiles = async function () {
     })
 }
 
-export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false, permissionType = null, userId = null) {
-
+export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, filters ,orderBy = null, orderDesc = false, permissionType = null, userId = null) {
+    console.log("FILTERSSSSSSSS",filters)
     function qs(search) {
         let qs = {}
         if (search) {
@@ -58,7 +58,49 @@ export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search 
     })
 }
 
+export const filterPaginateFiles = async function (
+  dateFrom,
+  dateTo,
+  filename,
+  createdBy,
+  type,
+  size
+) {
 
+  function getSort(orderBy, orderDesc) {
+    if (orderBy) {
+      return (orderDesc ? "-" : "") + orderBy;
+    }
+    return null;
+  }
+
+  const query = getQueryFilters(
+    dateFrom,
+    dateTo,
+    filename,
+    createdBy,
+    type,
+    size
+  );
+
+  const sort = getSort(orderBy, orderDesc);
+  const params = {
+    page: pageNumber, limit, sort,
+  };
+
+  return new Promise((resolve, reject) => {
+    File
+      .paginate(query, params)
+      .then((result) => {
+        resolve({
+          items: result.docs,
+          totalItems: result.totalDocs,
+          page: result.page,
+        });
+      })
+      .catch((err) => reject(err));
+  });
+}
 
 
 export const updateFile = async function (authUser, id, { description, tags }, permissionType, userId) {
@@ -112,3 +154,82 @@ function filterByFileOwner(permissionType, userId) {
     return query;
 }
 
+export const getQueryFilters = function (
+  dateFrom,
+  dateTo,
+  filename,
+  createdBy,
+  type,
+  size
+) {
+  const vacio = ""
+  // FUNCION QS
+  // FUNCION FECHA
+
+  function filterValues(
+    dateFrom,
+    dateTo,
+    filename,
+    createdBy,
+    type,
+    size
+  ) {
+    let filter = {}
+
+    if (dateFrom) {
+      filter = {
+        ...{ dateFrom: { $regex: dateFrom, $options: "i" } },
+        ...filter
+      }
+    }
+
+    if (dateTo) {
+      filter = {
+        ...{ dateTo: { $regex: dateTo, $options: "i" } },
+        ...filter
+      }
+    }
+
+    if (filename) {
+      filter = {
+        ...{ filename: { $regex: filename, $options: "i" } },
+        ...filter
+      }
+    }
+
+    if (createdBy) {
+      filter = {
+        ...{ createdBy: { $regex: createdBy, $options: "i" } },
+        ...filter
+      }
+    }
+
+    if (type) {
+      filter = {
+        ...{ type: { $regex: type, $options: "i" } },
+        ...filter
+      }
+    }
+
+    if (size) {
+      filter = {
+        ...{ size: { $regex: size, $options: "i" } },
+        ...filter
+      }
+    }
+
+    return filter;
+  }
+
+  return {
+    // FUNCION FECHA    ...getBirthDay(birthDayUntil, birthDaySince),
+    ...filterValues(
+      dateFrom,
+      dateTo,
+      filename,
+      createdBy,
+      type,
+      size
+    ),
+  }
+}
