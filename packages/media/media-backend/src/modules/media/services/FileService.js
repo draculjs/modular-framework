@@ -2,6 +2,8 @@ import File from './../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
 import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../../media/permissions/File";
 import { updateUserUsedStorage } from './UserStorageService';
+import fs from 'fs';
+import { DefaultLogger as winston } from '@dracul/logger-backend';
 
 export const findFile = async function (id, permissionType = null, userId = null) {
 
@@ -18,7 +20,7 @@ export const findFile = async function (id, permissionType = null, userId = null
 
 export const fetchFiles = async function () {
     return new Promise((resolve, reject) => {
-        File.find({}).isDeleted(false).populate('createdBy.user').exec((err, res) => (
+        File.find({}).populate('createdBy.user').exec((err, res) => (
             err ? reject(err) : resolve(res)
         ));
     })
@@ -46,7 +48,7 @@ export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search 
         }
     }
 
-    let query = { deleted: false, ...qs(search), ...filterByFileOwner(permissionType, userId) }
+    let query = { ...qs(search), ...filterByFileOwner(permissionType, userId) }
     let populate = ['createdBy.user']
     let sort = getSort(orderBy, orderDesc)
     let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
@@ -87,13 +89,19 @@ export const updateFile = async function (authUser, id, { description, tags }, p
 export const deleteFile = function (id, permissionType, userId) {
 
     return new Promise((resolve, rejects) => {
-        findFile(id, permissionType, userId).then((doc) => {
-            if (doc) {  
-                updateUserUsedStorage(userId, -doc.size)
-
-                doc.softdelete(function (err) {
-                    err ? rejects(err) : resolve({ id: id, success: true })
-                });
+        findFile(id, permissionType, userId).then(async (doc) => {
+            if (doc) {
+                try {
+                    updateUserUsedStorage(userId, -doc.size)
+                    fs.unlink(doc.relativePath, (error) => {
+                        if (error) winston.error(error)
+                        else winston.info('Se eliminó el archivo ' + doc.relativePath)
+                    });
+                    await File.deleteOne({ _id: id });
+                    resolve({ id: id, success: true })
+                } catch (err) {
+                    rejects(err)
+                }
             } else {
                 rejects('File not found')
             }

@@ -32,8 +32,11 @@
 
           </v-toolbar>
         </template>
+        <template v-slot:item.maxFileSize="{ item }">
+          {{item.maxFileSize.toFixed(2)}} MB
+        </template>
         <template v-slot:item.capacity="{ item }">
-          {{item.usedSpace}}/{{item.capacity}} MB
+          {{item.usedSpace.toFixed(2)}}/{{item.capacity}} MB
         </template>
         <template v-slot:item.usedSpace="{ item }">
           {{percentageUsed(item)}}
@@ -72,7 +75,7 @@
 <script>
     import {CrudLayout} from "@dracul/common-frontend"
     import UserStorageUpdate from './UserStorageUpdate/UserStorageUpdate.vue';
-    import userSorageProvider from '../../providers/UserStorageProvider'
+    import userStorageProvider from '../../providers/UserStorageProvider'
     import {Loading} from "@dracul/common-frontend"
 
     export default {
@@ -82,13 +85,6 @@
             return {
                 search: "",
                 user:[],
-                form: {
-                  user:null,
-                  name:"",
-                  facialRecognition: false,
-                  validateDNI: false,
-                  production: false,
-                },
                 loadingPermissions: true,
                 userToUpdate: null,
                 flashMessage: null,
@@ -99,6 +95,7 @@
                     sortable: false,
                     value: 'user.name',
                     },
+                    { text: this.$t("media.userStorage.maxFileSize"), value: 'maxFileSize', align: 'center' },
                     { text: this.$t("media.userStorage.capacity"), value: 'capacity', align: 'center' },
                     { text: this.$t("media.userStorage.percentage"), value: 'usedSpace', align: 'center' },
                     { text: this.$t("media.userStorage.actions"), value: 'actions', sortable: false, align: 'center' },
@@ -117,7 +114,7 @@
           load() {
               this.users=[]
               this.loadingPermissions = true
-              userSorageProvider.fetchUserStorage()
+              userStorageProvider.fetchUserStorage()
               .then(r=>{
                 this.users= r.data.userStorageFetch
               })

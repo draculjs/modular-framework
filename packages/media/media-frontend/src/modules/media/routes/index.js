@@ -20,7 +20,11 @@ const routes = [
     {
         name: 'UserStoragePage',
         path: '/user-storage',
-        component: UserStoragePage
+        component: UserStoragePage,
+        meta: {
+            requeresAuth: true,
+            permission: "USER_STORAGE_SHOW_ALL"
+        }
     }
 ]
 

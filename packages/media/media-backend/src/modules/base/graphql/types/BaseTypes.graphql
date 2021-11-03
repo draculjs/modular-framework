@@ -1,7 +1,12 @@
-type Ping{
+type Ping {
     status: Boolean
+}
+
+type MaxFileSize {
+    maxFileSize: Float!
 }
 
 type Query {
     ping: Ping
+    fetchMaxFileSize: MaxFileSize
 }

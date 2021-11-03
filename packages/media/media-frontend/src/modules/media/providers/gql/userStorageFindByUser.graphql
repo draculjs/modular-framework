@@ -1,5 +1,5 @@
-query userStorageFetch{
-    userStorageFetch{
+query userStorageFindByUser {
+    userStorageFindByUser {
         id
         user {
             name

@@ -43,6 +43,7 @@
 import uploadProvider from "../../providers/UploadProvider";
 import { ToolbarDialog} from '@dracul/common-frontend'
 import FileView from "../FileView/FileView";
+import UserStorageProvider from "../../../media/providers/UserStorageProvider"
 
 const INITIAL = 'initial'
 const SELECTED = 'selected'
@@ -118,8 +119,7 @@ export default {
     }
   },
   mounted () {
-    //aca iria unn provider para fijarse en la coleccion userStorage
-    this.maxFileSize = 200000
+    this.findUserStorage();
   },
   methods: {
     pickFile() {
@@ -138,6 +138,13 @@ export default {
       if (this.autoSubmit) {
         this.upload(fileSize)
       }
+    },
+    findUserStorage() {
+      return UserStorageProvider.findUserStorageByUser().then((res)  => {
+          this.maxFileSize = res.data.userStorageFindByUser.maxFileSize;
+      }).catch(
+          err => console.error(err)
+      )
     },
     upload(fileSize) {
       if (this.file && this.state != UPLOADED && fileSize<=this.maxFileSize) {

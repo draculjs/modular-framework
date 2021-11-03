@@ -8,6 +8,13 @@ class userStorageProvider {
         })
     }
 
+    findUserStorageByUser() {
+        return graphqlClient.query({
+            query: require('./gql/userStorageFindByUser.graphql'),
+            fetchPolicy: "network-only"
+        })
+    }
+
     updateUserStorage(form) {
         return graphqlClient.mutate({
             mutation: require('./gql/userStorageUpdate.graphql'),

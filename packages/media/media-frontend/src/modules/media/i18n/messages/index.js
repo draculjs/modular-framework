@@ -24,22 +24,25 @@ const messages = {
                 download: 'download'
 
             },
-            userStorage:{
-                title:"User Storage",
-                subtitle:"Manage users storage capacity",
-                title2:"",
-                user:"User",
-                capacity:"Capacity",
-                percentage:"Percentage",
-                actions:"Actions",
-                edit:"Edit",
-                editTitle:"Edit User Storage",
-                cliente:"Client",
-                usedPercentage:"Percentage used: ",
-                insufficientCapacity:"Insufficient capacity",
-                updated:"Capacity updated"
+            userStorage: {
+                title: "User Storage",
+                subtitle: "Manage users storage capacity",
+                title2: "",
+                user: "User",
+                capacity: "Capacity",
+                percentage: "Percentage",
+                actions: "Actions",
+                edit: "Edit",
+                editTitle: "Edit User Storage",
+                cliente: "Client",
+                usedPercentage: "Percentage used: ",
+                insufficientCapacity: "Insufficient capacity",
+                sizeLimitExceeded: "File size limit exceeded",
+                updated: "Capacity updated",
+                maxFileSize: "Max size",
+                fileSizeLimit: "File size limit"
             }
-        }
+        },
     },
     es: {
         media: {
@@ -66,20 +69,23 @@ const messages = {
                 download: 'descargar'
 
             },
-            userStorage:{
-                title:"Almacenamiento usuarios",
-                subtitle:"Administrar el almacenaminto de los usuarios",
-                title2:"",
-                user:"Usuario",
-                capacity:"Capacidad",
-                percentage:"Porcentaje",
-                actions:"Acciones",
-                edit:"Editar",
-                editTitle:"Edit Almacenamiento de Usuario",
-                cliente:"Cliente",
-                usedPercentage:"Porcentaje en uso: ",
-                insufficientCapacity:"Capacidad insuficiente",
-                updated:"Capacidad actualizada"
+            userStorage: {
+                title: "Almacenamiento usuarios",
+                subtitle: "Administrar el almacenaminto de los usuarios",
+                title2: "",
+                user: "Usuario",
+                capacity: "Capacidad",
+                percentage: "Porcentaje",
+                actions: "Acciones",
+                edit: "Editar",
+                editTitle: "Edit Almacenamiento de Usuario",
+                cliente: "Cliente",
+                usedPercentage: "Porcentaje en uso: ",
+                insufficientCapacity: "Capacidad insuficiente",
+                sizeLimitExceeded: "Límite de tamaño del archivo excedido",
+                updated: "Capacidad actualizada",
+                maxFileSize: "Tamaño máximo",
+                fileSizeLimit: "Límite de tamaño del archivo"
             }
         }
     },
@@ -108,20 +114,23 @@ const messages = {
                 download: 'download'
 
             },
-            userStorage:{
-                title:"Armazenamento do usuário",
-                subtitle:"Gerenciar armazenamento do usuário",
-                title2:"",
-                user:"Usuário",
-                capacity:"Capacidade",
-                percentage:"Porcentagem",
-                actions:"Ações",
-                edit:"Editar",
-                editTitle:"Editar Armazenamento do Usuário",
-                cliente:"Cliente",
-                usedPercentage:"Porcentagem em uso: ",
-                insufficientCapacity:"Capacidade insuficiente",
-                updated:"Capacidade atualizada"
+            userStorage: {
+                title: "Armazenamento do usuário",
+                subtitle: "Gerenciar armazenamento do usuário",
+                title2: "",
+                user: "Usuário",
+                capacity: "Capacidade",
+                percentage: "Porcentagem",
+                actions: "Ações",
+                edit: "Editar",
+                editTitle: "Editar Armazenamento do Usuário",
+                cliente: "Cliente",
+                usedPercentage: "Porcentagem em uso: ",
+                insufficientCapacity: "Capacidade insuficiente",
+                sizeLimitExceeded: "Limite de tamanho de arquivo excedido",
+                updated: "Capacidade atualizada",
+                maxFileSize: "Tamanho máximo",
+                fileSizeLimit: "Limite de tamanho de arquivo"
             }
         }
     }

@@ -26,7 +26,7 @@
                         <v-col cols="9">
                             <h6 class="text-h6">WEIGHT</h6>
                             <h1 class=" text-h3 font-weight-bold">
-                                {{redeableBytes(fileGlobalMetrics.weight)}}
+                                {{ fileGlobalMetrics.weight.toFixed(2) }} Mb
                             </h1>
                         </v-col>
                     </v-row>

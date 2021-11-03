@@ -1,0 +1,5 @@
+query fetchMaxFileSize {
+    fetchMaxFileSize {
+        maxFileSize
+    }
+}

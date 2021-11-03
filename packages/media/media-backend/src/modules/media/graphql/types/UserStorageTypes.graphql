@@ -3,22 +3,27 @@ type userStorage{
  user: User
  capacity: Float!
  usedSpace: Float
-}
-
-type Query {
-    userStorageFetch: [userStorage]    
+ maxFileSize: Float
 }
 
 input userStorageInput{
  name: String!
  capacity: Float!
  usedSpace: Float
+ maxFileSize: Float
 }
+
 type userStorageUpdate{
  id: ID!
  name: String
  capacity: Float!
  usedSpace: Float
+ maxFileSize: Float
+}
+
+type Query {
+    userStorageFetch: [userStorage],
+    userStorageFindByUser: userStorage
 }
 
 type Mutation {
