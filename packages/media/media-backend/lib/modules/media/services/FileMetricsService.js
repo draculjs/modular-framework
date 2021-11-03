@@ -35,9 +35,7 @@ const fileUserMetrics = async function () {
   return new Promise((resolve, reject) => {
     const aggregate = _FileModel.default.aggregate([{
       $group: {
-        _id: {
-          user: "$createdBy.username"
-        },
+        _id: "$createdBy.user",
         user: {
           $first: "$createdBy.username"
         },
@@ -51,6 +49,7 @@ const fileUserMetrics = async function () {
     }]);
 
     aggregate.exec().then(docs => {
+      console.log(docs);
       resolve(docs);
     }).catch(err => reject(err));
   });

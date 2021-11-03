@@ -1,17 +1,17 @@
 import userStorage from "../models/UserStorageModel";
-import {UserService} from '@dracul/user-backend'
+import {UserService} from '@dracul/user-backend';
+import ObjectId from 'mongodb'
 
 
 export const fetchUserStorage = async function () {
     return new Promise(async (resolve, reject) => {
         try{
             let existingUserStorages = await userStorage.find({}).populate('user').exec()
-            console.log(existingUserStorages)
             let users = await UserService.findUsers()
             await checkAndCreate(existingUserStorages, users)
     
             let updatedUserStorages = await userStorage.find({}).populate('user').exec()
-            console.log(updatedUserStorages)
+
             resolve(updatedUserStorages)
         }catch(err){
             reject(err)
@@ -34,7 +34,7 @@ export const createUserStorage = async function (user, capacity) {
     const doc = new userStorage({
         user, capacity
     });
-    doc.usedSpace = "0";
+    doc.usedSpace = 0;
     return new Promise((resolve, rejects) => {
         doc.save(((error) => {
         if (error) {
@@ -49,13 +49,14 @@ export const createUserStorage = async function (user, capacity) {
     });
 };
 
-export const updateUserUsedStorage = async function (user, size) {
+export const updateUserUsedStorage = async function (userId, size) {
+    console.log("SIZE",typeof size)
     return new Promise((resolve, rejects) => {
-        apiGoogleAccount.findOneAndUpdate({ user: user },
-        { $inc: {usedSpace: size }},
-        { runValidators: true, context: "query" },
-        (error, doc) => {
-            
+        userStorage.findOneAndUpdate({ user: userId },
+            { $inc: {usedSpace: size} },
+            { runValidators: true, context: "query" },
+            (error, doc) => {
+
             if (error) {
             if (error.name == "ValidationError") {
                 rejects(new UserInputError(error.message, { inputErrors: error.errors }));
@@ -69,8 +70,7 @@ export const updateUserUsedStorage = async function (user, size) {
 };
 
 export const updateUserStorage = async function (authUser, id, { name, capacity, usedSpace}) {
-    const oldStorage = await userStorage.findOne({ _id: id });
-    const oldCapacity= oldStorage.capacity;
+    
     return new Promise((resolve, rejects) => {
         userStorage.findOneAndUpdate({ _id: id },
         { capacity },
@@ -89,13 +89,13 @@ export const updateUserStorage = async function (authUser, id, { name, capacity,
     });
 };
 
-export const checkUserStorage = async function (id, newFileSize) {
+export const checkUserStorage = async function (userId, newFileSize) {
     return new Promise((resolve, reject) => {
-        userStorage.find({id:id}).exec((err, res) => {
+        userStorage.findOne({user:userId}).exec((err, res) => {
             if(err){
                 reject(err)
             }
-            
+
             let spaceLeft = res.capacity-res.usedSpace
 
             if(spaceLeft>=newFileSize){
@@ -103,6 +103,19 @@ export const checkUserStorage = async function (id, newFileSize) {
             }else{
                 resolve(false)
             }
+        })
+    });
+};
+
+export const checkUserStorageLeft = async function (userId) {
+    return new Promise((resolve, reject) => {
+        userStorage.findOne({user:userId}).exec((err, res) => {
+            if(err){
+                reject(err)
+            }
+
+            let storageLeft = res.capacity-res.usedSpace
+            resolve(storageLeft) 
         })
     });
 };

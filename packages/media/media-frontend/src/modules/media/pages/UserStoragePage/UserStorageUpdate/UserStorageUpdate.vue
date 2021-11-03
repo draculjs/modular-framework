@@ -6,7 +6,7 @@
                  @update="save"
                  @close="$emit('close')"
     >
-        <user-storage-form ref="form" v-model="form" :input-errors="inputErrors"></user-storage-form>
+        <user-storage-form ref="form" v-model="form" :input-errors="inputErrors" @submit.prevent="save"></user-storage-form>
     </crud-update>
 </template>
 
@@ -38,12 +38,15 @@
         },
         methods: {
             save() {
-                UserStorageProvider.updateUserStorage(this.form).then(
-                    this.$emit("roleUpdated"),
-                    this.$emit("close")
-                ).catch(
-                    err => console.error(err)
-                )
+                this.form.capacity= parseFloat(this.form.capacity)
+                if(this.form.capacity> this.form.usedSpace){
+                    UserStorageProvider.updateUserStorage(this.form).then(
+                        this.$emit("roleUpdated"),
+                        this.$emit("close")
+                    ).catch(
+                        err => console.error(err)
+                    )
+                }
             },
         }
     };

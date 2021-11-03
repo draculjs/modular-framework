@@ -7,8 +7,8 @@ const { Schema } = mongoose;
 
 const userStorageSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },  
-  capacity: { type: String, required: true },
-  usedSpace: { type: String, required: false }
+  capacity: { type: Number, required: true },
+  usedSpace: { type: Number, required: false }
 });
 
 userStorageSchema.plugin(mongoosePaginate);

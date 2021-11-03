@@ -25,13 +25,13 @@
     <v-dialog v-if="dialog" v-model="dialog" max-width="800">
       <v-card>
         <toolbar-dialog :title="dialogTitle" @close="dialog=false"></toolbar-dialog>
-        <v-text v-if="!!errorMessage">
+        <v-card-text  v-if="!!errorMessage">
           <v-alert type="error" outlined tile>
             {{ $t(errorMessage) }}
           </v-alert>
-        </v-text>
+        </v-card-text>
 
-        <v-card-text>
+        <v-card-text v-else>
           <file-view :file="uploadedFile"></file-view>
         </v-card-text>
       </v-card>
@@ -41,7 +41,7 @@
 
 <script>
 import uploadProvider from "../../providers/UploadProvider";
-import {ClientError, ToolbarDialog} from '@dracul/common-frontend'
+import { ToolbarDialog} from '@dracul/common-frontend'
 import FileView from "../FileView/FileView";
 
 const INITIAL = 'initial'
@@ -70,6 +70,7 @@ export default {
       type: null,
       uploadedFile: null,
       state: INITIAL,
+      maxFileSize:0,
       states: {
         initial: {
           color: 'blue-grey',
@@ -116,6 +117,10 @@ export default {
       return null
     }
   },
+  mounted () {
+    //aca iria unn provider para fijarse en la coleccion userStorage
+    this.maxFileSize = 200000
+  },
   methods: {
     pickFile() {
       if (this.state === INITIAL) {
@@ -128,25 +133,27 @@ export default {
     },
     onFilePicked: function (e) {
       this.file = e.target.files[0]
-      console.log("SIZE",e.target.files[0].size)
       this.state = SELECTED
-      const fileSize = e.target.files[0].size;
+      const fileSize = e.target.files[0].size?e.target.files[0].size/(1024*1024):null;
       if (this.autoSubmit) {
         this.upload(fileSize)
       }
     },
     upload(fileSize) {
-      if (this.file && this.state != UPLOADED) {
+      if (this.file && this.state != UPLOADED && fileSize<=this.maxFileSize) {
         this.loading = true
-        uploadProvider.uploadFile(this.file, fileSize.toString()).then(result => {
+        uploadProvider.uploadFile(this.file).then(result => {
           this.state = UPLOADED
           this.uploadedFile = result.data.fileUpload
           this.$emit('fileUploaded', result.data.fileUpload)
         }).catch(err => {
+          console.log("ERROR", err)
           this.state = ERROR
-          let clientError = new ClientError(err)
-          this.errorMessage = clientError.i18nMessage
+          this.errorMessage = "Error al cargar. Archivo o demasiado grande"
         }).finally(() => this.loading = false)
+      }else{
+        this.state = ERROR
+        this.errorMessage = "Error al cargar. Archivo o demasiado grande"
       }
     }
   }

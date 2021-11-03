@@ -1,8 +1,8 @@
 type userStorage{
  id: ID!
  user: User
- capacity: Float!
- usedSpace: Float
+ capacity: String!
+ usedSpace: String
 }
 
 type Query {

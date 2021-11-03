@@ -35,7 +35,7 @@
         </template>
 
         <template v-slot:item.size="{item}">
-          {{ redeableBytes(item.size) }}
+          {{ item.size.toFixed(2) }} Mb
         </template>
 
         <template v-slot:item.createdAt="{item}">

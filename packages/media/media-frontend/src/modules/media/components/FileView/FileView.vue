@@ -99,7 +99,7 @@ export default {
       return null
     },
     getSizeInMegaBytes() {
-      return this.file.size / 1e+6 + ' Megabyte'
+      return this.file.size.toFixed(5) + ' Megabyte'
     }
   },
   methods: {

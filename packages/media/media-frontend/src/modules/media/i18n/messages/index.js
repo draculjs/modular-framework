@@ -35,7 +35,9 @@ const messages = {
                 edit:"Edit",
                 editTitle:"Edit User Storage",
                 cliente:"Client",
-                usedPercentage:"Percentage used: "
+                usedPercentage:"Percentage used: ",
+                insufficientCapacity:"Insufficient capacity",
+                updated:"Capacity updated"
             }
         }
     },
@@ -75,7 +77,9 @@ const messages = {
                 edit:"Editar",
                 editTitle:"Edit Almacenamiento de Usuario",
                 cliente:"Cliente",
-                usedPercentage:"Porcentaje en uso: "
+                usedPercentage:"Porcentaje en uso: ",
+                insufficientCapacity:"Capacidad insuficiente",
+                updated:"Capacidad actualizada"
             }
         }
     },
@@ -115,7 +119,9 @@ const messages = {
                 edit:"Editar",
                 editTitle:"Editar Armazenamento do Usuário",
                 cliente:"Cliente",
-                usedPercentage:"Porcentagem em uso: "
+                usedPercentage:"Porcentagem em uso: ",
+                insufficientCapacity:"Capacidade insuficiente",
+                updated:"Capacidade atualizada"
             }
         }
     }

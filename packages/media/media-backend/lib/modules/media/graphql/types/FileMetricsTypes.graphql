@@ -1,4 +1,5 @@
 type UserMetrics{
+    _id: ID
     user: String
     count: Int
     weight: Int

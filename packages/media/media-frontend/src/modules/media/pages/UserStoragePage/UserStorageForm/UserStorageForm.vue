@@ -8,10 +8,12 @@
             <v-col cols="4">
                 <v-text-field
                     v-model="form.capacity"
+                    type='number'
                     :label="$t('media.userStorage.capacity')"
-                    dense hide-details
+                    dense 
                     suffix="MB"
-                    
+                    :rules="storageRules"
+                    required
                 ></v-text-field>
             </v-col>
             <v-col cols="6" class="ml-12">
@@ -20,7 +22,7 @@
                     :label="$t('renaper.asignOperations.facial')"
                     dense hide-details
                 ></v-checkbox> -->
-                <span class="headline black--text">{{$t('media.userStorage.usedPercentage')}} {{form.usedSpace/form.capacity}}%</span>
+                <span class="headline black--text">{{$t('media.userStorage.usedPercentage')}} {{percentageUsed(form)}}</span>
             </v-col>   
         </v-row>
         </v-form>
@@ -34,6 +36,20 @@
                 type: Object,
                 required: true
             },
+            inputErrors: Object
+        },
+        methods: {
+          percentageUsed(form){
+            return form.capacity>0?parseFloat(form.usedSpace*100/form.capacity).toFixed(2)+"%":"-"
+          },    
+        },
+        data () {
+            return {
+                storageRules: [
+                    (v) =>
+                    parseFloat(v) >= this.form.usedSpace || this.$t("media.userStorage.insufficientCapacity"),
+                ]
+            }
         },
         computed: {
             form: {
@@ -44,6 +60,14 @@
                     this.$emit('input', val)
                 }
             },
+            error:{
+                get() {
+                    return this.inputErrors
+                },
+                set(val) {
+                    this.$emit('input', val)
+                }
+            }
         },
         watch: {
             form: {

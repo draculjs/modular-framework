@@ -1,6 +1,7 @@
 import File from './../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
 import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../../media/permissions/File";
+import { updateUserUsedStorage } from './UserStorageService';
 
 export const findFile = async function (id, permissionType = null, userId = null) {
 
@@ -84,9 +85,12 @@ export const updateFile = async function (authUser, id, { description, tags }, p
 }
 
 export const deleteFile = function (id, permissionType, userId) {
+
     return new Promise((resolve, rejects) => {
         findFile(id, permissionType, userId).then((doc) => {
-            if (doc) {
+            if (doc) {  
+                updateUserUsedStorage(userId, -doc.size)
+
                 doc.softdelete(function (err) {
                     err ? rejects(err) : resolve({ id: id, success: true })
                 });

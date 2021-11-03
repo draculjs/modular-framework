@@ -1,5 +1,5 @@
-mutation fileUpload( $file: Upload!, $fileSize: String){
-    fileUpload(file: $file, fileSize: $fileSize){
+mutation fileUpload( $file: Upload!){
+    fileUpload(file: $file){
         id
         filename
         description

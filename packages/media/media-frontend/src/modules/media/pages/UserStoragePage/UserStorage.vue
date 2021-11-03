@@ -36,7 +36,7 @@
           {{item.usedSpace}}/{{item.capacity}} MB
         </template>
         <template v-slot:item.usedSpace="{ item }">
-          {{item.usedSpace/item.capacity}}%
+          {{percentageUsed(item)}}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-btn
@@ -52,7 +52,7 @@
         :timeout="timeout"
         :color="snackbarColor"
       >
-        {{ $t("renaper.asignOperations.updated") }}
+        {{ $t("media.userStorage.updated") }}
 
         <template v-slot:action="{ attrs }">
           <v-btn
@@ -111,12 +111,14 @@
         },
 
         methods: {
-            load() {
+          percentageUsed(item){
+            return item.capacity>0?parseFloat(item.usedSpace*100/item.capacity).toFixed(2)+"%":"-"
+          },  
+          load() {
               this.users=[]
               this.loadingPermissions = true
               userSorageProvider.fetchUserStorage()
               .then(r=>{
-                  console.log("RRRR",r)
                 this.users= r.data.userStorageFetch
               })
               .catch(err=> console.error(err))

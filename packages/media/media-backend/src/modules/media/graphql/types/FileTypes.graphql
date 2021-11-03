@@ -8,7 +8,7 @@ type File{
     extension: String!
     relativePath: String!
     absolutePath: String!
-    size: Int!
+    size: Float!
     url: String!
     createdAt: String!
     createdBy: CreatedBy
@@ -35,7 +35,7 @@ input FileInput{
     extension: String!
     relativePath: String!
     absolutePath: String!
-    size: Int!
+    size: Float!
     url: String!
     createdAt: String!
 }
