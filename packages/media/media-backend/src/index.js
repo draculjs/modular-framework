@@ -12,6 +12,8 @@ import { jwtMiddleware, corsMiddleware, rbacMiddleware, sessionMiddleware } from
 import { router as fileRouter } from './modules/media/rest/routers/FileRouter'
 import initService from "./init/init-service";
 import { ResponseTimeMiddleware, RequestMiddleware, GqlErrorLog, GqlResponseLog } from '@dracul/logger-backend'
+import { updateFileMiddleware } from "./middleware"
+import { cronManager } from "./cron";
 
 import swaggerUi from 'swagger-ui-express'
 const YAML = require('yamljs');
@@ -38,6 +40,7 @@ app.use(RequestMiddleware)
 app.use(ResponseTimeMiddleware)
 app.use(rbacMiddleware)
 app.use(sessionMiddleware)
+app.use('/media/files', updateFileMiddleware)
 
 app.use('/api', fileRouter)
 
@@ -86,7 +89,7 @@ app.use('/media/logo', express.static('media/logo'));
 app.use('/media/files', express.static('media/files'));
 app.use('/', express.static('web', { index: "index.html" }));
 
-app.get('*', function (request, response) {
+app.get('*', async function (request, response) {
     response.sendFile(path.resolve(__dirname, 'web/index.html'));
 });
 
@@ -109,5 +112,7 @@ initService().then(() => {
 }).catch(err => {
     DefaultLogger.error(err.message, err)
 })
+
+cronManager();
 
 export default app;

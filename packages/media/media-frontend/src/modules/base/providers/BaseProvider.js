@@ -15,9 +15,9 @@ class BaseProvider {
         })
     }
 
-    fetchMaxFileSize() {
+    fetchEnvironmentVariables() {
         return this.gqlc.query({
-            query: require('./gql/fetchMaxFileSize.graphql'),
+            query: require('./gql/fetchEnvironmentVariables.graphql'),
             fetchPolicy: "network-only"
         })
     }

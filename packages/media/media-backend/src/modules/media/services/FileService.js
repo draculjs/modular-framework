@@ -61,9 +61,6 @@ export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search 
     })
 }
 
-
-
-
 export const updateFile = async function (authUser, id, { description, tags }, permissionType, userId) {
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, userId) },
@@ -79,6 +76,25 @@ export const updateFile = async function (authUser, id, { description, tags }, p
                 }
                 if (doc) {
                     doc.populate('createdBy.user').execPopulate(() => resolve(doc))
+                } else {
+                    rejects('File not found')
+                }
+            })
+    })
+}
+
+export const updateByRelativePath = function (relativePath) {
+
+    return new Promise((resolve, rejects) => {
+        File.findOneAndUpdate({ relativePath: relativePath },
+            { lastAccess: Date.now() },
+            { runValidators: true, context: 'query' },
+            (error, doc) => {
+                if (error) {
+                    rejects(error)
+                }
+                if (doc) {
+                    resolve(doc)
                 } else {
                     rejects('File not found')
                 }
@@ -107,6 +123,80 @@ export const deleteFile = function (id, permissionType, userId) {
             }
         })
     })
+}
+
+export const findAndDeleteExpiredFiles = async function () {
+
+    function getDataEntity() {
+
+        return [
+            {
+                $lookup: {
+                    from: "userstorages",
+                    localField: "createdBy.user",
+                    foreignField: "user",
+                    as: "userStorage",
+                },
+            },
+            {
+                $unwind: "$userStorage",
+            },
+            {
+                $addFields: {
+                    timeDiffInMillis: { $subtract: ["$$NOW", "$lastAccess"] }
+                }
+            },
+            {
+                $addFields: {
+                    timeDiffInDays: { $divide: ["$timeDiffInMillis", 24 * 60 * 60 * 1000] }
+                }
+            },
+            {
+                $addFields: {
+                    roundedTime: { $round: ["$timeDiffInDays", 0] }
+                }
+            },
+            {
+                $match: {
+                    $expr: { $lte: ["$userStorage.fileExpirationTime", "$roundedTime"] },
+                },
+            }
+        ];
+    }
+
+    const entityData = getDataEntity();
+    const aggregateData = [entityData];
+
+    let docs = []
+    await File.aggregate(aggregateData).then((result) => {
+        docs = result;
+    }).catch((error) => {
+        winston.error('FileService - findExpiredFiles - Error en aggregate: ' + error)
+    });
+
+    // For each de los files con unlink y actualizo usedSpace de userStorage
+    if (docs) {
+        docs.forEach((file) => {
+            updateUserUsedStorage(file.createdBy.user, -file.size)
+            fs.unlink(file.relativePath, (error) => {
+                if (error) winston.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error)
+                else winston.info('Se eliminó el archivo ' + file.relativePath)
+            });
+        })
+    }
+
+    // Mappeo los ids de los files encontrados
+    let fileIds = docs.map(file => { return file._id });
+
+    // Borro los files encontrados
+    return new Promise((resolve, reject) => {
+        File.deleteMany({ _id: { $in: fileIds } }).then((result) => {
+            resolve({ ok: result.ok, deletedCount: result.deletedCount })
+        }).catch((err) => {
+            winston.error('FileService - findExpiredFiles. Error en deleteMany: ' + error)
+            reject({ ok: err.ok, deletedCount: err.deletedCount })
+        })
+    });
 }
 
 function filterByFileOwner(permissionType, userId) {

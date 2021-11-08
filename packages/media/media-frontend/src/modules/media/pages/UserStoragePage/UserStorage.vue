@@ -32,6 +32,9 @@
 
           </v-toolbar>
         </template>
+        <template v-slot:item.fileExpirationTime="{ item }">
+          {{item.fileExpirationTime}}  {{ $t("media.userStorage.days") }}
+        </template>
         <template v-slot:item.maxFileSize="{ item }">
           {{item.maxFileSize.toFixed(2)}} MB
         </template>
@@ -95,6 +98,7 @@
                     sortable: false,
                     value: 'user.name',
                     },
+                    { text: this.$t("media.userStorage.fileExpirationTime"), value: 'fileExpirationTime', align: 'center' },
                     { text: this.$t("media.userStorage.maxFileSize"), value: 'maxFileSize', align: 'center' },
                     { text: this.$t("media.userStorage.capacity"), value: 'capacity', align: 'center' },
                     { text: this.$t("media.userStorage.percentage"), value: 'usedSpace', align: 'center' },

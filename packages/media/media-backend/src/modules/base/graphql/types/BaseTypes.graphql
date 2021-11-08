@@ -2,11 +2,12 @@ type Ping {
     status: Boolean
 }
 
-type MaxFileSize {
+type EnvironmentVariable {
     maxFileSize: Float!
+    fileExpirationTime: Int!
 }
 
 type Query {
     ping: Ping
-    fetchMaxFileSize: MaxFileSize
+    fetchEnvironmentVariables: EnvironmentVariable
 }

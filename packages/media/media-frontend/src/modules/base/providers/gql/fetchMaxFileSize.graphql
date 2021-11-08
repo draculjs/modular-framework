@@ -1,5 +1,0 @@
-query fetchMaxFileSize {
-    fetchMaxFileSize {
-        maxFileSize
-    }
-}

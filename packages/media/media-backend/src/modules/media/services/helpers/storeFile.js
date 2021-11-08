@@ -17,18 +17,15 @@ class StreamSizeValidator extends Transform {
 
     _transform(chunk, encoding, callback) {
 
-        this.totalLength += chunk.length/(1024*1024)
-        console.log("compara", this.totalLength, this.maxFileSize, this.storageLeft)
+        this.totalLength += chunk.length / (1024 * 1024)
         if (this.totalLength > this.maxFileSize) {
             this.error = 'MAX_FILE_SIZE_EXCEEDED';
-            console.log("en111")
             winston.error("storeFile.StreamSizeValidator: _transform error: ", this.error)
             this.destroy(new Error(this.error));
             return;
         }
-        if (this.totalLength > this.storageLeft){
+        if (this.totalLength > this.storageLeft) {
             this.error = 'STORAGE_CAPACITY_EXCEEDED';
-            console.log("en222222")
             winston.error("storeFile.StreamSizeValidator: _transform error: ", this.error)
             this.destroy(new Error(this.error));
             return;
@@ -48,11 +45,11 @@ const storeFile = function (fileStream, dst, userId) {
     if (typeof fileStream.pipe != 'function') {
         throw new Error("Stream needs the pipe method")
     }
-    
+
     return new Promise(async (resolve, reject) => {
         let storageLeft = await checkUserStorageLeft(userId)
-        app.set("storageLeft",storageLeft)
-        
+        app.set("storageLeft", storageLeft)
+
         const sizeValidator = new StreamSizeValidator()
 
         createDirIfNotExist(dst)
@@ -82,7 +79,8 @@ const storeFile = function (fileStream, dst, userId) {
             .pipe(fileWriteStream)
             .on('error', error => reject(error))
             .on('finish', () => {
-                resolve({ finish: true, bytesWritten: fileWriteStream.bytesWritten })})
+                resolve({ finish: true, bytesWritten: fileWriteStream.bytesWritten })
+            })
     }
     );
 };

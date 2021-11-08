@@ -9,5 +9,6 @@ query userStorageFindByUser {
         capacity
         usedSpace
         maxFileSize
+        fileExpirationTime
     }
 }

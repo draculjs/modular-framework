@@ -41,6 +41,22 @@
                 <span class="headline black--text">{{$t('media.userStorage.fileSizeLimit')}}</span>
             </v-col>   
         </v-row>
+        <v-row> 
+            <v-col cols="4">
+                <v-text-field
+                    v-model="form.fileExpirationTime"
+                    type='number'
+                    :label="$t('media.userStorage.fileExpirationTime')"
+                    dense 
+                    :suffix="$t('media.userStorage.days')"
+                    :rules="fileExpirationTimeRules"
+                    required
+                ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="ml-12">
+                <span class="headline black--text">{{$t('media.userStorage.fileExpirationLimit')}}</span>
+            </v-col>   
+        </v-row>
         </v-form>
     </v-container>
 </template>
@@ -54,7 +70,8 @@
                 required: true
             },
             inputErrors: Object,
-            fileSizeLimit: Number
+            fileSizeLimit: Number,
+            fileExpirationLimit: Number
         },
         methods: {
           percentageUsed(form){
@@ -69,8 +86,19 @@
                     parseFloat(v) >= this.form.usedSpace || this.$t("media.userStorage.insufficientCapacity"),
                 ],
                 maxFileSizeRules: [
-                    (v) =>
-                    parseFloat(v) <= this.fileSizeLimit || this.$t("media.userStorage.sizeLimitExceeded"),
+                    (v) => {
+                        if (this.fileSizeLimit != 0) {
+                            return parseFloat(v) <= this.fileSizeLimit && parseFloat(v) > 0 || this.$t("media.userStorage.sizeLimitExceeded");
+                        }
+                    }
+                ],
+                fileExpirationTimeRules: [
+                    (v) => 
+                    {
+                        if (this.fileExpirationLimit != 0) {
+                            return parseInt(v) <= this.fileExpirationLimit && parseFloat(v) > 0 || this.$t("media.userStorage.fileExpirationTimeExceeded")
+                        }
+                    }
                 ]
             }
         },

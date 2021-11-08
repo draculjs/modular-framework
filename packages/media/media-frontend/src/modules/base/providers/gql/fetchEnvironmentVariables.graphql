@@ -1,0 +1,6 @@
+query fetchEnvironmentVariables {
+    fetchEnvironmentVariables {
+        maxFileSize
+        fileExpirationTime
+    }
+}

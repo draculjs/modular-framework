@@ -17,6 +17,7 @@ const FileSchema = new Schema({
     absolutePath: { type: String, required: true },
     size: { type: Number, required: true },
     url: { type: String, required: true },
+    lastAccess: { type: Date, required: true, default: Date.now },
     createdAt: { type: Date, required: true, default: Date.now },
     createdBy: {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },

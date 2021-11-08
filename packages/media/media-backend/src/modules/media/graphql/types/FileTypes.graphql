@@ -50,7 +50,6 @@ type FileDelete{
     success: Boolean!
 }
 
-
 type Mutation {
     fileUpdate(id: ID!, input: FileUpdateInput): File
     fileDelete(id: ID!): FileDelete!

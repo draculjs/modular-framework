@@ -156,11 +156,11 @@ export default {
         }).catch(err => {
           console.log("ERROR", err)
           this.state = ERROR
-          this.errorMessage = "Error al cargar. Archivo o demasiado grande"
+          this.errorMessage = this.$t("media.file.fileSizeExceeded")
         }).finally(() => this.loading = false)
       }else{
         this.state = ERROR
-        this.errorMessage = "Error al cargar. Archivo o demasiado grande"
+        this.errorMessage = this.$t("media.file.fileSizeExceeded")
       }
     }
   }

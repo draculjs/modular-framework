@@ -9,5 +9,6 @@ query userStorageFetch{
         capacity
         usedSpace
         maxFileSize
+        fileExpirationTime
     }
 }
