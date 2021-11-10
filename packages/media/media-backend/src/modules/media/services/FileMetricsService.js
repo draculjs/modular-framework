@@ -27,7 +27,7 @@ export const fileUserMetrics = async function () {
             {
                 $group:
                     {
-                        _id: { user: "$createdBy.username"  },
+                        _id: "$createdBy.user" ,
                         user: {$first: "$createdBy.username"},
                         count: { $sum: 1 },
                         weight: {$sum: "$size"}

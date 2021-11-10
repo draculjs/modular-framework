@@ -90,7 +90,7 @@ router.post('/file', upload.single('file'), function (req, res) {
   if (!req.rbac.isAllowed(req.user.id, _File.FILE_CREATE)) res.status(403).json({
     message: "Not Authorized"
   });
-  const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES : 4;
+  const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES : 4;
   if (req.file.size > (0, _convertGigabytesToBytes.default)(maxFileSize)) res.status(500).json({
     message: "Maximum file size exceeded"
   });

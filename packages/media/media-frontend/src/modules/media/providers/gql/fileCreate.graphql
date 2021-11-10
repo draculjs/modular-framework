@@ -18,6 +18,7 @@ mutation fileCreate($filename:String!, $extension:String!, $relativePath:String!
             }
             username
         }
+        lastAccess
     }
 }
 

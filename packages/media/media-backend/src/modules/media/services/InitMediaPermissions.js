@@ -8,6 +8,14 @@ import {
     FILE_DELETE_OWN
 } from '../permissions/File'
 
+import {
+    USER_STORAGE_SHOW_ALL,
+    USER_STORAGE_SHOW_OWN,
+    USER_STORAGE_UPDATE,
+    USER_STORAGE_CREATE,
+    USER_STORAGE_DELETE
+} from '../permissions/UserStorage'
+
 import { InitService } from "@dracul/user-backend";
 
 const initMediaPermissions = async function () {
@@ -18,7 +26,12 @@ const initMediaPermissions = async function () {
         FILE_UPDATE_ALL,
         FILE_UPDATE_OWN,
         FILE_DELETE_ALL,
-        FILE_DELETE_OWN
+        FILE_DELETE_OWN,
+        USER_STORAGE_SHOW_ALL,
+        USER_STORAGE_SHOW_OWN,
+        USER_STORAGE_UPDATE,
+        USER_STORAGE_CREATE,
+        USER_STORAGE_DELETE
     ]
     await InitService.initPermissions(permissions)
     console.log("Load custom permissions done.")

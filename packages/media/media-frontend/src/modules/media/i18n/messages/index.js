@@ -21,10 +21,34 @@ const messages = {
                 url: 'URL',
                 createdAt: 'Creation date',
                 createdBy: 'Created by',
-                download: 'download'
+                download: 'download',
+                fileSizeExceeded: "File is too big",
+                lastAccess: 'Last access'
 
+            },
+            userStorage: {
+                title: "User Storage",
+                subtitle: "Manage users storage capacity",
+                title2: "",
+                days: "days",
+                user: "User",
+                capacity: "Capacity",
+                percentage: "Percentage",
+                actions: "Actions",
+                edit: "Edit",
+                editTitle: "Edit User Storage",
+                cliente: "Client",
+                usedPercentage: "Percentage used: ",
+                insufficientCapacity: "Insufficient capacity",
+                sizeLimitExceeded: "File size limit exceeded",
+                updated: "Capacity updated",
+                maxFileSize: "Max size",
+                fileSizeLimit: "File size limit",
+                fileExpirationTime: "File expiration",
+                fileExpirationLimit: "File expiration limit",
+                fileExpirationTimeExceeded: "Expiration time not allowed"
             }
-        }
+        },
     },
     es: {
         media: {
@@ -48,8 +72,33 @@ const messages = {
                 url: 'URL',
                 createdAt: 'Fecha de creación',
                 createdBy: 'Creado por',
-                download: 'descargar'
+                download: 'descargar',
+                fileSizeExceeded: "Archivo demasiado grande",
+                lastAccess: 'Último acceso'
 
+
+            },
+            userStorage: {
+                title: "Almacenamiento usuarios",
+                subtitle: "Administrar el almacenaminto de los usuarios",
+                title2: "",
+                days: "días",
+                user: "Usuario",
+                capacity: "Capacidad",
+                percentage: "Porcentaje",
+                actions: "Acciones",
+                edit: "Editar",
+                editTitle: "Edit Almacenamiento de Usuario",
+                cliente: "Cliente",
+                usedPercentage: "Porcentaje en uso: ",
+                insufficientCapacity: "Capacidad insuficiente",
+                sizeLimitExceeded: "Límite de tamaño del archivo no permitido",
+                updated: "Capacidad actualizada",
+                maxFileSize: "Tamaño máximo",
+                fileSizeLimit: "Límite de tamaño del archivo",
+                fileExpirationTime: "Tiempo de expiración",
+                fileExpirationLimit: "Tiempo de expiración del archivo",
+                fileExpirationTimeExceeded: "Tiempo de expiración no permitido"
             }
         }
     },
@@ -75,8 +124,31 @@ const messages = {
                 url: 'URL',
                 createdAt: 'Data de criação',
                 createdBy: 'criado pela',
-                download: 'download'
-
+                download: 'download',
+                fileSizeExceeded: "Arquivo muito grande",
+                lastAccess: 'Último acesso'
+            },
+            userStorage: {
+                title: "Armazenamento do usuário",
+                subtitle: "Gerenciar armazenamento do usuário",
+                title2: "",
+                days: "dias",
+                user: "Usuário",
+                capacity: "Capacidade",
+                percentage: "Porcentagem",
+                actions: "Ações",
+                edit: "Editar",
+                editTitle: "Editar Armazenamento do Usuário",
+                cliente: "Cliente",
+                usedPercentage: "Porcentagem em uso: ",
+                insufficientCapacity: "Capacidade insuficiente",
+                sizeLimitExceeded: "Limite de tamanho de arquivo não permitido",
+                updated: "Capacidade atualizada",
+                maxFileSize: "Tamanho máximo",
+                fileSizeLimit: "Limite de tamanho de arquivo",
+                fileExpirationTime: "Tempo de expiração",
+                fileExpirationLimit: "Tempo de expiração do arquivo",
+                fileExpirationTimeExceeded: "Prazo de validade não permitido"
             }
         }
     }

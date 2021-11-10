@@ -1,0 +1,14 @@
+query userStorageFetch{
+    userStorageFetch{
+        id
+        user {
+            name
+            username
+            id
+        }
+        capacity
+        usedSpace
+        maxFileSize
+        fileExpirationTime
+    }
+}

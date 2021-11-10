@@ -20,6 +20,7 @@ mutation fileUpdate($id: ID!, $description:String, $tags:[String]){
             }
             username
         }
+        lastAccess
     }
 }
 

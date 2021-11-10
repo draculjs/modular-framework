@@ -1,0 +1,34 @@
+type userStorage{
+ id: ID!
+ user: User
+ capacity: Float!
+ usedSpace: Float
+ maxFileSize: Float
+ fileExpirationTime: Int
+}
+
+input userStorageInput{
+ name: String!
+ capacity: Float!
+ usedSpace: Float
+ maxFileSize: Float
+ fileExpirationTime: Int
+}
+
+type userStorageUpdate{
+ id: ID!
+ name: String
+ capacity: Float!
+ usedSpace: Float
+ maxFileSize: Float
+ fileExpirationTime: Int
+}
+
+type Query {
+    userStorageFetch: [userStorage],
+    userStorageFindByUser: userStorage
+}
+
+type Mutation {
+    userStorageUpdate(id: ID!, input: userStorageInput): userStorageUpdate
+}

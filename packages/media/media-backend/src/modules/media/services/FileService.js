@@ -2,6 +2,9 @@ import File from './../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
 import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../../media/permissions/File";
 import dayjs from 'dayjs'
+import { updateUserUsedStorage } from './UserStorageService';
+import fs from 'fs';
+import { DefaultLogger as winston } from '@dracul/logger-backend';
 
 export const findFile = async function (id, permissionType = null, userId = null) {
 
@@ -18,7 +21,7 @@ export const findFile = async function (id, permissionType = null, userId = null
 
 export const fetchFiles = async function () {
     return new Promise((resolve, reject) => {
-        File.find({}).isDeleted(false).populate('createdBy.user').exec((err, res) => (
+        File.find({}).populate('createdBy.user').exec((err, res) => (
             err ? reject(err) : resolve(res)
         ));
     })
@@ -143,18 +146,120 @@ export const updateFile = async function (authUser, id, { description, tags }, p
     })
 }
 
-export const deleteFile = function (id, permissionType, userId) {
+export const updateByRelativePath = function (relativePath) {
+
     return new Promise((resolve, rejects) => {
-        findFile(id, permissionType, userId).then((doc) => {
+        File.findOneAndUpdate({ relativePath: relativePath },
+            { lastAccess: Date.now() },
+            { runValidators: true, context: 'query' },
+            (error, doc) => {
+                if (error) {
+                    rejects(error)
+                }
+                if (doc) {
+                    resolve(doc)
+                } else {
+                    rejects('File not found')
+                }
+            })
+    })
+}
+
+export const deleteFile = function (id, permissionType, userId) {
+
+    return new Promise((resolve, rejects) => {
+        findFile(id, permissionType, userId).then(async (doc) => {
             if (doc) {
-                doc.softdelete(function (err) {
-                    err ? rejects(err) : resolve({ id: id, success: true })
-                });
+                try {
+                    updateUserUsedStorage(userId, -doc.size)
+                    fs.unlink(doc.relativePath, (error) => {
+                        if (error) winston.error(error)
+                        else winston.info('Se eliminó el archivo ' + doc.relativePath)
+                    });
+                    await File.deleteOne({ _id: id });
+                    resolve({ id: id, success: true })
+                } catch (err) {
+                    rejects(err)
+                }
             } else {
                 rejects('File not found')
             }
         })
     })
+}
+
+export const findAndDeleteExpiredFiles = async function () {
+
+    function getDataEntity() {
+
+        return [
+            {
+                $lookup: {
+                    from: "userstorages",
+                    localField: "createdBy.user",
+                    foreignField: "user",
+                    as: "userStorage",
+                },
+            },
+            {
+                $unwind: "$userStorage",
+            },
+            {
+                $addFields: {
+                    timeDiffInMillis: { $subtract: ["$$NOW", "$lastAccess"] }
+                }
+            },
+            {
+                $addFields: {
+                    timeDiffInDays: { $divide: ["$timeDiffInMillis", 24 * 60 * 60 * 1000] }
+                }
+            },
+            {
+                $addFields: {
+                    roundedTime: { $round: ["$timeDiffInDays", 0] }
+                }
+            },
+            {
+                $match: {
+                    $expr: { $lte: ["$userStorage.fileExpirationTime", "$roundedTime"] },
+                },
+            }
+        ];
+    }
+
+    const entityData = getDataEntity();
+    const aggregateData = [entityData];
+
+    let docs = []
+    await File.aggregate(aggregateData).then((result) => {
+        docs = result;
+    }).catch((error) => {
+        winston.error('FileService - findExpiredFiles - Error en aggregate: ' + error)
+    });
+
+    // For each de los files con unlink y actualizo usedSpace de userStorage
+    if (docs) {
+        docs.forEach((file) => {
+            updateUserUsedStorage(file.createdBy.user, -file.size)
+            fs.unlink(file.relativePath, (error) => {
+                if (error) winston.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error)
+                else winston.info('Se eliminó el archivo ' + file.relativePath)
+            });
+        })
+    }
+
+    // Mappeo los ids de los files encontrados
+    let fileIds = docs.map(file => { return file._id });
+
+    // Borro los files encontrados
+    return new Promise((resolve, reject) => {
+        File.deleteMany({ _id: { $in: fileIds } }).then((result) => {
+            resolve({ ok: result.ok, deletedCount: result.deletedCount })
+        }).catch((err) => {
+            winston.error('FileService - findExpiredFiles. Error en deleteMany: ' + error)
+            reject({ ok: err.ok, deletedCount: err.deletedCount })
+        })
+    });
 }
 
 function filterByFileOwner(permissionType, userId) {

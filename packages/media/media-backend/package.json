@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.2.35",
+  "version": "1.2.36",
   "author": "Cristian Incarnato",
   "main": "./lib/exports.js",
   "scripts": {
@@ -26,12 +26,14 @@
   },
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
+    "@dracul/common-backend": "^1.2.32",
     "@dracul/customize-backend": "^1.2.33",
     "@dracul/logger-backend": "^1.0.105",
     "@dracul/user-backend": "^1.2.33",
     "apollo-server-express": "^2.12.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
+    "cache-base": "^4.0.2",
     "csv-parser": "^2.3.2",
     "dayjs": "^1.10.7",
     "dotenv": "^8.1.0",
@@ -54,6 +56,7 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3",
     "multer": "^1.4.2",
+    "node-cron": "^3.0.0",
     "node-device-detector": "^1.2.1",
     "nodemailer": "^6.3.1",
     "nodemailer-pug-engine": "^1.0.1",

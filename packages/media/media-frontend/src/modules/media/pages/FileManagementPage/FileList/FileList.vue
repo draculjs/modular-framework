@@ -41,11 +41,15 @@
         </template>
 
         <template v-slot:item.size="{item}">
-          {{ redeableBytes(item.size) }}
+          {{ item.size.toFixed(2) }} Mb
         </template>
 
         <template v-slot:item.createdAt="{item}">
           {{ formatDate(item.createdAt) }}
+        </template>
+
+        <template v-slot:item.lastAccess="{item}">
+          {{ formatDate(item.lastAccess) }}
         </template>
 
         <template v-slot:item.action="{ item }">
@@ -191,6 +195,7 @@ export default {
         {text: this.$t('media.file.type'), value: 'type'},
         {text: this.$t('media.file.size'), value: 'size'},
         {text: this.$t('media.file.createdAt'), value: 'createdAt'},
+        {text: this.$t('media.file.lastAccess'), value: 'lastAccess'},
         {text: this.$t('media.file.createdBy'), value: 'createdBy.username'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},

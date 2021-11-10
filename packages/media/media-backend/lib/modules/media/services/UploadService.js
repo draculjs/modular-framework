@@ -25,7 +25,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const fileUpload = function (user, inputFile, fileSize = null) {
   const validateMaxFileSize = function (fileSize) {
-    const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES : 4;
+    const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES : 4;
     return (0, _convertGigabytesToBytes.default)(maxFileSize) > fileSize;
   };
 

@@ -4,21 +4,24 @@ const messages = {
       base: {
          home: 'Home',
          about: 'About',
-         welcome: "Welcome"
+         welcome: "Welcome",
+         search: "Search"
       }
    },
    es: {
       base: {
          home: 'Principal',
          about: 'Acerca de',
-         welcome: "Bienvenido"
+         welcome: "Bienvenido",
+         search: "Buscar"
       }
    },
    pt: {
       base: {
          home: 'Principal',
          about: 'Acerca de',
-         welcome: "Welcome"
+         welcome: "Welcome",
+         search: "Procurar"
       }
    }
 }
