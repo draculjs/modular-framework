@@ -12,6 +12,7 @@ type File{
     url: String!
     createdAt: String!
     createdBy: CreatedBy
+    lastAccess: String
 }
 
 type CreatedBy{

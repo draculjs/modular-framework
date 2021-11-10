@@ -23,6 +23,7 @@ query filePaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $order
                 }
                 username
             }
+            lastAccess
         }
     }
 }

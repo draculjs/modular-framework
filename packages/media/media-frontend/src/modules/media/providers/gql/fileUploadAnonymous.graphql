@@ -15,5 +15,6 @@ mutation fileUploadAnonymous( $file: Upload!){
         createdBy{
             username
         }
+        lastAccess
     }
 }

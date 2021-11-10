@@ -42,6 +42,10 @@
           {{ formatDate(item.createdAt) }}
         </template>
 
+        <template v-slot:item.lastAccess="{item}">
+          {{ formatDate(item.lastAccess) }}
+        </template>
+
         <template v-slot:item.action="{ item }">
           <show-button @click="$emit('show', item)"/>
           <edit-button @click="$emit('update', item)"/>
@@ -84,6 +88,7 @@ export default {
         {text: this.$t('media.file.type'), value: 'type'},
         {text: this.$t('media.file.size'), value: 'size'},
         {text: this.$t('media.file.createdAt'), value: 'createdAt'},
+        {text: this.$t('media.file.lastAccess'), value: 'lastAccess'},
         {text: this.$t('media.file.createdBy'), value: 'createdBy.username'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},

@@ -20,5 +20,6 @@ mutation fileUpload( $file: Upload!){
             }
             username
         }
+        lastAccess
     }
 }
