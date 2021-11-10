@@ -25,19 +25,16 @@ var _default = {
       return (0, _FileService.findFile)(id, permissionType, user.id);
     },
     filePaginate: (_, {
-      pageNumber,
-      itemsPerPage,
-      search,
-      orderBy,
-      orderDesc
+      input
     }, {
       user,
       rbac
     }) => {
+      console.log("INPUT resolver", input);
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
       if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL) && !rbac.isAllowed(user.id, _File.FILE_SHOW_OWN)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       let permissionType = rbac.isAllowed(user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : rbac.isAllowed(user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null;
-      return (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, user.id);
+      return (0, _FileService.paginateFiles)(input, permissionType, user.id);
     }
   },
   Mutation: {

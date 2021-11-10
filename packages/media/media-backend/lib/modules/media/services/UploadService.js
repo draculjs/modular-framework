@@ -9,6 +9,8 @@ var _loggerBackend = require("@dracul/logger-backend");
 
 var _path = _interopRequireDefault(require("path"));
 
+var _fs = _interopRequireDefault(require("fs"));
+
 var _FileModel = _interopRequireDefault(require("../models/FileModel"));
 
 var _storeFile = _interopRequireDefault(require("./helpers/storeFile"));
@@ -17,13 +19,24 @@ var _randomString = _interopRequireDefault(require("./helpers/randomString"));
 
 var _baseUrl = _interopRequireDefault(require("./helpers/baseUrl"));
 
+var _convertGigabytesToBytes = _interopRequireDefault(require("./helpers/convertGigabytesToBytes"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fileUpload = function (user, inputFile) {
+const fileUpload = function (user, inputFile, fileSize = null) {
+  const validateMaxFileSize = function (fileSize) {
+    const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES : 4;
+    return (0, _convertGigabytesToBytes.default)(maxFileSize) > fileSize;
+  };
+
   return new Promise(async (resolve, rejects) => {
     try {
       if (!user) {
         return rejects(new Error("user is required"));
+      }
+
+      if (fileSize && !validateMaxFileSize(fileSize)) {
+        return rejects(new Error("error.maxSizeExceeded"));
       }
 
       const {
@@ -86,7 +99,7 @@ const fileUpload = function (user, inputFile) {
     } catch (err) {
       _loggerBackend.DefaultLogger.error('UploadService: ', err);
 
-      rejects(new Error("Upload Fail"));
+      rejects(new Error(err));
     }
   });
 };

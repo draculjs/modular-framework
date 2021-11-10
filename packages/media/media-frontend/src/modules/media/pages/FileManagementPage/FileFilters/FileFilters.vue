@@ -17,7 +17,7 @@
             </v-col>
             <v-col cols="4">
               <date-input
-                v-model="filters.dateTo"
+                v-model="filters[1].value"
                 :label="$t('media.file.createdAt')"
                 prepend-icon="event"
                 color="secondary"
@@ -26,7 +26,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-model="filters.filename"  
+                v-model="filters[2].value"
                 :label="$t('media.file.filename')"
                 prepend-icon="article"
                 color="secondary"
@@ -35,7 +35,7 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-model="filters.createdBy"  
+                v-model="filters[3].value" 
                 :label="$t('media.file.createdBy')"
                 prepend-icon="account_box"
                 color="secondary"
@@ -44,18 +44,27 @@
             </v-col>
             <v-col cols="4">
               <v-text-field
-                v-model="filters.size"
+                v-model="filters[4].value"
+                :label="$t('media.file.type')"
+                prepend-icon="extension"
+                color="secondary"
+                hide-details
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="filters[5].value"
                 :label="$t('media.file.size')"
                 prepend-icon="album"
                 color="secondary"
                 hide-details
               />
             </v-col>
-            <v-col cols="4">
+            <v-col cols="2">
               <v-text-field
-                v-model="filters.type"
-                :label="$t('media.file.type')"
-                prepend-icon="extension"
+                v-model="filters[5].value"
+                :label="$t('media.file.size')"
+                prepend-icon="album"
                 color="secondary"
                 hide-details
               />
@@ -94,11 +103,6 @@ export default {
       }
     }
   },
-  /* data() {
-    return {
-      
-    }
-  }, */
   methods: {
     setFilters() {
       this.$emit("updateFilters", this.filters);

@@ -33,6 +33,7 @@
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "csv-parser": "^2.3.2",
+    "dayjs": "^1.10.7",
     "dotenv": "^8.1.0",
     "email-templates": "^6.0.3",
     "express": "^4.17.1",

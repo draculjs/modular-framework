@@ -35,7 +35,7 @@ input FilterPaginateInput{
   pageNumber: Int,
   itemsPerPage: Int,
   search: String,
-  filters: FilterInput,
+  filters: [FilterInput],
   orderBy: String,
   orderDesc: Boolean
 }

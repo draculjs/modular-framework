@@ -84,62 +84,36 @@ export default {
       filters: [
         {
           field: 'dateFrom',
-          operator: 'eq', // puede ser eq|contain|regex|gt|lt|gte|lte
-          value: ''
+          operator: '$gte', // puede ser eq|contain|regex|gt|lt|gte|lte
+          value: null
         },
         {
           field: 'dateTo',
-          operator: 'eq',
-          value: ''
+          operator: '$lte',
+          value: null
         },
         {
           field: 'filename',
-          operator: 'eq',
-          value: ''
+          operator: '$regex',
+          value: null
         },
         {
-          field: 'createdBy',
-          operator: 'eq',
-          value: ''
+          field: 'createdBy.username',
+          operator: '$regex',
+          value: null
         },
         {
           field: 'type',
-          operator: 'eq',
-          value: ''
+          operator: '$regex',
+          value: null
         },
         {
           field: 'size',
-          operator: 'eq',
-          value: ''
+          operator: '$gte',
+          value: null
         }
       ]
     }
-  },
-  computed: {
-    headers() {
-      return [
-        //Entity Headers
-        {text: this.$t('media.file.filename'), value: 'filename'},
-        {text: this.$t('media.file.type'), value: 'type'},
-        {text: this.$t('media.file.size'), value: 'size'},
-        {text: this.$t('media.file.createdAt'), value: 'createdAt'},
-        {text: this.$t('media.file.createdBy'), value: 'createdBy.username'},
-        //Actions
-        {text: this.$t('common.actions'), value: 'action', sortable: false},
-      ]
-    },
-    formatDate() {
-      return (date) => moment(parseInt(date)).tz("America/Argentina/Buenos_Aires").format('YYYY-MM-DD')
-    },
-    getOrderBy() {
-      return (Array.isArray(this.orderBy)) ? this.orderBy[0] : this.orderBy
-    },
-    getOrderDesc() {
-      return (Array.isArray(this.orderDesc)) ? this.orderDesc[0] : this.orderDesc
-    }
-  },
-  created() {
-    this.fetch()
   },
   methods: {
 
@@ -171,37 +145,71 @@ export default {
       this.filters = [
         {
           field: 'dateFrom',
-          operator: 'eq',
-          value: ''
+          operator: '$gte',
+          value: null
         },
         {
           field: 'dateTo',
-          operator: 'eq',
-          value: ''
+          operator: '$lte',
+          value: null
         },
         {
           field: 'filename',
-          operator: 'eq',
-          value: ''
+          operator: '$regex',
+          value: null
         },
         {
-          field: 'createdBy',
-          operator: 'eq',
-          value: ''
+          field: 'createdBy.username',
+          operator: '$regex',
+          value: null
         },
         {
           field: 'type',
-          operator: 'eq',
-          value: ''
+          operator: '$regex',
+          value: null
         },
         {
           field: 'size',
-          operator: 'eq',
-          value: ''
+          operator: '$expr',
+          value: null
         }
       ]
     }
+  },
+  watch: {
+    message: function(value) {
+      if (value) {
+        this.filters = true;
+      }
+    },
+  },
+  computed: {
+    headers() {
+      return [
+        //Entity Headers
+        {text: this.$t('media.file.filename'), value: 'filename'},
+        {text: this.$t('media.file.type'), value: 'type'},
+        {text: this.$t('media.file.size'), value: 'size'},
+        {text: this.$t('media.file.createdAt'), value: 'createdAt'},
+        {text: this.$t('media.file.createdBy'), value: 'createdBy.username'},
+        //Actions
+        {text: this.$t('common.actions'), value: 'action', sortable: false},
+      ]
+    },
+    formatDate() {
+      return (date) => moment(parseInt(date)).tz("America/Argentina/Buenos_Aires").format('YYYY-MM-DD')
+    },
+    getOrderBy() {
+      return (Array.isArray(this.orderBy)) ? this.orderBy[0] : this.orderBy
+    },
+    getOrderDesc() {
+      return (Array.isArray(this.orderDesc)) ? this.orderDesc[0] : this.orderDesc
+    }
+  },
+  created() {
+    this.fetch()
   }
+  
 
 }
 </script>

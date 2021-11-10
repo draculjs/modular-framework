@@ -38,7 +38,16 @@ const fetchFiles = async function () {
 
 exports.fetchFiles = fetchFiles;
 
-const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false, permissionType = null, userId = null) {
+const paginateFiles = function ({
+  pageNumber = 1,
+  itemsPerPage = 5,
+  search = null,
+  filters,
+  orderBy = null,
+  orderDesc = false
+}, permissionType = null, userId = null) {
+  console.log("FILTERS: ", filters);
+
   function qs(search) {
     let qs = {};
 
@@ -63,11 +72,106 @@ const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null,
       return null;
     }
   }
+  /* filters = [
+    { field: 'dateFrom', operator: 'eq', value: '' },
+    { field: 'dateTo', operator: 'eq', value: '' },
+    { field: 'filename', operator: 'eq', value: '' },
+    { field: 'createdBy', operator: 'eq', value: '' },
+    { field: 'type', operator: 'eq', value: '' },
+    { field: 'size', operator: 'eq', value: '' }
+  ] */
+
+
+  function filterValues(filters) {
+    let qsFilter = {};
+    /* filters.forEach(filter => {
+      switch (filter.field) {
+        case 'size':
+          (filter.value) && (qsFilter.size = {[filter.operator]: parseInt(filter.value)})
+          break;
+      
+        default:
+          break;
+      }
+    }) */
+
+    filters.forEach(({
+      field,
+      operator,
+      value
+    }) => {
+      switch (field) {
+        case 'dateFrom':
+          /* (value) && (qsFilter.dateFrom = {[operator]:  }) */
+          value && console.log("VALUE DATEFROM: ", value);
+          break;
+
+        case 'dateTo':
+          value && (qsFilter.dateTo = {
+            [operator]: value
+          })(value) && console.log("VALUE DATETO: ", value);
+          break;
+
+        case 'filename':
+          value && (qsFilter.filename = {
+            [operator]: value,
+            $options: "i"
+          });
+          break;
+
+        case 'createdBy':
+          value && (qsFilter.createdBy = {
+            [operator]: value,
+            $options: "i"
+          });
+          break;
+
+        case 'type':
+          value && (qsFilter.type = {
+            [operator]: value,
+            $options: "i"
+          });
+          break;
+
+        case 'size':
+          value && (qsFilter.size = {
+            [operator]: parseInt(value)
+          });
+          break;
+
+        default:
+          break;
+      }
+    });
+    /* if (filename.value) {
+      const { field, operator, value} = filename
+      filter = { ...{ [field]: { [operator]: value, $options: "i" } }, ...filter }
+    }
+       if (createdBy.value) {
+      const { field, operator, value} = createdBy
+      filter = { ...{ [field]: { [operator]: value, $options: "i" } }, ...filter }
+    }
+       if (type.value) {
+      const { field, operator, value} = type
+      filter = { ...{ [field]: { [operator]: value, $options: "i" } }, ...filter }
+    }
+       if (size.value) {
+      const { field, operator, value} = size
+      console.log("VALUE",value)
+      let nuevoValue = parseInt(value)
+      console.log("NUEVOVALUE",nuevoValue)
+      filter = { ...{ [field]: { [operator]: nuevoValue} }, ...filter };
+    } */
+
+    console.log("qsFilter", qsFilter);
+    return qsFilter;
+  }
 
   let query = {
     deleted: false,
     ...qs(search),
-    ...filterByFileOwner(permissionType, userId)
+    ...filterByFileOwner(permissionType, userId),
+    ...filterValues(filters)
   };
   let populate = ['createdBy.user'];
   let sort = getSort(orderBy, orderDesc);

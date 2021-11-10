@@ -1,6 +1,7 @@
 import File from './../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
 import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../../media/permissions/File";
+import dayjs from 'dayjs'
 
 export const findFile = async function (id, permissionType = null, userId = null) {
 
@@ -23,8 +24,10 @@ export const fetchFiles = async function () {
     })
 }
 
-export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, filters ,orderBy = null, orderDesc = false, permissionType = null, userId = null) {
-    console.log("FILTERSSSSSSSS",filters)
+
+export const paginateFiles = function ({pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false}, permissionType = null, userId = null) {
+    const filterDate = [filters[0], filters[1]]
+
     function qs(search) {
         let qs = {}
         if (search) {
@@ -45,7 +48,66 @@ export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search 
         }
     }
 
-    let query = { deleted: false, ...qs(search), ...filterByFileOwner(permissionType, userId) }
+    function filterValues(filters) {
+      let qsFilter = {};
+
+      filters.forEach(({field, operator, value}) => {
+        switch (field) {
+          case 'filename':
+            (value) && (qsFilter.filename = { [operator]: value, $options: "i" })
+            break
+          case 'createdBy':
+            (value) && (qsFilter.createdBy = { [operator]: value, $options: "i" })
+            break
+          case 'type':
+            (value) && (qsFilter.type = { [operator]: value, $options: "i" })
+            break
+          case 'size':
+            (value) && (qsFilter.size = { [operator]: parseInt(value) })
+            break
+          default:
+            break;
+        }
+      })
+      return qsFilter;
+    }
+
+    function filterDates(filterDate) {
+      let qsFilter = {};
+
+      filterDate.forEach(({field, operator, value}) => {
+        
+        switch (field) {
+          case 'dateFrom':
+            if (value) {
+              let dayBefore = dayjs(value).isValid() && dayjs(value)
+              qsFilter.createdAt = {[operator]: dayBefore.$d }
+            }
+            break
+          case 'dateTo':
+            if (value) {
+              let dayAfter = dayjs(value).isValid() && dayjs(value)
+              if (qsFilter.createdAt) {
+                qsFilter = { $and: [ {createdAt: qsFilter.createdAt}, { createdAt: { [operator]: dayAfter.$d } } ] }
+              } else {
+                qsFilter.createdAt = {[operator]: dayAfter.$d }
+              }
+            }  
+            break
+          default:
+            break;
+        }
+      })
+      
+      return qsFilter;
+    }
+
+    let query = {
+      ...qs(search),
+      ...filterByFileOwner(permissionType, userId),
+      ...filterValues(filters),
+      ...filterDates(filterDate)
+    }
     let populate = ['createdBy.user']
     let sort = getSort(orderBy, orderDesc)
     let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
@@ -56,50 +118,6 @@ export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search 
         }
         ).catch(err => reject(err))
     })
-}
-
-export const filterPaginateFiles = async function (
-  dateFrom,
-  dateTo,
-  filename,
-  createdBy,
-  type,
-  size
-) {
-
-  function getSort(orderBy, orderDesc) {
-    if (orderBy) {
-      return (orderDesc ? "-" : "") + orderBy;
-    }
-    return null;
-  }
-
-  const query = getQueryFilters(
-    dateFrom,
-    dateTo,
-    filename,
-    createdBy,
-    type,
-    size
-  );
-
-  const sort = getSort(orderBy, orderDesc);
-  const params = {
-    page: pageNumber, limit, sort,
-  };
-
-  return new Promise((resolve, reject) => {
-    File
-      .paginate(query, params)
-      .then((result) => {
-        resolve({
-          items: result.docs,
-          totalItems: result.totalDocs,
-          page: result.page,
-        });
-      })
-      .catch((err) => reject(err));
-  });
 }
 
 
@@ -152,84 +170,4 @@ function filterByFileOwner(permissionType, userId) {
             break;
     }
     return query;
-}
-
-export const getQueryFilters = function (
-  dateFrom,
-  dateTo,
-  filename,
-  createdBy,
-  type,
-  size
-) {
-  const vacio = ""
-  // FUNCION QS
-  // FUNCION FECHA
-
-  function filterValues(
-    dateFrom,
-    dateTo,
-    filename,
-    createdBy,
-    type,
-    size
-  ) {
-    let filter = {}
-
-    if (dateFrom) {
-      filter = {
-        ...{ dateFrom: { $regex: dateFrom, $options: "i" } },
-        ...filter
-      }
-    }
-
-    if (dateTo) {
-      filter = {
-        ...{ dateTo: { $regex: dateTo, $options: "i" } },
-        ...filter
-      }
-    }
-
-    if (filename) {
-      filter = {
-        ...{ filename: { $regex: filename, $options: "i" } },
-        ...filter
-      }
-    }
-
-    if (createdBy) {
-      filter = {
-        ...{ createdBy: { $regex: createdBy, $options: "i" } },
-        ...filter
-      }
-    }
-
-    if (type) {
-      filter = {
-        ...{ type: { $regex: type, $options: "i" } },
-        ...filter
-      }
-    }
-
-    if (size) {
-      filter = {
-        ...{ size: { $regex: size, $options: "i" } },
-        ...filter
-      }
-    }
-
-    return filter;
-  }
-
-  return {
-    // FUNCION FECHA    ...getBirthDay(birthDayUntil, birthDaySince),
-    ...filterValues(
-      dateFrom,
-      dateTo,
-      filename,
-      createdBy,
-      type,
-      size
-    ),
-  }
 }

@@ -19,11 +19,11 @@ class FileProvider {
         return this.gqlc.query({query: require('./gql/fileFetch.graphql')})
     }
     
-    paginateFiles({pageNumber, itemsPerPage, search = null, filters, orderBy = null, orderDesc = false}) {
-        return this.gqlc.query({
+    paginateFiles(pageNumber, itemsPerPage, search = null, filters, orderBy = null, orderDesc = false) {
+      return this.gqlc.query({
             query: require('./gql/filePaginate.graphql'),
             variables: {
-              FilterPaginateInput: {
+              input: {
                 pageNumber, itemsPerPage, search, filters, orderBy, orderDesc
               } 
             },

@@ -25,9 +25,24 @@ type FilePaginated{
     items: [File!]
 }
 
+input FilterInput{
+  field: String
+  operator: String
+  value: String
+}
+
+input FilterPaginateInput{
+  pageNumber: Int,
+  itemsPerPage: Int,
+  search: String,
+  filters: [FilterInput],
+  orderBy: String,
+  orderDesc: Boolean
+}
+
 type Query {
     fileFind(id:ID!): File
-    filePaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): FilePaginated
+    filePaginate(input: FilterPaginateInput): FilePaginated
 }
 
 input FileInput{
