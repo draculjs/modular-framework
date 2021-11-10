@@ -9,15 +9,25 @@ var _apolloServerExpress = require("apollo-server-express");
 
 var _UserStorageService = require("../../services/UserStorageService");
 
+var _UserStorage = require("../../permissions/UserStorage");
+
 var _default = {
   Query: {
     userStorageFetch: (_, {}, {
       user,
       rbac
     }) => {
-      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated"); // if (!rbac.isAllowed(user.id, APIGOOGLEACCOUNT_SHOW)) throw new ForbiddenError("Not Authorized");
-
+      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
+      if (!rbac.isAllowed(user.id, _UserStorage.USER_STORAGE_SHOW_ALL)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       return (0, _UserStorageService.fetchUserStorage)();
+    },
+    userStorageFindByUser: (_, {}, {
+      user,
+      rbac
+    }) => {
+      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
+      if (!rbac.isAllowed(user.id, _UserStorage.USER_STORAGE_SHOW_OWN)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      return (0, _UserStorageService.findUserStorageByUser)(user);
     }
   },
   Mutation: {
@@ -28,8 +38,8 @@ var _default = {
       user,
       rbac
     }) => {
-      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated"); // if (!rbac.isAllowed(user.id, APIGOOGLEACCOUNT_UPDATE)) throw new ForbiddenError("Not Authorized");
-
+      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
+      if (!rbac.isAllowed(user.id, _UserStorage.USER_STORAGE_UPDATE)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       return (0, _UserStorageService.updateUserStorage)(user, id, input);
     }
   }

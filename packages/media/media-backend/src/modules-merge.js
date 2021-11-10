@@ -1,8 +1,6 @@
 import {mergeTypes, mergeResolvers} from 'merge-graphql-schemas';
 import {securityResolvers,securityTypes} from '@dracul/user-backend'
 import {commonTypes} from '@dracul/common-backend'
-
-import {commonTypes} from '@dracul/common-backend'
 import {types as customTypes,resolvers as customResolvers} from '@dracul/customize-backend'
 
 //BASE RESOLVERS

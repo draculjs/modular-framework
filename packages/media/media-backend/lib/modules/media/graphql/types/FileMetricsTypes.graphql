@@ -2,12 +2,12 @@ type UserMetrics{
     _id: ID
     user: String
     count: Int
-    weight: Int
+    weight: Float
 }
 
 type TotalMetrics{
     count: Int
-    weight: Int
+    weight: Float
 }
 
 type Query {

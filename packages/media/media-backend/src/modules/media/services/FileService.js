@@ -29,7 +29,6 @@ export const fetchFiles = async function () {
 
 
 export const paginateFiles = function ({pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false}, permissionType = null, userId = null) {
-    const filterDate = [filters[0], filters[1]]
 
     function qs(search) {
         let qs = {}
@@ -56,31 +55,6 @@ export const paginateFiles = function ({pageNumber = 1, itemsPerPage = 5, search
 
       filters.forEach(({field, operator, value}) => {
         switch (field) {
-          case 'filename':
-            (value) && (qsFilter.filename = { [operator]: value, $options: "i" })
-            break
-          case 'createdBy':
-            (value) && (qsFilter.createdBy = { [operator]: value, $options: "i" })
-            break
-          case 'type':
-            (value) && (qsFilter.type = { [operator]: value, $options: "i" })
-            break
-          case 'size':
-            (value) && (qsFilter.size = { [operator]: parseInt(value) })
-            break
-          default:
-            break;
-        }
-      })
-      return qsFilter;
-    }
-
-    function filterDates(filterDate) {
-      let qsFilter = {};
-
-      filterDate.forEach(({field, operator, value}) => {
-        
-        switch (field) {
           case 'dateFrom':
             if (value) {
               let dayBefore = dayjs(value).isValid() && dayjs(value)
@@ -91,25 +65,44 @@ export const paginateFiles = function ({pageNumber = 1, itemsPerPage = 5, search
             if (value) {
               let dayAfter = dayjs(value).isValid() && dayjs(value)
               if (qsFilter.createdAt) {
-                qsFilter = { $and: [ {createdAt: qsFilter.createdAt}, { createdAt: { [operator]: dayAfter.$d } } ] }
+                qsFilter.createdAt = { ...qsFilter.createdAt, [operator]: dayAfter.$d }
               } else {
                 qsFilter.createdAt = {[operator]: dayAfter.$d }
               }
             }  
             break
+          case 'filename':
+            (value) && (qsFilter.filename = { [operator]: value, $options: "i" })
+            break
+          case 'createdBy':
+            (value) && (qsFilter.createdBy = { [operator]: value, $options: "i" })
+            break
+          case 'type':
+            (value) && (qsFilter.type = { [operator]: value, $options: "i" })
+            break
+          case 'minSize':
+            value && (qsFilter.size = { [operator]: parseFloat(value) })
+            break
+          case 'maxSize':
+            if (value) {
+              if (qsFilter.size) {
+                qsFilter.size = { ...qsFilter.size, [operator]: parseFloat(value) }
+              } else {
+                qsFilter.size = {[operator]: parseFloat(value) }
+              }
+            }
+            break
           default:
             break;
         }
       })
-      
       return qsFilter;
     }
 
     let query = {
       ...qs(search),
       ...filterByFileOwner(permissionType, userId),
-      ...filterValues(filters),
-      ...filterDates(filterDate)
+      ...filterValues(filters)
     }
     let populate = ['createdBy.user']
     let sort = getSort(orderBy, orderDesc)

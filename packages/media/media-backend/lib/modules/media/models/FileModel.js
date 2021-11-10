@@ -52,6 +52,11 @@ const FileSchema = new Schema({
     type: String,
     required: true
   },
+  lastAccess: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -69,7 +74,6 @@ const FileSchema = new Schema({
     }
   }
 });
-FileSchema.plugin(softDelete);
 FileSchema.plugin(mongoosePaginate);
 const File = mongoose.model('File', FileSchema);
 module.exports = File;

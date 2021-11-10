@@ -23,6 +23,10 @@ var _FileRouter = require("./modules/media/rest/routers/FileRouter");
 
 var _initService = _interopRequireDefault(require("./init/init-service"));
 
+var _middleware = require("./middleware");
+
+var _cron = require("./cron");
+
 var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -53,6 +57,7 @@ app.use(_loggerBackend.RequestMiddleware);
 app.use(_loggerBackend.ResponseTimeMiddleware);
 app.use(_userBackend.rbacMiddleware);
 app.use(_userBackend.sessionMiddleware);
+app.use('/media/files', _middleware.updateFileMiddleware);
 app.use('/api', _FileRouter.router);
 const swaggerDocument = YAML.load('./swagger.yaml');
 let PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000";
@@ -100,7 +105,7 @@ app.use('/media/files', _express.default.static('media/files'));
 app.use('/', _express.default.static('web', {
   index: "index.html"
 }));
-app.get('*', function (request, response) {
+app.get('*', async function (request, response) {
   response.sendFile(_path.default.resolve(__dirname, 'web/index.html'));
 }); //Endpoint for monitoring
 
@@ -119,5 +124,6 @@ app.get('/status', function (req, res) {
 }).catch(err => {
   _loggerBackend.DefaultLogger.error(err.message, err);
 });
+(0, _cron.cronManager)();
 var _default = app;
 exports.default = _default;

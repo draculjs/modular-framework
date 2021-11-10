@@ -18,15 +18,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   Mutation: {
     fileUpload: (_, {
-      file,
-      fileSize
+      file
     }, {
       user,
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
       if (!rbac.isAllowed(user.id, _File.FILE_CREATE)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _UploadService.fileUpload)(user, file, fileSize);
+      return (0, _UploadService.fileUpload)(user, file);
     },
     fileUploadAnonymous: (_, {
       file

@@ -62,7 +62,7 @@
             </v-col>
             <v-col cols="2">
               <v-text-field
-                v-model="filters[5].value"
+                v-model="filters[6].value"
                 :label="$t('media.file.size')"
                 prepend-icon="album"
                 color="secondary"

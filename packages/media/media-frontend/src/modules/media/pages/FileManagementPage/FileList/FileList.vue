@@ -7,10 +7,6 @@
       v-model="filters"
     />
 
-    <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
-      <search-input @search="performSearch" v-model="search"/>
-    </v-col>
-
     <v-col cols="12">
 
       <v-data-table
@@ -66,7 +62,7 @@
 <script>
 import FileProvider from "../../../providers/FileProvider";
 
-import {DeleteButton, EditButton, ShowButton, SearchInput} from "@dracul/common-frontend"
+import {DeleteButton, EditButton, ShowButton} from "@dracul/common-frontend"
 import redeableBytesMixin from "../../../mixins/readableBytesMixin";
 import moment from "moment-timezone"
 import FileFilters from "../FileFilters/FileFilters"
@@ -74,7 +70,7 @@ import FileFilters from "../FileFilters/FileFilters"
 export default {
   name: "FileList",
   mixins: [redeableBytesMixin],
-  components: {DeleteButton, EditButton, ShowButton, SearchInput, FileFilters},
+  components: {DeleteButton, EditButton, ShowButton, FileFilters},
   data() {
     return {
       items: [],
@@ -88,7 +84,7 @@ export default {
       filters: [
         {
           field: 'dateFrom',
-          operator: '$gte', // puede ser eq|contain|regex|gt|lt|gte|lte
+          operator: '$gte',
           value: null
         },
         {
@@ -112,8 +108,13 @@ export default {
           value: null
         },
         {
-          field: 'size',
+          field: 'minSize',
           operator: '$gte',
+          value: null
+        },
+        {
+          field: 'maxSize',
+          operator: '$lte',
           value: null
         }
       ]
@@ -146,38 +147,10 @@ export default {
       this.fetch()
     },
     clearFilters() {
-      this.filters = [
-        {
-          field: 'dateFrom',
-          operator: '$gte',
-          value: null
-        },
-        {
-          field: 'dateTo',
-          operator: '$lte',
-          value: null
-        },
-        {
-          field: 'filename',
-          operator: '$regex',
-          value: null
-        },
-        {
-          field: 'createdBy.username',
-          operator: '$regex',
-          value: null
-        },
-        {
-          field: 'type',
-          operator: '$regex',
-          value: null
-        },
-        {
-          field: 'size',
-          operator: '$expr',
-          value: null
-        }
-      ]
+      this.filters.forEach(filter => {
+        filter.value = null
+      })
+      this.fetch()
     }
   },
   watch: {
