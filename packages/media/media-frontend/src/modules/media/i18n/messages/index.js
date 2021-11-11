@@ -88,7 +88,7 @@ const messages = {
                 percentage: "Porcentaje",
                 actions: "Acciones",
                 edit: "Editar",
-                editTitle: "Edit Almacenamiento de Usuario",
+                editTitle: "Editar almacenamiento de Usuario",
                 cliente: "Cliente",
                 usedPercentage: "Porcentaje en uso: ",
                 insufficientCapacity: "Capacidad insuficiente",

@@ -89,6 +89,8 @@
                     (v) => {
                         if (this.fileSizeLimit != 0) {
                             return parseFloat(v) <= this.fileSizeLimit && parseFloat(v) > 0 || this.$t("media.userStorage.sizeLimitExceeded");
+                        } else{
+                            return true
                         }
                     }
                 ],
@@ -97,6 +99,8 @@
                     {
                         if (this.fileExpirationLimit != 0) {
                             return parseInt(v) <= this.fileExpirationLimit && parseFloat(v) > 0 || this.$t("media.userStorage.fileExpirationTimeExceeded")
+                        }else{
+                            return true
                         }
                     }
                 ]
