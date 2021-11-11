@@ -22,7 +22,8 @@ const messages = {
                 createdAt: 'Creation date',
                 createdBy: 'Created by',
                 download: 'download',
-                fileSizeExceeded: "File is too big"
+                fileSizeExceeded: "File is too big",
+                lastAccess: 'Last access'
 
             },
             userStorage: {
@@ -72,7 +73,9 @@ const messages = {
                 createdAt: 'Fecha de creación',
                 createdBy: 'Creado por',
                 download: 'descargar',
-                fileSizeExceeded: "Archivo demasiado grande"
+                fileSizeExceeded: "Archivo demasiado grande",
+                lastAccess: 'Último acceso'
+
 
             },
             userStorage: {
@@ -122,8 +125,8 @@ const messages = {
                 createdAt: 'Data de criação',
                 createdBy: 'criado pela',
                 download: 'download',
-                fileSizeExceeded: "Arquivo muito grande"
-
+                fileSizeExceeded: "Arquivo muito grande",
+                lastAccess: 'Último acesso'
             },
             userStorage: {
                 title: "Armazenamento do usuário",

@@ -20,11 +20,11 @@ export default {
             let permissionType = (rbac.isAllowed(user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (rbac.isAllowed(user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
             return findFile(id, permissionType, user.id)
         },
-        filePaginate: (_, { pageNumber, itemsPerPage, search, orderBy, orderDesc }, { user, rbac }) => {
+        filePaginate: (_, { input }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, FILE_SHOW_ALL) && !rbac.isAllowed(user.id, FILE_SHOW_OWN)) throw new ForbiddenError("Not Authorized")
             let permissionType = (rbac.isAllowed(user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (rbac.isAllowed(user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
-            return paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, user.id)
+            return paginateFiles(input, permissionType, user.id)
         },
     },
     Mutation: {

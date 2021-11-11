@@ -11,6 +11,8 @@ var _apolloServerExpress = require("apollo-server-express");
 
 var _File = require("../../media/permissions/File");
 
+var _dayjs = _interopRequireDefault(require("dayjs"));
+
 var _UserStorageService = require("./UserStorageService");
 
 var _fs = _interopRequireDefault(require("fs"));
@@ -44,7 +46,16 @@ const fetchFiles = async function () {
 
 exports.fetchFiles = fetchFiles;
 
-const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false, permissionType = null, userId = null) {
+const paginateFiles = function ({
+  pageNumber = 1,
+  itemsPerPage = 5,
+  search = null,
+  filters,
+  orderBy = null,
+  orderDesc = false
+}, permissionType = null, userId = null) {
+  const filterDate = [filters[0], filters[1]];
+
   function qs(search) {
     let qs = {};
 
@@ -70,8 +81,100 @@ const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null,
     }
   }
 
+  function filterValues(filters) {
+    let qsFilter = {};
+    filters.forEach(({
+      field,
+      operator,
+      value
+    }) => {
+      switch (field) {
+        case 'filename':
+          value && (qsFilter.filename = {
+            [operator]: value,
+            $options: "i"
+          });
+          break;
+
+        case 'createdBy':
+          value && (qsFilter.createdBy = {
+            [operator]: value,
+            $options: "i"
+          });
+          break;
+
+        case 'type':
+          value && (qsFilter.type = {
+            [operator]: value,
+            $options: "i"
+          });
+          break;
+
+        case 'size':
+          value && (qsFilter.size = {
+            [operator]: parseInt(value)
+          });
+          break;
+
+        default:
+          break;
+      }
+    });
+    return qsFilter;
+  }
+
+  function filterDates(filterDate) {
+    let qsFilter = {};
+    filterDate.forEach(({
+      field,
+      operator,
+      value
+    }) => {
+      switch (field) {
+        case 'dateFrom':
+          if (value) {
+            let dayBefore = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
+            qsFilter.createdAt = {
+              [operator]: dayBefore.$d
+            };
+          }
+
+          break;
+
+        case 'dateTo':
+          if (value) {
+            let dayAfter = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
+
+            if (qsFilter.createdAt) {
+              qsFilter = {
+                $and: [{
+                  createdAt: qsFilter.createdAt
+                }, {
+                  createdAt: {
+                    [operator]: dayAfter.$d
+                  }
+                }]
+              };
+            } else {
+              qsFilter.createdAt = {
+                [operator]: dayAfter.$d
+              };
+            }
+          }
+
+          break;
+
+        default:
+          break;
+      }
+    });
+    return qsFilter;
+  }
+
   let query = { ...qs(search),
-    ...filterByFileOwner(permissionType, userId)
+    ...filterByFileOwner(permissionType, userId),
+    ...filterValues(filters),
+    ...filterDates(filterDate)
   };
   let populate = ['createdBy.user'];
   let sort = getSort(orderBy, orderDesc);

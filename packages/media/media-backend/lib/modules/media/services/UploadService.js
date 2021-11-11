@@ -55,7 +55,6 @@ const fileUpload = function (user, inputFile) {
 
 
       let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath, user.id);
-      console.log("STOREREESSS111", storeResult);
 
       _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: " + storeResult);
 

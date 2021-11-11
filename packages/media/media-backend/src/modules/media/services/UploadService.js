@@ -33,14 +33,13 @@ const fileUpload = function (user, inputFile) {
 
       //Store
       let storeResult = await storeFile(createReadStream(), relativePath, user.id)
-      console.log("STOREREESSS111",storeResult)
       winston.info("fileUploadAnonymous store result: " + storeResult)
 
       let url = baseUrl() + relativePath
 
       if (storeResult && storeResult.finish) {
 
-        let fileSizeMB = storeResult.bytesWritten/(1024*1024)
+        let fileSizeMB = storeResult.bytesWritten / (1024 * 1024)
 
         updateUserUsedStorage(user.id, fileSizeMB)
 
@@ -68,7 +67,6 @@ const fileUpload = function (user, inputFile) {
       }
 
     } catch (err) {
-      console.log("STOREREESSS222",err)
       winston.error('UploadService: ', err)
       rejects(err)
     }

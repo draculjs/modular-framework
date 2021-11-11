@@ -1,6 +1,7 @@
 import File from './../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
 import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../../media/permissions/File";
+import dayjs from 'dayjs'
 import { updateUserUsedStorage } from './UserStorageService';
 import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
@@ -26,7 +27,8 @@ export const fetchFiles = async function () {
     })
 }
 
-export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false, permissionType = null, userId = null) {
+
+export const paginateFiles = function ({pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false}, permissionType = null, userId = null) {
 
     function qs(search) {
         let qs = {}
@@ -48,7 +50,60 @@ export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search 
         }
     }
 
-    let query = { ...qs(search), ...filterByFileOwner(permissionType, userId) }
+    function filterValues(filters) {
+      let qsFilter = {};
+
+      filters.forEach(({field, operator, value}) => {
+        switch (field) {
+          case 'dateFrom':
+            if (value) {
+              let dayBefore = dayjs(value).isValid() && dayjs(value)
+              qsFilter.createdAt = {[operator]: dayBefore.$d }
+            }
+            break
+          case 'dateTo':
+            if (value) {
+              let dayAfter = dayjs(value).isValid() && dayjs(value)
+              if (qsFilter.createdAt) {
+                qsFilter.createdAt = { ...qsFilter.createdAt, [operator]: dayAfter.$d }
+              } else {
+                qsFilter.createdAt = {[operator]: dayAfter.$d }
+              }
+            }  
+            break
+          case 'filename':
+            (value) && (qsFilter.filename = { [operator]: value, $options: "i" })
+            break
+          case 'createdBy':
+            (value) && (qsFilter.createdBy = { [operator]: value, $options: "i" })
+            break
+          case 'type':
+            (value) && (qsFilter.type = { [operator]: value, $options: "i" })
+            break
+          case 'minSize':
+            value && (qsFilter.size = { [operator]: parseFloat(value) })
+            break
+          case 'maxSize':
+            if (value) {
+              if (qsFilter.size) {
+                qsFilter.size = { ...qsFilter.size, [operator]: parseFloat(value) }
+              } else {
+                qsFilter.size = {[operator]: parseFloat(value) }
+              }
+            }
+            break
+          default:
+            break;
+        }
+      })
+      return qsFilter;
+    }
+
+    let query = {
+      ...qs(search),
+      ...filterByFileOwner(permissionType, userId),
+      ...filterValues(filters)
+    }
     let populate = ['createdBy.user']
     let sort = getSort(orderBy, orderDesc)
     let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
@@ -60,6 +115,7 @@ export const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search 
         ).catch(err => reject(err))
     })
 }
+
 
 export const updateFile = async function (authUser, id, { description, tags }, permissionType, userId) {
     return new Promise((resolve, rejects) => {
@@ -213,4 +269,3 @@ function filterByFileOwner(permissionType, userId) {
     }
     return query;
 }
-
