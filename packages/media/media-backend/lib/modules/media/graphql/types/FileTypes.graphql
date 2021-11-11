@@ -26,12 +26,6 @@ type FilePaginated{
     items: [File!]
 }
 
-input FilterInput{
-  field: String
-  operator: String
-  value: String
-}
-
 input FilterPaginateInput{
   pageNumber: Int,
   itemsPerPage: Int,

@@ -54,8 +54,6 @@ const paginateFiles = function ({
   orderBy = null,
   orderDesc = false
 }, permissionType = null, userId = null) {
-  const filterDate = [filters[0], filters[1]];
-
   function qs(search) {
     let qs = {};
 
@@ -89,6 +87,33 @@ const paginateFiles = function ({
       value
     }) => {
       switch (field) {
+        case 'dateFrom':
+          if (value) {
+            let dayBefore = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
+            qsFilter.createdAt = {
+              [operator]: dayBefore.$d
+            };
+          }
+
+          break;
+
+        case 'dateTo':
+          if (value) {
+            let dayAfter = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
+
+            if (qsFilter.createdAt) {
+              qsFilter.createdAt = { ...qsFilter.createdAt,
+                [operator]: dayAfter.$d
+              };
+            } else {
+              qsFilter.createdAt = {
+                [operator]: dayAfter.$d
+              };
+            }
+          }
+
+          break;
+
         case 'filename':
           value && (qsFilter.filename = {
             [operator]: value,
@@ -110,54 +135,21 @@ const paginateFiles = function ({
           });
           break;
 
-        case 'size':
+        case 'minSize':
           value && (qsFilter.size = {
-            [operator]: parseInt(value)
+            [operator]: parseFloat(value)
           });
           break;
 
-        default:
-          break;
-      }
-    });
-    return qsFilter;
-  }
-
-  function filterDates(filterDate) {
-    let qsFilter = {};
-    filterDate.forEach(({
-      field,
-      operator,
-      value
-    }) => {
-      switch (field) {
-        case 'dateFrom':
+        case 'maxSize':
           if (value) {
-            let dayBefore = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
-            qsFilter.createdAt = {
-              [operator]: dayBefore.$d
-            };
-          }
-
-          break;
-
-        case 'dateTo':
-          if (value) {
-            let dayAfter = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
-
-            if (qsFilter.createdAt) {
-              qsFilter = {
-                $and: [{
-                  createdAt: qsFilter.createdAt
-                }, {
-                  createdAt: {
-                    [operator]: dayAfter.$d
-                  }
-                }]
+            if (qsFilter.size) {
+              qsFilter.size = { ...qsFilter.size,
+                [operator]: parseFloat(value)
               };
             } else {
-              qsFilter.createdAt = {
-                [operator]: dayAfter.$d
+              qsFilter.size = {
+                [operator]: parseFloat(value)
               };
             }
           }
@@ -173,8 +165,7 @@ const paginateFiles = function ({
 
   let query = { ...qs(search),
     ...filterByFileOwner(permissionType, userId),
-    ...filterValues(filters),
-    ...filterDates(filterDate)
+    ...filterValues(filters)
   };
   let populate = ['createdBy.user'];
   let sort = getSort(orderBy, orderDesc);
