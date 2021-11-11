@@ -92,8 +92,6 @@ const fileUpload = function (user, inputFile) {
         rejects(new Error("Upload Fail"));
       }
     } catch (err) {
-      console.log("STOREREESSS222", err);
-
       _loggerBackend.DefaultLogger.error('UploadService: ', err);
 
       rejects(err);
