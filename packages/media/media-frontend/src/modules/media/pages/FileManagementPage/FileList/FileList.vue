@@ -40,6 +40,10 @@
           {{ item.size.toFixed(2) }} Mb
         </template>
 
+        <template v-slot:item.type="{item}">
+          {{ $t(`media.file.${item.type}`) }}
+        </template>
+
         <template v-slot:item.createdAt="{item}">
           {{ formatDate(item.createdAt) }}
         </template>
