@@ -3,11 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.checkUserStorage = exports.updateUserStorage = exports.updateUserUsedStorage = exports.createUserStorage = exports.fetchUserStorage = void 0;
+exports.checkUserStorageLeft = exports.checkUserStorage = exports.updateUserStorage = exports.updateUserUsedStorage = exports.createUserStorage = exports.findUserStorageByUser = exports.fetchUserStorage = void 0;
 
 var _UserStorageModel = _interopRequireDefault(require("../models/UserStorageModel"));
 
 var _userBackend = require("@dracul/user-backend");
+
+var _mongodb = _interopRequireDefault(require("mongodb"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15,11 +17,9 @@ const fetchUserStorage = async function () {
   return new Promise(async (resolve, reject) => {
     try {
       let existingUserStorages = await _UserStorageModel.default.find({}).populate('user').exec();
-      console.log(existingUserStorages);
       let users = await _userBackend.UserService.findUsers();
       await checkAndCreate(existingUserStorages, users);
       let updatedUserStorages = await _UserStorageModel.default.find({}).populate('user').exec();
-      console.log(updatedUserStorages);
       resolve(updatedUserStorages);
     } catch (err) {
       reject(err);
@@ -29,24 +29,44 @@ const fetchUserStorage = async function () {
 
 exports.fetchUserStorage = fetchUserStorage;
 
+const findUserStorageByUser = async function (user) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let doc = await _UserStorageModel.default.findOne({
+        user: user.id
+      }).populate('user').exec();
+      resolve(doc);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+exports.findUserStorageByUser = findUserStorageByUser;
+
 const checkAndCreate = async function (existingUserStorages, users) {
   for (let index = 0; index < users.length; index++) {
     if (existingUserStorages.every(x => x.user._id != users[index].id)) {
       let user = users[index].id;
       let capacity = 0;
-      await createUserStorage(user, capacity);
+      let usedSpace = 0;
+      let maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES;
+      let fileExpirationTime = process.env.FILE_EXPIRATION_TIME_IN_DAYS;
+      await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime);
     }
   }
 
   return true;
 };
 
-const createUserStorage = async function (user, capacity) {
+const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime) {
   const doc = new _UserStorageModel.default({
     user,
-    capacity
+    capacity,
+    usedSpace,
+    maxFileSize,
+    fileExpirationTime
   });
-  doc.usedSpace = "0";
   return new Promise((resolve, rejects) => {
     doc.save(error => {
       if (error) {
@@ -66,10 +86,10 @@ const createUserStorage = async function (user, capacity) {
 
 exports.createUserStorage = createUserStorage;
 
-const updateUserUsedStorage = async function (user, size) {
+const updateUserUsedStorage = async function (userId, size) {
   return new Promise((resolve, rejects) => {
-    apiGoogleAccount.findOneAndUpdate({
-      user: user
+    _UserStorageModel.default.findOneAndUpdate({
+      user: userId
     }, {
       $inc: {
         usedSpace: size
@@ -98,17 +118,17 @@ exports.updateUserUsedStorage = updateUserUsedStorage;
 const updateUserStorage = async function (authUser, id, {
   name,
   capacity,
-  usedSpace
+  usedSpace,
+  maxFileSize,
+  fileExpirationTime
 }) {
-  const oldStorage = await _UserStorageModel.default.findOne({
-    _id: id
-  });
-  const oldCapacity = oldStorage.capacity;
   return new Promise((resolve, rejects) => {
     _UserStorageModel.default.findOneAndUpdate({
       _id: id
     }, {
-      capacity
+      capacity,
+      maxFileSize,
+      fileExpirationTime
     }, {
       runValidators: true,
       context: "query"
@@ -130,10 +150,10 @@ const updateUserStorage = async function (authUser, id, {
 
 exports.updateUserStorage = updateUserStorage;
 
-const checkUserStorage = async function (id, newFileSize) {
+const checkUserStorage = async function (userId, newFileSize) {
   return new Promise((resolve, reject) => {
-    _UserStorageModel.default.find({
-      id: id
+    _UserStorageModel.default.findOne({
+      user: userId
     }).exec((err, res) => {
       if (err) {
         reject(err);
@@ -151,3 +171,20 @@ const checkUserStorage = async function (id, newFileSize) {
 };
 
 exports.checkUserStorage = checkUserStorage;
+
+const checkUserStorageLeft = async function (userId) {
+  return new Promise((resolve, reject) => {
+    _UserStorageModel.default.findOne({
+      user: userId
+    }).exec((err, res) => {
+      if (err) {
+        reject(err);
+      }
+
+      let storageLeft = res.capacity - res.usedSpace;
+      resolve(storageLeft);
+    });
+  });
+};
+
+exports.checkUserStorageLeft = checkUserStorageLeft;

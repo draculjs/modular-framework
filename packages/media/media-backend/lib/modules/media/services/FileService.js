@@ -3,13 +3,19 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deleteFile = exports.updateFile = exports.paginateFiles = exports.fetchFiles = exports.findFile = void 0;
+exports.findAndDeleteExpiredFiles = exports.deleteFile = exports.updateByRelativePath = exports.updateFile = exports.paginateFiles = exports.fetchFiles = exports.findFile = void 0;
 
 var _FileModel = _interopRequireDefault(require("./../models/FileModel"));
 
 var _apolloServerExpress = require("apollo-server-express");
 
 var _File = require("../../media/permissions/File");
+
+var _UserStorageService = require("./UserStorageService");
+
+var _fs = _interopRequireDefault(require("fs"));
+
+var _loggerBackend = require("@dracul/logger-backend");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,7 +38,7 @@ exports.findFile = findFile;
 
 const fetchFiles = async function () {
   return new Promise((resolve, reject) => {
-    _FileModel.default.find({}).isDeleted(false).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
+    _FileModel.default.find({}).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
   });
 };
 
@@ -64,9 +70,7 @@ const paginateFiles = function (pageNumber = 1, itemsPerPage = 5, search = null,
     }
   }
 
-  let query = {
-    deleted: false,
-    ...qs(search),
+  let query = { ...qs(search),
     ...filterByFileOwner(permissionType, userId)
   };
   let populate = ['createdBy.user'];
@@ -127,16 +131,52 @@ const updateFile = async function (authUser, id, {
 
 exports.updateFile = updateFile;
 
+const updateByRelativePath = function (relativePath) {
+  return new Promise((resolve, rejects) => {
+    _FileModel.default.findOneAndUpdate({
+      relativePath: relativePath
+    }, {
+      lastAccess: Date.now()
+    }, {
+      runValidators: true,
+      context: 'query'
+    }, (error, doc) => {
+      if (error) {
+        rejects(error);
+      }
+
+      if (doc) {
+        resolve(doc);
+      } else {
+        rejects('File not found');
+      }
+    });
+  });
+};
+
+exports.updateByRelativePath = updateByRelativePath;
+
 const deleteFile = function (id, permissionType, userId) {
   return new Promise((resolve, rejects) => {
-    findFile(id, permissionType, userId).then(doc => {
+    findFile(id, permissionType, userId).then(async doc => {
       if (doc) {
-        doc.softdelete(function (err) {
-          err ? rejects(err) : resolve({
+        try {
+          (0, _UserStorageService.updateUserUsedStorage)(userId, -doc.size);
+
+          _fs.default.unlink(doc.relativePath, error => {
+            if (error) _loggerBackend.DefaultLogger.error(error);else _loggerBackend.DefaultLogger.info('Se eliminó el archivo ' + doc.relativePath);
+          });
+
+          await _FileModel.default.deleteOne({
+            _id: id
+          });
+          resolve({
             id: id,
             success: true
           });
-        });
+        } catch (err) {
+          rejects(err);
+        }
       } else {
         rejects('File not found');
       }
@@ -145,6 +185,91 @@ const deleteFile = function (id, permissionType, userId) {
 };
 
 exports.deleteFile = deleteFile;
+
+const findAndDeleteExpiredFiles = async function () {
+  function getDataEntity() {
+    return [{
+      $lookup: {
+        from: "userstorages",
+        localField: "createdBy.user",
+        foreignField: "user",
+        as: "userStorage"
+      }
+    }, {
+      $unwind: "$userStorage"
+    }, {
+      $addFields: {
+        timeDiffInMillis: {
+          $subtract: ["$$NOW", "$lastAccess"]
+        }
+      }
+    }, {
+      $addFields: {
+        timeDiffInDays: {
+          $divide: ["$timeDiffInMillis", 24 * 60 * 60 * 1000]
+        }
+      }
+    }, {
+      $addFields: {
+        roundedTime: {
+          $round: ["$timeDiffInDays", 0]
+        }
+      }
+    }, {
+      $match: {
+        $expr: {
+          $lte: ["$userStorage.fileExpirationTime", "$roundedTime"]
+        }
+      }
+    }];
+  }
+
+  const entityData = getDataEntity();
+  const aggregateData = [entityData];
+  let docs = [];
+  await _FileModel.default.aggregate(aggregateData).then(result => {
+    docs = result;
+  }).catch(error => {
+    _loggerBackend.DefaultLogger.error('FileService - findExpiredFiles - Error en aggregate: ' + error);
+  }); // For each de los files con unlink y actualizo usedSpace de userStorage
+
+  if (docs) {
+    docs.forEach(file => {
+      (0, _UserStorageService.updateUserUsedStorage)(file.createdBy.user, -file.size);
+
+      _fs.default.unlink(file.relativePath, error => {
+        if (error) _loggerBackend.DefaultLogger.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error);else _loggerBackend.DefaultLogger.info('Se eliminó el archivo ' + file.relativePath);
+      });
+    });
+  } // Mappeo los ids de los files encontrados
+
+
+  let fileIds = docs.map(file => {
+    return file._id;
+  }); // Borro los files encontrados
+
+  return new Promise((resolve, reject) => {
+    _FileModel.default.deleteMany({
+      _id: {
+        $in: fileIds
+      }
+    }).then(result => {
+      resolve({
+        ok: result.ok,
+        deletedCount: result.deletedCount
+      });
+    }).catch(err => {
+      _loggerBackend.DefaultLogger.error('FileService - findExpiredFiles. Error en deleteMany: ' + error);
+
+      reject({
+        ok: err.ok,
+        deletedCount: err.deletedCount
+      });
+    });
+  });
+};
+
+exports.findAndDeleteExpiredFiles = findAndDeleteExpiredFiles;
 
 function filterByFileOwner(permissionType, userId) {
   let query;

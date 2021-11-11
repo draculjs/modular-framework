@@ -16,11 +16,19 @@ const userStorageSchema = new Schema({
     required: false
   },
   capacity: {
-    type: String,
+    type: Number,
     required: true
   },
   usedSpace: {
-    type: String,
+    type: Number,
+    required: false
+  },
+  maxFileSize: {
+    type: Number,
+    required: false
+  },
+  fileExpirationTime: {
+    type: Number,
     required: false
   }
 });

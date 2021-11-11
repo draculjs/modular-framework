@@ -49,7 +49,6 @@ const fileUserMetrics = async function () {
     }]);
 
     aggregate.exec().then(docs => {
-      console.log(docs);
       resolve(docs);
     }).catch(err => reject(err));
   });

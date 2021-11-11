@@ -8,7 +8,7 @@ type File{
     extension: String!
     relativePath: String!
     absolutePath: String!
-    size: Int!
+    size: Float!
     url: String!
     createdAt: String!
     createdBy: CreatedBy
@@ -35,7 +35,7 @@ input FileInput{
     extension: String!
     relativePath: String!
     absolutePath: String!
-    size: Int!
+    size: Float!
     url: String!
     createdAt: String!
 }
@@ -49,7 +49,6 @@ type FileDelete{
     id: ID!
     success: Boolean!
 }
-
 
 type Mutation {
     fileUpdate(id: ID!, input: FileUpdateInput): File

@@ -21,22 +21,15 @@ var _baseUrl = _interopRequireDefault(require("./helpers/baseUrl"));
 
 var _convertGigabytesToBytes = _interopRequireDefault(require("./helpers/convertGigabytesToBytes"));
 
+var _UserStorageService = require("./UserStorageService");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fileUpload = function (user, inputFile, fileSize = null) {
-  const validateMaxFileSize = function (fileSize) {
-    const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES : 4;
-    return (0, _convertGigabytesToBytes.default)(maxFileSize) > fileSize;
-  };
-
+const fileUpload = function (user, inputFile) {
   return new Promise(async (resolve, rejects) => {
     try {
       if (!user) {
         return rejects(new Error("user is required"));
-      }
-
-      if (fileSize && !validateMaxFileSize(fileSize)) {
-        return rejects(new Error("error.maxSizeExceeded"));
       }
 
       const {
@@ -61,13 +54,16 @@ const fileUpload = function (user, inputFile, fileSize = null) {
       const absolutePath = _path.default.resolve(relativePath); //Store
 
 
-      let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath);
+      let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath, user.id);
+      console.log("STOREREESSS111", storeResult);
 
       _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: " + storeResult);
 
       let url = (0, _baseUrl.default)() + relativePath;
 
       if (storeResult && storeResult.finish) {
+        let fileSizeMB = storeResult.bytesWritten / (1024 * 1024);
+        (0, _UserStorageService.updateUserUsedStorage)(user.id, fileSizeMB);
         let doc = new _FileModel.default({
           filename: finalFileName,
           mimetype: mimetype,
@@ -76,7 +72,7 @@ const fileUpload = function (user, inputFile, fileSize = null) {
           extension: extension,
           relativePath: relativePath,
           absolutePath: absolutePath,
-          size: storeResult.bytesWritten,
+          size: fileSizeMB,
           url: url,
           createdBy: {
             user: user.id,
@@ -97,9 +93,11 @@ const fileUpload = function (user, inputFile, fileSize = null) {
         rejects(new Error("Upload Fail"));
       }
     } catch (err) {
+      console.log("STOREREESSS222", err);
+
       _loggerBackend.DefaultLogger.error('UploadService: ', err);
 
-      rejects(new Error(err));
+      rejects(err);
     }
   });
 };
