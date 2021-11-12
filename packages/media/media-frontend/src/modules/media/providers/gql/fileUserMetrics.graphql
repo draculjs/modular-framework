@@ -1,0 +1,9 @@
+query fileUserMetrics{
+    fileUserMetrics{
+        labels
+        dataset{
+            label
+            data
+        }
+    }
+}

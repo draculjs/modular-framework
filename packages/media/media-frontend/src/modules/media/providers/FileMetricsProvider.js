@@ -13,6 +13,11 @@ class FileMetricsProvider {
             query: require('./gql/fileGlobalMetrics.graphql'),
         })
     }
+    fileUserMetrics() {
+        return this.gqlc.query({
+            query: require('./gql/fileUserMetrics.graphql'),
+        })
+    }
 }
 
 const fileMetricsProvider = new FileMetricsProvider()
