@@ -1,5 +1,5 @@
 import File from './../models/FileModel'
-
+import generateColors from '../util/generateColors'
 
 export const fileGlobalMetrics = async function () {
     return new Promise((resolve, reject) => {
@@ -21,10 +21,6 @@ export const fileGlobalMetrics = async function () {
     })
 }
 
-const getMonths = function () {
-    return ["julio", "agosto", "septiembre", "octubre", "noviembre"]
-}
-
 const aggregateCantidadDeArchivosPorFecha = async function () {
     return new Promise((resolve, reject) => {
         const aggregate = File.aggregate([
@@ -32,11 +28,9 @@ const aggregateCantidadDeArchivosPorFecha = async function () {
                 $group:
                 {
                     _id: {
-                        //user: "$createdBy.user" ,
                         month: { $month: "$createdAt" },
                         year: { $year: "$createdAt" }
                     },
-                    //user: {$first: "$createdBy.username"},
                     count: { $sum: 1 },
                     weight: { $sum: "$size" },
                 }
@@ -62,12 +56,15 @@ const aggregateAlmacenamientoPorUsuario = async function () {
                 {
                     _id: {
                         user: "$createdBy.user",
-                        // month: { $month: "$createdAt" },
-                        // year: { $year: "$createdAt" }
                     },
                     user: { $first: "$createdBy.username" },
                     count: { $sum: 1 },
                     weight: { $sum: "$size" },
+                },
+            },
+            {
+                $sort: {
+                    "user": -1,
                 }
             }
         ]);
@@ -85,15 +82,11 @@ export const fileUserMetrics = async function () {
     let month = date.getMonth() + 1
     let year = date.getFullYear()
 
-    let labels = getMonths()
+    let labels = []
     let dataset = []
-    // {
-    //     label: '',
-    //     data: [65, 59, 80, 81, 56, 55, 40],
-    // }
-    let label = "prueba"
-    let data = []
+    let dataCount = []
     let dataWeigth = []
+
     for (let i = 0; i < 5; i++) {
         let monthToPush = month - i
         let yearToPush = 0
@@ -103,23 +96,21 @@ export const fileUserMetrics = async function () {
         } else {
             yearToPush = year
         }
-        console.log("month y year2", monthToPush, yearToPush)
+        labels.unshift(monthToPush + '/' + yearToPush.toString().substring(2, 4));
 
         let docToPush = docs.filter(x => x._id.month == monthToPush && x._id.year == yearToPush)
-        console.log("doctopush", docToPush)
+
         if (docToPush[0]) {
-            data.unshift(docToPush[0].count)
+            dataCount.unshift(docToPush[0].count)
             dataWeigth.unshift(docToPush[0].weight)
         } else {
-            data.unshift(0)
+            dataCount.unshift(0)
             dataWeigth.unshift(0)
         }
     }
-    dataset.push({ label: label, data: data })
+
+    dataset.push({ label: "cantidad", data: dataCount })
     dataset.push({ label: "weight", data: dataWeigth })
-    console.log("dataset", dataset)
-    console.log("data", data)
-    console.log("labels", labels)
 
     return { labels: labels, dataset: dataset }
 
@@ -130,7 +121,8 @@ export const almacenamientoPorUsuario = async function () {
 
     let labels = docs.map((item) => item.user);
     let weights = docs.map((item) => item.weight);
-    let dataset = [{ label: 'Weight', data: weights }]
+    let colors = docs.map((item, index) => generateColors(index));
+    let dataset = [{ label: 'Weight', data: weights, backgroundColor: colors }]
 
     return { labels: labels, dataset: dataset }
 
@@ -141,8 +133,17 @@ export const cantidadArchivosPorUsuario = async function () {
 
     let labels = docs.map((item) => item.user);
     let fileCount = docs.map((item) => item.count);
-    let dataset = [{ label: 'Count', data: fileCount }]
+    let colors = docs.map((item, index) => generateColors(index));
+    let dataset = [{ label: 'Count', data: fileCount, backgroundColor: colors }]
 
     return { labels: labels, dataset: dataset }
 
+}
+
+const generateRandomNumber = function (min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+const generateRandomColor = function () {
+    return `rgba(${generateRandomNumber(0, 255)}, ${generateRandomNumber(0, 255)}, ${generateRandomNumber(0, 255)})`;
 }

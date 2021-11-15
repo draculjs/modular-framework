@@ -4,6 +4,7 @@ query almacenamientoPorUsuario{
         dataset{
             label
             data
+            backgroundColor
         }
     }
 }

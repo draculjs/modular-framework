@@ -6,6 +6,7 @@ type UserChartMetrics{
 type ChartData{
     label: String
     data: [Float]
+    backgroundColor: [String]
 }
 
 type Month {

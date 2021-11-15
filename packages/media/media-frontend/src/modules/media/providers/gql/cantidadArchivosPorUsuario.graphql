@@ -4,6 +4,7 @@ query cantidadArchivosPorUsuario{
         dataset{
             label
             data
+            backgroundColor
         }
     }
 }
