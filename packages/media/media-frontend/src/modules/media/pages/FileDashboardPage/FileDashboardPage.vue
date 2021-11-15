@@ -1,6 +1,6 @@
 <template>
-    <v-container>
-        <h5 class="text-h5">    {{$t('media.file.dashboardTitle')}}</h5>
+    <div>
+        <h5 class="text-h5">{{$t('media.file.dashboardTitle')}}</h5>
         <v-row v-if="fileGlobalMetrics">
             <v-col cols="12" sm="4" offset-sm="2">
                 <v-card color="blue" dark>
@@ -34,11 +34,17 @@
             </v-col>
         </v-row>
         <v-row class="dflex justify-center">
-            <v-card class="elevation-0 white" >
+            <v-card class="elevation-0 white mr-3" >
                 <file-bar-chart v-if="loaded" :chartdata="dataChart" :options="options"/>
             </v-card>
+            <v-card class="elevation-0 white mr-3" >
+                <file-pie-chart v-if="loaded" :chartdata="dataChartPieFileCount" :options="options"/>
+            </v-card>
+            <v-card class="elevation-0 white" >
+                <file-pie-chart v-if="loaded" :chartdata="dataChartPieFileWeight" :options="options"/>
+            </v-card>
         </v-row>
-    </v-container>
+    </div>
 
 </template>
 
@@ -46,11 +52,12 @@
     import fileMetricsProvider from "../../providers/FileMetricsProvider";
     import redeableBytesMixin from '../../mixins/readableBytesMixin';
     import FileBarChart from '../../components/FileBarChart'
+    import FilePieChart from '../../components/FilePieChart'
 
     export default {
         name: "FileDashboardPage",
         mixins: [redeableBytesMixin],
-        components: { FileBarChart },
+        components: { FileBarChart, FilePieChart },
         data() {
             return {
                 fileGlobalMetrics: null,
@@ -61,12 +68,6 @@
                         display: true,
                         text: 'Predicted world population (millions) in 2050'
                     },
-                    scales:{
-                        yAxes: [{
-                            display: false //this will remove all the x-axis grid lines
-                        }]
-                    }
-                    //skipNull: true,
                 },
                 dataChart: {
                     // labels: ["enero","feb","mar","abr","may","jun","jul"],
@@ -115,7 +116,9 @@
                     //     ],
                     //     borderWidth: 1
                     // }]
-                }
+                },
+                dataChartPieFileCount: { },
+                dataChartPieFileWeight: { }
             }
         },
         created() {
@@ -138,24 +141,32 @@
 
                     this.fileUserMetrics = r.data.fileUserMetrics
                     let results = r.data.fileUserMetrics
-                    console.log("usrmetrics", this.fileUserMetrics)
                     this.dataChart.labels = results.labels
+
                     results.dataset[0].backgroundColor= [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(255, 159, 64, 0.2)',
                         'rgba(255, 205, 86, 0.2)',
                         'rgba(75, 192, 192, 0.2)',
                         'rgba(54, 162, 235, 0.2)'
-                        ]
-                    this.dataChart.datasets = results.dataset
+                    ];
+
+                    results.dataset[1].backgroundColor = [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ];
+
+                    this.dataChart.datasets = results.dataset;
+
+                    this.dataChartPieFileCount.datasets = [this.dataChart.datasets[0]];
+                    this.dataChartPieFileCount.labels = results.labels;
+
+                    this.dataChartPieFileWeight.datasets = [this.dataChart.datasets[1]];
+                    this.dataChartPieFileWeight.labels = results.labels;
                     
-                    console.log("datachart", this.dataChart)
-                    // let userData = {
-                    //     label: this.fileUserMetrics[0].user,
-                    //     data: [this.fileUserMetrics[0].weight,0,0,0,0,0,0],
-                    //     backgroundColor: 'rgba(111, 1, 1, 0.2)'
-                    // }
-                    // this.dataChart.datasets.push(userData)
                 }).catch(err => {
                     console.error(err)
                 }).finally(()=>{
