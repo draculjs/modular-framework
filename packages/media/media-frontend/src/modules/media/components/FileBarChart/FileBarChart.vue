@@ -12,14 +12,6 @@
             chartdata: Object,
             options: Object
         },
-        data() {
-            return {
-                title: ''
-            }
-        },
-        methods: {
-            
-        }
     }
 </script>
 

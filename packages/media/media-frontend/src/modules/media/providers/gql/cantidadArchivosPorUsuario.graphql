@@ -1,0 +1,9 @@
+query cantidadArchivosPorUsuario{
+    cantidadArchivosPorUsuario{
+        labels
+        dataset{
+            label
+            data
+        }
+    }
+}

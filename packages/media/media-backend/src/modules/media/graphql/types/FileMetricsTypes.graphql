@@ -20,4 +20,6 @@ type TotalMetrics{
 type Query {
     fileUserMetrics: UserChartMetrics
     fileGlobalMetrics: TotalMetrics
+    almacenamientoPorUsuario: UserChartMetrics
+    cantidadArchivosPorUsuario: UserChartMetrics
 }

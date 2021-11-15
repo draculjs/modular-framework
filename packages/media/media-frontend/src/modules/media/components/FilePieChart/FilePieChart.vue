@@ -6,20 +6,14 @@
         extends: Pie,
         name: "PieChart",
         mounted () {
+            this.options.title = { display: true, text: this.title };
             this.renderChart(this.chartdata, this.options)
         },
         props: {
             chartdata: Object,
-            options: Object
+            options: Object,
+            title: String
         },
-        data() {
-            return {
-                title: ''
-            }
-        },
-        methods: {
-            
-        }
     }
 </script>
 

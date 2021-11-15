@@ -35,13 +35,13 @@
         </v-row>
         <v-row class="dflex justify-center">
             <v-card class="elevation-0 white mr-3" >
-                <file-bar-chart v-if="loaded" :chartdata="dataChart" :options="options"/>
+                <file-bar-chart v-if="loadedFileBarChart" :chartdata="dataChart" :options="fileBarChartOptions"/>
             </v-card>
             <v-card class="elevation-0 white mr-3" >
-                <file-pie-chart v-if="loaded" :chartdata="dataChartPieFileCount" :options="options"/>
+                <file-pie-chart v-if="loadedFilePieChartWeight" :chartdata="dataChartPieFileWeight" title="Almacenamiento por usuario" :options="filePieChartOptions"/>
             </v-card>
             <v-card class="elevation-0 white" >
-                <file-pie-chart v-if="loaded" :chartdata="dataChartPieFileWeight" :options="options"/>
+                <file-pie-chart v-if="loadedFilePieChartCount" :chartdata="dataChartPieFileCount" title="Cantidad de archivos por usuario" :options="filePieChartOptions"/>
             </v-card>
         </v-row>
     </div>
@@ -62,70 +62,44 @@
             return {
                 fileGlobalMetrics: null,
                 fileUserMetrics:null,
-                loaded: false,
-                options: {
+                almacenamientoPorUsuario:null,
+                loadedFileBarChart: false,
+                loadedFilePieChartWeight: false,
+                loadedFilePieChartCount: false,
+                fileBarChartOptions: {
                     title: {
                         display: true,
-                        text: 'Predicted world population (millions) in 2050'
+                        text: 'Indicadores de archivos de los últimos 5 meses'
+                    },
+                    plugins: {
+                        labels: {
+                            render: (value) => { 
+                                if (value.percentage != 'Nan') {
+                                    return value.value.toFixed(2)}
+                                }
+                        }
                     },
                 },
-                dataChart: {
-                    // labels: ["enero","feb","mar","abr","may","jun","jul"],
-                    // datasets: [{
-                    //     label: 'My First Dataset',
-                    //     data: [65, 59, 80, 81, 56, 55, 40],
-                    //     backgroundColor: [
-                    //     'rgba(255, 99, 132, 0.2)',
-                    //     'rgba(255, 159, 64, 0.2)',
-                    //     'rgba(255, 205, 86, 0.2)',
-                    //     'rgba(75, 192, 192, 0.2)',
-                    //     'rgba(54, 162, 235, 0.2)',
-                    //     'rgba(153, 102, 255, 0.2)',
-                    //     'rgba(201, 203, 207, 0.2)'
-                    //     ],
-                    //     borderColor: [
-                    //     'rgb(255, 99, 132)',
-                    //     'rgb(255, 159, 64)',
-                    //     'rgb(255, 205, 86)',
-                    //     'rgb(75, 192, 192)',
-                    //     'rgb(54, 162, 235)',
-                    //     'rgb(153, 102, 255)',
-                    //     'rgb(201, 203, 207)'
-                    //     ],
-                    //     borderWidth: 1
-                    // },{
-                    //     label: 'My second Dataset',
-                    //     data: [12, 23, 34, 45, 56, 67, 78],
-                    //     backgroundColor: [
-                    //     'rgba(255, 99, 132, 0.2)',
-                    //     'rgba(255, 159, 64, 0.2)',
-                    //     'rgba(255, 205, 86, 0.2)',
-                    //     'rgba(75, 192, 192, 0.2)',
-                    //     'rgba(54, 162, 235, 0.2)',
-                    //     'rgba(153, 102, 255, 0.2)',
-                    //     'rgba(201, 203, 207, 0.2)'
-                    //     ],
-                    //     borderColor: [
-                    //     'rgb(255, 99, 132)',
-                    //     'rgb(255, 159, 64)',
-                    //     'rgb(255, 205, 86)',
-                    //     'rgb(75, 192, 192)',
-                    //     'rgb(54, 162, 235)',
-                    //     'rgb(153, 102, 255)',
-                    //     'rgb(201, 203, 207)'
-                    //     ],
-                    //     borderWidth: 1
-                    // }]
+                filePieChartOptions: {
+                    plugins: {
+                        labels: {
+                            render: (value) => { return value.value.toFixed(2) }
+                        }
+                    },
                 },
+                dataChart: { },
                 dataChartPieFileCount: { },
                 dataChartPieFileWeight: { }
             }
         },
         created() {
-            this.loaded = false
+            this.loadedFileBarChart = false
+            this.loadedFilePieChartWeight = false
+            this.loadedFilePieChartCount = false
             this.fetchFileGlobalMetrics()
             this.fetchFileUserMetrics()
-            // this.getMonths()
+            this.getAlmacenamientoPorUsuario()
+            this.getCantidadArchivosPorUsuario()
         },
         methods: {
             fetchFileGlobalMetrics() {
@@ -138,7 +112,6 @@
             },
             fetchFileUserMetrics() {
                 fileMetricsProvider.fileUserMetrics().then(r => {
-
                     this.fileUserMetrics = r.data.fileUserMetrics
                     let results = r.data.fileUserMetrics
                     this.dataChart.labels = results.labels
@@ -160,19 +133,54 @@
                     ];
 
                     this.dataChart.datasets = results.dataset;
-
-                    this.dataChartPieFileCount.datasets = [this.dataChart.datasets[0]];
-                    this.dataChartPieFileCount.labels = results.labels;
-
-                    this.dataChartPieFileWeight.datasets = [this.dataChart.datasets[1]];
-                    this.dataChartPieFileWeight.labels = results.labels;
-                    
                 }).catch(err => {
                     console.error(err)
                 }).finally(()=>{
-                    this.loaded = true
+                    this.loadedFileBarChart = true
                 })
-            }
+            },
+            getAlmacenamientoPorUsuario() {
+                fileMetricsProvider.almacenamientoPorUsuario().then(r => {
+                    let results = r.data.almacenamientoPorUsuario
+
+                    results.dataset[0].backgroundColor= [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ];
+
+                    this.dataChartPieFileWeight.datasets = [results.dataset[0]];
+                    this.dataChartPieFileWeight.labels = results.labels;
+
+                }).catch(err => {
+                    console.error(err)
+                }).finally(()=>{
+                    this.loadedFilePieChartWeight = true
+                })
+            },
+            getCantidadArchivosPorUsuario() {
+                fileMetricsProvider.cantidadArchivosPorUsuario().then(r => {
+                    let results = r.data.cantidadArchivosPorUsuario
+
+                    results.dataset[0].backgroundColor= [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)'
+                    ];
+
+                    this.dataChartPieFileCount.datasets = [results.dataset[0]];
+                    this.dataChartPieFileCount.labels = results.labels;
+
+                }).catch(err => {
+                    console.error(err)
+                }).finally(()=>{
+                    this.loadedFilePieChartCount = true
+                })
+            },
 
         }
     }
