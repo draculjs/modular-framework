@@ -11,8 +11,8 @@
         <v-col cols="12" sm="6" md="4">
             <v-list>
                  <show-field :value="item.extension" :label="$t('media.file.extension')" icon="extension"/>
-                 <show-field :value="item.size" :label="$t('media.file.size')" icon="photo_size_select_actual"/>
-                 <show-field :value="item.createdBy" :label="$t('media.file.createdBy')" icon="account_circle"/>
+                 <show-field :value="item.size.toString()" :label="$t('media.file.size')" icon="photo_size_select_actual"/>
+                 <show-field :value="item.createdBy.user.name" :label="$t('media.file.createdBy')" icon="account_circle"/>
             </v-list>
         </v-col>
 

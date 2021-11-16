@@ -1,0 +1,9 @@
+mutation userStorageUpdate($id: ID!, $name:String!, $capacity:Float!, $usedSpace:Float, $maxFileSize: Float, $fileExpirationTime: Int){
+    userStorageUpdate(id: $id, input: { name: $name, capacity: $capacity, usedSpace: $usedSpace, maxFileSize: $maxFileSize, fileExpirationTime: $fileExpirationTime }){
+        id
+        name
+        capacity
+        usedSpace
+        fileExpirationTime
+    }
+}

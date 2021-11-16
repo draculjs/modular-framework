@@ -1,0 +1,10 @@
+query almacenamientoPorUsuario{
+    almacenamientoPorUsuario{
+        labels
+        dataset{
+            label
+            data
+            backgroundColor
+        }
+    }
+}

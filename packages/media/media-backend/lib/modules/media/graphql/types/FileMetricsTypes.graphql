@@ -1,15 +1,23 @@
-type UserMetrics{
-    user: String
-    count: Int
-    weight: Int
+type UserChartMetrics{
+    labels: [String]
+    dataset: [ChartData]
+}
+
+type ChartData{
+    label: String
+    data: [Float]
+}
+
+type Month {
+    month: Int
 }
 
 type TotalMetrics{
     count: Int
-    weight: Int
+    weight: Float
 }
 
 type Query {
-    fileUserMetrics: [UserMetrics]
+    fileUserMetrics: UserChartMetrics
     fileGlobalMetrics: TotalMetrics
 }

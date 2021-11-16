@@ -13,6 +13,8 @@ var _FileService = require("../../services/FileService");
 
 var _UploadService = require("../../services/UploadService");
 
+var _UserStorageService = require("../../services/UserStorageService");
+
 var _convertGigabytesToBytes = _interopRequireDefault(require("../../services/helpers/convertGigabytesToBytes"));
 
 var _File = require("../../permissions/File");
@@ -83,16 +85,12 @@ router.get('/file', function (req, res) {
     });
   });
 });
-router.post('/file', upload.single('file'), function (req, res) {
+router.post('/file', upload.single('file'), async function (req, res) {
   if (!req.user) res.status(401).json({
     message: "Not Authorized"
   });
   if (!req.rbac.isAllowed(req.user.id, _File.FILE_CREATE)) res.status(403).json({
     message: "Not Authorized"
-  });
-  const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES : 4;
-  if (req.file.size > (0, _convertGigabytesToBytes.default)(maxFileSize)) res.status(500).json({
-    message: "Maximum file size exceeded"
   });
   let file = {
     filename: req.file.originalname,

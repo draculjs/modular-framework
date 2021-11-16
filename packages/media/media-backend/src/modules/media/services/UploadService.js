@@ -6,24 +6,15 @@ import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
 import convertGigabytesToBytes from "./helpers/convertGigabytesToBytes"
+import { checkUserStorage, updateUserUsedStorage } from './UserStorageService';
 
-
-const fileUpload = function (user, inputFile, fileSize = null) {
-
-  const validateMaxFileSize = function (fileSize) {
-    const maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_GIGABYTES : 4;
-    return convertGigabytesToBytes(maxFileSize) > fileSize;
-  }
+const fileUpload = function (user, inputFile) {
 
   return new Promise(async (resolve, rejects) => {
     try {
 
       if (!user) {
         return rejects(new Error("user is required"))
-      }
-
-      if (fileSize && !validateMaxFileSize(fileSize)) {
-        return rejects(new Error("error.maxSizeExceeded"))
       }
 
       const { filename, mimetype, encoding, createReadStream } = await inputFile;
@@ -41,13 +32,16 @@ const fileUpload = function (user, inputFile, fileSize = null) {
       const absolutePath = path.resolve(relativePath);
 
       //Store
-      let storeResult = await storeFile(createReadStream(), relativePath)
-
+      let storeResult = await storeFile(createReadStream(), relativePath, user.id)
       winston.info("fileUploadAnonymous store result: " + storeResult)
 
       let url = baseUrl() + relativePath
 
       if (storeResult && storeResult.finish) {
+
+        let fileSizeMB = storeResult.bytesWritten / (1024 * 1024)
+
+        updateUserUsedStorage(user.id, fileSizeMB)
 
         let doc = new File({
           filename: finalFileName,
@@ -57,7 +51,7 @@ const fileUpload = function (user, inputFile, fileSize = null) {
           extension: extension,
           relativePath: relativePath,
           absolutePath: absolutePath,
-          size: storeResult.bytesWritten,
+          size: fileSizeMB,
           url: url,
           createdBy: { user: user.id, username: user.username }
         })
@@ -74,7 +68,7 @@ const fileUpload = function (user, inputFile, fileSize = null) {
 
     } catch (err) {
       winston.error('UploadService: ', err)
-      rejects(new Error(err))
+      rejects(err)
     }
   })
 

@@ -5,17 +5,24 @@ class BaseProvider {
         this.gqlc = null
     }
 
-    setGqlc(gqlc){
+    setGqlc(gqlc) {
         this.gqlc = gqlc
     }
 
-    ping(){
+    ping() {
         return this.gqlc.query({
             query: require('./gql/ping.graphql')
         })
     }
 
-    pingTimeout(){
+    fetchEnvironmentVariables() {
+        return this.gqlc.query({
+            query: require('./gql/fetchEnvironmentVariables.graphql'),
+            fetchPolicy: "network-only"
+        })
+    }
+
+    pingTimeout() {
         return this.gqlc.query({
             query: require('./gql/pingTimeout.graphql')
         })

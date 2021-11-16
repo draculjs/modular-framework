@@ -20,5 +20,6 @@ query fileFind($id:ID!){
             }
             username
         }
+        lastAccess
     }
 }

@@ -19,6 +19,7 @@
     "@dracul/common-frontend": "^1.2.30",
     "@dracul/customize-frontend": "^1.2.30",
     "@dracul/user-frontend": "^1.2.30",
+    "@dracul/dayjs-frontend": "^1.2.34",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",

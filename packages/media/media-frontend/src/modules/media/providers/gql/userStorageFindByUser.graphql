@@ -1,0 +1,14 @@
+query userStorageFindByUser {
+    userStorageFindByUser {
+        id
+        user {
+            name
+            username
+            id
+        }
+        capacity
+        usedSpace
+        maxFileSize
+        fileExpirationTime
+    }
+}

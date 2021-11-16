@@ -3,6 +3,7 @@ const messages = {
         error: {
             general: 'Unexpected failure',
             maxSizeExceeded: 'Max file size exceeded',
+            maxStorageExceeded:"Not enough storage",
             code: {
                 FORBIDDEN: 'Forbidden',
                 UNAUTHENTICATED: 'Unauthenticated',
@@ -17,6 +18,7 @@ const messages = {
         error: {
             general: 'Fallo inesperado',
             maxSizeExceeded: 'Tamaño máximo de archivo excedido',
+            maxStorageExceeded:"Almacenamiento insuficiente",
             code: {
                 FORBIDDEN: 'No Autorizado',
                 UNAUTHENTICATED: 'No Autenticado',
@@ -31,6 +33,7 @@ const messages = {
         error: {
             general: 'Falha inesperada',
             maxSizeExceeded: 'Tamanho máximo do arquivo excedido',
+            maxStorageExceeded:"Armazenamento insuficiente",
             code: {
                 FORBIDDEN: 'Proibido',
                 UNAUTHENTICATED: 'Não autenticado',

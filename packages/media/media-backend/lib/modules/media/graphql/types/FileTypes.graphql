@@ -8,10 +8,11 @@ type File{
     extension: String!
     relativePath: String!
     absolutePath: String!
-    size: Int!
+    size: Float!
     url: String!
     createdAt: String!
     createdBy: CreatedBy
+    lastAccess: String
 }
 
 type CreatedBy{
@@ -25,9 +26,18 @@ type FilePaginated{
     items: [File!]
 }
 
+input FilterPaginateInput{
+  pageNumber: Int,
+  itemsPerPage: Int,
+  search: String,
+  filters: [FilterInput],
+  orderBy: String,
+  orderDesc: Boolean
+}
+
 type Query {
     fileFind(id:ID!): File
-    filePaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): FilePaginated
+    filePaginate(input: FilterPaginateInput): FilePaginated
 }
 
 input FileInput{
@@ -35,7 +45,7 @@ input FileInput{
     extension: String!
     relativePath: String!
     absolutePath: String!
-    size: Int!
+    size: Float!
     url: String!
     createdAt: String!
 }
@@ -49,7 +59,6 @@ type FileDelete{
     id: ID!
     success: Boolean!
 }
-
 
 type Mutation {
     fileUpdate(id: ID!, input: FileUpdateInput): File

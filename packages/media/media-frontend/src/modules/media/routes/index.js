@@ -1,5 +1,6 @@
 import FileManagementPage from '../pages/FileManagementPage'
 import FileDashboardPage from '../pages/FileDashboardPage'
+import UserStoragePage from '../pages/UserStoragePage'
 
 const routes = [
     {
@@ -14,6 +15,15 @@ const routes = [
         meta: {
             requiresAuth: true,
             permission: "FILE_SHOW_ALL"
+        }
+    },
+    {
+        name: 'UserStoragePage',
+        path: '/user-storage',
+        component: UserStoragePage,
+        meta: {
+            requeresAuth: true,
+            permission: "USER_STORAGE_SHOW_ALL"
         }
     }
 ]

@@ -1,9 +1,11 @@
 <template>
   <v-row row wrap>
 
-    <v-col cols="12" sm="6" md="4" offset-md="8" offset-sm="6">
-      <search-input @search="performSearch" v-model="search"/>
-    </v-col>
+    <file-filters
+      v-on:updateFilters="setFilters"
+      v-on:clearFilter="clearFilters"
+      v-model="filters"
+    />
 
     <v-col cols="12">
 
@@ -35,11 +37,19 @@
         </template>
 
         <template v-slot:item.size="{item}">
-          {{ redeableBytes(item.size) }}
+          {{ item.size.toFixed(2) }} Mb
+        </template>
+
+        <template v-slot:item.type="{item}">
+          {{ $t(`media.file.${item.type}`) }}
         </template>
 
         <template v-slot:item.createdAt="{item}">
           {{ formatDate(item.createdAt) }}
+        </template>
+
+        <template v-slot:item.lastAccess="{item}">
+          {{ formatDate(item.lastAccess) }}
         </template>
 
         <template v-slot:item.action="{ item }">
@@ -56,14 +66,15 @@
 <script>
 import FileProvider from "../../../providers/FileProvider";
 
-import {DeleteButton, EditButton, ShowButton, SearchInput} from "@dracul/common-frontend"
+import {DeleteButton, EditButton, ShowButton} from "@dracul/common-frontend"
 import redeableBytesMixin from "../../../mixins/readableBytesMixin";
 import moment from "moment-timezone"
+import FileFilters from "../FileFilters/FileFilters"
 
 export default {
   name: "FileList",
   mixins: [redeableBytesMixin],
-  components: {DeleteButton, EditButton, ShowButton, SearchInput},
+  components: {DeleteButton, EditButton, ShowButton, FileFilters},
   data() {
     return {
       items: [],
@@ -73,8 +84,85 @@ export default {
       orderDesc: false,
       itemsPerPage: 5,
       pageNumber: 1,
-      search: ''
+      search: '',
+      filters: [
+        {
+          field: 'dateFrom',
+          operator: '$gte',
+          value: null
+        },
+        {
+          field: 'dateTo',
+          operator: '$lte',
+          value: null
+        },
+        {
+          field: 'filename',
+          operator: '$regex',
+          value: null
+        },
+        {
+          field: 'createdBy.user',
+          operator: '$eq',
+          value: null
+        },
+        {
+          field: 'type',
+          operator: '$regex',
+          value: null
+        },
+        {
+          field: 'minSize',
+          operator: '$gte',
+          value: null
+        },
+        {
+          field: 'maxSize',
+          operator: '$lte',
+          value: null
+        }
+      ]
     }
+  },
+  methods: {
+
+    performSearch() {
+      this.pageNumber = 1
+      this.fetch()
+    },
+    fetch() {
+      this.loading = true
+      FileProvider.paginateFiles(
+          this.pageNumber,
+          this.itemsPerPage,
+          this.search,
+          this.filters,
+          this.getOrderBy,
+          this.getOrderDesc
+      ).then(r => {
+        this.items = r.data.filePaginate.items
+        this.totalItems = r.data.filePaginate.totalItems
+      }).catch(err => {
+        console.error(err)
+      }).finally(() => this.loading = false)
+    },
+    setFilters(fileFilters) {
+      this.filters = fileFilters
+      this.fetch()
+    },
+    clearFilters() {
+      this.filters.forEach(filter => {
+        filter.value = null
+      })
+      this.fetch()
+    }
+  },
+  watch: {
+    message: function(value) {
+      if (value) {
+        this.filters = true;
+      }
+    },
   },
   computed: {
     headers() {
@@ -84,6 +172,7 @@ export default {
         {text: this.$t('media.file.type'), value: 'type'},
         {text: this.$t('media.file.size'), value: 'size'},
         {text: this.$t('media.file.createdAt'), value: 'createdAt'},
+        {text: this.$t('media.file.lastAccess'), value: 'lastAccess'},
         {text: this.$t('media.file.createdBy'), value: 'createdBy.username'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},
@@ -101,29 +190,8 @@ export default {
   },
   created() {
     this.fetch()
-  },
-  methods: {
-
-    performSearch() {
-      this.pageNumber = 1
-      this.fetch()
-    },
-    fetch() {
-      this.loading = true
-      FileProvider.paginateFiles(
-          this.pageNumber,
-          this.itemsPerPage,
-          this.search,
-          this.getOrderBy,
-          this.getOrderDesc
-      ).then(r => {
-        this.items = r.data.filePaginate.items
-        this.totalItems = r.data.filePaginate.totalItems
-      }).catch(err => {
-        console.error(err)
-      }).finally(() => this.loading = false)
-    }
   }
+  
 
 }
 </script>
