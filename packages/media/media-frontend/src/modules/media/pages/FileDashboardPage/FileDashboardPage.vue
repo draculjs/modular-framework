@@ -1,29 +1,35 @@
 <template>
-    <div>
-        <v-card class="mt-6 mx-3 pa-2 text-center">
-            <h5 class="text-h4 mt-2">{{$t('media.file.dashboardTitle')}}</h5>
-            <br>
-            <v-row class="d-flex justify-space-around  mb-2" v-if="fileGlobalMetrics">
-                <v-card width="500" class="elevation-0 white " >
-                    <file-bar-chart v-if="loadedFileBarChart" :chartdata="dataChart" :options="fileBarChartOptions"/>
+    <v-container class="elevation-4 mx-3 mt-6" white fluid>
+        <h5 class="text-h4 mt-2">{{$t('media.file.dashboardTitle')}}</h5>
+        <br>
+        <v-row align="start" justify="center" v-if="fileGlobalMetrics">
+            <v-col cols="12" sm="6" md="4">
+                <v-card class="elevation-0 white" >
+                    <v-card-text>
+                        <file-bar-chart v-if="loadedFileBarChart" :chartdata="dataChart" :options="fileBarChartOptions"/>
+                    </v-card-text>
                 </v-card>
-                <v-card width="500" class="elevation-0 white text-center">
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+                <v-card class="elevation-0 white text-center">
                     <file-pie-chart class="mb-2" v-if="loadedFilePieChartWeight" :chartdata="dataChartPieFileWeight" 
-                        title="Almacenamiento por usuario (Mb)" :options="filePieChartOptions"/>
+                        :title="$t('media.file.dashboard.almacenamientoPorUsuario.title')" :options="filePieChartOptions"/>
                     <span class="text-h5 font-weight-bold">
-                        Total weight: {{fileGlobalMetrics.weight.toFixed(2)}} Mb
+                        {{$t("media.file.dashboard.almacenamientoPorUsuario.subtitle")}}: {{fileGlobalMetrics.weight.toFixed(2)}} Mb
                     </span>
                 </v-card>
-                <v-card width="500" class="elevation-0 white text-center pb-3" >
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+                <v-card class="elevation-0 white text-center" >
                     <file-pie-chart class="mb-2" v-if="loadedFilePieChartCount" :chartdata="dataChartPieFileCount" 
-                        title="Cantidad de archivos por usuario" :options="filePieChartOptions"/>
+                        :title="$t('media.file.dashboard.cantidadArchivosPorUsuario.title')" :options="filePieChartOptions"/>
                     <span class="text-h5 font-weight-bold">
-                        Total count: {{fileGlobalMetrics.count}}
+                        {{$t("media.file.dashboard.cantidadArchivosPorUsuario.subtitle")}}: {{fileGlobalMetrics.count}}
                     </span>
                 </v-card>
-            </v-row>
-        </v-card>
-    </div>
+            </v-col>
+        </v-row>
+    </v-container>
 
 </template>
 
@@ -48,7 +54,7 @@
                 fileBarChartOptions: {
                     title: {
                         display: true,
-                        text: 'Indicadores de archivos de los últimos 5 meses',
+                        text: this. $t("media.file.dashboard.fileUserMetrics.title"),
                         fontSize: '18'
                     },
                     plugins: {
@@ -144,6 +150,7 @@
                 fileMetricsProvider.fileUserMetrics().then(r => {
                     this.fileUserMetrics = r.data.fileUserMetrics
                     let results = r.data.fileUserMetrics
+                    console.log(results.labels)
                     this.dataChart.labels = results.labels
 
                     results.dataset[0].backgroundColor= [
@@ -153,6 +160,7 @@
                          'rgba(75, 192, 192)',
                          'rgba(75, 192, 192)',
                     ];
+                    results.dataset[0].label = this.$t(`media.file.dashboard.fileUserMetrics.${results.dataset[0].label}`);
 
                     results.dataset[1].backgroundColor = [
                         'rgba(255, 205, 86)',
@@ -161,6 +169,7 @@
                         'rgba(255, 205, 86)',
                         'rgba(255, 205, 86)',
                     ];
+                    results.dataset[1].label = this.$t(`media.file.dashboard.fileUserMetrics.${results.dataset[1].label}`);
 
                     this.dataChart.datasets = results.dataset;
                 }).catch(err => {

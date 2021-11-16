@@ -33,7 +33,21 @@ const messages = {
                 until: 'Until',
                 sizeGt: 'Size greater than',
                 sizeLt: 'Size less than',
-
+                dashboard: {
+                    fileUserMetrics: {
+                        title: "File indicators of the last 5 months",
+                        countLabel: "File count",
+                        sizeLabel: "Size",
+                    },
+                    almacenamientoPorUsuario: {
+                        title: "User storage per user (Mb)",
+                        subtitle: "Total size"
+                    },
+                    cantidadArchivosPorUsuario: {
+                        title: "Number of files per user",
+                        subtitle: "Number of files"
+                    }
+                }
             },
             userStorage: {
                 title: "User Storage",
@@ -93,6 +107,21 @@ const messages = {
                 until: 'Hasta',
                 sizeGt: 'Tamaño mayor a',
                 sizeLt: 'Tamaño menor a',
+                dashboard: {
+                    fileUserMetrics: {
+                        title: "Indicadores de archivos de los últimos 5 meses",
+                        countLabel: "Cantidad de archivos",
+                        sizeLabel: "Peso",
+                    },
+                    almacenamientoPorUsuario: {
+                        title: "Almacenamiento por usuario (Mb)",
+                        subtitle: "Peso total"
+                    },
+                    cantidadArchivosPorUsuario: {
+                        title: "Cantidad de archivos por usuario",
+                        subtitle: "Cantidad de archivos"
+                    }
+                }
 
 
             },
@@ -124,7 +153,7 @@ const messages = {
         media: {
             file: {
                 title: 'Administração de File',
-                dashboardTitle: "File Dashboard",
+                dashboardTitle: "Painel de arquivos",
                 subtitle: 'Ver, buscar, criar, editar e usar File',
                 creating: 'Criando File',
                 editing: 'Edição File',
@@ -154,6 +183,21 @@ const messages = {
                 until: 'Até',
                 sizeGt: 'Tamanho maior que',
                 sizeLt: 'Tamanho menor que',
+                dashboard: {
+                    fileUserMetrics: {
+                        title: "Indicadores de arquivo dos últimos 5 meses",
+                        countLabel: "Número de arquivos",
+                        sizeLabel: "Peso",
+                    },
+                    almacenamientoPorUsuario: {
+                        title: "Armazenamento por usuário (Mb)",
+                        subtitle: "Peso total"
+                    },
+                    cantidadArchivosPorUsuario: {
+                        title: "Número de arquivos por usuário",
+                        subtitle: "Número de arquivos"
+                    }
+                }
             },
             userStorage: {
                 title: "Armazenamento do usuário",

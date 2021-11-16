@@ -102,8 +102,8 @@ export default {
           value: null
         },
         {
-          field: 'createdBy.username',
-          operator: '$regex',
+          field: 'createdBy.user',
+          operator: '$eq',
           value: null
         },
         {

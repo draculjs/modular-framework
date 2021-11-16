@@ -109,8 +109,9 @@ export const fileUserMetrics = async function () {
         }
     }
 
-    dataset.push({ label: "cantidad", data: dataCount })
-    dataset.push({ label: "weight", data: dataWeigth })
+
+    dataset.push({ label: "countLabel", data: dataCount })
+    dataset.push({ label: "sizeLabel", data: dataWeigth })
 
     return { labels: labels, dataset: dataset }
 

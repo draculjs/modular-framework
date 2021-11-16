@@ -5,7 +5,7 @@
       <v-row>
         <v-col cols="12" class="py-0">
           <v-row>
-            <v-col cols="4">
+            <v-col cols="12" sm="6" md="4"  >
               <date-input
                 v-if="filters[0].field == 'dateFrom'"
                 v-model="filters[0].value"
@@ -15,7 +15,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="4">
+            <v-col cols="12" sm="6" md="4"  >
               <date-input
                 v-model="filters[1].value"
                 :label="$t('media.file.until')"
@@ -24,7 +24,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="4">
+            <v-col cols="12" md="4">
               <v-text-field
                 v-model="filters[2].value"
                 :label="$t('media.file.filename')"
@@ -33,16 +33,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model="filters[3].value" 
-                :label="$t('media.file.createdBy')"
-                prepend-icon="account_box"
-                color="secondary"
-                hide-details
-              />
-            </v-col>
-            <v-col cols="4">
+            <v-col cols="12" md="4">
               <v-select
                 v-model="filters[4].value"
                 :label="$t('media.file.type')"
@@ -52,7 +43,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" sm="6"  md="2">
               <v-text-field
                 v-model="filters[5].value"
                 :label="$t('media.file.sizeGt')"
@@ -61,7 +52,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" sm="6" md="2">
               <v-text-field
                 v-model="filters[6].value"
                 :label="$t('media.file.sizeLt')"
@@ -69,6 +60,13 @@
                 color="secondary"
                 hide-details
               />
+            </v-col>
+            <v-col cols="12" md="4">
+              <user-autocomplete
+                v-model="filters[3].value"
+                :label="$t('media.file.createdBy')"
+                solo>
+              </user-autocomplete>
             </v-col>
           </v-row>
         </v-col>
@@ -88,11 +86,13 @@
 
 <script>
 
-import { DateInput } from '@dracul/dayjs-frontend'
+import { DateInput } from '@dracul/dayjs-frontend';
+import { UserAutocomplete} from '@dracul/user-frontend'
+
 
 export default {
   name: "FileFilters",
-  components: { DateInput },
+  components: { DateInput, UserAutocomplete },
   props: {
     value: Array
   },

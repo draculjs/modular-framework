@@ -13,7 +13,7 @@ const FileSchema = new Schema({
     encoding: { type: String, required: true },
     extension: { type: String, required: true },
     type: { type: String, required: true },
-    relativePath: { type: String, required: true },
+    relativePath: { type: String, required: true, index: true },
     absolutePath: { type: String, required: true },
     size: { type: Number, required: true },
     url: { type: String, required: true },

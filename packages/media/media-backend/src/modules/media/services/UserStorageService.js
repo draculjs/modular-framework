@@ -36,8 +36,8 @@ const checkAndCreate = async function (existingUserStorages, users) {
             let user = users[index].id;
             let capacity = 0;
             let usedSpace = 0;
-            let maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES;
-            let fileExpirationTime = process.env.FILE_EXPIRATION_TIME_IN_DAYS;
+            let maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
+            let fileExpirationTime = process.env.FILE_EXPIRATION_TIME_IN_DAYS || 365;
             await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime)
         }
     }
