@@ -21,6 +21,22 @@ var _default = {
       if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       return (0, _FileMetricsService.fileUserMetrics)();
     },
+    almacenamientoPorUsuario: (_, {}, {
+      user,
+      rbac
+    }) => {
+      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
+      if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      return (0, _FileMetricsService.almacenamientoPorUsuario)();
+    },
+    cantidadArchivosPorUsuario: (_, {}, {
+      user,
+      rbac
+    }) => {
+      if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
+      if (!rbac.isAllowed(user.id, _File.FILE_SHOW_ALL)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
+      return (0, _FileMetricsService.cantidadArchivosPorUsuario)();
+    },
     fileGlobalMetrics: (_, {}, {
       user,
       rbac

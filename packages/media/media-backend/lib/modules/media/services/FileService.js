@@ -19,6 +19,8 @@ var _fs = _interopRequireDefault(require("fs"));
 
 var _loggerBackend = require("@dracul/logger-backend");
 
+var _mongoose = _interopRequireDefault(require("mongoose"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const findFile = async function (id, permissionType = null, userId = null) {
@@ -121,10 +123,9 @@ const paginateFiles = function ({
           });
           break;
 
-        case 'createdBy':
-          value && (qsFilter.createdBy = {
-            [operator]: value,
-            $options: "i"
+        case 'createdBy.user':
+          value && (qsFilter["createdBy.user"] = {
+            [operator]: value
           });
           break;
 
