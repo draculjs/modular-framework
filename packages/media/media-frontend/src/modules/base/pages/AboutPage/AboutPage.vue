@@ -31,7 +31,7 @@
           {title: 'Documentacion backend', subtitle: 'Endpoints de GraphQL y REST. Descripcion de los servicios que provee.', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/media-backend/docs-es.md'},
           {title: 'Invocaciones con GraphQL', subtitle: 'Se sugiere usar la extensión "Altair Graphql cliente" la cual permite subir archivos).', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/media-backend/docs-es.md#queries'},
           {title: 'Swagger', subtitle: 'Link a la documentacion de endpoints REST con Swagger.', link: '/api-docs'},
-          {title: 'Repositorios con ejemplos', subtitle: 'Ejemplos con diferentes lenguajes (PHP, Javascript, Java). (En desarrollo).',link: 'https://github.com/juancaRabellino/dms-code-examples'}]
+          {title: 'Repositorios con ejemplos', subtitle: 'Ejemplos con diferentes lenguajes (PHP, Javascript, Java). (En desarrollo).',link: 'https://github.com/draculjs/dms-code-examples'}]
       }}
     }
 </script>
