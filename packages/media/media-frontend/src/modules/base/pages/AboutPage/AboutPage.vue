@@ -28,10 +28,10 @@
         dataList: [{title: 'Acerca de Dracul Media', subtitle: 'Informacion acerca de como levantar el proyecto en local.', link: 'https://github.com/draculjs/modular-framework/tree/master/packages/media'},
           {title: 'Docker', subtitle: 'Informacion acerca de como levantar el proyecto con Docker.', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/readme-docker.md'},
           {title: 'Documentacion frontend', subtitle: 'Listado de rutas, vistas y descripcion de componentes.', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/media-frontend/docs-es.md'},
-          {title:'Documentacion backend', subtitle: 'Endpoints de GraphQL y REST. Descripcion de los servicios que provee.', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/media-backend/docs-es.md'},
-          {title:'Invocaciones con GraphQL', subtitle: 'Se sugiere usar la extensión "Altair Graphql cliente" la cual permite subir archivos).', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/media-backend/docs-es.md#queries'},
+          {title: 'Documentacion backend', subtitle: 'Endpoints de GraphQL y REST. Descripcion de los servicios que provee.', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/media-backend/docs-es.md'},
+          {title: 'Invocaciones con GraphQL', subtitle: 'Se sugiere usar la extensión "Altair Graphql cliente" la cual permite subir archivos).', link: 'https://github.com/draculjs/modular-framework/blob/master/packages/media/media-backend/docs-es.md#queries'},
           {title: 'Swagger', subtitle: 'Link a la documentacion de endpoints REST con Swagger.', link: '/api-docs'},
-          {title: 'Repositorios con ejemplos', subtitle: 'Ejemplos con diferentes lenguajes (PHP, Javascript, Java). (En desarrollo).',link: ''}]
+          {title: 'Repositorios con ejemplos', subtitle: 'Ejemplos con diferentes lenguajes (PHP, Javascript, Java). (En desarrollo).',link: 'https://github.com/draculjs/dms-code-examples'}]
       }}
     }
 </script>
