@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import { updateUserUsedStorage } from './UserStorageService';
 import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
-import mongoose from 'mongoose'
 
 export const findFile = async function (id, permissionType = null, userId = null) {
 
@@ -54,50 +53,53 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
     function filterValues(filters) {
         let qsFilter = {};
 
-        filters.forEach(({ field, operator, value }) => {
-            switch (field) {
-                case 'dateFrom':
-                    if (value) {
-                        let dayBefore = dayjs(value).isValid() && dayjs(value)
-                        qsFilter.createdAt = { [operator]: dayBefore.$d }
-                    }
-                    break
-                case 'dateTo':
-                    if (value) {
-                        let dayAfter = dayjs(value).isValid() && dayjs(value)
-                        if (qsFilter.createdAt) {
-                            qsFilter.createdAt = { ...qsFilter.createdAt, [operator]: dayAfter.$d }
-                        } else {
-                            qsFilter.createdAt = { [operator]: dayAfter.$d }
+        if (filters) {
+            filters.forEach(({ field, operator, value }) => {
+                switch (field) {
+                    case 'dateFrom':
+                        if (value) {
+                            let dayBefore = dayjs(value).isValid() && dayjs(value)
+                            qsFilter.createdAt = { [operator]: dayBefore.$d }
                         }
-                    }
-                    break
-                case 'filename':
-                    (value) && (qsFilter.filename = { [operator]: value, $options: "i" })
-                    break
-                case 'createdBy.user':
-                    (value) && (qsFilter["createdBy.user"] = { [operator]: value })
-                    break
-                case 'type':
-                    (value) && (qsFilter.type = { [operator]: value, $options: "i" })
-                    break
-                case 'minSize':
-                    value && (qsFilter.size = { [operator]: parseFloat(value) })
-                    break
-                case 'maxSize':
-                    if (value) {
-                        if (qsFilter.size) {
-                            qsFilter.size = { ...qsFilter.size, [operator]: parseFloat(value) }
-                        } else {
-                            qsFilter.size = { [operator]: parseFloat(value) }
+                        break
+                    case 'dateTo':
+                        if (value) {
+                            let dayAfter = dayjs(value).isValid() && dayjs(value)
+                            if (qsFilter.createdAt) {
+                                qsFilter.createdAt = { ...qsFilter.createdAt, [operator]: dayAfter.$d }
+                            } else {
+                                qsFilter.createdAt = { [operator]: dayAfter.$d }
+                            }
                         }
-                    }
-                    break
-                default:
-                    break;
-            }
-        })
-        return qsFilter;
+                        break
+                    case 'filename':
+                        (value) && (qsFilter.filename = { [operator]: value, $options: "i" })
+                        break
+                    case 'createdBy.user':
+                        (value) && (qsFilter["createdBy.user"] = { [operator]: value })
+                        break
+                    case 'type':
+                        (value) && (qsFilter.type = { [operator]: value, $options: "i" })
+                        break
+                    case 'minSize':
+                        value && (qsFilter.size = { [operator]: parseFloat(value) })
+                        break
+                    case 'maxSize':
+                        if (value) {
+                            if (qsFilter.size) {
+                                qsFilter.size = { ...qsFilter.size, [operator]: parseFloat(value) }
+                            } else {
+                                qsFilter.size = { [operator]: parseFloat(value) }
+                            }
+                        }
+                        break
+                    default:
+                        break;
+                }
+            })
+            return qsFilter;
+        }
+
     }
 
     let query = {
@@ -105,6 +107,7 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
         ...filterByFileOwner(permissionType, userId),
         ...filterValues(filters)
     }
+
     let populate = ['createdBy.user']
     let sort = getSort(orderBy, orderDesc)
     let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
