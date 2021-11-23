@@ -38,7 +38,8 @@ const FileSchema = new Schema({
   },
   relativePath: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   absolutePath: {
     type: String,

@@ -6,6 +6,7 @@ type UserChartMetrics{
 type ChartData{
     label: String
     data: [Float]
+    backgroundColor: [String]
 }
 
 type Month {
@@ -20,4 +21,6 @@ type TotalMetrics{
 type Query {
     fileUserMetrics: UserChartMetrics
     fileGlobalMetrics: TotalMetrics
+    almacenamientoPorUsuario: UserChartMetrics
+    cantidadArchivosPorUsuario: UserChartMetrics
 }
