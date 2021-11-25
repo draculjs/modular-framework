@@ -10,7 +10,7 @@ const createDirIfNotExist = require('./createDirIfNotExist')
 
 class StreamSizeValidator extends Transform {
     //aca va la capacidad max por usuario
-    maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES : 1000;
+    maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES : 1000;
     totalLength = 0;
     error = '';
     storageLeft = app.get("storageLeft")

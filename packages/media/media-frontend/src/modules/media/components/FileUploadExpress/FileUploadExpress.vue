@@ -141,7 +141,10 @@ export default {
     },
     findUserStorage() {
       return UserStorageProvider.findUserStorageByUser().then((res)  => {
+        if(res.data.userStorageFindByUser && res.data.userStorageFindByUser.maxFileSize){
           this.maxFileSize = res.data.userStorageFindByUser.maxFileSize;
+        }
+
       }).catch(
           err => console.error(err)
       )

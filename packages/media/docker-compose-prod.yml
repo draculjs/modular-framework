@@ -10,6 +10,10 @@ services:
       - "7070:7070"
     environment:
       NODE_ENV: "development"
+      MEDIA_DEFAULT_CAPACITY: 1024
+      MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES: 4096
+      MEDIA_FILE_EXPIRATION_TIME_IN_DAYS: 180
+      MEDIA_DELETE_FILES_CRON: "0 0 0 * * * *"
       MONGO_URI: "mongodb://ip:27017/draculMedia"
       JWT_SECRET: "V8wzw4iL9H40oxXAVj9u"
       JWT_LOGIN_EXPIRED_IN: "1d"
