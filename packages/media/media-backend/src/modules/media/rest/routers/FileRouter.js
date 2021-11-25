@@ -8,19 +8,11 @@ const upload = multer()
 const streamifier = require('streamifier');
 import { findFile, paginateFiles } from "../../services/FileService";
 import { fileUpload } from "../../services/UploadService";
-import { updateUserUsedStorage } from "../../services/UserStorageService";
-import convertGigabytesToBytes from "../../services/helpers/convertGigabytesToBytes"
 import {
     FILE_SHOW_ALL,
     FILE_SHOW_OWN,
-    FILE_UPDATE_ALL,
-    FILE_UPDATE_OWN,
-    FILE_DELETE_ALL,
-    FILE_DELETE_OWN,
     FILE_CREATE
 } from "../../permissions/File";
-import {checkUserStorage} from '../../services/UserStorageService'
-
 
 router.get('/file/:id', function (req, res) {
 
@@ -49,7 +41,7 @@ router.get('/file', function (req, res) {
 
     const { pageNumber, itemsPerPage, search, orderBy, orderDesc } = req.query
 
-    paginateFiles(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, req.user.id).then(result => {
+    paginateFiles({ pageNumber, itemsPerPage, search, orderBy, orderDesc }, permissionType, req.user.id).then(result => {
         if (result) {
             res.status(200).json(result);
         } else {
@@ -60,7 +52,7 @@ router.get('/file', function (req, res) {
     })
 });
 
-router.post('/file', upload.single('file'),async function (req, res) {
+router.post('/file', upload.single('file'), async function (req, res) {
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
 
