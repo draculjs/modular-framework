@@ -45,6 +45,12 @@ Object.defineProperty(exports, "updateFile", {
     return FileService.updateFile;
   }
 });
+Object.defineProperty(exports, "userStorageCheckAndCreate", {
+  enumerable: true,
+  get: function () {
+    return UserStorageService.userStorageCheckAndCreate;
+  }
+});
 Object.defineProperty(exports, "fileUpload", {
   enumerable: true,
   get: function () {
@@ -63,13 +69,17 @@ Object.defineProperty(exports, "InitMediaPermissions", {
     return _InitMediaPermissions.default;
   }
 });
-exports.filePermissions = exports.FileService = void 0;
+exports.filePermissions = exports.UserStorageService = exports.FileService = void 0;
 
 var _graphql = require("./modules/media/graphql");
 
 var FileService = _interopRequireWildcard(require("./modules/media/services/FileService"));
 
 exports.FileService = FileService;
+
+var UserStorageService = _interopRequireWildcard(require("./modules/media/services/UserStorageService"));
+
+exports.UserStorageService = UserStorageService;
 
 var _UploadService = _interopRequireDefault(require("./modules/media/services/UploadService"));
 

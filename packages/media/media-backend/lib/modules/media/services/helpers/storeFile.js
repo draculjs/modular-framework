@@ -22,7 +22,7 @@ class StreamSizeValidator extends _stream.Transform {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "maxFileSize", process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES : 1000);
+    _defineProperty(this, "maxFileSize", process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES : 1000);
 
     _defineProperty(this, "totalLength", 0);
 

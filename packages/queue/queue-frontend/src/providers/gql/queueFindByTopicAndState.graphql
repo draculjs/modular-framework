@@ -1,5 +1,5 @@
-query queueFetch{
-    queueFetch{
+query queueFindByTopicAndState($topic:String!, $state: String!){
+    queueFindByTopicAndState(topic:$topic, state: $state){
         id
         blockedUntil
         workerId
@@ -16,4 +16,3 @@ query queueFetch{
         error
     }
 }
-

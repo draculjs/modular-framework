@@ -19,8 +19,6 @@ var _fs = _interopRequireDefault(require("fs"));
 
 var _loggerBackend = require("@dracul/logger-backend");
 
-var _mongoose = _interopRequireDefault(require("mongoose"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const findFile = async function (id, permissionType = null, userId = null) {
@@ -83,85 +81,88 @@ const paginateFiles = function ({
 
   function filterValues(filters) {
     let qsFilter = {};
-    filters.forEach(({
-      field,
-      operator,
-      value
-    }) => {
-      switch (field) {
-        case 'dateFrom':
-          if (value) {
-            let dayBefore = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
-            qsFilter.createdAt = {
-              [operator]: dayBefore.$d
-            };
-          }
 
-          break;
-
-        case 'dateTo':
-          if (value) {
-            let dayAfter = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
-
-            if (qsFilter.createdAt) {
-              qsFilter.createdAt = { ...qsFilter.createdAt,
-                [operator]: dayAfter.$d
-              };
-            } else {
+    if (filters) {
+      filters.forEach(({
+        field,
+        operator,
+        value
+      }) => {
+        switch (field) {
+          case 'dateFrom':
+            if (value) {
+              let dayBefore = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
               qsFilter.createdAt = {
-                [operator]: dayAfter.$d
+                [operator]: dayBefore.$d
               };
             }
-          }
 
-          break;
+            break;
 
-        case 'filename':
-          value && (qsFilter.filename = {
-            [operator]: value,
-            $options: "i"
-          });
-          break;
+          case 'dateTo':
+            if (value) {
+              let dayAfter = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
 
-        case 'createdBy.user':
-          value && (qsFilter["createdBy.user"] = {
-            [operator]: value
-          });
-          break;
-
-        case 'type':
-          value && (qsFilter.type = {
-            [operator]: value,
-            $options: "i"
-          });
-          break;
-
-        case 'minSize':
-          value && (qsFilter.size = {
-            [operator]: parseFloat(value)
-          });
-          break;
-
-        case 'maxSize':
-          if (value) {
-            if (qsFilter.size) {
-              qsFilter.size = { ...qsFilter.size,
-                [operator]: parseFloat(value)
-              };
-            } else {
-              qsFilter.size = {
-                [operator]: parseFloat(value)
-              };
+              if (qsFilter.createdAt) {
+                qsFilter.createdAt = { ...qsFilter.createdAt,
+                  [operator]: dayAfter.$d
+                };
+              } else {
+                qsFilter.createdAt = {
+                  [operator]: dayAfter.$d
+                };
+              }
             }
-          }
 
-          break;
+            break;
 
-        default:
-          break;
-      }
-    });
-    return qsFilter;
+          case 'filename':
+            value && (qsFilter.filename = {
+              [operator]: value,
+              $options: "i"
+            });
+            break;
+
+          case 'createdBy.user':
+            value && (qsFilter["createdBy.user"] = {
+              [operator]: value
+            });
+            break;
+
+          case 'type':
+            value && (qsFilter.type = {
+              [operator]: value,
+              $options: "i"
+            });
+            break;
+
+          case 'minSize':
+            value && (qsFilter.size = {
+              [operator]: parseFloat(value)
+            });
+            break;
+
+          case 'maxSize':
+            if (value) {
+              if (qsFilter.size) {
+                qsFilter.size = { ...qsFilter.size,
+                  [operator]: parseFloat(value)
+                };
+              } else {
+                qsFilter.size = {
+                  [operator]: parseFloat(value)
+                };
+              }
+            }
+
+            break;
+
+          default:
+            break;
+        }
+      });
+      return qsFilter;
+    }
   }
 
   let query = { ...qs(search),

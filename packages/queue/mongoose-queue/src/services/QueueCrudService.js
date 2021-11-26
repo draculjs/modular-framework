@@ -10,6 +10,14 @@ export const findQueue = async function (id) {
     })
 }
 
+export const findQueueByTopicAndState = async function (topic, state) {
+    return new Promise((resolve, reject) => {
+        QueueModel.findOne({topic, state}).exec((err, res) => (
+            err ? reject(err) : resolve(res)
+        ));
+    })
+}
+
 
 export const qs = function (search) {
     let qs = {}

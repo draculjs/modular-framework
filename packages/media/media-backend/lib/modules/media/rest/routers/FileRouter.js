@@ -13,10 +13,6 @@ var _FileService = require("../../services/FileService");
 
 var _UploadService = require("../../services/UploadService");
 
-var _UserStorageService = require("../../services/UserStorageService");
-
-var _convertGigabytesToBytes = _interopRequireDefault(require("../../services/helpers/convertGigabytesToBytes"));
-
 var _File = require("../../permissions/File");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -71,7 +67,13 @@ router.get('/file', function (req, res) {
     orderBy,
     orderDesc
   } = req.query;
-  (0, _FileService.paginateFiles)(pageNumber, itemsPerPage, search, orderBy, orderDesc, permissionType, req.user.id).then(result => {
+  (0, _FileService.paginateFiles)({
+    pageNumber,
+    itemsPerPage,
+    search,
+    orderBy,
+    orderDesc
+  }, permissionType, req.user.id).then(result => {
     if (result) {
       res.status(200).json(result);
     } else {

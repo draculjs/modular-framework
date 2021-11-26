@@ -17,6 +17,14 @@ class QueueProvider {
         })
     }
 
+    queueFindByTopicAndState(topic, state) {
+        return this.gqlc.query({
+            query: require('./gql/queueFindByTopicAndState.graphql'),
+            variables: {topic, state},
+            fetchPolicy: "network-only"
+        })
+    }
+
     fetchQueues() {
         return this.gqlc.query({query: require('./gql/queueFetch.graphql')})
     }

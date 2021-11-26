@@ -5,7 +5,8 @@ import {
     deleteQueue,
     findQueue,
     fetchQueues,
-    paginateQueues
+    paginateQueues,
+    findQueueByTopicAndState
 } from '@dracul/mongoose-queue'
 
 import {AuthenticationError, ForbiddenError} from "apollo-server-express";
@@ -23,6 +24,11 @@ export default {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if(!rbac.isAllowed(user.id, QUEUE_SHOW)) throw new ForbiddenError("Not Authorized")
             return findQueue(id)
+        },
+        queueFindByTopicAndState: (_, {topic, state}, {user,rbac}) => {
+            if (!user) throw new AuthenticationError("Unauthenticated")
+            if(!rbac.isAllowed(user.id, QUEUE_SHOW)) throw new ForbiddenError("Not Authorized")
+            return findQueueByTopicAndState(topic, state)
         },
         queueFetch: (_, {}, {user,rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")

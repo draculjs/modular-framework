@@ -29,7 +29,8 @@ import {
     paginateQueues,
     createQueue,
     updateQueue,
-    deleteQueue
+    deleteQueue,
+    findQueueByTopicAndState
 } from './services/QueueCrudService'
 
 
@@ -54,6 +55,7 @@ export {
     createQueue,
     updateQueue,
     deleteQueue,
+    findQueueByTopicAndState,
     //Classes
     Queue,
     Producer,

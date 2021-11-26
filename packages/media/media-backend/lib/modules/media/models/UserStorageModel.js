@@ -13,7 +13,8 @@ const userStorageSchema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: false
+    required: false,
+    unique: true
   },
   capacity: {
     type: Number,
