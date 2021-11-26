@@ -28,6 +28,7 @@
 
     <v-col cols="12" sm="6">
       <show-field :value="file.filename" :label="$t('media.file.filename')" icon="description"/>
+      <show-field :value="file.id" :label="$t('media.file.id')" icon="badge"/>
       <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
       <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
 
