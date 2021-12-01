@@ -36,7 +36,9 @@
                     capacity: this.userStorageForm.capacity,
                     usedSpace: this.userStorageForm.usedSpace,
                     maxFileSize: this.userStorageForm.maxFileSize,
-                    fileExpirationTime: this.userStorageForm.fileExpirationTime
+                    fileExpirationTime: this.userStorageForm.fileExpirationTime,
+                    deleteByLastAccess: this.userStorageForm.deleteByLastAccess,
+                    deleteByCreatedAt: this.userStorageForm.deleteByCreatedAt
                 },
                 fileSizeLimit: 0,
                 fileExpirationLimit: 0,

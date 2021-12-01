@@ -10,5 +10,7 @@ query userStorageFindByUser {
         usedSpace
         maxFileSize
         fileExpirationTime
+        deleteByLastAccess
+        deleteByCreatedAt
     }
 }

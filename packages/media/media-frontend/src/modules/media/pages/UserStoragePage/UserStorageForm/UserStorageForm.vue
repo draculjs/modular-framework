@@ -1,62 +1,84 @@
 <template>
     <v-container>
         <v-form ref="form" autocomplete="off" @submit.prevent="$emit('save')">
-        <v-row> 
-            <v-col cols="12">
-                <span class="headline black--text">{{$t('media.userStorage.cliente')}}: {{form.name}}</span>
-            </v-col>
-            <v-col cols="4">
-                <v-text-field
-                    v-model="form.capacity"
-                    type='number'
-                    :label="$t('media.userStorage.capacity')"
-                    dense 
-                    suffix="MB"
-                    :rules="storageRules"
-                    required
-                ></v-text-field>
-            </v-col>
-            <v-col cols="6" class="ml-12">
-                <span class="headline black--text">{{$t('media.userStorage.usedPercentage')}} {{percentageUsed(form)}}</span>
-            </v-col>   
-        </v-row>
-        <v-row> 
-            <v-col cols="4">
-                <v-text-field
-                    v-model="form.maxFileSize"
-                    type='number'
-                    :label="$t('media.userStorage.maxFileSize')"
-                    dense 
-                    suffix="MB"
-                    :rules="maxFileSizeRules"
-                    required
-                ></v-text-field>
-            </v-col>
-            <v-col cols="6" class="ml-12">
-                <!-- <v-checkbox
-                    v-model="form.facialRecognition"
-                    :label="$t('renaper.asignOperations.facial')"
-                    dense hide-details
-                ></v-checkbox> -->
-                <span class="headline black--text">{{$t('media.userStorage.fileSizeLimit')}}</span>
-            </v-col>   
-        </v-row>
-        <v-row> 
-            <v-col cols="4">
-                <v-text-field
-                    v-model="form.fileExpirationTime"
-                    type='number'
-                    :label="$t('media.userStorage.fileExpirationTime')"
-                    dense 
-                    :suffix="$t('media.userStorage.days')"
-                    :rules="fileExpirationTimeRules"
-                    required
-                ></v-text-field>
-            </v-col>
-            <v-col cols="6" class="ml-12">
-                <span class="headline black--text">{{$t('media.userStorage.fileExpirationLimit')}}</span>
-            </v-col>   
-        </v-row>
+            <v-row> 
+                <v-col cols="12">
+                    <span class="headline black--text">{{$t('media.userStorage.cliente')}}: {{form.name}}</span>
+                </v-col>
+                <v-col cols="4">
+                    <v-text-field
+                        v-model="form.capacity"
+                        type='number'
+                        :label="$t('media.userStorage.capacity')"
+                        dense 
+                        suffix="MB"
+                        :rules="storageRules"
+                        required
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="6" class="ml-12">
+                    <span class="headline black--text">{{$t('media.userStorage.usedPercentage')}} {{percentageUsed(form)}}</span>
+                </v-col>   
+            </v-row>
+            <v-row> 
+                <v-col cols="4">
+                    <v-text-field
+                        v-model="form.maxFileSize"
+                        type='number'
+                        :label="$t('media.userStorage.maxFileSize')"
+                        dense 
+                        suffix="MB"
+                        :rules="maxFileSizeRules"
+                        required
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="6" class="ml-12">
+                    <!-- <v-checkbox
+                        v-model="form.facialRecognition"
+                        :label="$t('renaper.asignOperations.facial')"
+                        dense hide-details
+                    ></v-checkbox> -->
+                    <span class="headline black--text">{{$t('media.userStorage.fileSizeLimit')}}</span>
+                </v-col>   
+            </v-row>
+            <v-row> 
+                <v-col cols="4">
+                    <v-text-field
+                        v-model="form.fileExpirationTime"
+                        type='number'
+                        :label="$t('media.userStorage.fileExpirationTime')"
+                        dense 
+                        :suffix="$t('media.userStorage.days')"
+                        :rules="fileExpirationTimeRules"
+                        required
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="6" class="ml-12">
+                    <span class="headline black--text">{{$t('media.userStorage.fileExpirationLimit')}}</span>
+                </v-col>   
+            </v-row>
+            <v-row align="center"> 
+                <v-col cols="4" class="pa-0 pl-2" >
+                    <v-col cols="12" sm="12" class="pa-0">
+                        <v-switch color="success" :label="form.deleteByLastAccess?'Activo':'Inactivo'" input-value="0"
+                            v-model="form.deleteByLastAccess"></v-switch>
+                    </v-col>    
+                </v-col>
+                <v-col cols="7" class="ml-12">
+                    <span class="headline black--text">{{$t('media.userStorage.deleteByLastAccess')}}</span>
+                </v-col>   
+            </v-row>
+            <v-row align="center"> 
+                <v-col cols="4" class="pa-0 pl-2" >
+                    <v-col cols="12" sm="12" class="pa-0">
+                        <v-switch color="success" :label="form.deleteByCreatedAt?'Activo':'Inactivo'" input-value="0"
+                            v-model="form.deleteByCreatedAt"></v-switch>
+                    </v-col>    
+                </v-col>
+                <v-col cols="7" class="ml-12">
+                    <span class="headline black--text">{{$t('media.userStorage.deleteByDateCreated')}}</span>
+                </v-col>   
+            </v-row>
         </v-form>
     </v-container>
 </template>
@@ -130,6 +152,17 @@
                     this.$emit('input', newVal)
                 },
                 deep: true
+            },
+            // No pueden estar los dos flags prendidos simultaneamente
+            'form.deleteByCreatedAt': function(newVal, oldVal) {
+                if (oldVal == false && newVal == true && this.form.deleteByLastAccess) {
+                    this.form.deleteByLastAccess = false
+                }
+            },
+            'form.deleteByLastAccess': function(newVal, oldVal) {
+                if (oldVal == false && newVal == true && this.form.deleteByCreatedAt) {
+                    this.form.deleteByCreatedAt = false
+                }
             }
         },
         

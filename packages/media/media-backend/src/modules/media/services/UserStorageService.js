@@ -1,6 +1,6 @@
 import userStorage from "../models/UserStorageModel";
 import { UserService } from '@dracul/user-backend';
-import {UserInputError} from "apollo-server-errors";
+import { UserInputError } from "apollo-server-errors";
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 
 
@@ -33,27 +33,29 @@ export const findUserStorageByUser = async function (user) {
 export const userStorageCheckAndCreate = async function () {
     winston.info("Media UserStorage running userStorageCheckAndCreate...")
     let userStorages = await userStorage.find({}).populate('user').exec()
-    let userStoragesIds = userStorages.map(us=> us.user.id)
+    let userStoragesIds = userStorages.map(us => us.user.id)
 
     let users = await UserService.findUsers()
     let usersWithoutStorage = users.filter(u => !userStoragesIds.includes(u.id))
 
 
-    for(let user of usersWithoutStorage){
+    for (let user of usersWithoutStorage) {
         let capacity = process.env.MEDIA_DEFAULT_CAPACITY ? process.env.MEDIA_DEFAULT_CAPACITY : 0;
         let usedSpace = 0;
         let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
         let fileExpirationTime = process.env.MEDIA_FILE_EXPIRATION_TIME_IN_DAYS || 365;
-        await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime)
+        let deleteByLastAccess = true;
+        let deleteByCreatedAt = false;
+        await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt)
 
     }
 
     return true
 }
 
-export const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime) {
+export const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt) {
     const doc = new userStorage({
-        user, capacity, usedSpace, maxFileSize, fileExpirationTime
+        user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt
     });
     return new Promise((resolve, rejects) => {
         doc.save(((error) => {
@@ -63,7 +65,7 @@ export const createUserStorage = async function (user, capacity, usedSpace, maxF
                 }
                 rejects(error);
             }
-            winston.info("Media UserStorage createUserStorage for: "+user.username)
+            winston.info("Media UserStorage createUserStorage for: " + user.username)
             resolve(doc);
         }));
     });
@@ -87,10 +89,10 @@ export const updateUserUsedStorage = async function (userId, size) {
     });
 };
 
-export const updateUserStorage = async function (authUser, id, { name, capacity, usedSpace, maxFileSize, fileExpirationTime }) {
+export const updateUserStorage = async function (authUser, id, { name, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt }) {
     return new Promise((resolve, rejects) => {
         userStorage.findOneAndUpdate({ _id: id },
-            { capacity, maxFileSize, fileExpirationTime },
+            { capacity, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt },
             { runValidators: true, context: "query" },
             (error, doc) => {
 
