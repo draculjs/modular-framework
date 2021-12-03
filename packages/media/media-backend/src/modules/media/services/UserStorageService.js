@@ -8,8 +8,6 @@ export const fetchUserStorage = async function () {
     return new Promise(async (resolve, reject) => {
         try {
 
-            await userStorageCheckAndCreate()
-
             let userStorages = await userStorage.find({}).populate('user').exec()
 
             resolve(userStorages)
@@ -77,7 +75,6 @@ export const updateUserUsedStorage = async function (userId, size) {
             { $inc: { usedSpace: size } },
             { runValidators: true, context: "query" },
             (error, doc) => {
-
                 if (error) {
                     if (error.name == "ValidationError") {
                         rejects(new UserInputError(error.message, { inputErrors: error.errors }));

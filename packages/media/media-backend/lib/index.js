@@ -27,6 +27,8 @@ var _middleware = require("./middleware");
 
 var _cron = require("./cron");
 
+var _UserCreateListener = require("./modules/media/listeners/UserCreateListener");
+
 var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -35,6 +37,18 @@ require('dotenv').config();
 
 _loggerBackend.DefaultLogger.info("Starting APP");
 
+// import { UserModel } from '@dracul/user-backend'
+// UserModel.schema.post('validate', function () {
+//     console.log('POST VALIDATE USUARIO CREADO');
+// });
+// UserModel.schema.pre('save', function () {
+//     // You can also return a promise that rejects
+//     console.warn('PRE SAVE USUARIO CREADO');
+// });
+// UserModel.schema.post('save', function () {
+//     console.warn('POST SAVE USUARIO CREADO');
+// });
+// userCreateListener();
 const YAML = require('yamljs');
 
 _loggerBackend.DefaultLogger.info(`Starting app`);

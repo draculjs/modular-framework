@@ -57,7 +57,9 @@ const userStorageCheckAndCreate = async function () {
     let usedSpace = 0;
     let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
     let fileExpirationTime = process.env.MEDIA_FILE_EXPIRATION_TIME_IN_DAYS || 365;
-    await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime);
+    let deleteByLastAccess = true;
+    let deleteByCreatedAt = false;
+    await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt);
   }
 
   return true;
@@ -65,13 +67,15 @@ const userStorageCheckAndCreate = async function () {
 
 exports.userStorageCheckAndCreate = userStorageCheckAndCreate;
 
-const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime) {
+const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt) {
   const doc = new _UserStorageModel.default({
     user,
     capacity,
     usedSpace,
     maxFileSize,
-    fileExpirationTime
+    fileExpirationTime,
+    deleteByLastAccess,
+    deleteByCreatedAt
   });
   return new Promise((resolve, rejects) => {
     doc.save(error => {
@@ -128,7 +132,9 @@ const updateUserStorage = async function (authUser, id, {
   capacity,
   usedSpace,
   maxFileSize,
-  fileExpirationTime
+  fileExpirationTime,
+  deleteByLastAccess,
+  deleteByCreatedAt
 }) {
   return new Promise((resolve, rejects) => {
     _UserStorageModel.default.findOneAndUpdate({
@@ -136,7 +142,9 @@ const updateUserStorage = async function (authUser, id, {
     }, {
       capacity,
       maxFileSize,
-      fileExpirationTime
+      fileExpirationTime,
+      deleteByLastAccess,
+      deleteByCreatedAt
     }, {
       runValidators: true,
       context: "query"

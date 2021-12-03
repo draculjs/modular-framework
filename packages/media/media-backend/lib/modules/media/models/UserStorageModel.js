@@ -31,6 +31,14 @@ const userStorageSchema = new Schema({
   fileExpirationTime: {
     type: Number,
     required: false
+  },
+  deleteByLastAccess: {
+    type: Boolean,
+    required: false
+  },
+  deleteByCreatedAt: {
+    type: Boolean,
+    required: false
   }
 });
 userStorageSchema.plugin(mongoosePaginate);
