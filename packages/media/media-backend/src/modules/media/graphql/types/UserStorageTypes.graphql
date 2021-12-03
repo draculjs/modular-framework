@@ -5,6 +5,8 @@ type userStorage{
  usedSpace: Float
  maxFileSize: Float
  fileExpirationTime: Int
+ deleteByLastAccess: Boolean
+ deleteByCreatedAt: Boolean
 }
 
 input userStorageInput{
@@ -13,6 +15,8 @@ input userStorageInput{
  usedSpace: Float
  maxFileSize: Float
  fileExpirationTime: Int
+ deleteByLastAccess: Boolean
+ deleteByCreatedAt: Boolean
 }
 
 type userStorageUpdate{
@@ -22,6 +26,8 @@ type userStorageUpdate{
  usedSpace: Float
  maxFileSize: Float
  fileExpirationTime: Int
+ deleteByLastAccess: Boolean
+ deleteByCreatedAt: Boolean
 }
 
 type Query {

@@ -203,7 +203,15 @@ export const findAndDeleteExpiredFiles = async function () {
             },
             {
                 $addFields: {
-                    timeDiffInMillis: { $subtract: ["$$NOW", "$lastAccess"] }
+                    timeDiffInMillis: {
+                        $cond: [
+                            {
+                                $eq: ["$userStorage.deleteByLastAccess", true]
+                            },
+                            { $subtract: ["$$NOW", "$lastAccess"] },
+                            { $subtract: ["$$NOW", "$createdAt"] }
+                        ]
+                    }
                 }
             },
             {
@@ -226,8 +234,8 @@ export const findAndDeleteExpiredFiles = async function () {
 
     const entityData = getDataEntity();
     const aggregateData = [entityData];
-
     let docs = []
+
     await File.aggregate(aggregateData).then((result) => {
         docs = result;
     }).catch((error) => {

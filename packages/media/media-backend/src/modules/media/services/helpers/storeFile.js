@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Transform } from 'stream'
 import { DefaultLogger as winston } from '@dracul/logger-backend';
-import { checkUserStorageLeft } from "../UserStorageService";
+import { checkUserStorageLeft, findUserStorageByUser } from "../UserStorageService";
 const CacheBase = require('cache-base');
 const app = new CacheBase();
 
@@ -9,8 +9,8 @@ const app = new CacheBase();
 const createDirIfNotExist = require('./createDirIfNotExist')
 
 class StreamSizeValidator extends Transform {
-    //aca va la capacidad max por usuario
-    maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES : 1000;
+
+    maxFileSize = app.get("maxFileSize")
     totalLength = 0;
     error = '';
     storageLeft = app.get("storageLeft")
@@ -20,15 +20,15 @@ class StreamSizeValidator extends Transform {
         this.totalLength += chunk.length / (1024 * 1024)
         if (this.totalLength > this.maxFileSize) {
             this.error = 'MAX_FILE_SIZE_EXCEEDED';
-            winston.error("storeFile.StreamSizeValidator: _transform error: ", this.error)
+            winston.error("storeFile.StreamSizeValidator: _transform error: " + this.error)
             this.destroy(new Error(this.error));
-            return;
+            return
         }
         if (this.totalLength > this.storageLeft) {
             this.error = 'STORAGE_CAPACITY_EXCEEDED';
-            winston.error("storeFile.StreamSizeValidator: _transform error: ", this.error)
+            winston.error("storeFile.StreamSizeValidator: _transform error: " + this.error)
             this.destroy(new Error(this.error));
-            return;
+            return
         }
 
         this.push(chunk)
@@ -37,7 +37,7 @@ class StreamSizeValidator extends Transform {
 }
 
 
-const storeFile = function (fileStream, dst, userId) {
+const storeFile = function (fileStream, dst, user) {
     if (!fileStream.readable) {
         throw new Error("A redeable stream is required")
     }
@@ -47,8 +47,14 @@ const storeFile = function (fileStream, dst, userId) {
     }
 
     return new Promise(async (resolve, reject) => {
-        let storageLeft = await checkUserStorageLeft(userId)
-        app.set("storageLeft", storageLeft)
+        const storageLeft = await checkUserStorageLeft(user.id)
+        const userStorage = await findUserStorageByUser(user)
+
+        const storageLeftUser = storageLeft ? storageLeft : 0;
+        const maxFileSize = userStorage ? userStorage.maxFileSize : process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES;
+
+        app.set("storageLeft", storageLeftUser)
+        app.set("maxFileSize", maxFileSize)
 
         const sizeValidator = new StreamSizeValidator()
 
@@ -63,13 +69,13 @@ const storeFile = function (fileStream, dst, userId) {
                 }
 
                 //sizeValidator.destroy(error)
-                winston.error("storeFile.storeFile: fileStream error: ", error)
+                // winston.error("storeFile.storeFile: fileStream error")
                 reject(error);
             })
 
         sizeValidator
             .on("error", error => {
-                winston.error("storeFile.storeFile: sizeValidator error: ", error)
+                // winston.error("storeFile.storeFile: sizeValidator error")
                 //fileStream.destroy(error)
                 reject(error)
             })

@@ -296,7 +296,13 @@ const findAndDeleteExpiredFiles = async function () {
     }, {
       $addFields: {
         timeDiffInMillis: {
-          $subtract: ["$$NOW", "$lastAccess"]
+          $cond: [{
+            $eq: ["$userStorage.deleteByLastAccess", true]
+          }, {
+            $subtract: ["$$NOW", "$lastAccess"]
+          }, {
+            $subtract: ["$$NOW", "$createdAt"]
+          }]
         }
       }
     }, {

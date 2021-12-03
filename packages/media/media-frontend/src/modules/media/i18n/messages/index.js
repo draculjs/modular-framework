@@ -70,7 +70,9 @@ const messages = {
                 fileSizeLimit: "File size limit",
                 fileExpirationTime: "File expiration",
                 fileExpirationLimit: "File expiration limit",
-                fileExpirationTimeExceeded: "Expiration time not allowed"
+                fileExpirationTimeExceeded: "Expiration time not allowed",
+                deleteByLastAccess: "Delete files by last access",
+                deleteByDateCreated: "Delete files by created date"
             }
         },
     },
@@ -147,7 +149,9 @@ const messages = {
                 fileSizeLimit: "Límite de tamaño del archivo",
                 fileExpirationTime: "Tiempo de expiración",
                 fileExpirationLimit: "Tiempo de expiración del archivo",
-                fileExpirationTimeExceeded: "Tiempo de expiración no permitido"
+                fileExpirationTimeExceeded: "Tiempo de expiración no permitido",
+                deleteByLastAccess: "Eliminar archivos por último acceso",
+                deleteByDateCreated: "Eliminar archivos por fecha de creación"
             }
         }
     },
@@ -222,7 +226,9 @@ const messages = {
                 fileSizeLimit: "Limite de tamanho de arquivo",
                 fileExpirationTime: "Tempo de expiração",
                 fileExpirationLimit: "Tempo de expiração do arquivo",
-                fileExpirationTimeExceeded: "Prazo de validade não permitido"
+                fileExpirationTimeExceeded: "Prazo de validade não permitido",
+                deleteByLastAccess: "Excluir o último acesso de arquivos",
+                deleteByDateCreated: "Excluir arquivos por data de criação"
             }
         }
     }

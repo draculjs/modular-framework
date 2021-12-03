@@ -9,8 +9,6 @@ var _loggerBackend = require("@dracul/logger-backend");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _fs = _interopRequireDefault(require("fs"));
-
 var _FileModel = _interopRequireDefault(require("../models/FileModel"));
 
 var _storeFile = _interopRequireDefault(require("./helpers/storeFile"));
@@ -18,8 +16,6 @@ var _storeFile = _interopRequireDefault(require("./helpers/storeFile"));
 var _randomString = _interopRequireDefault(require("./helpers/randomString"));
 
 var _baseUrl = _interopRequireDefault(require("./helpers/baseUrl"));
-
-var _convertGigabytesToBytes = _interopRequireDefault(require("./helpers/convertGigabytesToBytes"));
 
 var _UserStorageService = require("./UserStorageService");
 
@@ -54,7 +50,7 @@ const fileUpload = function (user, inputFile) {
       const absolutePath = _path.default.resolve(relativePath); //Store
 
 
-      let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath, user.id);
+      let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath, user);
 
       _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: " + storeResult);
 
@@ -92,7 +88,7 @@ const fileUpload = function (user, inputFile) {
         rejects(new Error("Upload Fail"));
       }
     } catch (err) {
-      _loggerBackend.DefaultLogger.error('UploadService: ', err);
+      _loggerBackend.DefaultLogger.error('UploadService error' + err);
 
       rejects(err);
     }
