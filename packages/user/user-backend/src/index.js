@@ -2,9 +2,9 @@ import {securityResolvers, securityTypes} from './graphql'
 
 import {sessionMiddleware, jwtMiddleware, rbacMiddleware, corsMiddleware} from './middleware'
 
-import UserModel from './models/UserModel'
-import RoleModel from './models/RoleModel'
-import GroupModel from './models/GroupModel'
+import {UserModel, UserSchema} from './models/UserModel'
+import {RoleModel,RoleSchema} from './models/RoleModel'
+import {GroupModel, GroupSchema} from './models/GroupModel'
 
 import {
     AuthService,
@@ -31,6 +31,11 @@ export {
     UserModel,
     RoleModel,
     GroupModel,
+
+    //Schemas
+    UserSchema,
+    RoleSchema,
+    GroupSchema,
 
     //rbac
     rbac,
