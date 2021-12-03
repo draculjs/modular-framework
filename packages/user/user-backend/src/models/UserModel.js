@@ -58,4 +58,11 @@ UserSchema.plugin(mongoosePaginate);
 
 const UserModel = mongoose.model('User', UserSchema);
 
-module.exports = UserModel
+export {
+    UserSchema,
+    UserModel
+}
+
+export default UserModel
+
+//module.exports = UserModel
