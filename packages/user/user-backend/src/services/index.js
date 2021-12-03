@@ -10,6 +10,7 @@ import * as InitService from './InitService'
 import * as AuthService from './AuthService'
 import * as RecoveryService from './RecoveryService'
 import * as RegisterService from './RegisterService'
+import * as RbacService from './RbacService'
 
 export {
     AuthService,
@@ -23,5 +24,6 @@ export {
     UserAuditService,
     UserEmailManager,
     UserService,
-    InitService
+    InitService,
+    RbacService
 }
