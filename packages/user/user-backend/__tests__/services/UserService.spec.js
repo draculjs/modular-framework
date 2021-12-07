@@ -1,10 +1,10 @@
 //Utils
-import {changePassword} from "../../src/services/ProfileService";
+import { changePassword } from "../../src/services/ProfileService";
 
 const mongoHandler = require('../utils/mongo-handler');
 
 //Init DB
-import {initPermissions,initAdminRole,initRootUser} from "../../src/services/InitService";
+import { initPermissions, initAdminRole, initRootUser } from "../../src/services/InitService";
 
 //Service to Test
 import {
@@ -19,8 +19,8 @@ import {
 } from "../../src/services/AuthService";
 
 //Service dependencies
-import {findRoleByName} from "../../src/services/RoleService";
-import {createGroup, findGroup} from "../../src/services/GroupService";
+import { findRoleByName } from "../../src/services/RoleService";
+import { createGroup, findGroup } from "../../src/services/GroupService";
 
 describe("UserService", () => {
 
@@ -34,12 +34,12 @@ describe("UserService", () => {
         await initPermissions()
         await initAdminRole()
         await initRootUser()
-        testGroupOne = await createGroup(null,{name:"testOne",color:"#ffffff", users: []})
-        testGroupTwo = await createGroup(null,{name:"testTwo",color:"#ffffff", users: []})
-        testGroupThree = await createGroup(null,{name:"testThree",color:"#ffffff", users: []})
+        testGroupOne = await createGroup(null, { name: "testOne", color: "#ffffff", users: [] })
+        testGroupTwo = await createGroup(null, { name: "testTwo", color: "#ffffff", users: [] })
+        testGroupThree = await createGroup(null, { name: "testThree", color: "#ffffff", users: [] })
     });
 
-    afterAll(async  () => {
+    afterAll(async () => {
         await mongoHandler.clearDatabase();
         await mongoHandler.closeDatabase();
     })
@@ -52,10 +52,10 @@ describe("UserService", () => {
             email: 'jrambo@gmail.com',
             name: 'Jhon Rambo',
             password: '123',
-            role:  role.id
+            role: role.id
         }
 
-        await expect(createUser(userDoc, null)).resolves.toHaveProperty('username','jrambo')
+        await expect(createUser(userDoc, null)).resolves.toHaveProperty('username', 'jrambo')
 
     }, 2000);
 
@@ -67,7 +67,7 @@ describe("UserService", () => {
             name: 'Jhon Rambun',
             password: '123',
             groups: [testGroupOne.id],
-            role:  role.id
+            role: role.id
         }
         let user = await createUser(userDoc, null)
         let group = await findGroup(testGroupOne.id)
@@ -84,7 +84,7 @@ describe("UserService", () => {
             name: 'Jhon Rambito',
             password: '123',
             groups: [testGroupThree.id],
-            role:  role.id,
+            role: role.id,
             active: true
         }
         let user = await createUser(userDoc, null)
@@ -99,9 +99,9 @@ describe("UserService", () => {
         let groupTwo = await findGroup(testGroupTwo.id)
 
 
-        console.log("user",user.groups)
-        console.log("groupThree Users",groupThree.users)
-        console.log("groupTwo Users",groupTwo.users)
+        console.log("user", user.groups)
+        console.log("groupThree Users", groupThree.users)
+        console.log("groupTwo Users", groupTwo.users)
 
         await expect(groupThree.users).toHaveLength(0)
 
@@ -116,7 +116,7 @@ describe("UserService", () => {
         let user = await findUserByUsername('root')
         user.email = 'wrongemailformat'
 
-        await expect(updateUser(user.id,user, null)).rejects.toThrow('Validation failed: email: validation.emailFormat');
+        await expect(updateUser(user.id, user, null)).rejects.toThrow('Validation failed: email: validation.emailFormat');
 
     }, 2000);
 
@@ -125,7 +125,7 @@ describe("UserService", () => {
         let user = await findUserByUsername('jrambo')
         user.name = 'Jhon Rambo Reloaded'
 
-        await expect(updateUser(user.id,user, null)).resolves.toHaveProperty('username','jrambo')
+        await expect(updateUser(user.id, user, null)).resolves.toHaveProperty('username', 'jrambo')
 
     }, 2000);
 
@@ -133,7 +133,7 @@ describe("UserService", () => {
     test('ChangePasswordOk', async () => {
         let user = await findUserByUsername('jrambo')
 
-        await expect(changePassword(user.id, {currentPassword:'123',newPassword: 'abc'}, user))
+        await expect(changePassword(user.id, { currentPassword: '123', newPassword: 'abc' }, user))
             .resolves.toHaveProperty('status', true);
 
 
@@ -143,7 +143,7 @@ describe("UserService", () => {
         let user = await findUserByUsername('jrambo')
         user.name = 'Jhon Rambo Reloaded'
 
-        await expect(deleteUser(user.id)).resolves.toHaveProperty('success',true)
+        await expect(deleteUser(user.id)).resolves.toHaveProperty('success', true)
 
     }, 2000);
 
