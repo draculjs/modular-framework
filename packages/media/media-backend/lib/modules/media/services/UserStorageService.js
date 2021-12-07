@@ -18,7 +18,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const fetchUserStorage = async function () {
   return new Promise(async (resolve, reject) => {
     try {
-      await userStorageCheckAndCreate();
       let userStorages = await _UserStorageModel.default.find({}).populate('user').exec();
       resolve(userStorages);
     } catch (err) {

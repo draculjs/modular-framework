@@ -37,18 +37,8 @@ require('dotenv').config();
 
 _loggerBackend.DefaultLogger.info("Starting APP");
 
-// import { UserModel } from '@dracul/user-backend'
-// UserModel.schema.post('validate', function () {
-//     console.log('POST VALIDATE USUARIO CREADO');
-// });
-// UserModel.schema.pre('save', function () {
-//     // You can also return a promise that rejects
-//     console.warn('PRE SAVE USUARIO CREADO');
-// });
-// UserModel.schema.post('save', function () {
-//     console.warn('POST SAVE USUARIO CREADO');
-// });
-// userCreateListener();
+(0, _UserCreateListener.userCreateListener)();
+
 const YAML = require('yamljs');
 
 _loggerBackend.DefaultLogger.info(`Starting app`);

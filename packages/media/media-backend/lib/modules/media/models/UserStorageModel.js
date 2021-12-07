@@ -34,11 +34,13 @@ const userStorageSchema = new Schema({
   },
   deleteByLastAccess: {
     type: Boolean,
-    required: false
+    required: false,
+    default: true
   },
   deleteByCreatedAt: {
     type: Boolean,
-    required: false
+    required: false,
+    default: false
   }
 });
 userStorageSchema.plugin(mongoosePaginate);
