@@ -189,15 +189,23 @@ exports.checkUserStorage = checkUserStorage;
 
 const checkUserStorageLeft = async function (userId) {
   return new Promise((resolve, reject) => {
+    if (!userId) {
+      return resolve(new Error("checkUserStorageLeft: UserId must be provided"));
+    }
+
     _UserStorageModel.default.findOne({
       user: userId
-    }).exec((err, res) => {
+    }).exec((err, doc) => {
       if (err) {
         reject(err);
       }
 
-      let storageLeft = res.capacity - res.usedSpace;
-      resolve(storageLeft);
+      if (doc) {
+        let storageLeft = doc.capacity - doc.usedSpace;
+        return resolve(storageLeft);
+      } else {
+        return resolve(0);
+      }
     });
   });
 };
