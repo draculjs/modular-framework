@@ -1,19 +1,21 @@
 import fs from "fs";
-import { Transform } from 'stream'
-import { DefaultLogger as winston } from '@dracul/logger-backend';
-import { checkUserStorageLeft, findUserStorageByUser } from "../UserStorageService";
-const CacheBase = require('cache-base');
-const app = new CacheBase();
+import {Transform} from 'stream'
+import {DefaultLogger as winston} from '@dracul/logger-backend';
+import {findUserStorageByUser} from "../UserStorageService";
 
 
 const createDirIfNotExist = require('./createDirIfNotExist')
 
 class StreamSizeValidator extends Transform {
 
-    maxFileSize = app.get("maxFileSize")
-    totalLength = 0;
-    error = '';
-    storageLeft = app.get("storageLeft")
+    constructor(maxFileSize, storageLeft) {
+        super();
+        this.maxFileSize = maxFileSize
+        this.storageLeft = storageLeft
+        this.totalLength = 0
+        this.error = ''
+    }
+
 
     _transform(chunk, encoding, callback) {
 
@@ -47,47 +49,48 @@ const storeFile = function (fileStream, dst, user) {
     }
 
     return new Promise(async (resolve, reject) => {
-        const storageLeft = await checkUserStorageLeft(user.id)
-        const userStorage = await findUserStorageByUser(user)
 
-        const storageLeftUser = storageLeft ? storageLeft : 0;
-        const maxFileSize = userStorage ? userStorage.maxFileSize : process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES;
+            let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES
+            let storageLeft = maxFileSize
 
-        app.set("storageLeft", storageLeftUser)
-        app.set("maxFileSize", maxFileSize)
-
-        const sizeValidator = new StreamSizeValidator()
-
-        createDirIfNotExist(dst)
-        const fileWriteStream = fs.createWriteStream(dst)
-
-        fileStream
-            .on('error', error => {
-
-                if (fileStream.truncated) {
-                    fs.unlinkSync(dst);
+            if (user) {
+                const userStorage = await findUserStorageByUser(user)
+                if (userStorage) {
+                    storageLeft = userStorage.capacity - userStorage.usedSpace
+                    maxFileSize = userStorage.maxFileSize
                 }
+            }
 
-                //sizeValidator.destroy(error)
-                // winston.error("storeFile.storeFile: fileStream error")
-                reject(error);
-            })
 
-        sizeValidator
-            .on("error", error => {
-                // winston.error("storeFile.storeFile: sizeValidator error")
-                //fileStream.destroy(error)
-                reject(error)
-            })
+            const sizeValidator = new StreamSizeValidator(maxFileSize,storageLeft)
 
-        fileStream
-            .pipe(sizeValidator)
-            .pipe(fileWriteStream)
-            .on('error', error => reject(error))
-            .on('finish', () => {
-                resolve({ finish: true, bytesWritten: fileWriteStream.bytesWritten })
-            })
-    }
+            createDirIfNotExist(dst)
+
+            const fileWriteStream = fs.createWriteStream(dst)
+
+            fileStream
+                .on('error', error => {
+
+                    if (fileStream.truncated) {
+                        fs.unlinkSync(dst);
+                    }
+
+                    return reject(error);
+                })
+
+            sizeValidator
+                .on("error", error => {
+                    return reject(error)
+                })
+
+            fileStream
+                .pipe(sizeValidator)
+                .pipe(fileWriteStream)
+                .on('error', error => reject(error))
+                .on('finish', () => {
+                    resolve({finish: true, bytesWritten: fileWriteStream.bytesWritten})
+                })
+        }
     );
 };
 

@@ -33,7 +33,7 @@ describe("UserStorageService", () => {
     // Creo userStorage para el root
     const capacity = process.env.MEDIA_DEFAULT_CAPACITY ? process.env.MEDIA_DEFAULT_CAPACITY : 0;
     const usedSpace = 0;
-    const maxFileSize = 2;
+    const maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES  : 0 ;
     const fileExpirationTime = 0;
     const deleteByLastAccess = true;
     const deleteByCreatedAt = false;

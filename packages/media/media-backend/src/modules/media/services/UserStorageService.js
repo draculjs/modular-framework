@@ -125,13 +125,22 @@ export const checkUserStorage = async function (userId, newFileSize) {
 
 export const checkUserStorageLeft = async function (userId) {
     return new Promise((resolve, reject) => {
-        userStorage.findOne({ user: userId }).exec((err, res) => {
+
+        if(!userId){
+            return  resolve(new Error("checkUserStorageLeft: UserId must be provided"))
+        }
+
+        userStorage.findOne({ user: userId }).exec((err, doc) => {
             if (err) {
                 reject(err)
             }
 
-            let storageLeft = res.capacity - res.usedSpace
-            resolve(storageLeft)
+            if(doc){
+                let storageLeft = doc.capacity - doc.usedSpace
+                return resolve(storageLeft)
+            }else{
+                return resolve(0)
+            }
         })
     });
 };

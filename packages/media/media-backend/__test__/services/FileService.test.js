@@ -19,11 +19,11 @@ describe("storeFile", () => {
     await InitService.initPermissions()
     await InitService.initAdminRole()
     await InitService.initRootUser()
-    
+
     let role = await RoleService.findRoleByName('admin')
     let userDoc = { username: 'jrambo', email: 'jrambo@gmail.com', name: 'Jhon Rambo', password: '123', role:  role.id }
     const user = await UserService.createUser(userDoc, null)
-    
+
     let filePath = path.join(__dirname,'../assets/','prueba.jpeg')
     let file = uploadFileSimulator(filePath)
 
@@ -31,13 +31,13 @@ describe("storeFile", () => {
     createFileTwo = await fileUpload(user, file)
     createFileThree = await fileUpload(user, file)
   });
-    
+
   afterAll(async  () => {
     await mongoHandler.clearDatabase();
     await mongoHandler.closeDatabase();
   })
-    
-    
+
+
   test('Find file is not null', async () => {
     await expect(findFile(createFileOne._id)).resolves.not.toBeNull()
   })
@@ -66,9 +66,9 @@ describe("storeFile", () => {
     await expect(fetchFiles(valor1, valor2, valor3)).resolves.not.toBeNull()
   })
 
-  
+
   test('Paginate files', () => {
-    expect(paginateFiles()).not.toBeNull()
+    expect(paginateFiles({pageNumber: 1, itemsPerPage:5})).not.toBeNull()
   })
 
   test('Update file', async () => {
@@ -78,5 +78,5 @@ describe("storeFile", () => {
   test('Delete file', async () => {
     await expect(deleteFile(createFileOne._id)).resolves.toEqual({id: createFileOne._id, success: true})
   })
-  
+
 })

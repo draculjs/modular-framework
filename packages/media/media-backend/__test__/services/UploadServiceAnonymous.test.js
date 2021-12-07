@@ -7,7 +7,7 @@ import {RoleService} from "@dracul/user-backend"
 import uploadFileSimulator from "../utils/uploadFileSimulator"
 import path from 'path'
 
-describe("storeFile", () => {
+describe("storeFile anonymous", () => {
 
   beforeAll(async () => {
     await mongoHandler.connect()
