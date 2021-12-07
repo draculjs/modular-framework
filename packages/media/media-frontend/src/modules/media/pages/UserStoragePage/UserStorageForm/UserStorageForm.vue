@@ -153,15 +153,19 @@
                 },
                 deep: true
             },
-            // No pueden estar los dos flags prendidos simultaneamente
+            // No pueden estar los dos flags prendidos ni apagados simultaneamente
             'form.deleteByCreatedAt': function(newVal, oldVal) {
                 if (oldVal == false && newVal == true && this.form.deleteByLastAccess) {
                     this.form.deleteByLastAccess = false
+                } else if (oldVal == true && newVal == false && this.form.deleteByLastAccess == false) {
+                    this.form.deleteByLastAccess = true
                 }
             },
             'form.deleteByLastAccess': function(newVal, oldVal) {
                 if (oldVal == false && newVal == true && this.form.deleteByCreatedAt) {
                     this.form.deleteByCreatedAt = false
+                } else if (oldVal == true && newVal == false && this.form.deleteByCreatedAt == false) {
+                    this.form.deleteByCreatedAt = true
                 }
             }
         },
