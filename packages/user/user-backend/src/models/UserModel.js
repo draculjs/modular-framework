@@ -6,7 +6,7 @@ import uniqueValidator from 'mongoose-unique-validator';
 
 // Defining user Mongoose Schema
 const UserSchema = new mongoose.Schema({
-    username: { type: String, unique: true, required: true, index: true },
+    username: {type: String, unique: true, required: true, index: true},
     email: {
         type: String,
         unique: true,
@@ -20,17 +20,17 @@ const UserSchema = new mongoose.Schema({
             message: "validation.emailFormat"
         }
     },
-    password: { type: String, required: true },
-    code: { type: String, required: false },
-    name: { type: String, required: true },
-    active: { type: Boolean, required: true, default: false },
+    password: {type: String, required: true},
+    code: {type: String, required: false},
+    name: {type: String, required: true},
+    active: {type: Boolean, required: true, default: false},
     phone: {
         type: String,
         required: false,
         validate: {
             validator: function (value) {
                 let r = /[0-9]+/;
-                return value ? r.test(value) : true;
+                return value ? r.test(value): true;
             },
             message: "Telefono no tiene un formato valido"
         }
@@ -47,11 +47,11 @@ const UserSchema = new mongoose.Schema({
         ref: 'Group',
         required: false,
     }]
-}, { timestamps: true });
+}, {timestamps: true});
 
-UserSchema.set('toJSON', { getters: true });
+UserSchema.set('toJSON', {getters: true});
 
-UserSchema.plugin(uniqueValidator, { message: 'validation.unique' });
+UserSchema.plugin(uniqueValidator, {message: 'validation.unique'});
 
 UserSchema.plugin(softDelete);
 UserSchema.plugin(mongoosePaginate);

@@ -1,12 +1,17 @@
-import { DefaultLogger as winston } from '@dracul/logger-backend';
+import {DefaultLogger as winston} from '@dracul/logger-backend';
 
 import User from '../models/UserModel'
 import '../models/GroupModel'
-import { createUserAudit } from './UserAuditService'
+import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
-import { UserInputError } from 'apollo-server-express'
-import { addUserToGroup, fetchMyGroups, removeUserToGroup } from "./GroupService";
-import { findRole, findRoleByName } from "./RoleService";
+import {UserInputError} from 'apollo-server-express'
+import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
+import {findRole, findRoleByName} from "./RoleService";
+
+const EventEmitter = require('events');
+
+export let UserEventEmitter = new EventEmitter()
+
 
 export const hashPassword = function (password) {
     if (!password) {
@@ -18,7 +23,7 @@ export const hashPassword = function (password) {
     return hashPassword;
 }
 
-export const createUser = async function ({ username, password, name, email, phone, role, groups, active }, actionBy = null) {
+export const createUser = async function ({username, password, name, email, phone, role, groups, active}, actionBy = null) {
 
 
     const newUser = new User({
@@ -39,7 +44,7 @@ export const createUser = async function ({ username, password, name, email, pho
             if (error) {
                 if (error.name == "ValidationError") {
                     winston.warn("createUser ValidationError ", error)
-                    reject(new UserInputError(error.message, { inputErrors: error.errors }));
+                    reject(new UserInputError(error.message, {inputErrors: error.errors}));
                 } else {
                     winston.error("UserService.createUser ", error)
                 }
@@ -55,7 +60,11 @@ export const createUser = async function ({ username, password, name, email, pho
 
                 winston.info('UserService.createUser successful for ' + doc.username)
                 createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userCreated')
-                doc.populate('role').populate('groups').execPopulate(() => (resolve(doc))
+
+                doc.populate('role').populate('groups').execPopulate(() => {
+                        UserEventEmitter.emit('created', doc)
+                        resolve(doc)
+                    }
                 )
             }
         })
@@ -63,7 +72,7 @@ export const createUser = async function ({ username, password, name, email, pho
 }
 
 
-export const updateUser = function (id, { username, name, email, phone, role, groups, active }, actionBy = null) {
+export const updateUser = function (id, {username, name, email, phone, role, groups, active}, actionBy = null) {
 
     return new Promise(async (resolve, reject) => {
         let updatedAt = Date.now()
@@ -80,17 +89,17 @@ export const updateUser = function (id, { username, name, email, phone, role, gr
         }
 
         User.findOneAndUpdate(
-            { _id: id }, { username, name, email, phone, role, groups, active, updatedAt }, {
-            new: true,
-            runValidators: true,
-            context: 'query'
-        },
+            {_id: id}, {username, name, email, phone, role, groups, active, updatedAt}, {
+                new: true,
+                runValidators: true,
+                context: 'query'
+            },
             async (error, doc) => {
                 if (error) {
 
                     if (error.name == "ValidationError") {
                         winston.warn("updateUser ValidationError ", error)
-                        reject(new UserInputError(error.message, { inputErrors: error.errors }));
+                        reject(new UserInputError(error.message, {inputErrors: error.errors}));
                     } else {
                         winston.error("UserService.updateUser ", error)
                     }
@@ -117,7 +126,10 @@ export const updateUser = function (id, { username, name, email, phone, role, gr
 
                     winston.info('UserService.updateUser successful for ' + doc.username)
                     createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userModified')
-                    doc.populate('role').populate('groups').execPopulate(() => resolve(doc))
+                    doc.populate('role').populate('groups').execPopulate(() => {
+                        UserEventEmitter.emit('updated', doc)
+                        resolve(doc)
+                    })
                 }
             }
         );
@@ -135,7 +147,8 @@ export const deleteUser = function (id, actionBy = null) {
                     reject(err)
                 } else {
                     winston.info('UserService.deleteUser successful for ' + doc.username)
-                    resolve({ success: true, id: id })
+                    UserEventEmitter.emit('deleted', doc)
+                    resolve({success: true, id: id})
                 }
             });
         })
@@ -152,8 +165,8 @@ export const findUsers = function (roles = [], userId = null) {
         if (roles && roles.length) {
             qs = {
                 $or: [
-                    { role: { $in: roles } },
-                    { _id: userId }
+                    {role: {$in: roles}},
+                    {_id: userId}
                 ]
             }
         }
@@ -178,7 +191,7 @@ export const findUsersByRole = function (roleName) {
 
         if (!role) return resolve([])
 
-        User.find({ role: role.id }).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
+        User.find({role: role.id}).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
             if (err) {
                 winston.error("UserService.findUsersByRole ", err)
                 reject(err)
@@ -199,15 +212,15 @@ export const paginateUsers = function (limit, pageNumber = 1, search = null, ord
         if (search) {
             qs = {
                 $or: [
-                    { name: { $regex: search, $options: 'i' } },
-                    { username: { $regex: search, $options: 'i' } },
-                    { email: { $regex: search, $options: 'i' } },
-                    { phone: { $regex: search, $options: 'i' } }
+                    {name: {$regex: search, $options: 'i'}},
+                    {username: {$regex: search, $options: 'i'}},
+                    {email: {$regex: search, $options: 'i'}},
+                    {phone: {$regex: search, $options: 'i'}}
                 ]
             }
         }
         if (roles && roles.length) {
-            qs.role = { $in: roles }
+            qs.role = {$in: roles}
         }
 
         if (activeUsers) {
@@ -227,16 +240,16 @@ export const paginateUsers = function (limit, pageNumber = 1, search = null, ord
     }
 
 
-    let query = { deleted: false, ...getQuery(search) }
+    let query = {deleted: false, ...getQuery(search)}
     let populate = ['role', 'groups']
     let sort = getSort(orderBy, orderDesc)
 
-    let params = { page: pageNumber, limit: limit, populate: populate, sort }
+    let params = {page: pageNumber, limit: limit, populate: populate, sort}
     return new Promise((resolve, reject) => {
         User.paginate(query, params).then(result => {
-            winston.debug('UserService.paginateUsers successful')
-            resolve({ users: result.docs, totalItems: result.totalDocs, page: result.page })
-        }
+                winston.debug('UserService.paginateUsers successful')
+                resolve({users: result.docs, totalItems: result.totalDocs, page: result.page})
+            }
         ).catch(err => {
             winston.error("UserService.paginateUsers ", err)
             reject(err)
@@ -246,7 +259,7 @@ export const paginateUsers = function (limit, pageNumber = 1, search = null, ord
 
 export const findUser = function (id) {
     return new Promise((resolve, reject) => {
-        User.findOne({ _id: id }).populate('role').populate('groups').exec((err, res) => {
+        User.findOne({_id: id}).populate('role').populate('groups').exec((err, res) => {
             if (err) {
                 winston.error("UserService.findUser ", err)
                 reject(err)
@@ -260,7 +273,7 @@ export const findUser = function (id) {
 
 export const findUserByUsername = function (name) {
     return new Promise((resolve, reject) => {
-        User.findOne({ username: name }).populate('role').populate('groups').exec((err, res) => {
+        User.findOne({username: name}).populate('role').populate('groups').exec((err, res) => {
             if (err) {
                 winston.error("UserService.findUserByUsername ", err)
                 reject(err)
@@ -273,21 +286,21 @@ export const findUserByUsername = function (name) {
 }
 
 
-export const changePasswordAdmin = function (id, { password, passwordVerify }, actionBy = null) {
+export const changePasswordAdmin = function (id, {password, passwordVerify}, actionBy = null) {
 
     if (password == passwordVerify) {
 
         return new Promise((resolve, rejects) => {
             User.findOneAndUpdate(
-                { _id: id }, { password: hashPassword(password) }, { new: true },
+                {_id: id}, {password: hashPassword(password)}, {new: true},
                 (err, doc) => {
                     if (err) {
                         winston.error("UserService.changePasswordAdmin ", err)
-                        rejects({ status: false, message: "Change password fail" })
+                        rejects({status: false, message: "Change password fail"})
                     } else {
                         winston.debug('UserService.changePasswordAdmin successful')
                         createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'changePasswordAdmin')
-                        resolve({ success: true, message: "PasswordChange", operation: "changePasswordAdmin" })
+                        resolve({success: true, message: "PasswordChange", operation: "changePasswordAdmin"})
                     }
                 }
             );
@@ -296,7 +309,7 @@ export const changePasswordAdmin = function (id, { password, passwordVerify }, a
 
     } else {
         return new Promise((resolve, rejects) => {
-            resolve({ status: false, message: "Password doesn't match" })
+            resolve({status: false, message: "Password doesn't match"})
         })
     }
 }
@@ -304,7 +317,7 @@ export const changePasswordAdmin = function (id, { password, passwordVerify }, a
 
 export const findUsersGroup = function (group) {
     return new Promise((resolve, reject) => {
-        User.find({ groups: group.id }).then(users => {
+        User.find({groups: group.id}).then(users => {
             winston.debug('UserService.findUsersGroup successful')
             resolve(users)
         }).catch(err => {
@@ -325,9 +338,9 @@ export const setUsersGroups = function (group, users) {
             } else {
                 // console.log("Deleting user " + oldUser.username + ' for ' + group.id)
                 return User.findOneAndUpdate(
-                    { _id: oldUser.id },
-                    { $pullAll: { groups: [group.id] } },
-                    { new: true, runValidators: true, context: 'query' }
+                    {_id: oldUser.id},
+                    {$pullAll: {groups: [group.id]}},
+                    {new: true, runValidators: true, context: 'query'}
                 )
             }
         });
@@ -336,9 +349,9 @@ export const setUsersGroups = function (group, users) {
     function getPushPromises() {
         return users.map(user => {
             return User.findOneAndUpdate(
-                { _id: user },
-                { $push: { groups: group.id } },
-                { new: true, runValidators: true, context: 'query' },
+                {_id: user},
+                {$push: {groups: group.id}},
+                {new: true, runValidators: true, context: 'query'},
             )
         });
     }
@@ -359,9 +372,9 @@ export const setUsersGroups = function (group, users) {
                 }).catch(err => reject(err))
 
             }).catch(err => {
-                winston.error("UserService.setUsersGroups ", err)
-                reject(err)
-            }
+                    winston.error("UserService.setUsersGroups ", err)
+                    reject(err)
+                }
             )
 
         }).catch(e => {
