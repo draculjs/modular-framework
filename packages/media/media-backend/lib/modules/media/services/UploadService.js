@@ -39,9 +39,9 @@ const fileUpload = function (user, inputFile) {
       const parseFileName = _path.default.parse(filename);
 
       const extension = parseFileName.ext;
-      const name = parseFileName.name;
-      const hash = (0, _randomString.default)(6) + '-';
-      const finalFileName = hash + name + extension;
+      const name = parseFileName.name.replace(/#/g, "");
+      const hash = '-' + (0, _randomString.default)(6);
+      const finalFileName = name + hash + extension;
       const year = new Date().getFullYear().toString();
       const month = (new Date().getMonth() + 1).toString();
 
