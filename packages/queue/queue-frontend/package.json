@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-frontend",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Dracul Vue Queue",
   "main": "src/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@dracul/common-frontend": "^1.2.30",
-    "@dracul/dayjs-frontend": "^1.2.34",
+    "@dracul/dayjs-frontend": "^1.4.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
