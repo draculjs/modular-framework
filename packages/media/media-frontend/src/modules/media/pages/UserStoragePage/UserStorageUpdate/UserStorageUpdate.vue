@@ -14,7 +14,6 @@
     import {CrudUpdate} from '@dracul/common-frontend'
     import UserStorageForm from '../UserStorageForm/UserStorageForm.vue';
     import UserStorageProvider from '../../../providers/UserStorageProvider'
-    import baseProvider from '../../../../base/providers/BaseProvider';
 
 
     export default {
@@ -45,7 +44,7 @@
             };
         },
         created() {
-            this.fetchEnvironmentVariables()
+            this.fetchMediaVariables()
         },
         methods: {
             save() {
@@ -58,10 +57,10 @@
                     )
                 }
             },
-            fetchEnvironmentVariables() {
-                return baseProvider.fetchEnvironmentVariables().then((res)  => {
-                    this.fileSizeLimit = res.data.fetchEnvironmentVariables.maxFileSize;
-                    this.fileExpirationLimit = res.data.fetchEnvironmentVariables.fileExpirationTime;
+            fetchMediaVariables() {
+                return UserStorageProvider.fetchMediaVariables().then((res)  => {
+                    this.fileSizeLimit = res.data.fetchMediaVariables.maxFileSize;
+                    this.fileExpirationLimit = res.data.fetchMediaVariables.fileExpirationTime;
                 }).catch(
                     err => console.error(err)
                 )
@@ -71,8 +70,8 @@
                 this.form.maxFileSize = parseFloat(this.form.maxFileSize)
                 this.form.fileExpirationTime = parseInt(this.form.fileExpirationTime)
 
-                return this.form.capacity >= 0 && this.form.maxFileSize > 0 && this.form.fileExpirationTime > 0 && 
-                    this.form.capacity > this.form.usedSpace && this.fileSizeLimit >= this.form.maxFileSize && 
+                return this.form.capacity >= 0 && this.form.maxFileSize > 0 && this.form.fileExpirationTime > 0 &&
+                    this.form.capacity > this.form.usedSpace && this.fileSizeLimit >= this.form.maxFileSize &&
                     this.fileExpirationLimit >= this.form.fileExpirationTime;
             }
         },
