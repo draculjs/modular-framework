@@ -1,3 +1,5 @@
+const {IgnorePlugin} = require("webpack")
+
 module.exports = {
   "transpileDependencies": [
     "vuetify"
