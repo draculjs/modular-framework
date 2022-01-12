@@ -3,19 +3,20 @@ query queuePaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $orde
         totalItems
         page
         items{
-          id
-          blockedUntil
-        workerId
-        maxRetries
-        retries
-        progress
-        info
-        output
-        state
-        topic
-        payload
-        done
-        error
+            id
+            blockedUntil
+            workerId
+            maxRetries
+            retries
+            progress
+            info
+            output
+            data
+            state
+            topic
+            payload
+            done
+            error
         }
     }
 }

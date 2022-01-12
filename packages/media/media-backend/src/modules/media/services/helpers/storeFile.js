@@ -1,34 +1,36 @@
 import fs from "fs";
-import { Transform } from 'stream'
-import { DefaultLogger as winston } from '@dracul/logger-backend';
-import { checkUserStorageLeft } from "../UserStorageService";
-const CacheBase = require('cache-base');
-const app = new CacheBase();
+import {Transform} from 'stream'
+import {DefaultLogger as winston} from '@dracul/logger-backend';
+import {findUserStorageByUser} from "../UserStorageService";
 
 
 const createDirIfNotExist = require('./createDirIfNotExist')
 
 class StreamSizeValidator extends Transform {
-    //aca va la capacidad max por usuario
-    maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES ? process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES : 1000;
-    totalLength = 0;
-    error = '';
-    storageLeft = app.get("storageLeft")
+
+    constructor(maxFileSize, storageLeft) {
+        super();
+        this.maxFileSize = maxFileSize
+        this.storageLeft = storageLeft
+        this.totalLength = 0
+        this.error = ''
+    }
+
 
     _transform(chunk, encoding, callback) {
 
         this.totalLength += chunk.length / (1024 * 1024)
         if (this.totalLength > this.maxFileSize) {
             this.error = 'MAX_FILE_SIZE_EXCEEDED';
-            winston.error("storeFile.StreamSizeValidator: _transform error: ", this.error)
+            winston.error("storeFile.StreamSizeValidator: _transform error: " + this.error)
             this.destroy(new Error(this.error));
-            return;
+            return
         }
         if (this.totalLength > this.storageLeft) {
             this.error = 'STORAGE_CAPACITY_EXCEEDED';
-            winston.error("storeFile.StreamSizeValidator: _transform error: ", this.error)
+            winston.error("storeFile.StreamSizeValidator: _transform error: " + this.error)
             this.destroy(new Error(this.error));
-            return;
+            return
         }
 
         this.push(chunk)
@@ -37,7 +39,7 @@ class StreamSizeValidator extends Transform {
 }
 
 
-const storeFile = function (fileStream, dst, userId) {
+const storeFile = function (fileStream, dst, user) {
     if (!fileStream.readable) {
         throw new Error("A redeable stream is required")
     }
@@ -47,41 +49,48 @@ const storeFile = function (fileStream, dst, userId) {
     }
 
     return new Promise(async (resolve, reject) => {
-        let storageLeft = await checkUserStorageLeft(userId)
-        app.set("storageLeft", storageLeft)
 
-        const sizeValidator = new StreamSizeValidator()
+            let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES
+            let storageLeft = maxFileSize
 
-        createDirIfNotExist(dst)
-        const fileWriteStream = fs.createWriteStream(dst)
-
-        fileStream
-            .on('error', error => {
-
-                if (fileStream.truncated) {
-                    fs.unlinkSync(dst);
+            if (user) {
+                const userStorage = await findUserStorageByUser(user)
+                if (userStorage) {
+                    storageLeft = userStorage.capacity - userStorage.usedSpace
+                    maxFileSize = userStorage.maxFileSize
                 }
+            }
 
-                //sizeValidator.destroy(error)
-                winston.error("storeFile.storeFile: fileStream error: ", error)
-                reject(error);
-            })
 
-        sizeValidator
-            .on("error", error => {
-                winston.error("storeFile.storeFile: sizeValidator error: ", error)
-                //fileStream.destroy(error)
-                reject(error)
-            })
+            const sizeValidator = new StreamSizeValidator(maxFileSize,storageLeft)
 
-        fileStream
-            .pipe(sizeValidator)
-            .pipe(fileWriteStream)
-            .on('error', error => reject(error))
-            .on('finish', () => {
-                resolve({ finish: true, bytesWritten: fileWriteStream.bytesWritten })
-            })
-    }
+            createDirIfNotExist(dst)
+
+            const fileWriteStream = fs.createWriteStream(dst)
+
+            fileStream
+                .on('error', error => {
+
+                    if (fileStream.truncated) {
+                        fs.unlinkSync(dst);
+                    }
+
+                    return reject(error);
+                })
+
+            sizeValidator
+                .on("error", error => {
+                    return reject(error)
+                })
+
+            fileStream
+                .pipe(sizeValidator)
+                .pipe(fileWriteStream)
+                .on('error', error => reject(error))
+                .on('finish', () => {
+                    resolve({finish: true, bytesWritten: fileWriteStream.bytesWritten})
+                })
+        }
     );
 };
 

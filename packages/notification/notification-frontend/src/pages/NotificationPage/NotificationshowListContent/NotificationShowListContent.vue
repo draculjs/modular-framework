@@ -30,7 +30,7 @@
         outlined
         small
         color="green"
-        :href="getUrl(item.content)" 
+        :href="getUrl(item.content)"
       >
         {{ $t("notification.downloadButton") }}
         <v-icon>get_app</v-icon>
@@ -71,7 +71,7 @@
 </template>
 <script>
 import notificationProvider from "../../../providers/notificationProvider";
-import dayjs from 'dayjs';  
+import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/es'
@@ -84,11 +84,11 @@ export default {
   methods: {
     getDate(date) {
       dayjs.extend(localizedFormat);
-      dayjs.locale(this.$t("notification.moment"))
+      dayjs.locale(this.$t("notification.locale"))
 
       let dateFormat = parseInt(date)
       let currentDate = dayjs(dateFormat);
-      
+
       let dateParse = dayjs(currentDate).format('llll');
 
       if (dateParse == this.$t("notification.invalidDate")) {
@@ -111,11 +111,11 @@ export default {
     },
     relativeDate(date) {
       dayjs.extend(relativeTime)
-      dayjs.locale(this.$t("notification.moment"))
+      dayjs.locale(this.$t("notification.locale"))
 
       let dateFormat = parseInt(date)
       let currentDate = dayjs(dateFormat);
-      
+
       return dayjs(currentDate).fromNow();
     },
     cleanContent(content){

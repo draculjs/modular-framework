@@ -1,18 +1,16 @@
 import userStorage from "../models/UserStorageModel";
 import { UserService } from '@dracul/user-backend';
-import ObjectId from 'mongodb'
+import { UserInputError } from "apollo-server-errors";
+import { DefaultLogger as winston } from '@dracul/logger-backend';
 
 
 export const fetchUserStorage = async function () {
     return new Promise(async (resolve, reject) => {
         try {
-            let existingUserStorages = await userStorage.find({}).populate('user').exec()
-            let users = await UserService.findUsers()
-            await checkAndCreate(existingUserStorages, users)
 
-            let updatedUserStorages = await userStorage.find({}).populate('user').exec()
+            let userStorages = await userStorage.find({}).populate('user').exec()
 
-            resolve(updatedUserStorages)
+            resolve(userStorages)
         } catch (err) {
             reject(err)
         }
@@ -30,23 +28,32 @@ export const findUserStorageByUser = async function (user) {
     });
 };
 
-const checkAndCreate = async function (existingUserStorages, users) {
-    for (let index = 0; index < users.length; index++) {
-        if (existingUserStorages.every(x => x.user._id != users[index].id)) {
-            let user = users[index].id;
-            let capacity = 0;
-            let usedSpace = 0;
-            let maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
-            let fileExpirationTime = process.env.FILE_EXPIRATION_TIME_IN_DAYS || 365;
-            await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime)
-        }
+export const userStorageCheckAndCreate = async function () {
+    winston.info("Media UserStorage running userStorageCheckAndCreate...")
+    let userStorages = await userStorage.find({}).populate('user').exec()
+    let userStoragesIds = userStorages.map(us => us.user.id)
+
+    let users = await UserService.findUsers()
+    let usersWithoutStorage = users.filter(u => !userStoragesIds.includes(u.id))
+
+
+    for (let user of usersWithoutStorage) {
+        let capacity = process.env.MEDIA_DEFAULT_CAPACITY ? process.env.MEDIA_DEFAULT_CAPACITY : 0;
+        let usedSpace = 0;
+        let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
+        let fileExpirationTime = process.env.MEDIA_FILE_EXPIRATION_TIME_IN_DAYS || 365;
+        let deleteByLastAccess = true;
+        let deleteByCreatedAt = false;
+        await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt)
+
     }
+
     return true
 }
 
-export const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime) {
+export const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt) {
     const doc = new userStorage({
-        user, capacity, usedSpace, maxFileSize, fileExpirationTime
+        user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt
     });
     return new Promise((resolve, rejects) => {
         doc.save(((error) => {
@@ -56,7 +63,7 @@ export const createUserStorage = async function (user, capacity, usedSpace, maxF
                 }
                 rejects(error);
             }
-
+            winston.info("Media UserStorage createUserStorage for: " + user.username)
             resolve(doc);
         }));
     });
@@ -68,7 +75,6 @@ export const updateUserUsedStorage = async function (userId, size) {
             { $inc: { usedSpace: size } },
             { runValidators: true, context: "query" },
             (error, doc) => {
-
                 if (error) {
                     if (error.name == "ValidationError") {
                         rejects(new UserInputError(error.message, { inputErrors: error.errors }));
@@ -80,10 +86,10 @@ export const updateUserUsedStorage = async function (userId, size) {
     });
 };
 
-export const updateUserStorage = async function (authUser, id, { name, capacity, usedSpace, maxFileSize, fileExpirationTime }) {
+export const updateUserStorage = async function (authUser, id, { name, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt }) {
     return new Promise((resolve, rejects) => {
         userStorage.findOneAndUpdate({ _id: id },
-            { capacity, maxFileSize, fileExpirationTime },
+            { capacity, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt },
             { runValidators: true, context: "query" },
             (error, doc) => {
 
@@ -119,13 +125,22 @@ export const checkUserStorage = async function (userId, newFileSize) {
 
 export const checkUserStorageLeft = async function (userId) {
     return new Promise((resolve, reject) => {
-        userStorage.findOne({ user: userId }).exec((err, res) => {
+
+        if(!userId){
+            return  resolve(new Error("checkUserStorageLeft: UserId must be provided"))
+        }
+
+        userStorage.findOne({ user: userId }).exec((err, doc) => {
             if (err) {
                 reject(err)
             }
 
-            let storageLeft = res.capacity - res.usedSpace
-            resolve(storageLeft)
+            if(doc){
+                let storageLeft = doc.capacity - doc.usedSpace
+                return resolve(storageLeft)
+            }else{
+                return resolve(0)
+            }
         })
     });
 };

@@ -19,7 +19,7 @@ const messages = {
         errorLoadingNotifications:"Error loading notifications",
         errorNotifications:"Error when performing the operation",
         received:"Received",
-        moment:"en",
+        locale:"en",
         invalidDate:"Invalid date",
         content:"Content",
         downloadButton:"Download file"
@@ -45,7 +45,7 @@ const messages = {
         errorLoadingNotifications:"Error al cargar las notificaciones",
         errorNotifications:"No se pudo realizar la operacion",
         received:"Recibido",
-        moment:"es",
+        locale:"es",
         invalidDate:"Fecha invalida",
         content:"Contenido",
         downloadButton:"Descargar archivo"
@@ -71,7 +71,7 @@ const messages = {
         errorLoadingNotifications:"Erro ao carregar notificações",
         errorNotifications:"Erro ao realizar a operação",
         received:"Recebido",
-        moment:"pt",
+        locale:"pt",
         invalidDate:"Data inválida",
         content:"Conteúdo",
         downloadButton:"Baixar arquivo"

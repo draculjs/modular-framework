@@ -21,12 +21,12 @@ require("dotenv").config();
 
 
 const cronManager = () => {
-  if (!_nodeCron.default.validate(process.env.DELETE_FILES_CRON)) {
-    throw new Error("Valor de variable de entorno DELETE_FILES_CRON no válido");
+  if (!_nodeCron.default.validate(process.env.MEDIA_DELETE_FILES_CRON)) {
+    throw new Error("Valor de variable de entorno MEDIA_DELETE_FILES_CRON no válido");
   }
 
-  if (process.env.DELETE_FILES_CRON) {
-    _nodeCron.default.schedule(process.env.DELETE_FILES_CRON, async () => {
+  if (process.env.MEDIA_DELETE_FILES_CRON) {
+    _nodeCron.default.schedule(process.env.MEDIA_DELETE_FILES_CRON, async () => {
       _loggerBackend.DefaultLogger.info("CronManager findAndDeleteExpiredFiles starting ");
 
       try {

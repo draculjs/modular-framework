@@ -9,11 +9,11 @@ require("dotenv").config();
  * findAndDeleteExpiredFiles: encuentra archivos expirados y los elimina.
  * */
 export const cronManager = () => {
-    if (!cron.validate(process.env.DELETE_FILES_CRON)) {
-        throw new Error("Valor de variable de entorno DELETE_FILES_CRON no válido")
+    if (!cron.validate(process.env.MEDIA_DELETE_FILES_CRON)) {
+        throw new Error("Valor de variable de entorno MEDIA_DELETE_FILES_CRON no válido")
     }
-    if (process.env.DELETE_FILES_CRON) {
-        cron.schedule(process.env.DELETE_FILES_CRON, async () => {
+    if (process.env.MEDIA_DELETE_FILES_CRON) {
+        cron.schedule(process.env.MEDIA_DELETE_FILES_CRON, async () => {
             winston.info("CronManager findAndDeleteExpiredFiles starting ");
             try {
                 const success = await findAndDeleteExpiredFiles();

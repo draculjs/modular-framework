@@ -19,6 +19,8 @@ var _initUploaderRole = _interopRequireDefault(require("./custom/initUploaderRol
 
 var _InitMediaPermissions = _interopRequireDefault(require("../modules/media/services/InitMediaPermissions"));
 
+var _UserStorageService = require("../modules/media/services/UserStorageService");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _dotenv.default.config();
@@ -35,7 +37,8 @@ _mongoose.default.set('useCreateIndex', true);
 const initService = async () => {
   await _userBackend.InitService.initPermissions();
   await (0, _customizeBackend.initPermissionsCustomization)();
-  await (0, _InitMediaPermissions.default)();
+  await (0, _InitMediaPermissions.default)(); // await userStorageCheckAndCreate()
+
   await _userBackend.InitService.initAdminRole();
   await _userBackend.InitService.initRoles([_initUploaderRole.default]);
   await _userBackend.InitService.initRootUser();

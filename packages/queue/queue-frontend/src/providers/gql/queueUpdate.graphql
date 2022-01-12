@@ -8,6 +8,7 @@ mutation queueUpdate($id: ID!, $blockedUntil:String, $workerId:String, $maxRetri
         progress
         info
         output
+        data
         state
         topic
         payload

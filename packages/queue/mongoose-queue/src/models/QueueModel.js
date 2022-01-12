@@ -45,6 +45,11 @@ const QueueSchema = new Schema({
         type: String,
         required: false,
     },
+    //Data for custom progress status
+    data: {
+        type: String,
+        required: false,
+    },
     //State info about the job
     state: {
         type: String,

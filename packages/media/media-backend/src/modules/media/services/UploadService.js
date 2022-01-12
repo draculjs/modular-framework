@@ -1,12 +1,10 @@
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import path from "path";
-import fs from "fs";
 import File from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
-import convertGigabytesToBytes from "./helpers/convertGigabytesToBytes"
-import { checkUserStorage, updateUserUsedStorage } from './UserStorageService';
+import { updateUserUsedStorage } from './UserStorageService';
 
 const fileUpload = function (user, inputFile) {
 
@@ -23,16 +21,16 @@ const fileUpload = function (user, inputFile) {
 
       const parseFileName = path.parse(filename);
       const extension = parseFileName.ext
-      const name = parseFileName.name
-      const hash = '-' + randomString(6)
-      const finalFileName = name + hash + extension
+      const name = parseFileName.name.replace(/#/g,"")
+      const hash =   '-' + randomString(6)
+      const finalFileName =  name + hash + extension
       const year = new Date().getFullYear().toString()
       const month = (new Date().getMonth() + 1).toString()
       const relativePath = path.join("media", "files", user.username, year, month, finalFileName)
       const absolutePath = path.resolve(relativePath);
 
       //Store
-      let storeResult = await storeFile(createReadStream(), relativePath, user.id)
+      let storeResult = await storeFile(createReadStream(), relativePath, user)
       winston.info("fileUploadAnonymous store result: " + storeResult)
 
       let url = baseUrl() + relativePath
@@ -67,7 +65,7 @@ const fileUpload = function (user, inputFile) {
       }
 
     } catch (err) {
-      winston.error('UploadService: ', err)
+      winston.error('UploadService error' + err)
       rejects(err)
     }
   })

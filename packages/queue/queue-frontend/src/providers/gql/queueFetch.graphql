@@ -8,6 +8,7 @@ query queueFetch{
         progress
         info
         output
+        data
         state
         topic
         payload

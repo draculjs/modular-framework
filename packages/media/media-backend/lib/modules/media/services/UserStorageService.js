@@ -3,24 +3,23 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.checkUserStorageLeft = exports.checkUserStorage = exports.updateUserStorage = exports.updateUserUsedStorage = exports.createUserStorage = exports.findUserStorageByUser = exports.fetchUserStorage = void 0;
+exports.checkUserStorageLeft = exports.checkUserStorage = exports.updateUserStorage = exports.updateUserUsedStorage = exports.createUserStorage = exports.userStorageCheckAndCreate = exports.findUserStorageByUser = exports.fetchUserStorage = void 0;
 
 var _UserStorageModel = _interopRequireDefault(require("../models/UserStorageModel"));
 
 var _userBackend = require("@dracul/user-backend");
 
-var _mongodb = _interopRequireDefault(require("mongodb"));
+var _apolloServerErrors = require("apollo-server-errors");
+
+var _loggerBackend = require("@dracul/logger-backend");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const fetchUserStorage = async function () {
   return new Promise(async (resolve, reject) => {
     try {
-      let existingUserStorages = await _UserStorageModel.default.find({}).populate('user').exec();
-      let users = await _userBackend.UserService.findUsers();
-      await checkAndCreate(existingUserStorages, users);
-      let updatedUserStorages = await _UserStorageModel.default.find({}).populate('user').exec();
-      resolve(updatedUserStorages);
+      let userStorages = await _UserStorageModel.default.find({}).populate('user').exec();
+      resolve(userStorages);
     } catch (err) {
       reject(err);
     }
@@ -44,40 +43,52 @@ const findUserStorageByUser = async function (user) {
 
 exports.findUserStorageByUser = findUserStorageByUser;
 
-const checkAndCreate = async function (existingUserStorages, users) {
-  for (let index = 0; index < users.length; index++) {
-    if (existingUserStorages.every(x => x.user._id != users[index].id)) {
-      let user = users[index].id;
-      let capacity = 0;
-      let usedSpace = 0;
-      let maxFileSize = process.env.MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
-      let fileExpirationTime = process.env.FILE_EXPIRATION_TIME_IN_DAYS || 365;
-      await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime);
-    }
+const userStorageCheckAndCreate = async function () {
+  _loggerBackend.DefaultLogger.info("Media UserStorage running userStorageCheckAndCreate...");
+
+  let userStorages = await _UserStorageModel.default.find({}).populate('user').exec();
+  let userStoragesIds = userStorages.map(us => us.user.id);
+  let users = await _userBackend.UserService.findUsers();
+  let usersWithoutStorage = users.filter(u => !userStoragesIds.includes(u.id));
+
+  for (let user of usersWithoutStorage) {
+    let capacity = process.env.MEDIA_DEFAULT_CAPACITY ? process.env.MEDIA_DEFAULT_CAPACITY : 0;
+    let usedSpace = 0;
+    let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
+    let fileExpirationTime = process.env.MEDIA_FILE_EXPIRATION_TIME_IN_DAYS || 365;
+    let deleteByLastAccess = true;
+    let deleteByCreatedAt = false;
+    await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt);
   }
 
   return true;
 };
 
-const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime) {
+exports.userStorageCheckAndCreate = userStorageCheckAndCreate;
+
+const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt) {
   const doc = new _UserStorageModel.default({
     user,
     capacity,
     usedSpace,
     maxFileSize,
-    fileExpirationTime
+    fileExpirationTime,
+    deleteByLastAccess,
+    deleteByCreatedAt
   });
   return new Promise((resolve, rejects) => {
     doc.save(error => {
       if (error) {
         if (error.name == "ValidationError") {
-          rejects(new UserInputError(error.message, {
+          rejects(new _apolloServerErrors.UserInputError(error.message, {
             inputErrors: error.errors
           }));
         }
 
         rejects(error);
       }
+
+      _loggerBackend.DefaultLogger.info("Media UserStorage createUserStorage for: " + user.username);
 
       resolve(doc);
     });
@@ -100,7 +111,7 @@ const updateUserUsedStorage = async function (userId, size) {
     }, (error, doc) => {
       if (error) {
         if (error.name == "ValidationError") {
-          rejects(new UserInputError(error.message, {
+          rejects(new _apolloServerErrors.UserInputError(error.message, {
             inputErrors: error.errors
           }));
         }
@@ -120,7 +131,9 @@ const updateUserStorage = async function (authUser, id, {
   capacity,
   usedSpace,
   maxFileSize,
-  fileExpirationTime
+  fileExpirationTime,
+  deleteByLastAccess,
+  deleteByCreatedAt
 }) {
   return new Promise((resolve, rejects) => {
     _UserStorageModel.default.findOneAndUpdate({
@@ -128,14 +141,16 @@ const updateUserStorage = async function (authUser, id, {
     }, {
       capacity,
       maxFileSize,
-      fileExpirationTime
+      fileExpirationTime,
+      deleteByLastAccess,
+      deleteByCreatedAt
     }, {
       runValidators: true,
       context: "query"
     }, (error, doc) => {
       if (error) {
         if (error.name == "ValidationError") {
-          rejects(new UserInputError(error.message, {
+          rejects(new _apolloServerErrors.UserInputError(error.message, {
             inputErrors: error.errors
           }));
         }
@@ -174,15 +189,23 @@ exports.checkUserStorage = checkUserStorage;
 
 const checkUserStorageLeft = async function (userId) {
   return new Promise((resolve, reject) => {
+    if (!userId) {
+      return resolve(new Error("checkUserStorageLeft: UserId must be provided"));
+    }
+
     _UserStorageModel.default.findOne({
       user: userId
-    }).exec((err, res) => {
+    }).exec((err, doc) => {
       if (err) {
         reject(err);
       }
 
-      let storageLeft = res.capacity - res.usedSpace;
-      resolve(storageLeft);
+      if (doc) {
+        let storageLeft = doc.capacity - doc.usedSpace;
+        return resolve(storageLeft);
+      } else {
+        return resolve(0);
+      }
     });
   });
 };

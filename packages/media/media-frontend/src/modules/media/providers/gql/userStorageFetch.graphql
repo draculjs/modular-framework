@@ -10,5 +10,7 @@ query userStorageFetch{
         usedSpace
         maxFileSize
         fileExpirationTime
+        deleteByLastAccess
+        deleteByCreatedAt
     }
 }

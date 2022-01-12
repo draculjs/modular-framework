@@ -7,6 +7,7 @@ type Queue{
     progress: Int
     info: String
     output: String
+    data: String
     state: String
     topic: String!
     payload: PAYLOAD!
@@ -22,6 +23,7 @@ type QueuePaginated{
 
 type Query {
     queueFind(id:ID!): Queue
+    queueFindByTopicAndState(topic:String!, state: String!): Queue
     queueFetch: [Queue]
     queuePaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): QueuePaginated
 

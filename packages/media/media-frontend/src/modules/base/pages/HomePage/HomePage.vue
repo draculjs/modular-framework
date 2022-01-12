@@ -18,6 +18,14 @@
         />
       </v-col>
 
+      <v-col v-if="$store.getters.hasPermission('FILE_SHOW_ALL')" cols="12" sm="4" class="text-center">
+        <home-card
+            title="User Storage Config"
+            icon="settings"
+            :to="{name:'UserStoragePage'}"
+        />
+      </v-col>
+
       <v-col cols="12" sm="4" class="text-center">
         <home-card
             title="Docs"

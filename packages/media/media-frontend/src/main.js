@@ -11,12 +11,14 @@ import {customizationProvider} from '@dracul/customize-frontend'
 import FileProvider from './modules/media/providers/FileProvider'
 import UploadProvider from './modules/media/providers/UploadProvider'
 import FileMetricsProvider from './modules/media/providers/FileMetricsProvider'
+import UserStorageProvider from './modules/media/providers/UserStorageProvider'
 
 setGraphQlClientToProviders(apolloClient)
 customizationProvider.setGqlc(apolloClient)
 UploadProvider.setGqlc(apolloClient)
 FileProvider.setGqlc(apolloClient)
 FileMetricsProvider.setGqlc(apolloClient)
+UserStorageProvider.setGqlc(apolloClient)
 
 Vue.config.productionTip = false
 

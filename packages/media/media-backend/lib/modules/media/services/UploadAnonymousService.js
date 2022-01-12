@@ -34,7 +34,7 @@ const fileUploadAnonymous = function (inputFile) {
       const parseFileName = _path.default.parse(filename);
 
       const extension = parseFileName.ext;
-      const name = parseFileName.name;
+      const name = parseFileName.name.replace(/#/g, "");
       const hash = '-' + (0, _randomString.default)(6);
       const finalFileName = name + hash + extension;
       const year = new Date().getFullYear().toString();

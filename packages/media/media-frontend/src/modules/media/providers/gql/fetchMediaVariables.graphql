@@ -1,0 +1,6 @@
+query fetchMediaVariables {
+    fetchMediaVariables {
+        maxFileSize
+        fileExpirationTime
+    }
+}

@@ -51,6 +51,12 @@ GroupSchema.set('toJSON', {
     }
 });
 
-const Group = mongoose.model('Group', GroupSchema);
+const GroupModel = mongoose.model('Group', GroupSchema);
 
-module.exports = Group;
+export {
+    GroupSchema,
+    GroupModel
+}
+export default GroupModel
+
+//module.exports = Group;

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-backend",
-  "version": "1.0.105",
+  "version": "1.4.0",
   "description": "Modulo de notificaciones de usuario",
   "main": "./lib/index.js",
   "scripts": {
@@ -21,10 +21,10 @@
     "@babel/runtime": "^7.12.5",
     "@dracul/logger-backend": "^1.0.105",
     "apollo-server-express": "^2.15.0",
+    "dayjs": "^1.10.7",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
     "graphql-tools": "^4.0.5",
-    "moment": "^2.27.0",
     "mongoose": "^5.9.19",
     "mongoose-paginate-v2": "^1.3.6",
     "subscriptions-transport-ws": "^0.9.18",

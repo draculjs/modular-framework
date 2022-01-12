@@ -1,5 +1,7 @@
 import {resolvers, types} from './modules/media/graphql'
 import * as FileService from './modules/media/services/FileService'
+import * as UserStorageService from './modules/media/services/UserStorageService'
+import {userStorageCheckAndCreate} from './modules/media/services/UserStorageService'
 import fileUpload from './modules/media/services/UploadService'
 import fileUploadAnonymous from './modules/media/services/UploadAnonymousService'
 import InitMediaPermissions from './modules/media/services/InitMediaPermissions'
@@ -17,6 +19,8 @@ export {
     types,
     resolvers,
     FileService,
+    UserStorageService,
+    userStorageCheckAndCreate,
     fileUpload,
     fileUploadAnonymous,
     InitMediaPermissions,

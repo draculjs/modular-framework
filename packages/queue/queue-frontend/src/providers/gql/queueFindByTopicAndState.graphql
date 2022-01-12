@@ -1,0 +1,18 @@
+query queueFindByTopicAndState($topic:String!, $state: String!){
+    queueFindByTopicAndState(topic:$topic, state: $state){
+        id
+        blockedUntil
+        workerId
+        maxRetries
+        retries
+        progress
+        info
+        output
+        data
+        state
+        topic
+        payload
+        done
+        error
+    }
+}
