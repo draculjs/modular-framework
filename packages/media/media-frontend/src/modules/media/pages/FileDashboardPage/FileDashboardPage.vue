@@ -159,7 +159,6 @@
                          'rgba(75, 192, 192)',
                          'rgba(75, 192, 192)',
                     ];
-                    console.log(results.dataset)
                     results.dataset[0].label = this.$t(`media.file.dashboard.fileUserMetrics.countLabel`);
 
                     results.dataset[1].backgroundColor = [
