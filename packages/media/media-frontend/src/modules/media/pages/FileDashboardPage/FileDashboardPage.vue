@@ -150,7 +150,6 @@
                 fileMetricsProvider.fileUserMetrics().then(r => {
                     this.fileUserMetrics = r.data.fileUserMetrics
                     let results = r.data.fileUserMetrics
-                    console.log(results.labels)
                     this.dataChart.labels = results.labels
 
                     results.dataset[0].backgroundColor= [
@@ -160,7 +159,8 @@
                          'rgba(75, 192, 192)',
                          'rgba(75, 192, 192)',
                     ];
-                    results.dataset[0].label = this.$t(`media.file.dashboard.fileUserMetrics.${results.dataset[0].label}`);
+                    console.log(results.dataset)
+                    results.dataset[0].label = this.$t(`media.file.dashboard.fileUserMetrics.countLabel`);
 
                     results.dataset[1].backgroundColor = [
                         'rgba(255, 205, 86)',
@@ -169,7 +169,7 @@
                         'rgba(255, 205, 86)',
                         'rgba(255, 205, 86)',
                     ];
-                    results.dataset[1].label = this.$t(`media.file.dashboard.fileUserMetrics.${results.dataset[1].label}`);
+                    results.dataset[1].label = this.$t(`media.file.dashboard.fileUserMetrics.sizeLabel`);
 
                     this.dataChart.datasets = results.dataset;
                 }).catch(err => {
