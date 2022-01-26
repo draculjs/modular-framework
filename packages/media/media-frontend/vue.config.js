@@ -1,4 +1,4 @@
-const {IgnorePlugin} = require("webpack")
+const { IgnorePlugin } = require("webpack")
 
 module.exports = {
   "transpileDependencies": [
@@ -13,10 +13,10 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.module
-        .rule('gql')
-        .test(/\.(graphql|gql)$/)
-        .use('graphql-tag/loader')
-        .loader('graphql-tag/loader')
-        .end();
+      .rule('gql')
+      .test(/\.(graphql|gql)$/)
+      .use('graphql-tag/loader')
+      .loader('graphql-tag/loader')
+      .end();
   }
 }

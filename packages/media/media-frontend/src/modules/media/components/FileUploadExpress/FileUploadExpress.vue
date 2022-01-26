@@ -22,7 +22,7 @@
            @change="onFilePicked"
     />
 
-    <v-dialog v-if="dialog" v-model="dialog" max-width="800">
+    <!-- <v-dialog v-if="dialog" v-model="dialog" max-width="800">
       <v-card>
         <toolbar-dialog :title="dialogTitle" @close="dialog=false"></toolbar-dialog>
         <v-card-text  v-if="!!errorMessage">
@@ -31,18 +31,18 @@
           </v-alert>
         </v-card-text>
 
-        <v-card-text v-else>
+        <v-card-text>
           <file-view :file="uploadedFile"></file-view>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
 <script>
 import uploadProvider from "../../providers/UploadProvider";
-import { ToolbarDialog} from '@dracul/common-frontend'
-import FileView from "../FileView/FileView";
+// import { ToolbarDialog} from '@dracul/common-frontend'
+// import FileView from "../FileView/FileView";
 import UserStorageProvider from "../../../media/providers/UserStorageProvider"
 
 const INITIAL = 'initial'
@@ -52,7 +52,7 @@ const ERROR = 'error'
 
 export default {
   name: "FileUploadExpress",
-  components: {FileView, ToolbarDialog},
+  components: {},
   props: {
     autoSubmit: {type: Boolean, default: false},
     accept: {type: String, default: '*'},
@@ -160,10 +160,13 @@ export default {
           console.log("ERROR", err)
           this.state = ERROR
           this.errorMessage = this.$t("media.file.fileSizeExceeded")
+          this.$emit('onFileUploadError',  this.errorMessage)
+
         }).finally(() => this.loading = false)
       }else{
         this.state = ERROR
         this.errorMessage = this.$t("media.file.fileSizeExceeded")
+        this.$emit('onFileUploadError', this.errorMessage)
       }
     }
   }
