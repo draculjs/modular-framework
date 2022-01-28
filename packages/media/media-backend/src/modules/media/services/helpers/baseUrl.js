@@ -3,7 +3,7 @@ export const baseUrl = function () {
 
     //Si no tiene http o https al inicio, lo agrega
     if (!/^http(s)?:\/\//.test(url)) {
-        url = "http://" + baseUrl
+        url = "http://" + url
     }
 
     if (!/\/$/.test(url)) {
