@@ -1,7 +1,8 @@
 export const baseUrl = function () {
     let url = process.env.APP_API_URL
 
-    if (!/^http:\/\//.test(url)) {
+    //Si no tiene http o https al inicio, lo agrega
+    if (!/^http(s)?:\/\//.test(url)) {
         url = "http://" + baseUrl
     }
 
