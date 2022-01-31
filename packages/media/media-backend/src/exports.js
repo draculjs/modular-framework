@@ -6,6 +6,7 @@ import fileUpload from './modules/media/services/UploadService'
 import fileUploadAnonymous from './modules/media/services/UploadAnonymousService'
 import InitMediaPermissions from './modules/media/services/InitMediaPermissions'
 import * as filePermissions from './modules/media/permissions/File'
+import * as userStoragePermissions from './modules/media/permissions/UserStorage'
 
 import {
     findFile,
@@ -24,7 +25,11 @@ export {
     fileUpload,
     fileUploadAnonymous,
     InitMediaPermissions,
+
+    //Permissions
     filePermissions,
+    userStoragePermissions,
+
     //Services
     findFile,
     fetchFiles,
