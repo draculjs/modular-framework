@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.baseUrl = void 0;
 
 const baseUrl = function () {
-  let url = process.env.APP_API_URL;
+  let url = process.env.APP_API_URL; //Si no tiene http o https al inicio, lo agrega
 
-  if (!/^http:\/\//.test(url)) {
-    url = "http://" + baseUrl;
+  if (!/^http(s)?:\/\//.test(url)) {
+    url = "http://" + url;
   }
 
   if (!/\/$/.test(url)) {

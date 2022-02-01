@@ -19,6 +19,7 @@
           :error="error"
           :error-messages="errorMessages"
           color="secondary"
+          :clearable="clearable"
       ></v-text-field>
     </template>
     <v-time-picker :value="item"
@@ -38,7 +39,8 @@ export default {
     error: {type: Boolean},
     errorMessages: {type: Array},
     label: {type: String},
-    rules: {type: Array, default: () => []}
+    rules: {type: Array, default: () => []},
+    clearable: {type:Boolean, default: true}
   },
   mixins: [DayjsMixin],
   computed: {

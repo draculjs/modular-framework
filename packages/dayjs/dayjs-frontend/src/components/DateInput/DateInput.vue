@@ -9,6 +9,7 @@
   >
     <template v-slot:activator="{ on }">
       <v-text-field
+
           ref="date"
           v-model="item"
           :label="label"
@@ -19,6 +20,7 @@
           :error="error"
           :error-messages="errorMessages"
           color="secondary"
+          :clearable="clearable"
       ></v-text-field>
     </template>
     <v-date-picker v-model="item" scrollable @input="menu = false">
@@ -37,7 +39,8 @@ export default {
     error: {type: Boolean},
     errorMessages: {type:Array},
     label: { type: String},
-    rules: {type: Array, default: ()=>[]}
+    rules: {type: Array, default: ()=>[]},
+    clearable: {type:Boolean, default: true}
   },
   mixins: [DayjsMixin],
   computed: {
