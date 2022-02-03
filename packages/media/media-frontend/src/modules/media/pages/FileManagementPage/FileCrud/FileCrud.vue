@@ -17,7 +17,6 @@
                         :open="creating"
                         v-on:itemCreated="onItemCreated"
                         v-on:close="creating=false"
-                        @onFileUploadError="onFileUploadError"
         />
 
         <file-update v-if="updating"
@@ -40,7 +39,7 @@
                          v-on:close="deleting=false"
         />
 
-        <snackbar v-model="flash" :color="color"/>
+        <snackbar v-model="flash"/>
 
 </crud-layout>
 </template>
@@ -69,7 +68,6 @@
                 title: 'media.file.title',
                 subtitle: 'media.file.subtitle',
                 flash: null,
-                color: null,
                 creating: false,
                 updating: false,
                 deleting: false,
@@ -83,17 +81,14 @@
             //On
             onItemCreated() {
                 this.$refs.list.fetch()
-                this.color = 'green'
                 this.flash=  this.$t("common.created")
             },
             onItemUpdated() {
                 this.$refs.list.fetch()
-                this.color = 'green'
                 this.flash= this.$t("common.updated")
             },
             onItemDeleted() {
                 this.$refs.list.fetch()
-                this.color = 'green'
                 this.flash=  this.$t("common.deleted")
             },
             //Open
@@ -112,10 +107,6 @@
                 this.deleting = true
                 this.itemToDelete = item
             },
-            onFileUploadError(error) {
-                this.flash = error;
-                this.color = 'red';
-            }
         }
 
     }

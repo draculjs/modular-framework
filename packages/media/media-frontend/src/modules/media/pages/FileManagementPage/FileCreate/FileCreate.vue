@@ -10,7 +10,6 @@
                            autoSubmit
                            x-large
                            @fileUploaded="fileUploaded"
-                           @onFileUploadError="onFileUploadError"
       />
 
       <file-view v-if="file" :file="file"/>
@@ -63,9 +62,6 @@ export default {
       this.file = file
       this.$emit('itemCreated')
     },
-    onFileUploadError(error) {
-      this.$emit('onFileUploadError', error)
-    }
 
   },
 }
