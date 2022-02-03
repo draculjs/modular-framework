@@ -14,6 +14,7 @@
 
       <file-view v-if="file" :file="file"/>
     </div>
+
   </crud-show>
 </template>
 
@@ -60,7 +61,7 @@ export default {
     fileUploaded(file) {
       this.file = file
       this.$emit('itemCreated')
-    }
+    },
 
   },
 }

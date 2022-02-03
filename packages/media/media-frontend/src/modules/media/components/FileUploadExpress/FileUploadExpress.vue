@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <v-btn v-on:click="pickFile"
            class="mx-3"
            fab dark
@@ -31,7 +32,7 @@
           </v-alert>
         </v-card-text>
 
-        <v-card-text v-else>
+        <v-card-text>
           <file-view :file="uploadedFile"></file-view>
         </v-card-text>
       </v-card>
@@ -52,7 +53,7 @@ const ERROR = 'error'
 
 export default {
   name: "FileUploadExpress",
-  components: {FileView, ToolbarDialog},
+  components: { ToolbarDialog, FileView },
   props: {
     autoSubmit: {type: Boolean, default: false},
     accept: {type: String, default: '*'},
@@ -160,6 +161,7 @@ export default {
           console.log("ERROR", err)
           this.state = ERROR
           this.errorMessage = this.$t("media.file.fileSizeExceeded")
+
         }).finally(() => this.loading = false)
       }else{
         this.state = ERROR

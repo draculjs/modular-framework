@@ -106,7 +106,7 @@
             remove(item) {
                 this.deleting = true
                 this.itemToDelete = item
-            }
+            },
         }
 
     }

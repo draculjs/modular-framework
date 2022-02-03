@@ -17,7 +17,7 @@
 export default {
   name: "AboutList",
   props:{
-    items: []
+    items: {type: Array, default: null},
   }
 }
 </script>

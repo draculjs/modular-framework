@@ -4,8 +4,8 @@ services:
   draculMedia:
     image: sndregistry.sondeosglobal.com/dracul/dracul-media:1.2.0
     volumes:
-      - ./media:/deploy/dist/media
-      - ./logs:/deploy/dist/logs
+      - ./media:/app/media
+      - ./logs:/app/logs
     ports:
       - "7070:7070"
     environment:
