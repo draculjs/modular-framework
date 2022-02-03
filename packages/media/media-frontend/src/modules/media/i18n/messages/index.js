@@ -34,6 +34,8 @@ const messages = {
                 until: 'Until',
                 sizeGt: 'Size greater than',
                 sizeLt: 'Size less than',
+                expirationDate: 'Expiration date',
+                days: 'days',
                 dashboard: {
                     fileUserMetrics: {
                         title: "File indicators of the last 5 months",
@@ -70,7 +72,9 @@ const messages = {
                 fileSizeLimit: "File size limit",
                 fileExpirationTime: "File expiration",
                 fileExpirationLimit: "File expiration limit",
+                fileExpirationTimeOlderThanToday: "Expiration time must be older than today",
                 fileExpirationTimeExceeded: "Expiration time not allowed",
+                fileExpirationLimitExceeded: "File expiration time cannot be longer than ",
                 deleteByLastAccess: "Delete files by last access",
                 deleteByDateCreated: "Delete files by created date"
             }
@@ -111,6 +115,8 @@ const messages = {
                 until: 'Hasta',
                 sizeGt: 'Tamaño mayor a',
                 sizeLt: 'Tamaño menor a',
+                expirationDate: 'Fecha de expiración',
+                days: 'días',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de archivos de los últimos 5 meses",
@@ -150,6 +156,8 @@ const messages = {
                 fileExpirationTime: "Tiempo de expiración",
                 fileExpirationLimit: "Tiempo de expiración del archivo",
                 fileExpirationTimeExceeded: "Tiempo de expiración no permitido",
+                fileExpirationTimeOlderThanToday: "Tiempo de expiración debe ser mayor a hoy",
+                fileExpirationLimitExceeded: "El límite de expiración del archivo no puede ser mayor a  ",
                 deleteByLastAccess: "Eliminar archivos por último acceso",
                 deleteByDateCreated: "Eliminar archivos por fecha de creación"
             }
@@ -190,6 +198,8 @@ const messages = {
                 until: 'Até',
                 sizeGt: 'Tamanho maior que',
                 sizeLt: 'Tamanho menor que',
+                expirationDate: 'Data de validade',
+                days: 'dias',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de arquivo dos últimos 5 meses",
@@ -227,6 +237,8 @@ const messages = {
                 fileExpirationTime: "Tempo de expiração",
                 fileExpirationLimit: "Tempo de expiração do arquivo",
                 fileExpirationTimeExceeded: "Prazo de validade não permitido",
+                fileExpirationTimeOlderThanToday: "O tempo de expiração deve ser mais antigo do que hoje",
+                fileExpirationLimitExceeded: "O tempo de expiração do arquivo não pode ser maior que ",
                 deleteByLastAccess: "Excluir o último acesso de arquivos",
                 deleteByDateCreated: "Excluir arquivos por data de criação"
             }

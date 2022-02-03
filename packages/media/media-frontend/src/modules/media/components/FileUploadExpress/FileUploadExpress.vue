@@ -1,6 +1,25 @@
 <template>
   <div>
 
+    <v-row>
+
+      <v-col cols="12" sm="6" md="4" class="mt-3"  >
+        <h3>Fecha de expiración (opcional):</h3>
+      </v-col>
+
+      <v-col cols="12" sm="6" md="4" class="pt-0" >
+        <date-input
+          v-model="expirationDate"
+          :label="$t('media.file.expirationDate')"
+          prepend-icon="event"
+          color="secondary"
+          hide-details
+          :rules="fileExpirationTimeRules"
+        />
+      </v-col>
+
+    </v-row>
+
     <v-btn v-on:click="pickFile"
            class="mx-3"
            fab dark
@@ -45,6 +64,7 @@ import uploadProvider from "../../providers/UploadProvider";
 import { ToolbarDialog} from '@dracul/common-frontend'
 import FileView from "../FileView/FileView";
 import UserStorageProvider from "../../../media/providers/UserStorageProvider"
+import { DateInput } from '@dracul/dayjs-frontend';
 
 const INITIAL = 'initial'
 const SELECTED = 'selected'
@@ -53,7 +73,7 @@ const ERROR = 'error'
 
 export default {
   name: "FileUploadExpress",
-  components: { ToolbarDialog, FileView },
+  components: { ToolbarDialog, DateInput, FileView},
   props: {
     autoSubmit: {type: Boolean, default: false},
     accept: {type: String, default: '*'},
@@ -73,6 +93,8 @@ export default {
       uploadedFile: null,
       state: INITIAL,
       maxFileSize:0,
+      expirationDate: null,
+      fileExpirationTime: null,
       states: {
         initial: {
           color: 'blue-grey',
@@ -96,6 +118,19 @@ export default {
         }
       },
       loading: false,
+      fileExpirationTimeRules: [
+        () => {
+          if (this.getFileExpirationTimeInput < 0) {
+            return this.$t("media.userStorage.fileExpirationTimeOlderThanToday")
+          }
+          else if (this.fileExpirationTime && this.getFileExpirationTimeInput) {
+            return (this.getFileExpirationTimeInput < this.fileExpirationTime) 
+            || `${this.$t("media.userStorage.fileExpirationLimitExceeded")} ${this.fileExpirationTime} ${this.$t("media.file.days")}`
+          } else {
+            return true
+          }
+        }
+      ]
     }
   },
   computed: {
@@ -117,6 +152,15 @@ export default {
         return this.uploadedFile.url
       }
       return null
+    },
+    getFileExpirationTimeInput() {
+      if (this.expirationDate) {
+        const today = new Date();
+        const expirationDate = new Date(this.expirationDate);
+        const differenceInDays = ((expirationDate - today)/(1000 * 3600 * 24)).toFixed(0);
+        return differenceInDays;
+      }
+      return null;
     }
   },
   mounted () {
@@ -144,6 +188,7 @@ export default {
       return UserStorageProvider.findUserStorageByUser().then((res)  => {
         if(res.data.userStorageFindByUser && res.data.userStorageFindByUser.maxFileSize){
           this.maxFileSize = res.data.userStorageFindByUser.maxFileSize;
+          this.fileExpirationTime = res.data.userStorageFindByUser.fileExpirationTime;
         }
 
       }).catch(
@@ -151,9 +196,12 @@ export default {
       )
     },
     upload(fileSize) {
-      if (this.file && this.state != UPLOADED && fileSize<=this.maxFileSize) {
-        this.loading = true
-        uploadProvider.uploadFile(this.file).then(result => {
+      if (this.file && this.state != UPLOADED && fileSize <= this.maxFileSize && this.getFileExpirationTimeInput < this.fileExpirationTime) {
+        this.loading = true;
+
+        this.expirationDate = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
+
+        uploadProvider.uploadFile(this.file, this.expirationDate).then(result => {
           this.state = UPLOADED
           this.uploadedFile = result.data.fileUpload
           this.$emit('fileUploaded', result.data.fileUpload)
@@ -167,6 +215,14 @@ export default {
         this.state = ERROR
         this.errorMessage = this.$t("media.file.fileSizeExceeded")
       }
+    },
+    addHoursMinutesSecondsToDate(date) {
+      let today = new Date();
+      let expirationDate = new Date(date)
+      expirationDate.setHours(today.getHours());
+      expirationDate.setMinutes(today.getMinutes());
+      expirationDate.setSeconds(today.getSeconds());
+      return expirationDate.toString();
     }
   }
 }
