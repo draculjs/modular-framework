@@ -40,6 +40,7 @@
            ref="file"
            :accept="accept"
            @change="onFilePicked"
+           :disabled="disableUploadButton"
     />
 
     <v-dialog v-if="dialog" v-model="dialog" max-width="800">
@@ -95,6 +96,7 @@ export default {
       maxFileSize:0,
       expirationDate: null,
       fileExpirationTime: null,
+      disableUploadButton: false,
       states: {
         initial: {
           color: 'blue-grey',
@@ -121,12 +123,19 @@ export default {
       fileExpirationTimeRules: [
         () => {
           if (this.getFileExpirationTimeInput < 0) {
+            this.disableUploadButton = true;
             return this.$t("media.userStorage.fileExpirationTimeOlderThanToday")
           }
           else if (this.fileExpirationTime && this.getFileExpirationTimeInput) {
-            return (this.getFileExpirationTimeInput < this.fileExpirationTime) 
-            || `${this.$t("media.userStorage.fileExpirationLimitExceeded")} ${this.fileExpirationTime} ${this.$t("media.file.days")}`
+            if (this.getFileExpirationTimeInput < this.fileExpirationTime)  {
+              this.disableUploadButton = false;
+              return true;
+            } else {
+              this.disableUploadButton = true;
+              return `${this.$t("media.userStorage.fileExpirationLimitExceeded")} ${this.fileExpirationTime} ${this.$t("media.file.days")}`
+            }
           } else {
+            this.disableUploadButton = false;
             return true
           }
         }
@@ -196,12 +205,12 @@ export default {
       )
     },
     upload(fileSize) {
-      if (this.file && this.state != UPLOADED && fileSize <= this.maxFileSize && this.getFileExpirationTimeInput < this.fileExpirationTime) {
+      if (this.file && this.state != UPLOADED && fileSize <= this.maxFileSize && this.getFileExpirationTimeInput <= this.fileExpirationTime) {
         this.loading = true;
 
-        this.expirationDate = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
+        let expiration = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null
 
-        uploadProvider.uploadFile(this.file, this.expirationDate).then(result => {
+        uploadProvider.uploadFile(this.file, expiration).then(result => {
           this.state = UPLOADED
           this.uploadedFile = result.data.fileUpload
           this.$emit('fileUploaded', result.data.fileUpload)

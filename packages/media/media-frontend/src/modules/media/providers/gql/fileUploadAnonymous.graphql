@@ -16,5 +16,6 @@ mutation fileUploadAnonymous( $file: Upload!){
             username
         }
         lastAccess
+        expirationDate
     }
 }

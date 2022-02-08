@@ -4,27 +4,38 @@
            
                     <v-col cols="12" sm="12">
                         <v-text-field
-                                prepend-icon="description"
-                                name="filename"
-                                v-model="form.description"
-                                :label="$t('media.file.description')"
-                                :placeholder="$t('media.file.description')"
-                                :error="hasInputErrors('description')"
-                                :error-messages="getInputErrors('description')"
-                                color="secondary"
+                            prepend-icon="description"
+                            name="filename"
+                            v-model="form.description"
+                            :label="$t('media.file.description')"
+                            :placeholder="$t('media.file.description')"
+                            :error="hasInputErrors('description')"
+                            :error-messages="getInputErrors('description')"
+                            color="secondary"
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="12">
+                    <v-col cols="12" md="6" sm="6">
                         <v-combobox
-                                prepend-icon="loyalty"
-                                v-model="form.tags"
-                                :label="$t('media.file.tags')"
-                                multiple
-                                chips
-                                color="secondary"
-                                item-color="secondary"
+                            prepend-icon="loyalty"
+                            v-model="form.tags"
+                            :label="$t('media.file.tags')"
+                            multiple
+                            chips
+                            color="secondary"
+                            item-color="secondary"
                         ></v-combobox>
+                    </v-col>
+
+                    <v-col cols="12" md="6" sm="6" class="mt-3">
+                        <date-input
+                            v-model="form.expirationDate"
+                            :label="$t('media.file.expirationDate')"
+                            prepend-icon="event"
+                            persistent-hint
+                            color="secondary"
+                            :rules="fileExpirationTimeRules"
+                        />
                     </v-col>
 
         </v-row>
@@ -35,35 +46,89 @@
 
     import {InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
 
+    import { DateInput } from '@dracul/dayjs-frontend';
+
+    import UserStorageProvider from "../../../providers/UserStorageProvider"
+
 
     export default {
         name: "FileForm",
         mixins: [InputErrorsByProps, RequiredRule],
-        
+        components: { DateInput }, 
+        data() {
+            return {
+                maxFileSize: null,
+                fileExpirationTime: null,
+                fileExpirationTimeInput: null,
+                differenceInDays: null,
+                fileExpirationTimeRules: [
+                    () => {
+                        if (this.differenceInDays < 0) {
+                            return this.$t("media.userStorage.fileExpirationTimeOlderThanToday")
+                        }
+                        else if (this.fileExpirationTime && this.differenceInDays) {
+                            return (this.differenceInDays < this.fileExpirationTime) 
+                            || `${this.$t("media.userStorage.fileExpirationLimitExceeded")} ${this.fileExpirationTime} ${this.$t("media.file.days")}`
+                        } else {
+                            return true
+                        }
+                    }
+                ]
+            }
+        },
         props:{
             value: {
                 type: Object,
                 required: true
             },
         },
+        mounted () {
+            this.findUserStorage();
+        },
         computed: {
            form: {
                 get() { return this.value },
                 set(val) {this.$emit('input', val)}
-            }
+            },
         },
-         watch: {
+        watch: {
             form: {
                 handler(newVal) {
                     this.$emit('input', newVal)
                 },
                 deep: true
+            },
+            'form.expirationDate': {
+                handler(newVal) {
+                    if (newVal) {
+                        const today = new Date();
+                        const expirationDate = new Date(this.form.expirationDate);
+                        this.differenceInDays = ((expirationDate - today)/(1000 * 3600 * 24)).toFixed(0);
+                    }
+                    return null;
+                }
             }
         },
         methods: {
             validate(){
               return this.$refs.form.validate()
-            }
+            },
+            formatDate (date) {
+                if (!date) return null
+
+                const [year, month, day] = date.split('-')
+                return `${day}/${month}/${year}`
+            },
+            findUserStorage() {
+                return UserStorageProvider.findUserStorageByUser().then((res)  => {
+                    if(res.data.userStorageFindByUser && res.data.userStorageFindByUser.maxFileSize){
+                        this.maxFileSize = res.data.userStorageFindByUser.maxFileSize;
+                        this.fileExpirationTime = res.data.userStorageFindByUser.fileExpirationTime;
+                    }
+                }).catch(
+                    err => console.error(err)
+                )
+            },
         }
     }
 </script>

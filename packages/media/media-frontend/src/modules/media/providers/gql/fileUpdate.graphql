@@ -1,5 +1,5 @@
-mutation fileUpdate($id: ID!, $description:String, $tags:[String]){
-    fileUpdate(id: $id, input: {description: $description, tags: $tags}){
+mutation fileUpdate($id: ID!, $description:String, $tags:[String], $expirationDate: String){
+    fileUpdate(id: $id, input: {description: $description, tags: $tags, expirationDate: $expirationDate}){
         id
         filename
         description
@@ -21,6 +21,7 @@ mutation fileUpdate($id: ID!, $description:String, $tags:[String]){
             username
         }
         lastAccess
+        expirationDate
     }
 }
 

@@ -4,7 +4,7 @@ import File from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
-import { updateUserUsedStorage } from './UserStorageService';
+import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 
 const fileUpload = function (user, inputFile, expirationDate) {
 
@@ -33,6 +33,16 @@ const fileUpload = function (user, inputFile, expirationDate) {
       let storeResult = await storeFile(createReadStream(), relativePath, user)
       winston.info("fileUploadAnonymous store result: " + storeResult)
 
+      let expiration = new Date();
+
+      if (!expirationDate) {
+        let userStorage = await findUserStorageByUser(user);
+        const today = new Date();
+        expiration.setDate(today.getDate() + userStorage.fileExpirationTime);
+      } else {
+        expiration = expirationDate
+      }
+
       let url = baseUrl() + relativePath
 
       if (storeResult && storeResult.finish) {
@@ -52,7 +62,7 @@ const fileUpload = function (user, inputFile, expirationDate) {
           size: fileSizeMB,
           url: url,
           createdBy: { user: user.id, username: user.username },
-          expirationDate: expirationDate
+          expirationDate: expiration
         })
         winston.info("fileUploadAnonymous saving file")
         await doc.save()
