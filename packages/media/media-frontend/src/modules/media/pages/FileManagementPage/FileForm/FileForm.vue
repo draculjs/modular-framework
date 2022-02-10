@@ -2,41 +2,41 @@
     <v-form ref="form" autocomplete="off" @submit.prevent="save" >
         <v-row>
            
-                    <v-col cols="12" sm="12">
-                        <v-text-field
-                            prepend-icon="description"
-                            name="filename"
-                            v-model="form.description"
-                            :label="$t('media.file.description')"
-                            :placeholder="$t('media.file.description')"
-                            :error="hasInputErrors('description')"
-                            :error-messages="getInputErrors('description')"
-                            color="secondary"
-                        ></v-text-field>
-                    </v-col>
+            <v-col cols="12" sm="12">
+                <v-text-field
+                    prepend-icon="description"
+                    name="filename"
+                    v-model="form.description"
+                    :label="$t('media.file.description')"
+                    :placeholder="$t('media.file.description')"
+                    :error="hasInputErrors('description')"
+                    :error-messages="getInputErrors('description')"
+                    color="secondary"
+                ></v-text-field>
+            </v-col>
 
-                    <v-col cols="12" md="6" sm="6">
-                        <v-combobox
-                            prepend-icon="loyalty"
-                            v-model="form.tags"
-                            :label="$t('media.file.tags')"
-                            multiple
-                            chips
-                            color="secondary"
-                            item-color="secondary"
-                        ></v-combobox>
-                    </v-col>
+            <v-col cols="12" md="6" sm="6">
+                <v-combobox
+                    prepend-icon="loyalty"
+                    v-model="form.tags"
+                    :label="$t('media.file.tags')"
+                    multiple
+                    chips
+                    color="secondary"
+                    item-color="secondary"
+                ></v-combobox>
+            </v-col>
 
-                    <v-col cols="12" md="6" sm="6" class="mt-3">
-                        <date-input
-                            v-model="form.expirationDate"
-                            :label="$t('media.file.expirationDate')"
-                            prepend-icon="event"
-                            persistent-hint
-                            color="secondary"
-                            :rules="fileExpirationTimeRules"
-                        />
-                    </v-col>
+            <v-col cols="12" md="6" sm="6" class="mt-3">
+                <date-input
+                    v-model="form.expirationDate"
+                    :label="$t('media.file.expirationDate')"
+                    prepend-icon="event"
+                    persistent-hint
+                    color="secondary"
+                    :rules="fileExpirationTimeRules"
+                />
+            </v-col>
 
         </v-row>
     </v-form>
@@ -103,7 +103,7 @@
                     if (newVal) {
                         const today = new Date();
                         const expirationDate = new Date(this.form.expirationDate);
-                        this.differenceInDays = ((expirationDate - today)/(1000 * 3600 * 24)).toFixed(0);
+                        this.differenceInDays = Math.floor((expirationDate - today)/(1000 * 3600 * 24));
                     }
                     return null;
                 }
