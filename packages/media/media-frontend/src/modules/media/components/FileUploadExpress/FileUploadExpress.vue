@@ -34,7 +34,6 @@
       :close-on-content-click="false"
       :close-on-click="false"
       offset-x
-      class="ml-2"
     >
       <template v-slot:activator="{ on, attrs }">
          <v-btn v-on:click="pickFile(); on"
@@ -53,13 +52,22 @@
           </v-btn>
       </template>
       
-      <v-card elevation="0">
-        <v-list elevation="0">
+      <v-card class="mt-2" elevation="0">
+        <v-card-text class="pb-0"> 
+          <v-alert class="mb-0" border="left" type="error" text outlined tile>
+            {{ errorMessage }}
+          </v-alert>
+        </v-card-text>
+        <v-card-actions align="center" justify="center">
+           <v-spacer></v-spacer>
+          <v-btn text color="secondary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
+        </v-card-actions>
+        <!-- <v-list elevation="0">
           <v-list-item elevation="0">
               {{ errorMessage }}
               <v-btn v-on:click="resetUpload" class="ml-2">OK</v-btn>
           </v-list-item>
-        </v-list>
+        </v-list> -->
       </v-card>
       
     </v-menu>
@@ -228,11 +236,11 @@ export default {
     },
     resetUpload() {
       this.showErrorMessage = false;
-      this.state = INITIAL;
+      this.setState(INITIAL);
     },
     setErrorFileExceeded() {
       this.setState(ERROR);
-      this.setErrorMessage(this.$t("media.file.fileSizeExceeded"));
+      this.setErrorMessage(`${this.$t("media.file.fileSizeExceeded")} ${this.maxFileSize} Mb`);
       this.showErrorMessage = true;
     },
     setState(state) {
