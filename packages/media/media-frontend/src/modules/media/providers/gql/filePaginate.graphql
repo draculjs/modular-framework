@@ -24,6 +24,7 @@ query filePaginate($input: FilterPaginateInput){
                 username
             }
             lastAccess
+            expirationDate
         }
     }
 }

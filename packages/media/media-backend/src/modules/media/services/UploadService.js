@@ -4,9 +4,9 @@ import File from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
-import { updateUserUsedStorage } from './UserStorageService';
+import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 
-const fileUpload = function (user, inputFile) {
+const fileUpload = function (user, inputFile, expirationDate) {
 
   return new Promise(async (resolve, rejects) => {
     try {
@@ -21,9 +21,9 @@ const fileUpload = function (user, inputFile) {
 
       const parseFileName = path.parse(filename);
       const extension = parseFileName.ext
-      const name = parseFileName.name.replace(/#/g,"")
-      const hash =   '-' + randomString(6)
-      const finalFileName =  name + hash + extension
+      const name = parseFileName.name.replace(/#/g, "")
+      const hash = '-' + randomString(6)
+      const finalFileName = name + hash + extension
       const year = new Date().getFullYear().toString()
       const month = (new Date().getMonth() + 1).toString()
       const relativePath = path.join("media", "files", user.username, year, month, finalFileName)
@@ -32,6 +32,16 @@ const fileUpload = function (user, inputFile) {
       //Store
       let storeResult = await storeFile(createReadStream(), relativePath, user)
       winston.info("fileUploadAnonymous store result: " + storeResult)
+
+      let expiration = new Date();
+
+      if (!expirationDate) {
+        let userStorage = await findUserStorageByUser(user);
+        const today = new Date();
+        expiration.setDate(today.getDate() + userStorage.fileExpirationTime);
+      } else {
+        expiration = expirationDate
+      }
 
       let url = baseUrl() + relativePath
 
@@ -51,7 +61,8 @@ const fileUpload = function (user, inputFile) {
           absolutePath: absolutePath,
           size: fileSizeMB,
           url: url,
-          createdBy: { user: user.id, username: user.username }
+          createdBy: { user: user.id, username: user.username },
+          expirationDate: expiration
         })
         winston.info("fileUploadAnonymous saving file")
         await doc.save()

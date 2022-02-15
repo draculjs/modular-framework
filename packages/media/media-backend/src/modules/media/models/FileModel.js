@@ -22,7 +22,8 @@ const FileSchema = new Schema({
     createdBy: {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
         username: { type: String, required: true }
-    }
+    },
+    expirationDate: { type: Date, required: false },
 
 
 });

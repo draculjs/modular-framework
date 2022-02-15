@@ -2,7 +2,7 @@ import File from './../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
 import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../../media/permissions/File";
 import dayjs from 'dayjs'
-import { updateUserUsedStorage } from './UserStorageService';
+import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 
@@ -121,13 +121,12 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 }
 
 
-export const updateFile = async function (authUser, id, { description, tags }, permissionType, userId) {
+export const updateFile = async function (authUser, id, input, permissionType, userId) {
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, userId) },
-            { description, tags },
+            { description, tags, expirationDate },
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
-
                 if (error) {
                     if (error.name == "ValidationError") {
                         rejects(new UserInputError(error.message, { inputErrors: error.errors }));
@@ -141,6 +140,45 @@ export const updateFile = async function (authUser, id, { description, tags }, p
                 }
             })
     })
+}
+
+// Rest service
+export const updateFileRest = function (id, user, permissionType, input) {
+    return new Promise(async (resolve, reject) => {
+
+        let updatedFile = purgeInput(input);
+
+        if (!input || Object.entries(input).length == 0) {
+            throw reject({ message: "File content can not be empty", status: 400 })
+        }
+
+        let userStorage = await findUserStorageByUser(user)
+
+        let timeDiffExpirationDate = validateExpirationDate(input.expirationDate)
+
+        if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
+            throw reject({
+                message: `File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`,
+                status: 403
+            })
+        }
+
+        // Find file and update it with the request body
+        File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, user.id) },
+            { $set: updatedFile },
+            { new: true })
+            .then(file => {
+                if (!file) {
+                    throw reject({ message: `file not found with id ${id}`, status: 404 })
+                }
+                resolve(file);
+            }).catch(err => {
+                if (err.kind === 'ObjectId') {
+                    throw reject({ message: `file not found with id ${id}`, status: 404 })
+                }
+                throw reject({ message: `Error updating file with id ${id}. Error: ${err}`, status: 500 })
+            });
+    });
 }
 
 export const updateByRelativePath = function (relativePath) {
@@ -280,4 +318,21 @@ function filterByFileOwner(permissionType, userId) {
             break;
     }
     return query;
+}
+
+function validateExpirationDate(expirationTime) {
+    const today = new Date();
+    const expirationDate = new Date(expirationTime);
+    if (expirationDate < today)
+        return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(0);
+}
+
+function purgeInput(input) {
+    let updatedFile = {};
+    for (const key in input) {
+        if (key == 'description' || key == 'expirationDate' || key == 'tags') {
+            updatedFile[key] = input[key];
+        }
+    }
+    return updatedFile;
 }

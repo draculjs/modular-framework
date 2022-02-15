@@ -101,7 +101,10 @@ export default {
     },
     getSizeInMegaBytes() {
       return this.file.size.toFixed(5) + ' Megabyte'
-    }
+    },
+    computedDateFormatted () {
+      return this.formatDate(this.date)
+    },
   },
   methods: {
     copyToClipboard() {
@@ -118,6 +121,18 @@ export default {
       /* unselect the range */
       toCopy.setAttribute('type', 'hidden')
       window.getSelection().removeAllRanges()
+    },
+    formatDate (date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+    parseDate (date) {
+      if (!date) return null
+
+      const [day, month, year] = date.split('-')
+      return `${day}/${month}/${year}`
     },
 
   }
