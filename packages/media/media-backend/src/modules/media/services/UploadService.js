@@ -35,13 +35,13 @@ const fileUpload = function (user, inputFile, expirationDate) {
 
       let expiration = new Date();
 
-      if (!expirationDate) {
-        let userStorage = await findUserStorageByUser(user);
-        const today = new Date();
-        expiration.setDate(today.getDate() + userStorage.fileExpirationTime);
-      } else {
-        expiration = expirationDate
-      }
+      // if (!expirationDate) {
+      //   let userStorage = await findUserStorageByUser(user);
+      //   const today = new Date();
+      //   expiration.setDate(today.getDate() + userStorage.fileExpirationTime);
+      // } else {
+      //   expiration = expirationDate
+      // }
 
       let url = baseUrl() + relativePath
 
@@ -62,7 +62,7 @@ const fileUpload = function (user, inputFile, expirationDate) {
           size: fileSizeMB,
           url: url,
           createdBy: { user: user.id, username: user.username },
-          expirationDate: expiration
+          expirationDate: expirationDate
         })
         winston.info("fileUploadAnonymous saving file")
         await doc.save()
