@@ -184,7 +184,7 @@ export const updateFileRest = function (id, user, permissionType, input) {
         let userStorage = await findUserStorageByUser(user)
 
         let timeDiffExpirationDate = validateExpirationDate(input.expirationDate)
-        console.log(timeDiffExpirationDate)
+
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
             throw reject({
                 message: `File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`,

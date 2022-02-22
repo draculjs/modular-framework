@@ -33,15 +33,21 @@ const fileUpload = function (user, inputFile, expirationDate) {
       let storeResult = await storeFile(createReadStream(), relativePath, user)
       winston.info("fileUploadAnonymous store result: " + storeResult)
 
-      let expiration = new Date();
+      if (expirationDate) {
+        let timeDiffExpirationDate = validateExpirationDate(expirationDate)
 
-      // if (!expirationDate) {
-      //   let userStorage = await findUserStorageByUser(user);
-      //   const today = new Date();
-      //   expiration.setDate(today.getDate() + userStorage.fileExpirationTime);
-      // } else {
-      //   expiration = expirationDate
-      // }
+        if (!timeDiffExpirationDate) {
+          winston.error("Expiration date must be older than current date")
+          rejects(new Error("Expiration date must be older than current date"))
+        }
+
+        let userStorage = await findUserStorageByUser(user)
+
+        if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
+          winston.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
+          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
+        }
+      }
 
       let url = baseUrl() + relativePath
 
@@ -82,6 +88,16 @@ const fileUpload = function (user, inputFile, expirationDate) {
   })
 
 }
+
+function validateExpirationDate(expirationTime) {
+  const today = new Date();
+  const expirationDate = new Date(expirationTime);
+  if (expirationDate > today) {
+    return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
+  }
+  return null;
+}
+
 
 export { fileUpload }
 export default fileUpload
