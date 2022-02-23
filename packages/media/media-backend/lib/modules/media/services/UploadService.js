@@ -21,7 +21,7 @@ var _UserStorageService = require("./UserStorageService");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fileUpload = function (user, inputFile) {
+const fileUpload = function (user, inputFile, expirationDate) {
   return new Promise(async (resolve, rejects) => {
     try {
       if (!user) {
@@ -54,6 +54,16 @@ const fileUpload = function (user, inputFile) {
 
       _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: " + storeResult);
 
+      let expiration = new Date();
+
+      if (!expirationDate) {
+        let userStorage = await (0, _UserStorageService.findUserStorageByUser)(user);
+        const today = new Date();
+        expiration.setDate(today.getDate() + userStorage.fileExpirationTime);
+      } else {
+        expiration = expirationDate;
+      }
+
       let url = (0, _baseUrl.default)() + relativePath;
 
       if (storeResult && storeResult.finish) {
@@ -72,7 +82,8 @@ const fileUpload = function (user, inputFile) {
           createdBy: {
             user: user.id,
             username: user.username
-          }
+          },
+          expirationDate: expiration
         });
 
         _loggerBackend.DefaultLogger.info("fileUploadAnonymous saving file");

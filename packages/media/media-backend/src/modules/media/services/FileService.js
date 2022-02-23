@@ -64,7 +64,7 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
                         break
                     case 'dateTo':
                         if (value) {
-                            let dayAfter = dayjs(value).isValid() && dayjs(value)
+                            let dayAfter = dayjs(value).isValid() && dayjs(value).add(1, 'day')
                             if (qsFilter.createdAt) {
                                 qsFilter.createdAt = { ...qsFilter.createdAt, [operator]: dayAfter.$d }
                             } else {
