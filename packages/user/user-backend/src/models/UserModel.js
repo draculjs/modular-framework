@@ -46,7 +46,15 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Group',
         required: false,
-    }]
+    }],
+    refreshToken: {
+        token: {
+          type: String,
+        },
+        expiryDate: {
+          type: Date
+        }
+    }
 }, {timestamps: true});
 
 UserSchema.set('toJSON', {getters: true});

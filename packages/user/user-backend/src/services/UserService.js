@@ -72,7 +72,7 @@ export const createUser = async function ({username, password, name, email, phon
 }
 
 
-export const updateUser = function (id, {username, name, email, phone, role, groups, active}, actionBy = null) {
+export const updateUser = function (id, {username, name, email, phone, role, groups, active, refreshToken}, actionBy = null) {
 
     return new Promise(async (resolve, reject) => {
         let updatedAt = Date.now()
@@ -89,7 +89,7 @@ export const updateUser = function (id, {username, name, email, phone, role, gro
         }
 
         User.findOneAndUpdate(
-            {_id: id}, {username, name, email, phone, role, groups, active, updatedAt}, {
+            {_id: id}, {username, name, email, phone, role, groups, active, updatedAt, refreshToken}, {
                 new: true,
                 runValidators: true,
                 context: 'query'
@@ -383,5 +383,19 @@ export const setUsersGroups = function (group, users) {
             reject(e)
         })
 
+    })
+}
+
+export const findUserByRefreshToken = function (refreshToken) {
+    return new Promise((resolve, reject) => {
+        User.findOne({"refreshToken.token": refreshToken}).populate('role').populate('groups').exec((err, res) => {
+            if (err) {
+                winston.error("UserService.findUserByRefreshToken ", err)
+                reject(err)
+            } else {
+                winston.debug('UserService.findUserByRefreshToken successful')
+                resolve(res)
+            }
+        })
     })
 }
