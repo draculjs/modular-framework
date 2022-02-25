@@ -149,8 +149,8 @@ const generateRefreshToken = () => {
 }
 
 const validateUserForRefresh = (user) => {
-    if (!user.active) return "Inactive user"
-    if (!user.refreshToken.token) return "User refresh token is undefined"
-    if (user.refreshToken.expiryDate.getTime() < new Date().getTime()) return "Token is expired"
+    if (!user.active) throw new Error("Inactive user")
+    if (!user.refreshToken.token) throw new Error("User refresh token is undefined")
+    if (user.refreshToken.expiryDate.getTime() < new Date().getTime()) throw new Error("Token is expired")
     return true
 }
