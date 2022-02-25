@@ -48,12 +48,16 @@ const UserSchema = new mongoose.Schema({
         required: false,
     }],
     refreshToken: {
-        token: {
-          type: String,
-        },
-        expiryDate: {
-          type: Date
-        }
+        type: [{
+            token: {
+            type: String,
+            },
+            expiryDate: {
+            type: Date
+            }
+        }],
+        default: [],
+        _id: false
     }
 }, {timestamps: true});
 

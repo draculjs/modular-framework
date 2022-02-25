@@ -19,7 +19,7 @@ export default {
             return new Promise((resolve, reject) => {
 
                 auth({username, password}, req)
-                    .then(r => resolve({token: r.token}))
+                    .then(r => resolve({token: r.token, refreshToken: r.refreshToken}))
                     .catch(err => {
                         console.warn('Auth error: ', err.message)
                         reject(new AuthenticationError("BadCredentials"))
@@ -44,9 +44,9 @@ export default {
 
 
         },
-        refreshToken: (_, {refreshToken}, {req}) => {
+        refreshToken: (_, {token, expiryDate}, {req}) => {
             return new Promise((resolve, reject) => {
-                refreshAuth(refreshToken, req)
+                refreshAuth(token, expiryDate, req)
                     .then(r => resolve({token: r}))
                     .catch(err => {
                         console.warn('Auth error: ', err.message)

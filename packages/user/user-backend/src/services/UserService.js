@@ -386,9 +386,12 @@ export const setUsersGroups = function (group, users) {
     })
 }
 
-export const findUserByRefreshToken = function (refreshToken) {
+export const findUserByRefreshToken = function (refreshToken, expiryDate) {
+    let modifiedExpiryDate = new Date(expiryDate).toISOString()
+    let userRefreshToken= {token: refreshToken, expiryDate: modifiedExpiryDate}
+
     return new Promise((resolve, reject) => {
-        User.findOne({"refreshToken.token": refreshToken}).populate('role').populate('groups').exec((err, res) => {
+        User.findOne({"refreshToken": userRefreshToken}).populate('role').populate('groups').exec((err, res) => {
             if (err) {
                 winston.error("UserService.findUserByRefreshToken ", err)
                 reject(err)

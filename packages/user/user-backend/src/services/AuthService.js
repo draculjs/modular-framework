@@ -43,11 +43,15 @@ export const auth = async function ({username, password}, req) {
                     createSession(user, req).then(async session => {
                         let { token, payload, options } = generateToken(user, session)
                         let userToUpdate = await findUser(user.id)
-                        userToUpdate.refreshToken = generateRefreshToken()
+                        let refreshToken = generateRefreshToken()
+
+                        userToUpdate.refreshToken = userToUpdate.refreshToken.map((token)=>{
+                            if(token.expiryDate > Date.now()) return token
+                        })
+                        userToUpdate.refreshToken = userToUpdate.refreshToken.push(refreshToken)
                         updateUser(user.id, userToUpdate)
 
                         winston.info('AuthService.auth successful by ' + user.username)
-                        let refreshToken = userToUpdate.refreshToken.token
                         resolve({token, payload, options, refreshToken})
 
                     }).catch(err => {
@@ -97,9 +101,9 @@ export const apiKey = function (userId, req) {
     })
 }
 
-export const refreshAuth = function(refreshToken, req) {
+export const refreshAuth = function(refreshToken, expiryDate, req) {
     return new Promise(async (resolve, reject) => {
-        let user = await findUserByRefreshToken(refreshToken)
+        let user = await findUserByRefreshToken(refreshToken, expiryDate)
 
         if (validateUserForRefresh(user)) {
             createSession(user, req).then(async session => {
@@ -131,8 +135,8 @@ const generateToken = (user, session) => {
 
 const generateRefreshToken = () => {
     let expiredAt = new Date();
-    expiredAt.setSeconds(
-        process.env.REFRESHTOKEN_EXPIRED || expiredAt.getSeconds() + 3600
+    expiredAt.setHours(
+        process.env.REFRESHTOKEN_EXPIRED ? expiredAt.getHours() + process.env.REFRESHTOKEN_EXPIRED : expiredAt.getHours() + 24
     );
     let uuidToken = uuidv4()
 

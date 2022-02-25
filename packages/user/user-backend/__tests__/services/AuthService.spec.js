@@ -35,7 +35,7 @@ describe("UserService", () => {
 
         auth(user, null).then((res) => {setTimeout(async () => {
           let refreshToken = res.refreshToken
-          let newToken = await AuthResolvers.Mutation.refreshToken(null, {refreshToken}, {req: null})
+          let newToken = await AuthResolvers.Mutation.refreshToken(null, {token:refreshToken.token, expiryDate:refreshToken.expiryDate}, {req: null})
 
           expect(newToken).not.toBe({token: res.token})
           done()
