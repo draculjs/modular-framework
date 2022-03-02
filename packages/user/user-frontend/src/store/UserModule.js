@@ -56,7 +56,7 @@ export default {
 
                 let dateNow = new Date();
                 let dateToken = new Date(payload.exp * 1000)
-                if (dateNow < dateToken) {
+                if (dateNow > dateToken) {
                     return true
                 }
 
