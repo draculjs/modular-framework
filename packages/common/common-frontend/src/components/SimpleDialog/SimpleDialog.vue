@@ -4,7 +4,7 @@
       v-model="value"
       :width="width"
       :persistent="persistent"
-  >
+a   >
     <v-card>
       <toolbar-dialog
           :danger="danger"
