@@ -5,6 +5,7 @@ import jsonwebtoken from "jsonwebtoken";
 import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername, updateUser} from "./UserService";
 import {decodePassword} from "./PasswordService"
+import dayjs from 'dayjs'
 
 const {v4: uuidv4} = require('uuid');
 
@@ -43,24 +44,25 @@ export const auth = async function ({username, password}, req) {
             if (user) {
                 let decodedPassword = decodePassword(password)
                 if (bcryptjs.compareSync(decodedPassword, user.password)) {
+
                     createSession(user, req).then(async session => {
 
-                        //TOKEN
+                        //GENERAMOS ACCESS TOKEN
                         let {token, payload, options} = generateToken(user, session.id)
 
-                        //REFRESH TOKEN
-                        let refreshToken = generateRefreshToken(session.id)
-                        //TODO recorrer y eliminar refreshToken expirados
-                        /*
-                        let now = new Date()
-                        for(let rf of user.refreshToken){
-                            let expiryDate = new Date(parseInt(rf.expiryDate))
-                            if(now > expiryDate){
-                                user.refreshToken.pull(rf)
-                            }
-                        }
-                        */
 
+                        //ELIMINAMOS REFRESHTOKENS CADUCADOS
+                        let now = new Date()
+                        let refreshTokenToDelete = user.refreshToken.filter(rf => {
+                            let expiryDate = new Date(rf.expiryDate)
+                            return (now > expiryDate) ? true: false
+                        })
+                        for(let rf of refreshTokenToDelete){
+                            user.refreshToken.pull(rf)
+                        }
+
+                        //AGREGAMOS NUEVO REFRESH TOKEN
+                        let refreshToken = generateRefreshToken(session.id)
                         user.refreshToken.push(refreshToken)
                         await user.save()
 
@@ -125,7 +127,7 @@ export const refreshAuth = function (refreshTokenId) {
         let sessionId
         for (let refreshToken of user.refreshToken) {
             if (refreshToken.id === refreshTokenId) {
-                sessionId = refreshTokenId.sessionId
+                sessionId = refreshToken.sessionId
                 break
             }
         }
@@ -157,16 +159,25 @@ const generateToken = (user, sessionId) => {
     return {token, payload, options}
 }
 
-const generateRefreshToken = (sessionId) => {
-    let expiredAt = new Date();
-    const DEFAULT_REFRESHTOKEN_EXPIRED_IN = 24
-    expiredAt.setHours(
-        process.env.JWT_REFRESHTOKEN_EXPIRED_IN ? expiredAt.getHours() + parseInt(process.env.JWT_REFRESHTOKEN_EXPIRED_IN) : expiredAt.getHours() + DEFAULT_REFRESHTOKEN_EXPIRED_IN
-    );
+export const generateRefreshToken = (sessionId) => {
+
+    const DEFAULT_REFRESHTOKEN_EXPIRED_IN = '24h'
+
+    const duration = process.env.JWT_REFRESHTOKEN_EXPIRED_IN || DEFAULT_REFRESHTOKEN_EXPIRED_IN
+
+
+    if (!/[0-9]+[dwMyhms(ms)]/.test(duration)) {
+        throw new Error("JWT_REFRESHTOKEN_EXPIRED_IN invalid format /[0-9]+[dwMyhms(ms)/")
+    }
+
+    let number = duration.match(/[0-9]+/)[0]
+    let unit = duration.match(/[dwMyhms(ms)]/)[0]
+
+    let expiredAt = dayjs().add(number, unit)
 
     let refreshToken = {
         id: uuidv4(),
-        expiryDate: expiredAt.getTime(),
+        expiryDate: expiredAt.valueOf(),
         sessionId: sessionId
     }
 

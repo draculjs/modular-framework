@@ -6,11 +6,12 @@ export default {
     state: {
         access_token: null,
         refresh_token: {
-            token: null,
+            id: null,
             expiryDate: null
         },
         me: null,
         avatarurl: null,
+        now: new Date()
     },
     getters: {
         me: (state) => {
@@ -54,9 +55,9 @@ export default {
                     return true
                 }
 
-                let dateNow = new Date();
                 let dateToken = new Date(payload.exp * 1000)
-                if (dateNow > dateToken) {
+                console.log("now", state.now, "dateToken", dateToken)
+                if (state.now > dateToken) {
                     return true
                 }
 
@@ -77,7 +78,7 @@ export default {
             let dateNow = new Date();
             let expiryDate = new Date(parseInt(state.refresh_token.expiryDate))
 
-            if (dateNow > expiryDate) {
+            if (state.now > expiryDate) {
                 return true
             }
 
@@ -138,7 +139,7 @@ export default {
             commit('avatarUpdate', null)
             commit('setMe', null)
             commit('setAccessToken', null)
-            commit('setRefreshToken', {token: null, expiryDate: null})
+            commit('setRefreshToken', {id: null, expiryDate: null})
         },
 
         verifyToken({commit, dispatch}, token) {
@@ -174,37 +175,54 @@ export default {
 
         validateSession: ({dispatch, getters, commit}) => {
             return new Promise((resolve) => {
-                if (getters.tokenIsExpired === true && getters.refreshTokenIsExpired === false) {
-                    //Puedo Renovar
-                    dispatch('renewToken')
-                        .then(token => {
-                            commit('setAccessToken', token)
-                            resolve(true)
-                        })
-                        .catch(e => {
-                            console.log("Error on renewToken", e)
-                            dispatch('logout')
-                        })
-                }else if (getters.tokenIsExpired === false){
+                commit('refreshNow')
+                console.log("VALIDATE SESSION")
+                if (getters.tokenIsExpired === true) {
+
+                    if (getters.refreshTokenIsExpired === false) {
+                        console.log("TOKEN EXPIRADO, REFRESH TOKEN OK, PROCEDO A RENOVAR")
+                        //Puedo Renovar
+                        dispatch('renewToken')
+                            .then(token => {
+                                commit('setAccessToken', token)
+                                resolve(true)
+                            })
+                            .catch(e => {
+                                console.log("Error on renewToken", e)
+                                dispatch('logout')
+                            })
+                    } else {
+                        console.log("REFRESH TOKEN EXPIRADO => LOGOUT")
+                        dispatch('logout')
+                        resolve(false)
+                    }
+
+
+                } else {
+                    console.log("TOKEN OK")
                     resolve(true)
-                }else if(getters.refreshTokenIsExpired === true){
-                    resolve(false)
-                    dispatch('logout')
                 }
+
+
             })
         },
 
         renewToken: ({getters}) => {
             return new Promise((resolve, reject) => {
-                let {id} = getters.getRefreshToken
-                AuthProvider.refreshToken(id)
+                console.log("RENOVADO TOKEEENNN")
+                console.log("REGRESH TOKEN ID", getters.getRefreshToken.id)
+                AuthProvider.refreshToken(getters.getRefreshToken.id)
                     .then(r => {
                         let token = r.data.refreshToken.token
+                        console.log("RENOVADO CON EXITO", token)
                         resolve(token)
                     })
                     .catch(e => {
+                        console.error("RENOVADO token", e)
                         reject(e)
-                    })
+                    }).finally(() => {
+                    console.log("RENOVADO TOKEN FINALLY")
+                })
             })
 
         }
@@ -214,17 +232,16 @@ export default {
     mutations: {
         setAccessToken(state, access_token) {
             state.access_token = access_token
-        }
-        ,
+        },
         setRefreshToken(state, refresh_token) {
-            state.refresh_token.token = refresh_token.token
-            state.refresh_token.expiryDate = refresh_token.expiryDate
-        }
-        ,
+            state.refresh_token = refresh_token
+        },
         setMe(state, me) {
             state.me = me
-        }
-        ,
+        },
+        refreshNow(state) {
+            state.now = new Date()
+        },
         avatarUpdate(state, avatarurl) {
             state.avatarurl = avatarurl
             if (state.me != null) {

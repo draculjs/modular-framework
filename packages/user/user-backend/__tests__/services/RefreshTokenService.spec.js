@@ -6,11 +6,11 @@ import {initPermissions,initAdminRole,initRootUser} from "../../src/services/Ini
 
 //Service to Test
 import {
-    auth
+    auth, generateRefreshToken
 } from "../../src/services/AuthService";
 import {encodePassword} from "../../src/services/PasswordService"
 
-import {findUserByRefreshToken, findUsers} from "../../src/services/UserService";
+import {findUserByRefreshToken, findUserByUsername, findUsers} from "../../src/services/UserService";
 
 describe("RefreshTokenService", () => {
 
@@ -46,6 +46,44 @@ describe("RefreshTokenService", () => {
     }, 5000);
 
 
+    test('generateRefreshToken',  async (done) => {
+
+        //AUTH
+        let user = {username: 'root', password: 'root.123'}
+        user.password = encodePassword(user.password)
+        let authResult = await auth(user, null)
+
+        console.log("authResult",authResult)
+
+        let refreshToken = generateRefreshToken(authResult.payload.idSession)
+        expect(refreshToken).not.toBe(null)
+        done()
+    })
+
+
+    test('Remove old refresh tokens',  async (done) => {
+
+        //AUTH
+        process.env.JWT_REFRESHTOKEN_EXPIRED_IN = '2s'
+        let user = {username: 'root', password: 'root.123'}
+        user.password = encodePassword(user.password)
+        await auth(user, null)
+        await auth(user, null)
+        await auth(user, null)
+
+        let userRoot = await findUserByUsername('root')
+        expect(userRoot.refreshToken.length === 3)
+
+        setTimeout(async ()=>{
+            await auth(user, null)
+
+            let userRoot = await findUserByUsername('root')
+            expect(userRoot.refreshToken.length === 1)
+            done()
+        },4000)
+
+
+    })
 
 })
 

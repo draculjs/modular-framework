@@ -1,4 +1,4 @@
-mutation ( $refreshTokenId: String!){
+mutation refreshToken ( $refreshTokenId: String!){
     refreshToken(refreshTokenId: $refreshTokenId){
         token
     }
