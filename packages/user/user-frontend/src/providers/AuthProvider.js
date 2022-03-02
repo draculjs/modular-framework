@@ -19,13 +19,10 @@ class AuthProvider {
         })
     }
 
-    refreshToken(token, expiryDate) {
+    refreshToken(refreshTokenId) {
         return this.gqlc.mutate({
             mutation: require('./gql/refreshToken.graphql'),
-            variables: {
-                token: token,
-                expiryDate: expiryDate
-            }
+            variables: {refreshTokenId}
         })
     }
 

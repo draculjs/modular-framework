@@ -2,7 +2,7 @@
 const mongoHandler = require('../utils/mongo-handler');
 
 //Init DB
-import {initPermissions,initAdminRole,initRootUser} from "../../src/services/InitService";
+import {initPermissions, initAdminRole, initRootUser} from "../../src/services/InitService";
 
 //Service to Test
 
@@ -33,13 +33,19 @@ describe("UserService", () => {
         let user = {username: 'root', password: 'root.123'}
         user.password = encodePassword(user.password)
 
-        auth(user, null).then((res) => {setTimeout(async () => {
-          let refreshToken = res.refreshToken
-          let newToken = await AuthResolvers.Mutation.refreshToken(null, {token:refreshToken.token, expiryDate:refreshToken.expiryDate}, {req: null})
+        auth(user, null).then((res) => {
 
-          expect(newToken).not.toBe({token: res.token})
-          done()
-        }, 2000)})
+            setTimeout(async () => {
+                let refreshToken = res.refreshToken
+                let newToken = await AuthResolvers.Mutation.refreshToken(null,
+                    {
+                        refreshTokenId: refreshToken.id,
+                    }, {req: null})
+
+                expect(newToken.token).not.toBe( res.token)
+                done()
+            }, 2000)
+        })
 
     }, 5000);
 

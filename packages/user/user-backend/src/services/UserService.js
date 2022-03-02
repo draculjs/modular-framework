@@ -6,7 +6,7 @@ import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-express'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
-import {findRole, findRoleByName} from "./RoleService";
+import {findRoleByName} from "./RoleService";
 
 const EventEmitter = require('events');
 
@@ -386,12 +386,15 @@ export const setUsersGroups = function (group, users) {
     })
 }
 
-export const findUserByRefreshToken = function (refreshToken, expiryDate) {
-    let modifiedExpiryDate = new Date(expiryDate).toISOString()
-    let userRefreshToken= {token: refreshToken, expiryDate: modifiedExpiryDate}
+export const findUserByRefreshToken = function (id) {
 
-    return new Promise((resolve, reject) => {
-        User.findOne({"refreshToken": userRefreshToken}).populate('role').populate('groups').exec((err, res) => {
+    return new Promise(async (resolve, reject) => {
+        let now = new Date()
+        User.findOne({
+            active: true,
+            'refreshToken.id': id,
+            'refreshToken.expiryDate': {$gte: now}
+        }).populate('role').populate('groups').exec((err, res) => {
             if (err) {
                 winston.error("UserService.findUserByRefreshToken ", err)
                 reject(err)

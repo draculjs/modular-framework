@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
         validate: {
             validator: function (value) {
                 let r = /[0-9]+/;
-                return value ? r.test(value): true;
+                return value ? r.test(value) : true;
             },
             message: "Telefono no tiene un formato valido"
         }
@@ -48,14 +48,13 @@ const UserSchema = new mongoose.Schema({
         required: false,
     }],
     refreshToken: {
-        type: [{
-            token: {
-            type: String,
-            },
-            expiryDate: {
-            type: Date
+        type: [
+            {
+                id: {type: String},
+                expiryDate: {type: Date},
+                sessionId: {type: String},
             }
-        }],
+        ],
         default: [],
         _id: false
     }

@@ -18,6 +18,6 @@ type Query {
 
 type Mutation {
     auth(username: String!, password:String!): AuthResponse!
-    refreshToken(token: String!, expiryDate: String!): RefreshResponse!
+    refreshToken(refreshTokenId: String!): RefreshResponse!
     apikey(userid: ID!): AuthResponse!
 }

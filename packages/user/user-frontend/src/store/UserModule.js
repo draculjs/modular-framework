@@ -1,12 +1,14 @@
 import AuthProvider from '../providers/AuthProvider'
 import jwt_decode from 'jwt-decode'
 import ClientError from '../errors/ClientError'
+import store from "@/store/index";
+import authProvider from "../providers/AuthProvider";
 
 export default {
     state: {
         access_token: null,
         refresh_token: {
-            token:null,
+            token: null,
             expiryDate: null
         },
         me: null,
@@ -41,6 +43,49 @@ export default {
             if (!state.me) return false
             return state.me.role.permissions.includes(permission)
         },
+        tokenIsExpired: (state) => {
+            try {
+
+                if (!state.access_token) {
+                    return true
+                }
+
+                let payload = jwt_decode(state.access_token)
+
+                if (!payload.exp) {
+                    return true
+                }
+
+                let dateNow = new Date();
+                let dateToken = new Date(payload.exp * 1000)
+                if (dateNow < dateToken) {
+                    return true
+                }
+
+                return false
+
+            } catch (err) {
+                console.error(err)
+                return true
+            }
+
+        },
+        refreshTokenIsExpired: (state) => {
+
+            if (!state.refresh_token || !state.refresh_token.expiryDate) {
+                return true
+            }
+
+            let dateNow = new Date();
+            let expiryDate = new Date(parseInt(state.refresh_token.expiryDate))
+
+            if (dateNow > expiryDate) {
+                return true
+            }
+
+            return false
+
+        }
     },
     actions: {
         fetchMe({commit}) {
@@ -121,31 +166,67 @@ export default {
             return false
         },
 
-        checkAuth: ({state, dispatch}) => {
-            if (state.refresh_token.token) {
-                let dateNow = new Date();
-                let dateToken = state.refresh_token.expiryDate
-                console.log("now", dateNow, "expiry", dateToken)
-                if (dateNow > dateToken) {
-                    dispatch('logout')
-                } else if (state.me === null) {
-                    dispatch('fetchMe')
-                }
+        checkAuth: ({state, dispatch, getters}) => {
+            if (getters.refreshTokenIsExpired) {
+                dispatch('logout')
+            } else if (state.me === null) {
+                dispatch('fetchMe')
             }
         },
 
+        validateSession: ({dispatch, getters, commit}) => {
+            return new Promise((resolve) => {
+                if (getters.tokenIsExpired === true && getters.refreshTokenIsExpired === false) {
+                    //Puedo Renovar
+                    dispatch('renewToken')
+                        .then(token => {
+                            commit('setAccessToken', token)
+                            resolve(true)
+                        })
+                        .catch(e => {
+                            console.log("Error on renewToken", e)
+                            dispatch('logout')
+                        })
+                }else if (getters.tokenIsExpired === false){
+                    resolve(true)
+                }else if(getters.refreshTokenIsExpired === true){
+                    resolve(false)
+                    dispatch('logout')
+                }
+            })
+        },
+
+        renewToken: ({getters}) => {
+            return new Promise((resolve, reject) => {
+                let {id} = getters.getRefreshToken
+                AuthProvider.refreshToken(id)
+                    .then(r => {
+                        let token = r.data.refreshToken.token
+                        resolve(token)
+                    })
+                    .catch(e => {
+                        reject(e)
+                    })
+            })
+
+        }
+
     },
+
     mutations: {
         setAccessToken(state, access_token) {
             state.access_token = access_token
-        },
+        }
+        ,
         setRefreshToken(state, refresh_token) {
             state.refresh_token.token = refresh_token.token
             state.refresh_token.expiryDate = refresh_token.expiryDate
-        },
+        }
+        ,
         setMe(state, me) {
             state.me = me
-        },
+        }
+        ,
         avatarUpdate(state, avatarurl) {
             state.avatarurl = avatarurl
             if (state.me != null) {

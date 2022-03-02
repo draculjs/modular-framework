@@ -44,9 +44,9 @@ export default {
 
 
         },
-        refreshToken: (_, {token, expiryDate}, {req}) => {
+        refreshToken: (_, {refreshTokenId}, {req}) => {
             return new Promise((resolve, reject) => {
-                refreshAuth(token, expiryDate, req)
+                refreshAuth(refreshTokenId)
                     .then(r => resolve({token: r}))
                     .catch(err => {
                         console.warn('Auth error: ', err.message)

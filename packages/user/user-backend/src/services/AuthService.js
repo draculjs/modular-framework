@@ -5,10 +5,11 @@ import jsonwebtoken from "jsonwebtoken";
 import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername, updateUser} from "./UserService";
 import {decodePassword} from "./PasswordService"
-const { v4: uuidv4 } = require('uuid');
+
+const {v4: uuidv4} = require('uuid');
 
 
-export const tokenSignPayload = function (user, session) {
+export const tokenSignPayload = function (user, sessionId) {
     return {
         id: user.id,
         //name: user.name,
@@ -16,9 +17,11 @@ export const tokenSignPayload = function (user, session) {
         //email: user.email,
         //phone: user.phone,
         role: {id: user.role.id, name: user.role.name, childRoles: user.role.childRoles},
-        groups: user.groups.map(g => {id: g.id}),
+        groups: user.groups.map(g => {
+            id: g.id
+        }),
         //avatarurl: user.avatarurl,
-        idSession: session.id
+        idSession: sessionId
     };
 }
 
@@ -41,15 +44,26 @@ export const auth = async function ({username, password}, req) {
                 let decodedPassword = decodePassword(password)
                 if (bcryptjs.compareSync(decodedPassword, user.password)) {
                     createSession(user, req).then(async session => {
-                        let { token, payload, options } = generateToken(user, session)
-                        let userToUpdate = await findUser(user.id)
-                        let refreshToken = generateRefreshToken()
 
-                        userToUpdate.refreshToken = userToUpdate.refreshToken.map((token)=>{
-                            if(token.expiryDate > Date.now()) return token
-                        })
-                        userToUpdate.refreshToken = userToUpdate.refreshToken.push(refreshToken)
-                        updateUser(user.id, userToUpdate)
+                        //TOKEN
+                        let {token, payload, options} = generateToken(user, session.id)
+
+                        //REFRESH TOKEN
+                        let refreshToken = generateRefreshToken(session.id)
+                        //TODO recorrer y eliminar refreshToken expirados
+                        /*
+                        let now = new Date()
+                        for(let rf of user.refreshToken){
+                            let expiryDate = new Date(parseInt(rf.expiryDate))
+                            if(now > expiryDate){
+                                user.refreshToken.pull(rf)
+                            }
+                        }
+                        */
+
+                        user.refreshToken.push(refreshToken)
+                        await user.save()
+
 
                         winston.info('AuthService.auth successful by ' + user.username)
                         resolve({token, payload, options, refreshToken})
@@ -101,23 +115,33 @@ export const apiKey = function (userId, req) {
     })
 }
 
-export const refreshAuth = function(refreshToken, expiryDate, req) {
-    return new Promise(async (resolve, reject) => {
-        let user = await findUserByRefreshToken(refreshToken, expiryDate)
+export const refreshAuth = function (refreshTokenId) {
 
-        if (validateUserForRefresh(user)) {
-            createSession(user, req).then(async session => {
-                let { token } = generateToken(user, session)
-                return resolve(token)
-            })
+    return new Promise(async (resolve, reject) => {
+
+        let user = await findUserByRefreshToken(refreshTokenId)
+
+
+        let sessionId
+        for (let refreshToken of user.refreshToken) {
+            if (refreshToken.id === refreshTokenId) {
+                sessionId = refreshTokenId.sessionId
+                break
+            }
+        }
+
+        if (user) {
+            let {token} = generateToken(user, sessionId)
+            return resolve(token)
+
         } else {
             return reject("No valida")
         }
     })
 }
 
-const generateToken = (user, session) => {
-    const payload = tokenSignPayload(user, session)
+const generateToken = (user, sessionId) => {
+    const payload = tokenSignPayload(user, sessionId)
 
     const options = {
         expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1h',
@@ -130,27 +154,22 @@ const generateToken = (user, session) => {
         options
     )
 
-    return { token, payload, options }
+    return {token, payload, options}
 }
 
-const generateRefreshToken = () => {
+const generateRefreshToken = (sessionId) => {
     let expiredAt = new Date();
+    const DEFAULT_REFRESHTOKEN_EXPIRED_IN = 24
     expiredAt.setHours(
-        process.env.REFRESHTOKEN_EXPIRED ? expiredAt.getHours() + process.env.REFRESHTOKEN_EXPIRED : expiredAt.getHours() + 24
+        process.env.JWT_REFRESHTOKEN_EXPIRED_IN ? expiredAt.getHours() + parseInt(process.env.JWT_REFRESHTOKEN_EXPIRED_IN) : expiredAt.getHours() + DEFAULT_REFRESHTOKEN_EXPIRED_IN
     );
-    let uuidToken = uuidv4()
 
     let refreshToken = {
-      token: uuidToken,
-      expiryDate: expiredAt.getTime()
+        id: uuidv4(),
+        expiryDate: expiredAt.getTime(),
+        sessionId: sessionId
     }
 
     return refreshToken
 }
 
-const validateUserForRefresh = (user) => {
-    if (!user.active) throw new Error("Inactive user")
-    if (!user.refreshToken.token) throw new Error("User refresh token is undefined")
-    if (user.refreshToken.expiryDate.getTime() < new Date().getTime()) throw new Error("Token is expired")
-    return true
-}

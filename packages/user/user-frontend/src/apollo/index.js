@@ -31,20 +31,9 @@ const uploadLink = createUploadLink({
 
 const authLink = new ApolloLink(async (operation, forward) => {
     if (store.getters.getToken) {
-        let tokenExpired
-        try {
-            let payload = jwt_decode(token)
 
-            if (payload.exp) {
-                let dateNow = new Date();
-                let dateToken = new Date(payload.exp * 1000)
-                if (dateNow < dateToken) {
-                    tokenExpired = true
-                }
-            }
-        }catch(err){
-            console.error(err)
-        }
+        let tokenExpired = store.getters.tokenIsExpired
+
 
         if(tokenExpired){
             try {

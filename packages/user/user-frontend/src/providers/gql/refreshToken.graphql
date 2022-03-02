@@ -1,5 +1,5 @@
-mutation ( $token: String!, $expiryDate: String!){
-    refreshToken(token: $token, expiryDate: $expiryDate){
+mutation ( $refreshTokenId: String!){
+    refreshToken(refreshTokenId: $refreshTokenId){
         token
     }
 }
