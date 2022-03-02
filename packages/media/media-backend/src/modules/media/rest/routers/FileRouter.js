@@ -57,6 +57,8 @@ router.post('/file', upload.single('file'), async function (req, res) {
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
 
+    const { expirationTime } = req.body;
+
     let file = {
         filename: req.file.originalname,
         mimetype: req.file.mimetype,
@@ -64,10 +66,10 @@ router.post('/file', upload.single('file'), async function (req, res) {
         encoding: req.file.encoding
     }
 
-    fileUpload(req.user, file).then(result => {
+    fileUpload(req.user, file, expirationTime).then(result => {
         res.status(201).json(result)
     }).catch(err => {
-        res.status(500).json({ message: err.message })
+        res.status(409).json({ message: err.message })
     })
 
 })

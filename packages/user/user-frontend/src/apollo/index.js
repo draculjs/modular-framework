@@ -1,16 +1,18 @@
-import {ApolloClient} from 'apollo-client'
-import {createUploadLink} from 'apollo-upload-client'
-import {InMemoryCache} from 'apollo-cache-inmemory'
-import {ApolloLink} from 'apollo-link'
+import { ApolloClient } from 'apollo-client'
+import { createUploadLink } from 'apollo-upload-client'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { ApolloLink } from 'apollo-link'
 import store from '../store'
 import jwt_decode from 'jwt-decode'
+
 
 import {onError} from "apollo-link-error";
 import authProvider from '../providers/AuthProvider'
 
-const errorLink = onError(({graphQLErrors, networkError}) => {
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
-        graphQLErrors.map(({message, locations, path}) =>
+        graphQLErrors.map(({ message, locations, path }) =>
             console.error(
                 `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
             ),
@@ -26,6 +28,7 @@ const uploadLink = createUploadLink({
 })
 
 //Middleware for Authorization
+
 const authLink = new ApolloLink(async (operation, forward) => {
     if (store.getters.getToken) {
         let tokenExpired

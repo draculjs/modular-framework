@@ -52,22 +52,16 @@
           </v-btn>
       </template>
       
-      <v-card class="mt-2" elevation="0">
-        <v-card-text class="pb-0"> 
+      <v-card :style="{width: '280px'}" elevation="0">
+        <v-card-text class="pb-0 pa-0"> 
           <v-alert class="mb-0" border="left" type="error" text outlined tile>
             {{ errorMessage }}
           </v-alert>
         </v-card-text>
-        <v-card-actions align="center" justify="center">
-           <v-spacer></v-spacer>
-          <v-btn text color="secondary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
+        <v-card-actions class="justify-center">
+           <!-- <v-spacer></v-spacer> -->
+          <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
         </v-card-actions>
-        <!-- <v-list elevation="0">
-          <v-list-item elevation="0">
-              {{ errorMessage }}
-              <v-btn v-on:click="resetUpload" class="ml-2">OK</v-btn>
-          </v-list-item>
-        </v-list> -->
       </v-card>
       
     </v-menu>
