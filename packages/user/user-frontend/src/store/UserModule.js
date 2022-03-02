@@ -176,11 +176,9 @@ export default {
         validateSession: ({dispatch, getters, commit}) => {
             return new Promise((resolve) => {
                 commit('refreshNow')
-                console.log("VALIDATE SESSION")
                 if (getters.tokenIsExpired === true) {
 
                     if (getters.refreshTokenIsExpired === false) {
-                        console.log("TOKEN EXPIRADO, REFRESH TOKEN OK, PROCEDO A RENOVAR")
                         //Puedo Renovar
                         dispatch('renewToken')
                             .then(token => {
@@ -192,7 +190,6 @@ export default {
                                 dispatch('logout')
                             })
                     } else {
-                        console.log("REFRESH TOKEN EXPIRADO => LOGOUT")
                         dispatch('logout')
                         resolve(false)
                     }
@@ -209,19 +206,15 @@ export default {
 
         renewToken: ({getters}) => {
             return new Promise((resolve, reject) => {
-                console.log("RENOVADO TOKEEENNN")
-                console.log("REGRESH TOKEN ID", getters.getRefreshToken.id)
                 AuthProvider.refreshToken(getters.getRefreshToken.id)
                     .then(r => {
                         let token = r.data.refreshToken.token
-                        console.log("RENOVADO CON EXITO", token)
                         resolve(token)
                     })
                     .catch(e => {
                         console.error("RENOVADO token", e)
                         reject(e)
                     }).finally(() => {
-                    console.log("RENOVADO TOKEN FINALLY")
                 })
             })
 
