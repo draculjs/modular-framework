@@ -121,24 +121,29 @@ export const refreshAuth = function (refreshTokenId) {
 
     return new Promise(async (resolve, reject) => {
 
-        let user = await findUserByRefreshToken(refreshTokenId)
+        try{
+            let user = await findUserByRefreshToken(refreshTokenId)
 
+            if (user) {
+                let sessionId
+                for (let refreshToken of user.refreshToken) {
+                    if (refreshToken.id === refreshTokenId) {
+                        sessionId = refreshToken.sessionId
+                        break
+                    }
+                }
 
-        let sessionId
-        for (let refreshToken of user.refreshToken) {
-            if (refreshToken.id === refreshTokenId) {
-                sessionId = refreshToken.sessionId
-                break
+                let {token} = generateToken(user, sessionId)
+                return resolve(token)
+
+            } else {
+                return reject(new Error("Invalid RefreshToken"))
             }
+
+        }catch (e) {
+            return reject(e)
         }
 
-        if (user) {
-            let {token} = generateToken(user, sessionId)
-            return resolve(token)
-
-        } else {
-            return reject("No valida")
-        }
     })
 }
 

@@ -49,8 +49,8 @@ export default {
                 refreshAuth(refreshTokenId)
                     .then(r => resolve({token: r}))
                     .catch(err => {
-                        console.warn('Auth error: ', err.message)
-                        reject(new AuthenticationError("Refresh token expired"))
+                        //console.warn('Auth error: ', err.message)
+                        reject(err)
                     })
             })
         }

@@ -56,7 +56,6 @@ export default {
                 }
 
                 let dateToken = new Date(payload.exp * 1000)
-                console.log("now", state.now, "dateToken", dateToken)
                 if (state.now > dateToken) {
                     return true
                 }
@@ -75,7 +74,6 @@ export default {
                 return true
             }
 
-            let dateNow = new Date();
             let expiryDate = new Date(parseInt(state.refresh_token.expiryDate))
 
             if (state.now > expiryDate) {
@@ -186,7 +184,7 @@ export default {
                                 resolve(true)
                             })
                             .catch(e => {
-                                console.log("Error on renewToken", e)
+                                console.error("Error on renewToken", e)
                                 dispatch('logout')
                             })
                     } else {
@@ -196,7 +194,6 @@ export default {
 
 
                 } else {
-                    console.log("TOKEN OK")
                     resolve(true)
                 }
 
