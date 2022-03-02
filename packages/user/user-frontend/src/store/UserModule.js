@@ -5,6 +5,10 @@ import ClientError from '../errors/ClientError'
 export default {
     state: {
         access_token: null,
+        refresh_token: {
+            token:null,
+            expiryDate: null
+        },
         me: null,
         avatarurl: null,
     },
@@ -22,6 +26,9 @@ export default {
         },
         getToken: (state) => {
             return state.access_token
+        },
+        getRefreshToken: (state) => {
+            return state.refresh_token
         },
         isAuth: (state) => {
             return (state.access_token) ? true : false
@@ -68,6 +75,7 @@ export default {
                 AuthProvider.auth(username, password)
                     .then((response) => {
                         commit('setAccessToken', response.data.auth.token)
+                        commit('setRefreshToken', response.data.auth.refreshToken)
                         dispatch('fetchMe')
                             .then(me => {
                                 resolve(me)
@@ -87,6 +95,7 @@ export default {
             commit('avatarUpdate', null)
             commit('setMe', null)
             commit('setAccessToken', null)
+            commit('setRefreshToken', {token: null, expiryDate: null})
         },
 
         verifyToken({commit, dispatch}, token) {
@@ -113,26 +122,26 @@ export default {
         },
 
         checkAuth: ({state, dispatch}) => {
-            if (state.access_token) {
-                let payload = jwt_decode(state.access_token)
-                if (payload.exp) {
-                    let dateNow = new Date();
-                    let dateToken = new Date(payload.exp * 1000)
-                    if (dateNow > dateToken) {
-                        dispatch('logout')
-                    } else if (state.me === null) {
-                        dispatch('fetchMe')
-                    }
+            if (state.refresh_token.token) {
+                let dateNow = new Date();
+                let dateToken = state.refresh_token.expiryDate
+                console.log("now", dateNow, "expiry", dateToken)
+                if (dateNow > dateToken) {
+                    dispatch('logout')
+                } else if (state.me === null) {
+                    dispatch('fetchMe')
                 }
             }
-
         },
-
 
     },
     mutations: {
         setAccessToken(state, access_token) {
             state.access_token = access_token
+        },
+        setRefreshToken(state, refresh_token) {
+            state.refresh_token.token = refresh_token.token
+            state.refresh_token.expiryDate = refresh_token.expiryDate
         },
         setMe(state, me) {
             state.me = me

@@ -7,6 +7,8 @@ exports.default = exports.router = void 0;
 
 var _apolloServerExpress = require("apollo-server-express");
 
+var _FileModel = _interopRequireDefault(require("../../models/FileModel"));
+
 var _express = _interopRequireDefault(require("express"));
 
 var _FileService = require("../../services/FileService");
@@ -104,6 +106,22 @@ router.post('/file', upload.single('file'), async function (req, res) {
     res.status(201).json(result);
   }).catch(err => {
     res.status(500).json({
+      message: err.message
+    });
+  });
+});
+router.patch('/file/:id', async function (req, res) {
+  if (!req.user) res.status(401).json({
+    message: "Not Authorized"
+  });
+  if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN)) res.status(403).json({
+    message: "Not Authorized"
+  });
+  let permissionType = req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null;
+  (0, _FileService.updateFileRest)(req.params.id, req.user, permissionType, req.body).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    res.status(err.status).json({
       message: err.message
     });
   });

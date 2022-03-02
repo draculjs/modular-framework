@@ -12,13 +12,9 @@ import {
 } from "../../src/services/AuthService";
 import {encodePassword} from "../../src/services/PasswordService"
 import {findUserByUsername} from "../../src/services/UserService";
-
-//Service dependencies
-import {findRoleByName} from "../../src/services/RoleService";
+import AuthResolvers from "../../src/graphql/resolvers/AuthResolvers"
 
 describe("UserService", () => {
-
-    let connection;
 
     beforeAll(async () => {
         await mongoHandler.connect()
@@ -27,21 +23,25 @@ describe("UserService", () => {
         await initRootUser()
     });
 
-    afterAll(async  () => {
+    afterAll(async () => {
         await mongoHandler.clearDatabase();
         await mongoHandler.closeDatabase();
     })
 
-
-
-    test('LoginOk', async () => {
+    test('LoginOk', async (done) => {
 
         let user = {username: 'root', password: 'root.123'}
         user.password = encodePassword(user.password)
-        await expect(auth(user, null))
-            .resolves.toHaveProperty('token')
 
-    }, 2000);
+        auth(user, null).then((res) => {setTimeout(async () => {
+          let refreshToken = res.refreshToken
+          let newToken = await AuthResolvers.Mutation.refreshToken(null, {token:refreshToken.token, expiryDate:refreshToken.expiryDate}, {req: null})
+
+          expect(newToken).not.toBe({token: res.token})
+          done()
+        }, 2000)})
+
+    }, 5000);
 
     test('LoginFail', async () => {
 
