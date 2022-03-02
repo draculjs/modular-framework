@@ -1,14 +1,14 @@
-import {ApolloClient} from 'apollo-client'
-import {createUploadLink} from 'apollo-upload-client'
-import {InMemoryCache} from 'apollo-cache-inmemory'
-import {ApolloLink} from 'apollo-link'
+import { ApolloClient } from 'apollo-client'
+import { createUploadLink } from 'apollo-upload-client'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { ApolloLink } from 'apollo-link'
 import store from '../store'
 
-import {onError} from "apollo-link-error";
+import { onError } from "apollo-link-error";
 
-const errorLink = onError(({graphQLErrors, networkError}) => {
+const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
-        graphQLErrors.map(({message, locations, path}) =>
+        graphQLErrors.map(({ message, locations, path }) =>
             console.error(
                 `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
             ),
@@ -25,6 +25,7 @@ const uploadLink = createUploadLink({
 
 //Middleware for Authorization
 const authLink = new ApolloLink((operation, forward) => {
+    // Verifico que el token no haya expirado (localmente). Si expiro, lo renuevo (refresh token). Sino, hago la pegada
     if (store.getters.getToken) {
         operation.setContext({
             headers: {
