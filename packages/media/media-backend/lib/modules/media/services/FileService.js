@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.findAndDeleteExpiredFiles = exports.deleteFile = exports.updateByRelativePath = exports.updateFileRest = exports.updateFile = exports.paginateFiles = exports.fetchFiles = exports.findFile = void 0;
+exports.findAndDeleteByExpirationDate = exports.findAndDeleteExpiredFiles = exports.deleteFile = exports.updateByRelativePath = exports.updateFileRest = exports.updateFile = exports.paginateFiles = exports.fetchFiles = exports.findFile = void 0;
 
 var _FileModel = _interopRequireDefault(require("./../models/FileModel"));
 
@@ -38,9 +38,38 @@ const findFile = async function (id, permissionType = null, userId = null) {
 
 exports.findFile = findFile;
 
-const fetchFiles = async function () {
+const fetchFiles = async function (expirationDate = null) {
+  function filter(expirationDate) {
+    let operationsRange = {};
+    let dateSinceForQuery = null;
+    let dateUntilForQuery = null;
+
+    if (expirationDate) {
+      dateSinceForQuery = new Date(expirationDate);
+      dateSinceForQuery.setHours(0);
+      dateSinceForQuery.setMinutes(0);
+      dateUntilForQuery = new Date(expirationDate);
+      dateUntilForQuery.setHours(23);
+      dateUntilForQuery.setMinutes(59);
+      operationsRange = {
+        $and: [{
+          createdAt: {
+            $gte: dateSinceForQuery
+          }
+        }, {
+          createdAt: {
+            $lte: dateUntilForQuery
+          }
+        }]
+      };
+    }
+
+    return operationsRange;
+  }
+
+  const query = filter(expirationDate);
   return new Promise((resolve, reject) => {
-    _FileModel.default.find({}).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
+    _FileModel.default.find(query).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
   });
 };
 
@@ -101,7 +130,7 @@ const paginateFiles = function ({
 
           case 'dateTo':
             if (value) {
-              let dayAfter = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value);
+              let dayAfter = (0, _dayjs.default)(value).isValid() && (0, _dayjs.default)(value).add(1, 'day');
 
               if (qsFilter.createdAt) {
                 qsFilter.createdAt = { ...qsFilter.createdAt,
@@ -340,6 +369,12 @@ exports.deleteFile = deleteFile;
 const findAndDeleteExpiredFiles = async function () {
   function getDataEntity() {
     return [{
+      $match: {
+        expirationDate: {
+          $eq: null
+        }
+      }
+    }, {
       $lookup: {
         from: "userstorages",
         localField: "createdBy.user",
@@ -388,16 +423,29 @@ const findAndDeleteExpiredFiles = async function () {
     docs = result;
   }).catch(error => {
     _loggerBackend.DefaultLogger.error('FileService - findExpiredFiles - Error en aggregate: ' + error);
-  }); // For each de los files con unlink y actualizo usedSpace de userStorage
+  });
+  return deleteAndUnlinkFiles(docs);
+};
 
+exports.findAndDeleteExpiredFiles = findAndDeleteExpiredFiles;
+
+const findAndDeleteByExpirationDate = async function () {
+  let expirationDate = new Date();
+  let docs = [];
+  await fetchFiles(expirationDate).then(result => {
+    docs = result;
+  }).catch(error => {
+    _loggerBackend.DefaultLogger.error('FileService - findAndDeleteByExpirationDate - Error en aggregate: ' + error);
+  });
+  return deleteAndUnlinkFiles(docs);
+};
+
+exports.findAndDeleteByExpirationDate = findAndDeleteByExpirationDate;
+
+function deleteAndUnlinkFiles(docs) {
+  // For each de los files con unlink y actualizo usedSpace de userStorage
   if (docs) {
-    docs.forEach(file => {
-      (0, _UserStorageService.updateUserUsedStorage)(file.createdBy.user, -file.size);
-
-      _fs.default.unlink(file.relativePath, error => {
-        if (error) _loggerBackend.DefaultLogger.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error);else _loggerBackend.DefaultLogger.info('Se eliminó el archivo ' + file.relativePath);
-      });
-    });
+    unlinkFiles(docs);
   } // Mappeo los ids de los files encontrados
 
 
@@ -405,10 +453,24 @@ const findAndDeleteExpiredFiles = async function () {
     return file._id;
   }); // Borro los files encontrados
 
+  return deleteManyById(fileIds);
+}
+
+function unlinkFiles(files) {
+  files.forEach(file => {
+    (0, _UserStorageService.updateUserUsedStorage)(file.createdBy.user, -file.size);
+
+    _fs.default.unlink(file.relativePath, error => {
+      if (error) _loggerBackend.DefaultLogger.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error);else _loggerBackend.DefaultLogger.info('Se eliminó el archivo ' + file.relativePath);
+    });
+  });
+}
+
+function deleteManyById(ids) {
   return new Promise((resolve, reject) => {
     _FileModel.default.deleteMany({
       _id: {
-        $in: fileIds
+        $in: ids
       }
     }).then(result => {
       resolve({
@@ -424,9 +486,7 @@ const findAndDeleteExpiredFiles = async function () {
       });
     });
   });
-};
-
-exports.findAndDeleteExpiredFiles = findAndDeleteExpiredFiles;
+}
 
 function filterByFileOwner(permissionType, userId) {
   let query;
@@ -451,7 +511,12 @@ function filterByFileOwner(permissionType, userId) {
 function validateExpirationDate(expirationTime) {
   const today = new Date();
   const expirationDate = new Date(expirationTime);
-  if (expirationDate < today) return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(0);
+
+  if (expirationDate > today) {
+    return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
+  }
+
+  return null;
 }
 
 function purgeInput(input) {

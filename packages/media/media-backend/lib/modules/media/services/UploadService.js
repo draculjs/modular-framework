@@ -54,14 +54,22 @@ const fileUpload = function (user, inputFile, expirationDate) {
 
       _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: " + storeResult);
 
-      let expiration = new Date();
+      if (expirationDate) {
+        let timeDiffExpirationDate = validateExpirationDate(expirationDate);
 
-      if (!expirationDate) {
+        if (!timeDiffExpirationDate) {
+          _loggerBackend.DefaultLogger.error("Expiration date must be older than current date");
+
+          rejects(new Error("Expiration date must be older than current date"));
+        }
+
         let userStorage = await (0, _UserStorageService.findUserStorageByUser)(user);
-        const today = new Date();
-        expiration.setDate(today.getDate() + userStorage.fileExpirationTime);
-      } else {
-        expiration = expirationDate;
+
+        if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
+          _loggerBackend.DefaultLogger.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`);
+
+          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`));
+        }
       }
 
       let url = (0, _baseUrl.default)() + relativePath;
@@ -83,7 +91,7 @@ const fileUpload = function (user, inputFile, expirationDate) {
             user: user.id,
             username: user.username
           },
-          expirationDate: expiration
+          expirationDate: expirationDate
         });
 
         _loggerBackend.DefaultLogger.info("fileUploadAnonymous saving file");
@@ -107,5 +115,17 @@ const fileUpload = function (user, inputFile, expirationDate) {
 };
 
 exports.fileUpload = fileUpload;
+
+function validateExpirationDate(expirationTime) {
+  const today = new Date();
+  const expirationDate = new Date(expirationTime);
+
+  if (expirationDate > today) {
+    return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
+  }
+
+  return null;
+}
+
 var _default = fileUpload;
 exports.default = _default;
