@@ -1,6 +1,7 @@
 type RefreshToken {
-    token: String!
+    id: String!
     expiryDate: String!
+    sessionId: String
 }
 
 type AuthResponse {

@@ -1,8 +1,6 @@
 import AuthProvider from '../providers/AuthProvider'
 import jwt_decode from 'jwt-decode'
 import ClientError from '../errors/ClientError'
-import store from "@/store/index";
-import authProvider from "../providers/AuthProvider";
 
 export default {
     state: {
