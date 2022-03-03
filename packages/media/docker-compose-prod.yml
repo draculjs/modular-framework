@@ -18,6 +18,7 @@ services:
       JWT_SECRET: "V8wzw4iL9H40oxXAVj9u"
       JWT_LOGIN_EXPIRED_IN: "1d"
       JWT_REGISTER_EXPIRED_IN: "30d"
+      JWT_REFRESHTOKEN_EXPIRED_IN: "1d"
       APP_NAME: "MEDIA"
       APP_PORT: 7070
       APP_API_URL: "http://url:puerto"
