@@ -7,7 +7,8 @@ export default {
         access_token: null,
         refresh_token: {
             id: null,
-            expiryDate: null
+            expiryDate: null,
+            sessionId: null
         },
         me: null,
         avatarurl: null,
@@ -137,7 +138,7 @@ export default {
             commit('avatarUpdate', null)
             commit('setMe', null)
             commit('setAccessToken', null)
-            commit('setRefreshToken', {id: null, expiryDate: null})
+            commit('setRefreshToken', {id: null, expiryDate: null, sessionId: null})
         },
 
         verifyToken({commit, dispatch}, token) {
