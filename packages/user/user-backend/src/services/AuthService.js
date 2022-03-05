@@ -52,14 +52,17 @@ export const auth = async function ({username, password}, req) {
 
 
                         //ELIMINAMOS REFRESHTOKENS CADUCADOS
-                        let now = new Date()
-                        let refreshTokenToDelete = user.refreshToken.filter(rf => {
-                            let expiryDate = new Date(rf.expiryDate)
-                            return (now > expiryDate) ? true: false
-                        })
-                        for(let rf of refreshTokenToDelete){
-                            user.refreshToken.pull(rf)
+                        if(user.refreshToken && user.refreshToken.length > 0){
+                            let now = new Date()
+                            let refreshTokenToDelete = user.refreshToken.filter(rf => {
+                                let expiryDate = new Date(rf.expiryDate)
+                                return (now > expiryDate) ? true: false
+                            })
+                            for(let rf of refreshTokenToDelete){
+                                user.refreshToken.pull(rf)
+                            }
                         }
+
 
                         //AGREGAMOS NUEVO REFRESH TOKEN
                         let refreshToken = generateRefreshToken(session.id)
