@@ -66,6 +66,9 @@ export const auth = async function ({username, password}, req) {
 
                         //AGREGAMOS NUEVO REFRESH TOKEN
                         let refreshToken = generateRefreshToken(session.id)
+                        if(!user.refreshToken){
+                            user.refreshToken = []
+                        }
                         user.refreshToken.push(refreshToken)
                         await user.save()
 

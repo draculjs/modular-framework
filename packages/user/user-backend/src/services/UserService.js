@@ -35,8 +35,8 @@ export const createUser = async function ({username, password, name, email, phon
         active,
         role,
         groups,
-        createdAt: Date.now()
-
+        createdAt: Date.now(),
+        refreshToken: []
     })
 
     return new Promise((resolve, reject) => {
