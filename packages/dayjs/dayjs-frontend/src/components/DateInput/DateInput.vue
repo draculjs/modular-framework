@@ -24,7 +24,6 @@
           :outlined="outlined"
           :disabled="disabled"
           :readonly="readonly"
-          :clearable="clearable"
           :hide-details="hideDetails"
           :style="{width: width, maxWidth: width}"
       ></v-text-field>
