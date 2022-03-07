@@ -88,6 +88,7 @@ export default {
     }
   },
   computed: {
+    //notification_activate
     isWebSocketEnable() {
       return process.env.VUE_APP_ACTIVATE_WEB_SOCKET ? process.env.VUE_APP_ACTIVATE_WEB_SOCKET : true
     },

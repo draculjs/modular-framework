@@ -269,3 +269,17 @@ export const deleteNotificationsService = (userId, numberOfDays = 30) => {
             });
     });
 };
+
+/**
+ * Get the way to fetch notifications
+ * @return {Promise}
+ */
+export const wayFetchNotificationsService = () => {
+
+    return new Promise((resolve, reject) => {
+        let wayToGetNotifications = process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET ? true : false
+        let timePollingNotifications = !process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET ? parseInt(process.env.VUE_APP_TIME_POLLING) : 30000
+        console.log({ws: wayToGetNotifications, timePolling: timePollingNotifications})
+        resolve({ws: wayToGetNotifications, timePolling: timePollingNotifications})
+    })
+}
