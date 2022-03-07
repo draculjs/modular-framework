@@ -73,6 +73,10 @@ const FileSchema = new Schema({
       type: String,
       required: true
     }
+  },
+  expirationDate: {
+    type: Date,
+    required: false
   }
 });
 FileSchema.plugin(mongoosePaginate);

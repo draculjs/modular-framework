@@ -45,11 +45,11 @@
         </template>
 
         <template v-slot:item.createdAt="{item}">
-          {{ formatDate(item.createdAt) }}
+          {{ getDateFormat(item.createdAt) }}
         </template>
 
         <template v-slot:item.lastAccess="{item}">
-          {{ formatDate(item.lastAccess) }}
+          {{ getDateFormat(item.lastAccess) }}
         </template>
 
         <template v-slot:item.action="{ item }">
@@ -68,13 +68,14 @@ import FileProvider from "../../../providers/FileProvider";
 
 import {DeleteButton, EditButton, ShowButton} from "@dracul/common-frontend"
 import redeableBytesMixin from "../../../mixins/readableBytesMixin";
-import moment from "moment-timezone"
 import FileFilters from "../FileFilters/FileFilters"
+import {DayjsMixin} from "@dracul/dayjs-frontend"
 
 export default {
   name: "FileList",
-  mixins: [redeableBytesMixin],
+  mixins: [redeableBytesMixin,DayjsMixin],
   components: {DeleteButton, EditButton, ShowButton, FileFilters},
+
   data() {
     return {
       items: [],
@@ -178,9 +179,6 @@ export default {
         {text: this.$t('common.actions'), value: 'action', sortable: false},
       ]
     },
-    formatDate() {
-      return (date) => moment(parseInt(date)).tz("America/Argentina/Buenos_Aires").format('YYYY-MM-DD')
-    },
     getOrderBy() {
       return (Array.isArray(this.orderBy)) ? this.orderBy[0] : this.orderBy
     },
@@ -191,7 +189,7 @@ export default {
   created() {
     this.fetch()
   }
-  
+
 
 }
 </script>

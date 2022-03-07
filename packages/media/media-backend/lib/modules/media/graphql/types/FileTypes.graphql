@@ -13,6 +13,7 @@ type File{
     createdAt: String!
     createdBy: CreatedBy
     lastAccess: String
+    expirationDate: String
 }
 
 type CreatedBy{
@@ -53,6 +54,7 @@ input FileInput{
 input FileUpdateInput{
     description: String
     tags: [String]
+    expirationDate: String
 }
 
 type FileDelete{

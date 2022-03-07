@@ -5,8 +5,14 @@ import ClientError from '../errors/ClientError'
 export default {
     state: {
         access_token: null,
+        refresh_token: {
+            id: null,
+            expiryDate: null,
+            sessionId: null
+        },
         me: null,
         avatarurl: null,
+        now: new Date()
     },
     getters: {
         me: (state) => {
@@ -23,6 +29,9 @@ export default {
         getToken: (state) => {
             return state.access_token
         },
+        getRefreshToken: (state) => {
+            return state.refresh_token
+        },
         isAuth: (state) => {
             return (state.access_token) ? true : false
         },
@@ -34,6 +43,47 @@ export default {
             if (!state.me) return false
             return state.me.role.permissions.includes(permission)
         },
+        tokenIsExpired: (state) => {
+            try {
+
+                if (!state.access_token) {
+                    return true
+                }
+
+                let payload = jwt_decode(state.access_token)
+
+                if (!payload.exp) {
+                    return true
+                }
+
+                let dateToken = new Date(payload.exp * 1000)
+                if (state.now > dateToken) {
+                    return true
+                }
+
+                return false
+
+            } catch (err) {
+                console.error(err)
+                return true
+            }
+
+        },
+        refreshTokenIsExpired: (state) => {
+
+            if (!state.refresh_token || !state.refresh_token.expiryDate) {
+                return true
+            }
+
+            let expiryDate = new Date(parseInt(state.refresh_token.expiryDate))
+
+            if (state.now > expiryDate) {
+                return true
+            }
+
+            return false
+
+        }
     },
     actions: {
         fetchMe({commit}) {
@@ -68,6 +118,7 @@ export default {
                 AuthProvider.auth(username, password)
                     .then((response) => {
                         commit('setAccessToken', response.data.auth.token)
+                        commit('setRefreshToken', response.data.auth.refreshToken)
                         dispatch('fetchMe')
                             .then(me => {
                                 resolve(me)
@@ -87,6 +138,7 @@ export default {
             commit('avatarUpdate', null)
             commit('setMe', null)
             commit('setAccessToken', null)
+            commit('setRefreshToken', {id: null, expiryDate: null, sessionId: null})
         },
 
         verifyToken({commit, dispatch}, token) {
@@ -112,30 +164,74 @@ export default {
             return false
         },
 
-        checkAuth: ({state, dispatch}) => {
-            if (state.access_token) {
-                let payload = jwt_decode(state.access_token)
-                if (payload.exp) {
-                    let dateNow = new Date();
-                    let dateToken = new Date(payload.exp * 1000)
-                    if (dateNow > dateToken) {
-                        dispatch('logout')
-                    } else if (state.me === null) {
-                        dispatch('fetchMe')
-                    }
-                }
+        checkAuth: ({state, dispatch, getters}) => {
+            if (getters.refreshTokenIsExpired) {
+                dispatch('logout')
+            } else if (state.me === null) {
+                dispatch('fetchMe')
             }
-
         },
 
+        validateSession: ({dispatch, getters, commit}) => {
+            return new Promise((resolve) => {
+                commit('refreshNow')
+                if (getters.tokenIsExpired === true) {
+
+                    if (getters.refreshTokenIsExpired === false) {
+                        //Puedo Renovar
+                        dispatch('renewToken')
+                            .then(token => {
+                                commit('setAccessToken', token)
+                                resolve(true)
+                            })
+                            .catch(e => {
+                                console.error("Error on renewToken", e)
+                                dispatch('logout')
+                            })
+                    } else {
+                        dispatch('logout')
+                        resolve(false)
+                    }
+
+
+                } else {
+                    resolve(true)
+                }
+
+
+            })
+        },
+
+        renewToken: ({getters}) => {
+            return new Promise((resolve, reject) => {
+                AuthProvider.refreshToken(getters.getRefreshToken.id)
+                    .then(r => {
+                        let token = r.data.refreshToken.token
+                        resolve(token)
+                    })
+                    .catch(e => {
+                        console.error("RENOVADO token", e)
+                        reject(e)
+                    }).finally(() => {
+                })
+            })
+
+        }
 
     },
+
     mutations: {
         setAccessToken(state, access_token) {
             state.access_token = access_token
         },
+        setRefreshToken(state, refresh_token) {
+            state.refresh_token = refresh_token
+        },
         setMe(state, me) {
             state.me = me
+        },
+        refreshNow(state) {
+            state.now = new Date()
         },
         avatarUpdate(state, avatarurl) {
             state.avatarurl = avatarurl

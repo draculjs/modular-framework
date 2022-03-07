@@ -1,5 +1,10 @@
-mutation ( $username: String!, $password: String!){
+mutation auth( $username: String!, $password: String!){
     auth(username: $username, password: $password){
         token
+        refreshToken{
+            id
+            expiryDate
+            sessionId
+        }
     }
 }

@@ -102,7 +102,7 @@
 
 <script>
     import notificationProvider from "../../providers/notificationProvider";
-    import dayjs from 'dayjs';  
+    import dayjs from 'dayjs';
     import relativeTime from 'dayjs/plugin/relativeTime';
     import 'dayjs/locale/es'
     import 'dayjs/locale/pt'
@@ -140,11 +140,11 @@
             },
             getRelativeDate(date) {
                 dayjs.extend(relativeTime)
-                dayjs.locale(this.$t("notification.moment"))
+                dayjs.locale(this.$t("notification.locale"))
 
                 let dateFormat = parseInt(date)
                 let currentDate = dayjs(dateFormat);
-                
+
                 return dayjs(currentDate).fromNow();
             },
             cleanContent(content){

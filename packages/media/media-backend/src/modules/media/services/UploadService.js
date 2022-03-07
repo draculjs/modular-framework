@@ -1,14 +1,12 @@
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import path from "path";
-import fs from "fs";
 import File from '../models/FileModel'
 import storeFile from './helpers/storeFile'
 import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
-import convertGigabytesToBytes from "./helpers/convertGigabytesToBytes"
-import { checkUserStorage, updateUserUsedStorage } from './UserStorageService';
+import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 
-const fileUpload = function (user, inputFile) {
+const fileUpload = function (user, inputFile, expirationDate) {
 
   return new Promise(async (resolve, rejects) => {
     try {
@@ -23,7 +21,7 @@ const fileUpload = function (user, inputFile) {
 
       const parseFileName = path.parse(filename);
       const extension = parseFileName.ext
-      const name = parseFileName.name
+      const name = parseFileName.name.replace(/#/g, "")
       const hash = '-' + randomString(6)
       const finalFileName = name + hash + extension
       const year = new Date().getFullYear().toString()
@@ -32,8 +30,24 @@ const fileUpload = function (user, inputFile) {
       const absolutePath = path.resolve(relativePath);
 
       //Store
-      let storeResult = await storeFile(createReadStream(), relativePath, user.id)
+      let storeResult = await storeFile(createReadStream(), relativePath, user)
       winston.info("fileUploadAnonymous store result: " + storeResult)
+
+      if (expirationDate) {
+        let timeDiffExpirationDate = validateExpirationDate(expirationDate)
+
+        if (!timeDiffExpirationDate) {
+          winston.error("Expiration date must be older than current date")
+          rejects(new Error("Expiration date must be older than current date"))
+        }
+
+        let userStorage = await findUserStorageByUser(user)
+
+        if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
+          winston.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
+          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
+        }
+      }
 
       let url = baseUrl() + relativePath
 
@@ -53,7 +67,8 @@ const fileUpload = function (user, inputFile) {
           absolutePath: absolutePath,
           size: fileSizeMB,
           url: url,
-          createdBy: { user: user.id, username: user.username }
+          createdBy: { user: user.id, username: user.username },
+          expirationDate: expirationDate
         })
         winston.info("fileUploadAnonymous saving file")
         await doc.save()
@@ -67,12 +82,22 @@ const fileUpload = function (user, inputFile) {
       }
 
     } catch (err) {
-      winston.error('UploadService: ', err)
+      winston.error('UploadService error' + err)
       rejects(err)
     }
   })
 
 }
+
+function validateExpirationDate(expirationTime) {
+  const today = new Date();
+  const expirationDate = new Date(expirationTime);
+  if (expirationDate > today) {
+    return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
+  }
+  return null;
+}
+
 
 export { fileUpload }
 export default fileUpload

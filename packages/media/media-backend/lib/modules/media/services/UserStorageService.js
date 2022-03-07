@@ -18,7 +18,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const fetchUserStorage = async function () {
   return new Promise(async (resolve, reject) => {
     try {
-      await userStorageCheckAndCreate();
       let userStorages = await _UserStorageModel.default.find({}).populate('user').exec();
       resolve(userStorages);
     } catch (err) {
@@ -57,7 +56,9 @@ const userStorageCheckAndCreate = async function () {
     let usedSpace = 0;
     let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES || 1024;
     let fileExpirationTime = process.env.MEDIA_FILE_EXPIRATION_TIME_IN_DAYS || 365;
-    await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime);
+    let deleteByLastAccess = true;
+    let deleteByCreatedAt = false;
+    await createUserStorage(user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt);
   }
 
   return true;
@@ -65,13 +66,15 @@ const userStorageCheckAndCreate = async function () {
 
 exports.userStorageCheckAndCreate = userStorageCheckAndCreate;
 
-const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime) {
+const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt) {
   const doc = new _UserStorageModel.default({
     user,
     capacity,
     usedSpace,
     maxFileSize,
-    fileExpirationTime
+    fileExpirationTime,
+    deleteByLastAccess,
+    deleteByCreatedAt
   });
   return new Promise((resolve, rejects) => {
     doc.save(error => {
@@ -128,7 +131,9 @@ const updateUserStorage = async function (authUser, id, {
   capacity,
   usedSpace,
   maxFileSize,
-  fileExpirationTime
+  fileExpirationTime,
+  deleteByLastAccess,
+  deleteByCreatedAt
 }) {
   return new Promise((resolve, rejects) => {
     _UserStorageModel.default.findOneAndUpdate({
@@ -136,7 +141,9 @@ const updateUserStorage = async function (authUser, id, {
     }, {
       capacity,
       maxFileSize,
-      fileExpirationTime
+      fileExpirationTime,
+      deleteByLastAccess,
+      deleteByCreatedAt
     }, {
       runValidators: true,
       context: "query"
@@ -182,15 +189,23 @@ exports.checkUserStorage = checkUserStorage;
 
 const checkUserStorageLeft = async function (userId) {
   return new Promise((resolve, reject) => {
+    if (!userId) {
+      return resolve(new Error("checkUserStorageLeft: UserId must be provided"));
+    }
+
     _UserStorageModel.default.findOne({
       user: userId
-    }).exec((err, res) => {
+    }).exec((err, doc) => {
       if (err) {
         reject(err);
       }
 
-      let storageLeft = res.capacity - res.usedSpace;
-      resolve(storageLeft);
+      if (doc) {
+        let storageLeft = doc.capacity - doc.usedSpace;
+        return resolve(storageLeft);
+      } else {
+        return resolve(0);
+      }
     });
   });
 };

@@ -147,6 +147,12 @@ Object.defineProperty(exports, "deleteQueue", {
     return _QueueCrudService.deleteQueue;
   }
 });
+Object.defineProperty(exports, "findQueueByTopicAndState", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.findQueueByTopicAndState;
+  }
+});
 
 var _QueueModel = _interopRequireDefault(require("./models/QueueModel"));
 

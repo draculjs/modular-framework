@@ -1,4 +1,15 @@
+type RefreshToken {
+    id: String!
+    expiryDate: String!
+    sessionId: String
+}
+
 type AuthResponse {
+    token:String!
+    refreshToken: RefreshToken!
+}
+
+type RefreshResponse {
     token:String!
 }
 
@@ -8,5 +19,6 @@ type Query {
 
 type Mutation {
     auth(username: String!, password:String!): AuthResponse!
+    refreshToken(refreshTokenId: String!): RefreshResponse!
     apikey(userid: ID!): AuthResponse!
 }

@@ -3,11 +3,14 @@ import bcryptjs from "bcryptjs";
 import {createSession} from "./SessionService";
 import jsonwebtoken from "jsonwebtoken";
 import {createLoginFail} from "./LoginFailService";
-import {findUser, findUserByUsername} from "./UserService";
+import {findUser, findUserByRefreshToken, findUserByUsername, updateUser} from "./UserService";
 import {decodePassword} from "./PasswordService"
+import dayjs from 'dayjs'
+
+const {v4: uuidv4} = require('uuid');
 
 
-export const tokenSignPayload = function (user, session) {
+export const tokenSignPayload = function (user, sessionId) {
     return {
         id: user.id,
         //name: user.name,
@@ -15,9 +18,11 @@ export const tokenSignPayload = function (user, session) {
         //email: user.email,
         //phone: user.phone,
         role: {id: user.role.id, name: user.role.name, childRoles: user.role.childRoles},
-        groups: user.groups.map(g => {id: g.id}),
+        groups: user.groups.map(g => {
+            id: g.id
+        }),
         //avatarurl: user.avatarurl,
-        idSession: session.id
+        idSession: sessionId
     };
 }
 
@@ -25,7 +30,6 @@ export const tokenSignPayload = function (user, session) {
 export const auth = async function ({username, password}, req) {
     return new Promise((resolve, reject) => {
         findUserByUsername(username).then(user => {
-
 
             if (!user) {
                 winston.warn('AuthService.auth: UserDoesntExist => ' + username)
@@ -41,22 +45,36 @@ export const auth = async function ({username, password}, req) {
                 let decodedPassword = decodePassword(password)
                 if (bcryptjs.compareSync(decodedPassword, user.password)) {
 
-                    createSession(user, req).then(session => {
+                    createSession(user, req).then(async session => {
 
-                        const payload = tokenSignPayload(user, session)
+                        //GENERAMOS ACCESS TOKEN
+                        let {token, payload, options} = generateToken(user, session.id)
 
-                        const options = {
-                            expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1d',
-                            jwtid: user.id
+
+                        //ELIMINAMOS REFRESHTOKENS CADUCADOS
+                        if(user.refreshToken && user.refreshToken.length > 0){
+                            let now = new Date()
+                            let refreshTokenToDelete = user.refreshToken.filter(rf => {
+                                let expiryDate = new Date(rf.expiryDate)
+                                return (now > expiryDate) ? true: false
+                            })
+                            for(let rf of refreshTokenToDelete){
+                                user.refreshToken.pull(rf)
+                            }
                         }
 
-                        let token = jsonwebtoken.sign(
-                            payload,
-                            process.env.JWT_SECRET,
-                            options
-                        )
+
+                        //AGREGAMOS NUEVO REFRESH TOKEN
+                        let refreshToken = generateRefreshToken(session.id)
+                        if(!user.refreshToken){
+                            user.refreshToken = []
+                        }
+                        user.refreshToken.push(refreshToken)
+                        await user.save()
+
+
                         winston.info('AuthService.auth successful by ' + user.username)
-                        resolve({token, payload, options})
+                        resolve({token, payload, options, refreshToken})
 
                     }).catch(err => {
                         winston.error('AuthService.auth.createSession ', err)
@@ -104,3 +122,76 @@ export const apiKey = function (userId, req) {
         })
     })
 }
+
+export const refreshAuth = function (refreshTokenId) {
+
+    return new Promise(async (resolve, reject) => {
+
+        try{
+            let user = await findUserByRefreshToken(refreshTokenId)
+
+            if (user) {
+                let sessionId
+                for (let refreshToken of user.refreshToken) {
+                    if (refreshToken.id === refreshTokenId) {
+                        sessionId = refreshToken.sessionId
+                        break
+                    }
+                }
+
+                let {token} = generateToken(user, sessionId)
+                return resolve(token)
+
+            } else {
+                return reject(new Error("Invalid RefreshToken"))
+            }
+
+        }catch (e) {
+            return reject(e)
+        }
+
+    })
+}
+
+const generateToken = (user, sessionId) => {
+    const payload = tokenSignPayload(user, sessionId)
+
+    const options = {
+        expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1h',
+        jwtid: user.id
+    }
+
+    let token = jsonwebtoken.sign(
+        payload,
+        process.env.JWT_SECRET,
+        options
+    )
+
+    return {token, payload, options}
+}
+
+export const generateRefreshToken = (sessionId) => {
+
+    const DEFAULT_REFRESHTOKEN_EXPIRED_IN = '24h'
+
+    const duration = process.env.JWT_REFRESHTOKEN_EXPIRED_IN || DEFAULT_REFRESHTOKEN_EXPIRED_IN
+
+
+    if (!/[0-9]+[dwMyhms(ms)]/.test(duration)) {
+        throw new Error("JWT_REFRESHTOKEN_EXPIRED_IN invalid format /[0-9]+[dwMyhms(ms)/")
+    }
+
+    let number = duration.match(/[0-9]+/)[0]
+    let unit = duration.match(/[dwMyhms(ms)]/)[0]
+
+    let expiredAt = dayjs().add(number, unit)
+
+    let refreshToken = {
+        id: uuidv4(),
+        expiryDate: expiredAt.valueOf(),
+        sessionId: sessionId
+    }
+
+    return refreshToken
+}
+

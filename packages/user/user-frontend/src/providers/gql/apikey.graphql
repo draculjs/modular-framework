@@ -1,4 +1,4 @@
-mutation ( $userid: ID!){
+mutation apikey( $userid: ID!){
     apikey(userid: $userid){
         token
     }

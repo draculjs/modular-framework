@@ -19,6 +19,13 @@ class AuthProvider {
         })
     }
 
+    refreshToken(refreshTokenId) {
+        return this.gqlc.mutate({
+            mutation: require('./gql/refreshToken.graphql'),
+            variables: {refreshTokenId}
+        })
+    }
+
     apikey(userid) {
         return this.gqlc.mutate({
             mutation: require('./gql/apikey.graphql'),

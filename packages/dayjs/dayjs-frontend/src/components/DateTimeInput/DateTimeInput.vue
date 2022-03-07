@@ -1,11 +1,11 @@
 <template>
   <v-row>
     <v-col cols="12" sm="6">
-      <date-input ref="date" :value="item" :rules="dateRules" @input="setDate"></date-input>
+      <date-input ref="date" :value="item" :rules="dateRules" @input="setDate" :clearable="clearable"></date-input>
     </v-col>
 
     <v-col cols="12" sm="6">
-      <time-input ref="time" :value="item" :rules="timeRules" @input="setTime"></time-input>
+      <time-input ref="time" :value="item" :rules="timeRules" @input="setTime" :clearable="clearable"></time-input>
     </v-col>
 
   </v-row>
@@ -30,6 +30,7 @@ export default {
     label: {type: String},
     dateRules: {type: Array, default: () => []},
     timeRules: {type: Array, default: () => []},
+    clearable: {type:Boolean, default: true}
   },
   mixins: [DayjsMixin],
   computed: {

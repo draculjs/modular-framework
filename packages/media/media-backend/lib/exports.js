@@ -69,7 +69,7 @@ Object.defineProperty(exports, "InitMediaPermissions", {
     return _InitMediaPermissions.default;
   }
 });
-exports.filePermissions = exports.UserStorageService = exports.FileService = void 0;
+exports.userStoragePermissions = exports.filePermissions = exports.UserStorageService = exports.FileService = void 0;
 
 var _graphql = require("./modules/media/graphql");
 
@@ -90,6 +90,10 @@ var _InitMediaPermissions = _interopRequireDefault(require("./modules/media/serv
 var filePermissions = _interopRequireWildcard(require("./modules/media/permissions/File"));
 
 exports.filePermissions = filePermissions;
+
+var userStoragePermissions = _interopRequireWildcard(require("./modules/media/permissions/UserStorage"));
+
+exports.userStoragePermissions = userStoragePermissions;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

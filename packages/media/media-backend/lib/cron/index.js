@@ -27,14 +27,26 @@ const cronManager = () => {
 
   if (process.env.MEDIA_DELETE_FILES_CRON) {
     _nodeCron.default.schedule(process.env.MEDIA_DELETE_FILES_CRON, async () => {
-      _loggerBackend.DefaultLogger.info("CronManager findAndDeleteExpiredFiles starting ");
+      let success;
 
       try {
-        const success = await (0, _FileService.findAndDeleteExpiredFiles)();
+        _loggerBackend.DefaultLogger.info("CronManager findAndDeleteExpiredFiles starting ");
+
+        success = await (0, _FileService.findAndDeleteExpiredFiles)();
 
         _loggerBackend.DefaultLogger.info("CronManager findAndDeleteExpiredFiles finished. Deleted count " + success.deletedCount);
       } catch (e) {
         _loggerBackend.DefaultLogger.error("CronManager findAndDeleteExpiredFiles error", e);
+      }
+
+      try {
+        _loggerBackend.DefaultLogger.info("CronManager findAndDeleteByExpirationDate starting ");
+
+        success = await (0, _FileService.findAndDeleteByExpirationDate)();
+
+        _loggerBackend.DefaultLogger.info("CronManager findAndDeleteByExpirationDate finished. Deleted count " + success.deletedCount);
+      } catch (e) {
+        _loggerBackend.DefaultLogger.error("CronManager findAndDeleteByExpirationDate error", e);
       }
     }, {
       scheduled: true

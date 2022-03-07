@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.3.2",
+  "version": "1.5.13",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -16,13 +16,14 @@
     "build": "vue-cli-service build --dest dist --mode production"
   },
   "dependencies": {
-    "@dracul/common-frontend": "^1.2.30",
-    "@dracul/customize-frontend": "^1.2.30",
-    "@dracul/dayjs-frontend": "^1.2.34",
-    "@dracul/user-frontend": "^1.2.30",
+    "@dracul/common-frontend": "^1.5.0",
+    "@dracul/customize-frontend": "^1.5.13",
+    "@dracul/dayjs-frontend": "^1.5.13",
+    "@dracul/user-frontend": "^1.5.13",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
+    "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
     "apollo-upload-client": "^13.0.0",
@@ -31,8 +32,6 @@
     "core-js": "^3.6.5",
     "graphql": "^15.0.0",
     "jwt-decode": "^2.2.0",
-    "moment": "^2.26.0",
-    "moment-timezone": "^0.5.31",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-i18n": "^8.18.1",
@@ -57,7 +56,9 @@
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-vuetify": "~2.0.5",
     "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.3.0"
+    "vuetify-loader": "^1.3.0",
+    "webpack": "^4.1.0",
+    "webpack-bundle-analyzer": "^4.5.0"
   },
   "eslintConfig": {
     "root": true,

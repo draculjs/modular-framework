@@ -1,4 +1,4 @@
-mutation ( $file: Upload!){
+mutation avatarUpload( $file: Upload!){
     avatarUpload(file: $file){
         filename
         mimetype

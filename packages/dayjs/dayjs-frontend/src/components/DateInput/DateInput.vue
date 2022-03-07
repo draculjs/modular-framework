@@ -18,7 +18,14 @@
           :rules="rules"
           :error="error"
           :error-messages="errorMessages"
-          color="secondary"
+          :color="color"
+          :clearable="clearable"
+          :solo="solo"
+          :outlined="outlined"
+          :disabled="disabled"
+          :readonly="readonly"
+          :hide-details="hideDetails"
+          :style="{width: width, maxWidth: width}"
       ></v-text-field>
     </template>
     <v-date-picker v-model="item" scrollable @input="menu = false">
@@ -37,7 +44,15 @@ export default {
     error: {type: Boolean},
     errorMessages: {type:Array},
     label: { type: String},
-    rules: {type: Array, default: ()=>[]}
+    color: { type: String, default: "secondary"},
+    rules: {type: Array, default: ()=>[]},
+    clearable: {type:Boolean, default: true},
+    outlined: {type:Boolean, default: false},
+    solo: {type:Boolean, default: false},
+    readonly: {type:Boolean, default:false},
+    disabled: {type:Boolean, default: false},
+    hideDetails: {type: Boolean, default: false},
+    width: {type: String, default: null},
   },
   mixins: [DayjsMixin],
   computed: {
