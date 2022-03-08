@@ -39,16 +39,27 @@ export default {
       type: null,
       isRead: false,
       loading: false,
-      interval: null
+      interval: null,
+      notificationMethod
     }
   },
   mounted() {
-    this.getNotifications()
+    this.fetchNotificationMethod()
   },
   beforeDestroy(){
     clearInterval(this.interval)
   },
   methods: {
+    fetchNotificationMethod(){
+      notificationProvider.fetchNotificationMethod()
+      .then((res)=>{
+        console.log(res)
+        notificationMethod = res
+        this.getNotifications()
+      }).catch(err => {
+        setTimeout(this.fetchNotificationMethod, 30000)
+      })
+    },
     getNotifications() {
       if (this.isWebSocketEnable) {
         this.fetchNotifications()
@@ -89,10 +100,10 @@ export default {
   },
   computed: {
     isWebSocketEnable() {
-      return process.env.VUE_APP_ACTIVATE_WEB_SOCKET ? process.env.VUE_APP_ACTIVATE_WEB_SOCKET : true
+      return notificationMethod.enableWs ? notificationMethod.enableWs : false
     },
     timePolling() {
-      return process.env.VUE_APP_TIME_POLLING ? parseInt(process.env.VUE_APP_TIME_POLLING) : 30000
+      return notificationMethod.timePolling ? notificationMethod.timePolling : 30000
     },
     totalNotifications() {
       return this.getNotificationsWithoutRead.length
