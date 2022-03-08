@@ -324,7 +324,6 @@ var deleteNotificationsService = function deleteNotificationsService(userId) {
 };
 /**
  * Get the way to fetch notifications
- * NOTIFICATION_ACTIVATE_WEB_SOCKET enable(disable)
  * @return {Promise}
  */
 
