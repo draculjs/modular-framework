@@ -24,10 +24,10 @@ export default{
             if(!rbac.isAllowed(user.id, NOTIFICATION_SHOW)) throw new ForbiddenError("Not Authorized")
             return notificationsPaginateFilterService(user.id,limit, pageNumber, isRead, type)
         },
-        wayFetchNotifications:(_,{},{user, rbac})=>{
+        fetchNotificationMethod:(_,{},{user, rbac})=>{
             if (!user) throw new AuthenticationError("Unauthenticated")
             if(!rbac.isAllowed(user.id, NOTIFICATION_SHOW)) throw new ForbiddenError("Not Authorized")
-            return wayFetchNotificationsService(user.id)
+            return fetchNotificationMethodService(user.id)
         }
     },
     Mutation:{

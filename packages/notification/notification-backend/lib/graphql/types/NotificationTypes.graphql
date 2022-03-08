@@ -20,7 +20,7 @@ type NotificationsPaginated{
 }
 
 type wayFetchNotifications{
-    ws: Boolean
+    enableWs: Boolean
     timePolling: Int
 }
 

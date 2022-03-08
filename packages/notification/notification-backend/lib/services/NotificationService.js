@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.wayFetchNotificationsService = exports.deleteNotificationsService = exports.markAllReadOrNotReadService = exports.markAsReadOrNotReadService = exports.notificationsPaginateFilterService = exports.fetchNotificationsService = exports.createNotificationService = void 0;
+exports.fetchNotificationMethodService = exports.deleteNotificationsService = exports.markAllReadOrNotReadService = exports.markAsReadOrNotReadService = exports.notificationsPaginateFilterService = exports.fetchNotificationsService = exports.createNotificationService = void 0;
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
@@ -13,7 +13,7 @@ var _NotificationModel = _interopRequireDefault(require("../models/NotificationM
 
 var _loggerBackend = require("@dracul/logger-backend");
 
-var _moment = _interopRequireDefault(require("moment"));
+var _dayjs = _interopRequireDefault(require("dayjs"));
 
 var _PubSub = require("../PubSub");
 
@@ -298,8 +298,8 @@ var getReadDate = function getReadDate(readValue) {
 
 var deleteNotificationsService = function deleteNotificationsService(userId) {
   var numberOfDays = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 30;
-  var today = (0, _moment["default"])();
-  var until = (0, _moment["default"])().add(numberOfDays, "days");
+  var today = (0, _dayjs["default"])();
+  var until = (0, _dayjs["default"])().add(numberOfDays, "day");
   return new Promise(function (resolve, reject) {
     var query = {
       user: userId,
@@ -324,25 +324,29 @@ var deleteNotificationsService = function deleteNotificationsService(userId) {
 };
 /**
  * Get the way to fetch notifications
+ * NOTIFICATION_ACTIVATE_WEB_SOCKET enable(disable)
  * @return {Promise}
  */
 
 
 exports.deleteNotificationsService = deleteNotificationsService;
 
-var wayFetchNotificationsService = function wayFetchNotificationsService() {
+var fetchNotificationMethodService = function fetchNotificationMethodService() {
   return new Promise(function (resolve, reject) {
-    var wayToGetNotifications = process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET ? true : false;
-    var timePollingNotifications = !process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET ? parseInt(process.env.VUE_APP_TIME_POLLING) : 30000;
+    var WEB_SOCKET_STATE = ["enable", "disable"];
+    if (!process.env.NOTIFICATION_TIME_POLLING && !/^[0-9]+$/.test(process.env.NOTIFICATION_TIME_POLLING)) return reject(new Error("ENV VAR NOTIFICATION_TIME_POLLING must be a number!"));
+    if (WEB_SOCKET_STATE.includes(process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET)) return reject(new Error("ENV VAR NOTIFICATION_ACTIVATE_WEB_SOCKET must be 'enable' or 'disable'!"));
+    var wayToGetNotifications = process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET == "enable" ? true : false;
+    var timePollingNotifications = !process.env.NOTIFICATION_TIME_POLLING ? parseInt(process.env.NOTIFICATION_TIME_POLLING) : 30000;
     console.log({
-      ws: wayToGetNotifications,
+      enableWs: wayToGetNotifications,
       timePolling: timePollingNotifications
     });
     resolve({
-      ws: wayToGetNotifications,
+      enableWs: wayToGetNotifications,
       timePolling: timePollingNotifications
     });
   });
 };
 
-exports.wayFetchNotificationsService = wayFetchNotificationsService;
+exports.fetchNotificationMethodService = fetchNotificationMethodService;

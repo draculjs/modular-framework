@@ -43,13 +43,13 @@ var _default = {
       if (!rbac.isAllowed(user.id, _permissions.NOTIFICATION_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
       return (0, _NotificationService.notificationsPaginateFilterService)(user.id, limit, pageNumber, isRead, type);
     },
-    wayFetchNotifications: function wayFetchNotifications(_, _ref5, _ref6) {
+    fetchNotificationMethod: function fetchNotificationMethod(_, _ref5, _ref6) {
       (0, _objectDestructuringEmpty2["default"])(_ref5);
       var user = _ref6.user,
           rbac = _ref6.rbac;
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
       if (!rbac.isAllowed(user.id, _permissions.NOTIFICATION_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _NotificationService.wayFetchNotificationsService)(user.id);
+      return fetchNotificationMethodService(user.id);
     }
   },
   Mutation: {
