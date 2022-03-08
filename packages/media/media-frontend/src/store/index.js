@@ -22,6 +22,7 @@ export default new Vuex.Store({
                 {
                     user: {
                         access_token: state.user.access_token,
+                        refresh_token: state.user.refresh_token,
                         me: state.user.me
                     },
                     customization: {

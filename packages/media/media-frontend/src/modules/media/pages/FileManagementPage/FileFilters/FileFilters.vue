@@ -61,7 +61,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col v-if="isUserAuthorized()" cols="12" md="4">
               <user-autocomplete
                 v-model="filters[3].value"
                 :label="$t('media.file.createdBy')"
@@ -88,6 +88,7 @@
 
 import { DateInput } from '@dracul/dayjs-frontend';
 import { UserAutocomplete} from '@dracul/user-frontend'
+import { mapGetters } from 'vuex'
 
 
 export default {
@@ -97,6 +98,9 @@ export default {
     value: Array
   },
   computed: {
+    ...mapGetters([
+      'me'
+    ]),
     filters: {
       get() {return this.value},
       set(val) {
@@ -121,6 +125,9 @@ export default {
     cleanFilters() {
       this.$emit("clearFilter", this.filters);
     },
+    isUserAuthorized() {
+      return this.me.role.permissions.includes('FILE_SHOW_ALL')
+    }
   },
 };
 </script>

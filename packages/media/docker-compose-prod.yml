@@ -2,10 +2,10 @@ version: "3.5"
 
 services:
   draculMedia:
-    image: sndregistry.sondeosglobal.com/dracul/dracul-media:1.0.1
+    image: sndregistry.sondeosglobal.com/dracul/dracul-media:1.2.0
     volumes:
-      - ./media:/deploy/dist/media
-      - ./logs:/deploy/dist/logs
+      - ./media:/app/media
+      - ./logs:/app/logs
     ports:
       - "7070:7070"
     environment:
@@ -18,10 +18,14 @@ services:
       JWT_SECRET: "V8wzw4iL9H40oxXAVj9u"
       JWT_LOGIN_EXPIRED_IN: "1d"
       JWT_REGISTER_EXPIRED_IN: "30d"
+      JWT_REFRESHTOKEN_EXPIRED_IN: "1d"
       APP_NAME: "MEDIA"
       APP_PORT: 7070
       APP_API_URL: "http://url:puerto"
       APP_WEB_URL: "http://url:puerto"
+      MAX_SIZE_PER_FILE_IN_MEGABYTES: 4096
+      FILE_EXPIRATION_TIME_IN_DAYS: 180
+      DELETE_FILES_CRON: 0 0 0 * * * *
       SMTP_HOST: "smtp.xxxx.com.ar"
       SMTP_PORT: 25
       SMTP_SECURE: "false"

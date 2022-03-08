@@ -1,4 +1,5 @@
 import { AuthenticationError, ForbiddenError } from "apollo-server-express";
+import File from '../../models/FileModel'
 
 import express from 'express';
 
@@ -6,7 +7,7 @@ const router = express.Router();
 const multer = require('multer')
 const upload = multer()
 const streamifier = require('streamifier');
-import { findFile, paginateFiles } from "../../services/FileService";
+import { findFile, paginateFiles, updateFileRest } from "../../services/FileService";
 import { fileUpload } from "../../services/UploadService";
 import {
     FILE_SHOW_ALL,
@@ -56,6 +57,8 @@ router.post('/file', upload.single('file'), async function (req, res) {
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
 
+    const { expirationTime } = req.body;
+
     let file = {
         filename: req.file.originalname,
         mimetype: req.file.mimetype,
@@ -63,10 +66,24 @@ router.post('/file', upload.single('file'), async function (req, res) {
         encoding: req.file.encoding
     }
 
-    fileUpload(req.user, file).then(result => {
+    fileUpload(req.user, file, expirationTime).then(result => {
         res.status(201).json(result)
     }).catch(err => {
-        res.status(500).json({ message: err.message })
+        res.status(409).json({ message: err.message })
+    })
+
+})
+
+router.patch('/file/:id', async function (req, res) {
+
+    if (!req.user) res.status(401).json({ message: "Not Authorized" })
+    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
+    let permissionType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
+
+    updateFileRest(req.params.id, req.user, permissionType, req.body).then(result => {
+        res.status(200).json(result)
+    }).catch(err => {
+        res.status(err.status).json({ message: err.message })
     })
 
 })

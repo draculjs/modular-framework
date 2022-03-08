@@ -1,6 +1,6 @@
 import Notification from "../models/NotificationModel";
 import {DefaultLogger as winston} from "@dracul/logger-backend";
-import moment from "moment";
+import dayjs from "dayjs"
 import {pubsub} from '../PubSub'
 import mongoose from "mongoose";
 
@@ -21,7 +21,7 @@ export const createNotificationService = (
     type,
     icon
 ) => {
-    
+
     return new Promise((resolve, reject) => {
 
     if(!userId)
@@ -32,7 +32,7 @@ export const createNotificationService = (
         throw new Error("title must be provider")
     if(!content)
         throw new Error("content must be provider")
-        
+
         let newNotification = new Notification({
             user: userId,
             title,
@@ -248,9 +248,9 @@ const getReadDate = (readValue) => {
  * @return {Promise}
  */
 export const deleteNotificationsService = (userId, numberOfDays = 30) => {
-    
-    let today = moment();
-    let until = moment().add(numberOfDays, "days");
+
+    let today = dayjs();
+    let until = dayjs().add(numberOfDays, "day");
 
     return new Promise((resolve, reject) => {
         let query = {

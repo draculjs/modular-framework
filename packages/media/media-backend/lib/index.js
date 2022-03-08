@@ -27,6 +27,8 @@ var _middleware = require("./middleware");
 
 var _cron = require("./cron");
 
+var _UserCreateListener = require("./modules/media/listeners/UserCreateListener");
+
 var _swaggerUiExpress = _interopRequireDefault(require("swagger-ui-express"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -34,6 +36,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 require('dotenv').config();
 
 _loggerBackend.DefaultLogger.info("Starting APP");
+
+(0, _UserCreateListener.userCreateListener)();
 
 const YAML = require('yamljs');
 

@@ -2,6 +2,10 @@ import {securityResolvers, securityTypes} from './graphql'
 
 import {sessionMiddleware, jwtMiddleware, rbacMiddleware, corsMiddleware} from './middleware'
 
+import {UserModel, UserSchema} from './models/UserModel'
+import {RoleModel,RoleSchema} from './models/RoleModel'
+import {GroupModel, GroupSchema} from './models/GroupModel'
+
 import {
     AuthService,
     RecoveryService,
@@ -14,7 +18,8 @@ import {
     LoginFailService,
     SessionService,
     InitService,
-    ProfileService
+    ProfileService,
+    RbacService
 } from './services'
 
 import * as permissions from './permissions'
@@ -22,6 +27,15 @@ import * as permissions from './permissions'
 import rbac from './rbac/index'
 
 export {
+    //Models
+    UserModel,
+    RoleModel,
+    GroupModel,
+
+    //Schemas
+    UserSchema,
+    RoleSchema,
+    GroupSchema,
 
     //rbac
     rbac,
@@ -49,6 +63,7 @@ export {
     SessionService,
     InitService,
     ProfileService,
+    RbacService,
 
     //permissions
     permissions

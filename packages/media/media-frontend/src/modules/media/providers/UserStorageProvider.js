@@ -9,6 +9,13 @@ class UserStorageProvider {
     }
 
 
+    fetchMediaVariables() {
+        return this.gqlc.query({
+            query: require('./gql/fetchMediaVariables.graphql'),
+            fetchPolicy: "network-only"
+        })
+    }
+
     fetchUserStorage() {
         return this.gqlc.query({
             query: require('./gql/userStorageFetch.graphql'),

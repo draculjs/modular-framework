@@ -2,7 +2,7 @@
 const mongoHandler = require('../utils/mongo-handler');
 
 //Init DB
-import {initPermissions,initAdminRole,initRootUser} from "../../src/services/InitService";
+import {initPermissions, initAdminRole, initRootUser} from "../../src/services/InitService";
 
 //Service to Test
 
@@ -12,13 +12,9 @@ import {
 } from "../../src/services/AuthService";
 import {encodePassword} from "../../src/services/PasswordService"
 import {findUserByUsername} from "../../src/services/UserService";
-
-//Service dependencies
-import {findRoleByName} from "../../src/services/RoleService";
+import AuthResolvers from "../../src/graphql/resolvers/AuthResolvers"
 
 describe("UserService", () => {
-
-    let connection;
 
     beforeAll(async () => {
         await mongoHandler.connect()
@@ -27,21 +23,31 @@ describe("UserService", () => {
         await initRootUser()
     });
 
-    afterAll(async  () => {
+    afterAll(async () => {
         await mongoHandler.clearDatabase();
         await mongoHandler.closeDatabase();
     })
 
-
-
-    test('LoginOk', async () => {
+    test('LoginOk', async (done) => {
 
         let user = {username: 'root', password: 'root.123'}
         user.password = encodePassword(user.password)
-        await expect(auth(user, null))
-            .resolves.toHaveProperty('token')
 
-    }, 2000);
+        auth(user, null).then((res) => {
+
+            setTimeout(async () => {
+                let refreshToken = res.refreshToken
+                let newToken = await AuthResolvers.Mutation.refreshToken(null,
+                    {
+                        refreshTokenId: refreshToken.id,
+                    }, {req: null})
+
+                expect(newToken.token).not.toBe( res.token)
+                done()
+            }, 2000)
+        })
+
+    }, 5000);
 
     test('LoginFail', async () => {
 

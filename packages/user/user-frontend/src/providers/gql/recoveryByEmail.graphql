@@ -1,4 +1,4 @@
-mutation ( $email: String!){
+mutation recoveryByEmail( $email: String!){
     recoveryByEmail(email: $email){
         status
         message

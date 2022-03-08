@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
         validate: {
             validator: function (value) {
                 let r = /[0-9]+/;
-                return value ? r.test(value): true;
+                return value ? r.test(value) : true;
             },
             message: "Telefono no tiene un formato valido"
         }
@@ -46,7 +46,18 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Group',
         required: false,
-    }]
+    }],
+    refreshToken: {
+        type: [
+            {
+                id: {type: String},
+                expiryDate: {type: Date},
+                sessionId: {type: String},
+            }
+        ],
+        default: [],
+        _id: false
+    }
 }, {timestamps: true});
 
 UserSchema.set('toJSON', {getters: true});
@@ -58,4 +69,11 @@ UserSchema.plugin(mongoosePaginate);
 
 const UserModel = mongoose.model('User', UserSchema);
 
-module.exports = UserModel
+export {
+    UserSchema,
+    UserModel
+}
+
+export default UserModel
+
+//module.exports = UserModel

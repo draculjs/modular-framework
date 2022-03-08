@@ -9,8 +9,6 @@ var _loggerBackend = require("@dracul/logger-backend");
 
 var _path = _interopRequireDefault(require("path"));
 
-var _fs = _interopRequireDefault(require("fs"));
-
 var _FileModel = _interopRequireDefault(require("../models/FileModel"));
 
 var _storeFile = _interopRequireDefault(require("./helpers/storeFile"));
@@ -19,13 +17,11 @@ var _randomString = _interopRequireDefault(require("./helpers/randomString"));
 
 var _baseUrl = _interopRequireDefault(require("./helpers/baseUrl"));
 
-var _convertGigabytesToBytes = _interopRequireDefault(require("./helpers/convertGigabytesToBytes"));
-
 var _UserStorageService = require("./UserStorageService");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fileUpload = function (user, inputFile) {
+const fileUpload = function (user, inputFile, expirationDate) {
   return new Promise(async (resolve, rejects) => {
     try {
       if (!user) {
@@ -43,7 +39,7 @@ const fileUpload = function (user, inputFile) {
       const parseFileName = _path.default.parse(filename);
 
       const extension = parseFileName.ext;
-      const name = parseFileName.name;
+      const name = parseFileName.name.replace(/#/g, "");
       const hash = '-' + (0, _randomString.default)(6);
       const finalFileName = name + hash + extension;
       const year = new Date().getFullYear().toString();
@@ -54,9 +50,27 @@ const fileUpload = function (user, inputFile) {
       const absolutePath = _path.default.resolve(relativePath); //Store
 
 
-      let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath, user.id);
+      let storeResult = await (0, _storeFile.default)(createReadStream(), relativePath, user);
 
       _loggerBackend.DefaultLogger.info("fileUploadAnonymous store result: " + storeResult);
+
+      if (expirationDate) {
+        let timeDiffExpirationDate = validateExpirationDate(expirationDate);
+
+        if (!timeDiffExpirationDate) {
+          _loggerBackend.DefaultLogger.error("Expiration date must be older than current date");
+
+          rejects(new Error("Expiration date must be older than current date"));
+        }
+
+        let userStorage = await (0, _UserStorageService.findUserStorageByUser)(user);
+
+        if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
+          _loggerBackend.DefaultLogger.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`);
+
+          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`));
+        }
+      }
 
       let url = (0, _baseUrl.default)() + relativePath;
 
@@ -76,7 +90,8 @@ const fileUpload = function (user, inputFile) {
           createdBy: {
             user: user.id,
             username: user.username
-          }
+          },
+          expirationDate: expirationDate
         });
 
         _loggerBackend.DefaultLogger.info("fileUploadAnonymous saving file");
@@ -92,7 +107,7 @@ const fileUpload = function (user, inputFile) {
         rejects(new Error("Upload Fail"));
       }
     } catch (err) {
-      _loggerBackend.DefaultLogger.error('UploadService: ', err);
+      _loggerBackend.DefaultLogger.error('UploadService error' + err);
 
       rejects(err);
     }
@@ -100,5 +115,17 @@ const fileUpload = function (user, inputFile) {
 };
 
 exports.fileUpload = fileUpload;
+
+function validateExpirationDate(expirationTime) {
+  const today = new Date();
+  const expirationDate = new Date(expirationTime);
+
+  if (expirationDate > today) {
+    return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
+  }
+
+  return null;
+}
+
 var _default = fileUpload;
 exports.default = _default;

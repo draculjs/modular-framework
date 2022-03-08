@@ -18,9 +18,9 @@ const fileUploadAnonymous = function (inputFile) {
 
       const parseFileName = path.parse(filename);
       const extension = parseFileName.ext
-      const name = parseFileName.name
-      const hash = '-' + randomString(6)
-      const finalFileName = name + hash + extension
+      const name = parseFileName.name.replace(/#/g,"")
+      const hash =   '-' + randomString(6)
+      const finalFileName =  name + hash + extension
       const year = new Date().getFullYear().toString()
       const month = (new Date().getMonth() + 1).toString()
       const relativePath = path.join("media", "files", USERNAME, year, month, finalFileName)

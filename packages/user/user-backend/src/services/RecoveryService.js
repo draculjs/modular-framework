@@ -146,7 +146,7 @@ export const recoveryChangePassword = function (token, newPassword, req) {
 
                     createSession(user, req).then(session => {
 
-                        const payload = tokenSignPayload(user, session)
+                        const payload = tokenSignPayload(user, session.id)
 
                         const options = {
                             expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1d',

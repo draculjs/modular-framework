@@ -37,8 +37,8 @@ _mongoose.default.set('useCreateIndex', true);
 const initService = async () => {
   await _userBackend.InitService.initPermissions();
   await (0, _customizeBackend.initPermissionsCustomization)();
-  await (0, _InitMediaPermissions.default)();
-  await (0, _UserStorageService.userStorageCheckAndCreate)();
+  await (0, _InitMediaPermissions.default)(); // await userStorageCheckAndCreate()
+
   await _userBackend.InitService.initAdminRole();
   await _userBackend.InitService.initRoles([_initUploaderRole.default]);
   await _userBackend.InitService.initRootUser();

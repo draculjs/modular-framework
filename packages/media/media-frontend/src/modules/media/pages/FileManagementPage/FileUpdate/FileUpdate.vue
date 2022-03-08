@@ -41,7 +41,8 @@
                 form: {
                     id: this.item.id,
                     description: this.item.description,
-                    tags: this.item.tags
+                    tags: this.item.tags,
+                    expirationDate: this.item.expirationDate
                 }
             }
         },

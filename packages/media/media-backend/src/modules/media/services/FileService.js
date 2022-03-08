@@ -2,7 +2,7 @@ import File from './../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
 import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../../media/permissions/File";
 import dayjs from 'dayjs'
-import { updateUserUsedStorage } from './UserStorageService';
+import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 
@@ -19,14 +19,43 @@ export const findFile = async function (id, permissionType = null, userId = null
     }
 }
 
-export const fetchFiles = async function () {
+export const fetchFiles = async function (expirationDate = null) {
+
+    function filter(expirationDate) {
+
+        let operationsRange = {};
+        let dateSinceForQuery = null
+        let dateUntilForQuery = null
+
+        if (expirationDate) {
+
+            dateSinceForQuery = new Date(expirationDate);
+            dateSinceForQuery.setHours(0);
+            dateSinceForQuery.setMinutes(0);
+
+            dateUntilForQuery = new Date(expirationDate);
+            dateUntilForQuery.setHours(23);
+            dateUntilForQuery.setMinutes(59);
+
+            operationsRange = {
+                $and: [
+                    { createdAt: { $gte: dateSinceForQuery } },
+                    { createdAt: { $lte: dateUntilForQuery } },
+                ],
+            };
+
+        }
+        return operationsRange;
+    }
+
+    const query = filter(expirationDate);
+
     return new Promise((resolve, reject) => {
-        File.find({}).populate('createdBy.user').exec((err, res) => (
+        File.find(query).populate('createdBy.user').exec((err, res) => (
             err ? reject(err) : resolve(res)
         ));
     })
 }
-
 
 export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false }, permissionType = null, userId = null) {
 
@@ -64,7 +93,7 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
                         break
                     case 'dateTo':
                         if (value) {
-                            let dayAfter = dayjs(value).isValid() && dayjs(value)
+                            let dayAfter = dayjs(value).isValid() && dayjs(value).add(1, 'day')
                             if (qsFilter.createdAt) {
                                 qsFilter.createdAt = { ...qsFilter.createdAt, [operator]: dayAfter.$d }
                             } else {
@@ -121,13 +150,12 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 }
 
 
-export const updateFile = async function (authUser, id, { description, tags }, permissionType, userId) {
+export const updateFile = async function (authUser, id, input, permissionType, userId) {
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, userId) },
-            { description, tags },
+            { description, tags, expirationDate },
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
-
                 if (error) {
                     if (error.name == "ValidationError") {
                         rejects(new UserInputError(error.message, { inputErrors: error.errors }));
@@ -141,6 +169,45 @@ export const updateFile = async function (authUser, id, { description, tags }, p
                 }
             })
     })
+}
+
+// Rest service
+export const updateFileRest = function (id, user, permissionType, input) {
+    return new Promise(async (resolve, reject) => {
+
+        let updatedFile = purgeInput(input);
+
+        if (!input || Object.entries(input).length == 0) {
+            throw reject({ message: "File content can not be empty", status: 400 })
+        }
+
+        let userStorage = await findUserStorageByUser(user)
+
+        let timeDiffExpirationDate = validateExpirationDate(input.expirationDate)
+
+        if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
+            throw reject({
+                message: `File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`,
+                status: 403
+            })
+        }
+
+        // Find file and update it with the request body
+        File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, user.id) },
+            { $set: updatedFile },
+            { new: true })
+            .then(file => {
+                if (!file) {
+                    throw reject({ message: `file not found with id ${id}`, status: 404 })
+                }
+                resolve(file);
+            }).catch(err => {
+                if (err.kind === 'ObjectId') {
+                    throw reject({ message: `file not found with id ${id}`, status: 404 })
+                }
+                throw reject({ message: `Error updating file with id ${id}. Error: ${err}`, status: 500 })
+            });
+    });
 }
 
 export const updateByRelativePath = function (relativePath) {
@@ -191,6 +258,11 @@ export const findAndDeleteExpiredFiles = async function () {
 
         return [
             {
+                $match: {
+                    expirationDate: { $eq: null }
+                }
+            },
+            {
                 $lookup: {
                     from: "userstorages",
                     localField: "createdBy.user",
@@ -203,7 +275,15 @@ export const findAndDeleteExpiredFiles = async function () {
             },
             {
                 $addFields: {
-                    timeDiffInMillis: { $subtract: ["$$NOW", "$lastAccess"] }
+                    timeDiffInMillis: {
+                        $cond: [
+                            {
+                                $eq: ["$userStorage.deleteByLastAccess", true]
+                            },
+                            { $subtract: ["$$NOW", "$lastAccess"] },
+                            { $subtract: ["$$NOW", "$createdAt"] }
+                        ]
+                    }
                 }
             },
             {
@@ -226,31 +306,56 @@ export const findAndDeleteExpiredFiles = async function () {
 
     const entityData = getDataEntity();
     const aggregateData = [entityData];
-
     let docs = []
+
     await File.aggregate(aggregateData).then((result) => {
         docs = result;
     }).catch((error) => {
         winston.error('FileService - findExpiredFiles - Error en aggregate: ' + error)
     });
 
+    return deleteAndUnlinkFiles(docs);
+}
+
+export const findAndDeleteByExpirationDate = async function () {
+
+    let expirationDate = new Date();
+    let docs = [];
+
+    await fetchFiles(expirationDate).then((result) => {
+        docs = result;
+    }).catch((error) => {
+        winston.error('FileService - findAndDeleteByExpirationDate - Error en aggregate: ' + error)
+    });
+
+    return deleteAndUnlinkFiles(docs);
+}
+
+function deleteAndUnlinkFiles(docs) {
     // For each de los files con unlink y actualizo usedSpace de userStorage
     if (docs) {
-        docs.forEach((file) => {
-            updateUserUsedStorage(file.createdBy.user, -file.size)
-            fs.unlink(file.relativePath, (error) => {
-                if (error) winston.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error)
-                else winston.info('Se eliminó el archivo ' + file.relativePath)
-            });
-        })
+        unlinkFiles(docs)
     }
-
     // Mappeo los ids de los files encontrados
     let fileIds = docs.map(file => { return file._id });
 
     // Borro los files encontrados
+    return deleteManyById(fileIds);
+}
+
+function unlinkFiles(files) {
+    files.forEach((file) => {
+        updateUserUsedStorage(file.createdBy.user, -file.size)
+        fs.unlink(file.relativePath, (error) => {
+            if (error) winston.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error)
+            else winston.info('Se eliminó el archivo ' + file.relativePath)
+        });
+    })
+}
+
+function deleteManyById(ids) {
     return new Promise((resolve, reject) => {
-        File.deleteMany({ _id: { $in: fileIds } }).then((result) => {
+        File.deleteMany({ _id: { $in: ids } }).then((result) => {
             resolve({ ok: result.ok, deletedCount: result.deletedCount })
         }).catch((err) => {
             winston.error('FileService - findExpiredFiles. Error en deleteMany: ' + error)
@@ -272,4 +377,23 @@ function filterByFileOwner(permissionType, userId) {
             break;
     }
     return query;
+}
+
+function validateExpirationDate(expirationTime) {
+    const today = new Date();
+    const expirationDate = new Date(expirationTime);
+    if (expirationDate > today) {
+        return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
+    }
+    return null;
+}
+
+function purgeInput(input) {
+    let updatedFile = {};
+    for (const key in input) {
+        if (key == 'description' || key == 'expirationDate' || key == 'tags') {
+            updatedFile[key] = input[key];
+        }
+    }
+    return updatedFile;
 }

@@ -6,7 +6,12 @@ import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-express'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
-import {findRole, findRoleByName} from "./RoleService";
+import {findRoleByName} from "./RoleService";
+
+const EventEmitter = require('events');
+
+export let UserEventEmitter = new EventEmitter()
+
 
 export const hashPassword = function (password) {
     if (!password) {
@@ -30,8 +35,8 @@ export const createUser = async function ({username, password, name, email, phon
         active,
         role,
         groups,
-        createdAt: Date.now()
-
+        createdAt: Date.now(),
+        refreshToken: []
     })
 
     return new Promise((resolve, reject) => {
@@ -47,15 +52,19 @@ export const createUser = async function ({username, password, name, email, phon
             } else {
 
                 //Add user to groups
-                if(groups && groups.length){
-                    for(let group of groups){
-                        await addUserToGroup(group,doc._id)
+                if (groups && groups.length) {
+                    for (let group of groups) {
+                        await addUserToGroup(group, doc._id)
                     }
                 }
 
                 winston.info('UserService.createUser successful for ' + doc.username)
                 createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userCreated')
-                doc.populate('role').populate('groups').execPopulate(() => (resolve(doc))
+
+                doc.populate('role').populate('groups').execPopulate(() => {
+                        UserEventEmitter.emit('created', doc)
+                        resolve(doc)
+                    }
                 )
             }
         })
@@ -63,7 +72,7 @@ export const createUser = async function ({username, password, name, email, phon
 }
 
 
-export const updateUser =  function (id, {username, name, email, phone, role, groups, active}, actionBy = null) {
+export const updateUser = function (id, {username, name, email, phone, role, groups, active, refreshToken}, actionBy = null) {
 
     return new Promise(async (resolve, reject) => {
         let updatedAt = Date.now()
@@ -72,15 +81,15 @@ export const updateUser =  function (id, {username, name, email, phone, role, gr
         let toRemoveGroups = []
         let toAddGroups = []
         let oldGroups = await fetchMyGroups(id)
-        if(oldGroups && oldGroups.length){
+        if (oldGroups && oldGroups.length) {
             toRemoveGroups = oldGroups.filter(group => !groups.some(ngroup => ngroup.id === group.id))
         }
-        if(groups && groups.length){
+        if (groups && groups.length) {
             toAddGroups = groups.filter(group => !oldGroups.some(ngroup => ngroup.id === group.id))
         }
 
         User.findOneAndUpdate(
-            {_id: id}, {username, name, email, phone, role, groups, active, updatedAt}, {
+            {_id: id}, {username, name, email, phone, role, groups, active, updatedAt, refreshToken}, {
                 new: true,
                 runValidators: true,
                 context: 'query'
@@ -100,24 +109,27 @@ export const updateUser =  function (id, {username, name, email, phone, role, gr
 
                     //Add user to groups
                     //console.log("toAddGroups", toAddGroups)
-                    if(toAddGroups && toAddGroups.length){
-                        for(let groupId of toAddGroups){
-                            await addUserToGroup(groupId,doc._id)
+                    if (toAddGroups && toAddGroups.length) {
+                        for (let groupId of toAddGroups) {
+                            await addUserToGroup(groupId, doc._id)
                         }
                     }
 
                     //Remove user to groups
                     //console.log("toRemoveGroups", toRemoveGroups)
-                    if(toRemoveGroups && toRemoveGroups.length){
-                        for(let group of toRemoveGroups){
-                            await removeUserToGroup(group.id,doc._id)
+                    if (toRemoveGroups && toRemoveGroups.length) {
+                        for (let group of toRemoveGroups) {
+                            await removeUserToGroup(group.id, doc._id)
                         }
                     }
 
 
                     winston.info('UserService.updateUser successful for ' + doc.username)
                     createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userModified')
-                    doc.populate('role').populate('groups').execPopulate(() => resolve(doc))
+                    doc.populate('role').populate('groups').execPopulate(() => {
+                        UserEventEmitter.emit('updated', doc)
+                        resolve(doc)
+                    })
                 }
             }
         );
@@ -135,6 +147,7 @@ export const deleteUser = function (id, actionBy = null) {
                     reject(err)
                 } else {
                     winston.info('UserService.deleteUser successful for ' + doc.username)
+                    UserEventEmitter.emit('deleted', doc)
                     resolve({success: true, id: id})
                 }
             });
@@ -150,7 +163,7 @@ export const findUsers = function (roles = [], userId = null) {
         let qs = {}
 
         if (roles && roles.length) {
-            qs  = {
+            qs = {
                 $or: [
                     {role: {$in: roles}},
                     {_id: userId}
@@ -176,7 +189,7 @@ export const findUsersByRole = function (roleName) {
 
         let role = await findRoleByName(roleName)
 
-        if(!role) return resolve([])
+        if (!role) return resolve([])
 
         User.find({role: role.id}).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
             if (err) {
@@ -370,5 +383,25 @@ export const setUsersGroups = function (group, users) {
             reject(e)
         })
 
+    })
+}
+
+export const findUserByRefreshToken = function (id) {
+
+    return new Promise(async (resolve, reject) => {
+        let now = new Date()
+        User.findOne({
+            active: true,
+            'refreshToken.id': id,
+            'refreshToken.expiryDate': {$gte: now}
+        }).populate('role').populate('groups').exec((err, res) => {
+            if (err) {
+                winston.error("UserService.findUserByRefreshToken ", err)
+                reject(err)
+            } else {
+                winston.debug('UserService.findUserByRefreshToken successful')
+                resolve(res)
+            }
+        })
     })
 }

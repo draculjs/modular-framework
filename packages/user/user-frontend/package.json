@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.2.30",
+  "version": "1.5.13",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -19,7 +19,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.2.30"
+    "@dracul/common-frontend": "^1.5.0",
+    "@dracul/dayjs-frontend": "^1.5.13"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
@@ -55,8 +56,6 @@
     "jest-transform-graphql": "^2.1.0",
     "jwt-decode": "^2.2.0",
     "mock-apollo-client": "^0.4.0",
-    "moment": "^2.26.0",
-    "moment-timezone": "^0.5.31",
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
     "vue": "^2.6.11",
