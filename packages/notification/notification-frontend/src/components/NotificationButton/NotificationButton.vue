@@ -40,7 +40,7 @@ export default {
       isRead: false,
       loading: false,
       interval: null,
-      notificationMethod
+      notificationMethod: null
     }
   },
   mounted() {
