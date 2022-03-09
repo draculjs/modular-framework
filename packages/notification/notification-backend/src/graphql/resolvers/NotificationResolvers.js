@@ -1,4 +1,4 @@
-import {markAsReadOrNotReadService, markAllReadOrNotReadService, fetchNotificationsService,createNotificationService,notificationsPaginateFilterService,wayFetchNotificationsService} from '../../services/NotificationService'
+import {markAsReadOrNotReadService, markAllReadOrNotReadService, fetchNotificationsService,createNotificationService,notificationsPaginateFilterService,fetchNotificationMethodService} from '../../services/NotificationService'
 
 import {AuthenticationError, ForbiddenError} from 'apollo-server-express';
 
