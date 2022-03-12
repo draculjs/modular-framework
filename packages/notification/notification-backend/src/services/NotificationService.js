@@ -269,3 +269,21 @@ export const deleteNotificationsService = (userId, numberOfDays = 30) => {
             });
     });
 };
+
+/**
+ * Get the way to fetch notifications
+ * @return {Promise}
+ */
+export const fetchNotificationMethodService = () => {
+
+    return new Promise((resolve, reject) => {
+
+        const WEB_SOCKET_STATE = ["enable","disable"]
+        if(!process.env.NOTIFICATION_TIME_POLLING && !/^[0-9]+$/.test(process.env.NOTIFICATION_TIME_POLLING)) return reject(new Error("ENV VAR NOTIFICATION_TIME_POLLING must be a number!"))
+        if(!WEB_SOCKET_STATE.includes(process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET)) return reject(new Error("ENV VAR NOTIFICATION_ACTIVATE_WEB_SOCKET must be 'enable' or 'disable'!"))
+
+        let enableWs = process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET == "enable" ? true : false
+        let timePolling = !process.env.NOTIFICATION_TIME_POLLING ? parseInt(process.env.NOTIFICATION_TIME_POLLING) : 30000
+        resolve({enableWs: enableWs, timePolling: timePolling})
+    })
+}

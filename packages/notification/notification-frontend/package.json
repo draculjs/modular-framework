@@ -32,7 +32,7 @@
     "symbol-observable": "^3.0.0",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.4.9",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.6.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

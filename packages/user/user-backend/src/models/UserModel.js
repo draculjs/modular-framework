@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import {mongoose} from '@dracul/common-backend';
 import softDelete from 'mongoose-softdelete'
 import mongoosePaginate from 'mongoose-paginate-v2';
 
@@ -76,4 +76,3 @@ export {
 
 export default UserModel
 
-//module.exports = UserModel

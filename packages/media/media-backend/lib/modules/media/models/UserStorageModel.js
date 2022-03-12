@@ -1,6 +1,6 @@
 "use strict";
 
-const mongoose = require("mongoose");
+var _commonBackend = require("@dracul/common-backend");
 
 const mongoosePaginate = require("mongoose-paginate-v2");
 
@@ -8,10 +8,10 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 const {
   Schema
-} = mongoose;
+} = _commonBackend.mongoose;
 const userStorageSchema = new Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: _commonBackend.mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: false,
     unique: true
@@ -47,5 +47,7 @@ userStorageSchema.plugin(mongoosePaginate);
 userStorageSchema.plugin(uniqueValidator, {
   message: "validation.unique"
 });
-const userStorage = mongoose.model("userStorage", userStorageSchema);
+
+const userStorage = _commonBackend.mongoose.model("userStorage", userStorageSchema);
+
 module.exports = userStorage;

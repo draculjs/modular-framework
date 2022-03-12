@@ -1,4 +1,4 @@
-type Notification{
+type Notification {
     id: ID,
     user: ID,
     title: String
@@ -9,26 +9,32 @@ type Notification{
     icon: String
     readDate: String
 }
-type ResponseNotification{
+type ResponseNotification {
     success: Int
 }
 
-type NotificationsPaginated{
+type NotificationsPaginated {
     totalItems: Int
     page: Int
     items: [Notification]
 }
 
+type FetchNotificationMethod{
+    enableWs: Boolean
+    timePolling: Int
+}
+
 type Query{
-    fetchNotifications(limit: Int, isRead: Boolean ,type: String):[Notification]
+    fetchNotifications(limit: Int, isRead: Boolean ,type: String): [Notification]
     notificationsPaginateFilter(limit: Int, pageNumber: Int, isRead: Boolean, type: String): NotificationsPaginated
+    fetchNotificationMethod: FetchNotificationMethod
 }
 
 type Mutation{
-    markAsReadOrNotRead(id: ID, isRead: Boolean):Notification
-    markAllReadOrNotRead(isRead: Boolean):ResponseNotification
-    createNotification(title: String, content: String, type: String, icon: String):Notification
-    createNotificationTest(user: ID, title: String, content: String, type: String, icon: String):Notification
+    markAsReadOrNotRead(id: ID, isRead: Boolean): Notification
+    markAllReadOrNotRead(isRead: Boolean): ResponseNotification
+    createNotification(title: String, content: String, type: String, icon: String): Notification
+    createNotificationTest(user: ID, title: String, content: String, type: String, icon: String): Notification
 }
 
 type Subscription{

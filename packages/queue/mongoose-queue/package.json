@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dracul/common-backend": "^1.2.32",
     "@dracul/logger-backend": "^1.0.105",
     "apollo-server-express": "^3.3.0",
     "dotenv": "^8.2.0",

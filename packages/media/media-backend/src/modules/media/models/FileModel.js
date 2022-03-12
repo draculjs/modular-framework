@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import {mongoose} from '@dracul/common-backend';
 const softDelete = require('mongoose-softdelete')
 const mongoosePaginate = require('mongoose-paginate-v2');
 

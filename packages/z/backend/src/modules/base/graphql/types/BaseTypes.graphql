@@ -1,0 +1,10 @@
+type Ping{
+    status: Boolean
+}
+
+type Query {
+    ping: Ping
+    pingDelayed: Ping
+    pingTimeout: Ping
+    errorDemo: String
+}

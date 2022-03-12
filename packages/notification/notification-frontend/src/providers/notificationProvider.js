@@ -49,6 +49,14 @@ class notificationProvider {
     });
   }
 
+  fetchNotificationMethod(){
+    return this.gqlc.query({
+      query: require("./gql/fetchNotificationMethod.graphql"),
+      variables: {},
+      fetchPolicy: "network-only",
+    });
+  }
+
   createNotification(title, content, type, icon) {
     return this.gqlc.mutate({
       mutation: require("./gql/createNotification.graphql"),

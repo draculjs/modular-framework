@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import {mongoose} from '@dracul/common-backend';
 
 const Schema = mongoose.Schema;
 

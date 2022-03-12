@@ -1,4 +1,4 @@
-import {markAsReadOrNotReadService, markAllReadOrNotReadService, fetchNotificationsService,createNotificationService,notificationsPaginateFilterService} from '../../services/NotificationService'
+import {markAsReadOrNotReadService, markAllReadOrNotReadService, fetchNotificationsService,createNotificationService,notificationsPaginateFilterService,fetchNotificationMethodService} from '../../services/NotificationService'
 
 import {AuthenticationError, ForbiddenError} from 'apollo-server-express';
 
@@ -23,6 +23,11 @@ export default{
             if (!user) throw new AuthenticationError("Unauthenticated")
             if(!rbac.isAllowed(user.id, NOTIFICATION_SHOW)) throw new ForbiddenError("Not Authorized")
             return notificationsPaginateFilterService(user.id,limit, pageNumber, isRead, type)
+        },
+        fetchNotificationMethod:(_,{},{user, rbac})=>{
+            if (!user) throw new AuthenticationError("Unauthenticated")
+            if(!rbac.isAllowed(user.id, NOTIFICATION_SHOW)) throw new ForbiddenError("Not Authorized")
+            return fetchNotificationMethodService()
         }
     },
     Mutation:{

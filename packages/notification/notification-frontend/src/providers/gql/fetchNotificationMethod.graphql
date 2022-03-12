@@ -1,0 +1,6 @@
+query fetchNotificationMethod{
+    fetchNotificationMethod{
+        enableWs
+        timePolling
+    }
+}

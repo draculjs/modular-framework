@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import {mongoose} from '@dracul/common-backend';
 
 import uniqueValidator from 'mongoose-unique-validator';
 
