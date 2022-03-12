@@ -30,10 +30,6 @@
     "isobject": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "merge-graphql-schemas": "^1.7.8",
-    "mongoose": "5.13.14",
-    "mongoose-paginate-v2": "^1.3.6",
-    "mongoose-softdelete": "1.1.0",
-    "mongoose-unique-validator": "^2.0.3",
     "node-device-detector": "^1.2.1",
     "nodemailer": "^6.3.1",
     "nodemailer-pug-engine": "^1.0.1",
@@ -58,7 +54,11 @@
     "jest": "^25.4.0",
     "mime-types": "^2.1.27",
     "mongodb-memory-server": "^6.5.2",
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "mongoose": "5.13.14",
+    "mongoose-paginate-v2": "^1.3.6",
+    "mongoose-softdelete": "1.1.0",
+    "mongoose-unique-validator": "^2.0.3"
   },
   "gitHead": "0b585638233d846c57d4a8717e3bf91e3d4e34a3"
 }
