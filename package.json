@@ -1,7 +1,12 @@
 {
   "name": "root",
   "private": true,
+  "dependencies": {
+    "mongoose": "^5.9.19"
+  },
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "lerna": "^3.22.1",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7"
   }
 }

@@ -1,8 +1,8 @@
 "use strict";
 
-const mongoose = require('mongoose');
+var _commonBackend = require("@dracul/common-backend");
 
-const Schema = mongoose.Schema;
+const Schema = _commonBackend.mongoose.Schema;
 const QueueStatsSchema = new Schema({
   topic: {
     type: String,
@@ -30,5 +30,7 @@ const QueueStatsSchema = new Schema({
     default: 0
   }
 });
-const QueueStatsModel = mongoose.model('QueueStats', QueueStatsSchema);
+
+const QueueStatsModel = _commonBackend.mongoose.model('QueueStats', QueueStatsSchema);
+
 module.exports = QueueStatsModel;

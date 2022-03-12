@@ -1,5 +1,11 @@
 <template>
-  <v-menu offset-y left open-on-hover :close-on-content-click="false">
+  <v-menu
+      left :nudge-bottom="40"
+      open-on-hover
+      :close-on-content-click="false"
+      :nudge-width="280"
+
+  >
     <template v-slot:activator="{ on, attrs }">
       <v-badge
           :content="totalNotifications"
@@ -12,12 +18,14 @@
                icon
                class="onPrimary--text"
         >
-          <v-icon >notifications</v-icon>
+          <v-icon>notifications</v-icon>
         </v-btn>
       </v-badge>
     </template>
-    <notificationMiniShow :notificationsItems="getNotificationsWithoutRead"
-                          v-on:updateNotifications="getNotifications"/>
+    <notificationMiniShow
+        :notificationsItems="getNotificationsWithoutRead"
+        v-on:updateNotifications="getNotifications"
+    />
   </v-menu>
 </template>
 
@@ -46,17 +54,16 @@ export default {
   mounted() {
     this.fetchNotificationMethod()
   },
-  beforeDestroy(){
+  beforeDestroy() {
     clearInterval(this.interval)
   },
   methods: {
-    fetchNotificationMethod(){
+    fetchNotificationMethod() {
       notificationProvider.fetchNotificationMethod()
-      .then((res)=>{
-        console.log(res)
-        notificationMethod = res
-        this.getNotifications()
-      }).catch(err => {
+          .then((res) => {
+            this.notificationMethod = res.data.fetchNotificationMethod
+            this.getNotifications()
+          }).catch(err => {
         setTimeout(this.fetchNotificationMethod, 30000)
       })
     },
@@ -91,7 +98,7 @@ export default {
         return
       }
       notificationProvider.subscriptionNotification(this.userId).subscribe(res => {
-        if(res.data.notification){
+        if (res.data.notification) {
           this.items.unshift(res.data.notification)
           this.fetchNotifications();
         }
@@ -100,10 +107,10 @@ export default {
   },
   computed: {
     isWebSocketEnable() {
-      return notificationMethod.enableWs ? notificationMethod.enableWs : false
+      return this.notificationMethod.enableWs ? this.notificationMethod.enableWs : false
     },
     timePolling() {
-      return notificationMethod.timePolling ? notificationMethod.timePolling : 30000
+      return this.notificationMethod.timePolling ? this.notificationMethod.timePolling : 30000
     },
     totalNotifications() {
       return this.getNotificationsWithoutRead.length

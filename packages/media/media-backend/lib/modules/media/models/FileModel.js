@@ -1,12 +1,12 @@
 "use strict";
 
-const mongoose = require('mongoose');
+var _commonBackend = require("@dracul/common-backend");
 
 const softDelete = require('mongoose-softdelete');
 
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-const Schema = mongoose.Schema;
+const Schema = _commonBackend.mongoose.Schema;
 const FileSchema = new Schema({
   filename: {
     type: String,
@@ -65,7 +65,7 @@ const FileSchema = new Schema({
   },
   createdBy: {
     user: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: _commonBackend.mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: false
     },
@@ -80,5 +80,7 @@ const FileSchema = new Schema({
   }
 });
 FileSchema.plugin(mongoosePaginate);
-const File = mongoose.model('File', FileSchema);
+
+const File = _commonBackend.mongoose.model('File', FileSchema);
+
 module.exports = File;

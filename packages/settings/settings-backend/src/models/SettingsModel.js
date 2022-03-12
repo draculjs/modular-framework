@@ -1,4 +1,4 @@
-const mongoose = require('mongoose'); 
+import {mongoose} from '@dracul/common-backend';
 
 
 
@@ -7,7 +7,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 
-const SettingsSchema = new Schema({ 
+const SettingsSchema = new Schema({
 
  key: {type: String, required: true, unique: true},
  value: {type: String, required: false, unique: false},

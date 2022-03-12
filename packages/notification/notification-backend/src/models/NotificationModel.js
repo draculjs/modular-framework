@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import {mongoose} from '@dracul/common-backend';
 const mongoosePaginate = require("mongoose-paginate-v2");
 const Schema = mongoose.Schema;
 

@@ -1,0 +1,16 @@
+type BaseError{
+    name: String
+    age: Int
+    color: String
+}
+
+type Query {
+    getNotAuthorized: String
+    getAuthenticationError: String
+    getUserInputError: String
+    getValidationError: String
+    getApolloError: String
+    getCustomError: String
+    getTimeout: String
+    getNetworkError: String
+}

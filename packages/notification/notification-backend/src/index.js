@@ -8,7 +8,6 @@ import {
 } from "./services/NotificationService"
 
 import {types, resolvers} from "./graphql"
-import {startNotificacionWs} from "./WebSocketServer"
 import * as permissions from "./permissions"
 import NotificationModel from "./models/NotificationModel"
 
@@ -23,8 +22,6 @@ export{
     //Types and resolvers
     types,
     resolvers,
-    //WebSocket server
-    startNotificacionWs,
     //Permissions
     permissions,
     //Model

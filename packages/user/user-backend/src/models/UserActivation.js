@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import {mongoose} from '@dracul/common-backend';
 
 const UserActivationSchema = new mongoose.Schema({
     code: { type: String, required: true },

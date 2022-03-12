@@ -21,6 +21,12 @@ Object.defineProperty(exports, "DateInput", {
     return _DateInput.default;
   }
 });
+Object.defineProperty(exports, "MonthPicker", {
+  enumerable: true,
+  get: function () {
+    return _MonthPicker.default;
+  }
+});
 Object.defineProperty(exports, "DateTimeInput", {
   enumerable: true,
   get: function () {
@@ -39,6 +45,8 @@ var _Dayjs = _interopRequireDefault(require("./utils/Dayjs"));
 var _DayjsMixin = _interopRequireDefault(require("./mixins/DayjsMixin"));
 
 var _DateInput = _interopRequireDefault(require("./components/DateInput"));
+
+var _MonthPicker = _interopRequireDefault(require("./components/MonthPicker"));
 
 var _DateTimeInput = _interopRequireDefault(require("./components/DateTimeInput"));
 

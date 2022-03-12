@@ -27,7 +27,7 @@ export default{
         fetchNotificationMethod:(_,{},{user, rbac})=>{
             if (!user) throw new AuthenticationError("Unauthenticated")
             if(!rbac.isAllowed(user.id, NOTIFICATION_SHOW)) throw new ForbiddenError("Not Authorized")
-            return fetchNotificationMethodService(user.id)
+            return fetchNotificationMethodService()
         }
     },
     Mutation:{
