@@ -13,15 +13,18 @@
   "dependencies": {
     "@dracul/common-backend": "^1.6.2",
     "@dracul/logger-backend": "^1.0.105",
-    "apollo-server-express": "^3.3.0",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "graphql": "^15.5.3",
-    "mongoose": "^5.9.19",
-    "mongoose-paginate-v2": "^1.4.2",
     "underscore": "^1.11.0"
   },
+  "peerDependencies": {
+    "mongoose": "5.13.14",
+    "mongoose-paginate-v2": "^1.6.3",
+    "mongoose-softdelete": "1.1.0",
+    "mongoose-unique-validator": "^2.0.3",
+    "apollo-server-express": "^3.6.3"
+  },
   "devDependencies": {
+    "apollo-server-express": "^3.6.3",
+    "dotenv": "^8.2.0",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
