@@ -13,7 +13,6 @@
           v-model="date"
           :label="label"
           prepend-icon="mdi-calendar"
-          readonly
           v-on="on"
           :clearable="clearable"
           :solo="solo"

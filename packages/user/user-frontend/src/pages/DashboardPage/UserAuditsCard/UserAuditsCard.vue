@@ -15,7 +15,7 @@
                 <template v-slot:activator="{ on }">
                   <span style="cursor:pointer" v-on="on">{{ getMessage(item) }}</span>
                 </template>
-                <span>{{ getDateTimeFormat(item.date,true) }}</span>
+                <span>{{ getDateTimeFormat(item.date, true) }}</span>
               </v-tooltip>
 
             </td>

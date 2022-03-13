@@ -13,7 +13,6 @@
           v-model="item"
           :label="label"
           prepend-icon="date_range"
-          readonly
           v-on="on"
           :rules="rules"
           :error="error"

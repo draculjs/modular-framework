@@ -9,8 +9,8 @@
         Your browser does not support the audio element.
       </audio>
 
-      <video  v-if="isVideo" width="100%" controls>
-        <source :src="getSrc" :type="file.mimetype">
+      <video v-if="isVideo" width="100%" controls>
+        <source :src="getSrc" :type="file.mimetype" />
       </video>
 
       <object v-if="isPdf"
@@ -18,11 +18,11 @@
               type="application/pdf" width="300"
               height="200"
       >
-        <a :href="getSrc" target="_blank" class="text-uppercase"> {{$t('media.file.download')}}</a>
+        <a :href="getSrc" target="_blank" class="text-uppercase"> {{ $t('media.file.download') }}</a>
       </object>
 
       <a v-if="!isImage && !isAudio && !isVideo && !isPdf" target="_blank" :href="getSrc" class="text-uppercase">
-            {{$t('media.file.download')}}
+        {{ $t('media.file.download') }}
       </a>
     </v-col>
 
@@ -82,16 +82,16 @@ export default {
   },
   computed: {
     isImage() {
-      return (this.file && this.file.type === 'image') ? true : false
+      return (this.file && this.file.type === 'image')
     },
     isAudio() {
-      return (this.file && this.file.type === 'audio') ? true : false
+      return (this.file && this.file.type === 'audio')
     },
     isVideo() {
-      return (this.file && this.file.type === 'video') ? true : false
+      return (this.file && this.file.type === 'video')
     },
     isPdf() {
-      return (this.file && this.file.mimetype === 'application/pdf') ? true : false
+      return (this.file && this.file.mimetype === 'application/pdf')
     },
     getSrc() {
       if (this.file && this.file.url) {
@@ -102,7 +102,7 @@ export default {
     getSizeInMegaBytes() {
       return this.file.size.toFixed(5) + ' Megabyte'
     },
-    computedDateFormatted () {
+    computedDateFormatted() {
       return this.formatDate(this.date)
     },
   },
@@ -122,13 +122,13 @@ export default {
       toCopy.setAttribute('type', 'hidden')
       window.getSelection().removeAllRanges()
     },
-    formatDate (date) {
+    formatDate(date) {
       if (!date) return null
 
       const [year, month, day] = date.split('-')
       return `${day}/${month}/${year}`
     },
-    parseDate (date) {
+    parseDate(date) {
       if (!date) return null
 
       const [day, month, year] = date.split('-')

@@ -6,7 +6,7 @@
              @close="$emit('close')"
   >
     <div class="text-center">
-      <file-upload-express v-if="!file" ref="form"
+      <file-upload-expiration v-if="!file" ref="form"
                            autoSubmit
                            x-large
                            @fileUploaded="fileUploaded"
@@ -23,13 +23,13 @@
 
 import {CrudShow} from '@dracul/common-frontend'
 
-import FileUploadExpress from "../../../components/FileUploadExpress/FileUploadExpress";
+import FileUploadExpiration from "../../../components/FileUploadExpiration/FileUploadExpiration";
 import FileView from "../../../components/FileView/FileView";
 
 export default {
   name: "FileCreate",
 
-  components: {FileView, FileUploadExpress, CrudShow},
+  components: {FileView, FileUploadExpiration, CrudShow},
 
   props: {
     open: {type: Boolean, default: true}

@@ -9,6 +9,7 @@ import FileMetricsProvider from './modules/media/providers/FileMetricsProvider'
 import UserStorageProvider from './modules/media/providers/UserStorageProvider'
 
 //Components
+import FileUploadExpiration from './modules/media/components/FileUploadExpiration'
 import FileUploadExpress from './modules/media/components/FileUploadExpress'
 import FileUpload from './modules/media/components/FileUpload'
 import FileView from './modules/media/components/FileView'
@@ -37,6 +38,7 @@ export {
     UserStorageProvider,
 
     //Components
+    FileUploadExpiration,
     FileUploadExpress,
     FileUpload,
     FileView,
