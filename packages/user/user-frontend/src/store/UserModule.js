@@ -43,26 +43,19 @@ export default {
             if (!state.me) return false
             return state.me.role.permissions.includes(permission)
         },
-
-    },
-    actions: {
-        tokenIsExpired: (state) => {
+        tokenIsExpired: (state) => () => {
             try {
-                let now = new Date()
-                if (!state.access_token) {
-                    return true
-                }
+
+                if (!state.access_token) return true
 
                 let payload = jwt_decode(state.access_token)
 
-                if (!payload.exp) {
-                    return true
-                }
+                if (!payload.exp) return true
 
                 let dateToken = new Date(payload.exp * 1000)
-                if (now > dateToken) {
-                    return true
-                }
+
+                let now = new Date()
+                if (now > dateToken) return true
 
                 return false
 
@@ -72,21 +65,24 @@ export default {
             }
 
         },
-        refreshTokenIsExpired: (state) => {
-            let now = new Date()
+        refreshTokenIsExpired: (state) => () => {
+
             if (!state.refresh_token || !state.refresh_token.expiryDate) {
                 return true
             }
 
             let expiryDate = new Date(parseInt(state.refresh_token.expiryDate))
 
+            let now = new Date()
             if (now > expiryDate) {
                 return true
             }
 
             return false
 
-        },
+        }
+    },
+    actions: {
         fetchMe({commit}) {
 
             return new Promise((resolve, reject) => {
@@ -165,8 +161,8 @@ export default {
             return false
         },
 
-        checkAuth: ({state, dispatch}) => {
-            if (dispatch('refreshTokenIsExpired') === true) {
+        checkAuth: ({state, dispatch, getters}) => {
+            if (getters.refreshTokenIsExpired() === true) {
                 dispatch('logout')
             } else if (state.me === null) {
                 dispatch('fetchMe')
@@ -175,9 +171,9 @@ export default {
 
         validateSession: ({dispatch, getters, commit}) => {
             return new Promise((resolve) => {
-                if (dispatch('tokenIsExpired') === true) {
+                if (getters.tokenIsExpired() === true) {
 
-                    if (dispatch('refreshTokenIsExpired') === false) {
+                    if (getters.refreshTokenIsExpired() === false) {
                         //Puedo Renovar
                         dispatch('renewToken')
                             .then(token => {
@@ -210,6 +206,7 @@ export default {
                         resolve(token)
                     })
                     .catch(e => {
+                        console.error("RENOVADO token", e)
                         reject(e)
                     }).finally(() => {
                 })
