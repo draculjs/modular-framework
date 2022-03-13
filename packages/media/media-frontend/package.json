@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.6.11",
+  "version": "1.6.12",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -16,10 +16,10 @@
     "build": "vue-cli-service build --dest dist --mode production"
   },
   "dependencies": {
-    "@dracul/common-frontend": "^1.6.9",
-    "@dracul/customize-frontend": "^1.6.9",
+    "@dracul/common-frontend": "^1.6.12",
+    "@dracul/customize-frontend": "^1.6.12",
     "@dracul/dayjs-frontend": "^1.6.9",
-    "@dracul/user-frontend": "^1.6.9",
+    "@dracul/user-frontend": "^1.6.12",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
