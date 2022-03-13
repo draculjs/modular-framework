@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-backend",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Modulo de notificaciones de usuario",
   "main": "./lib/index.js",
   "scripts": {
