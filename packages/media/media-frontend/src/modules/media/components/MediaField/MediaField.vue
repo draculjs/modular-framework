@@ -26,7 +26,7 @@
 
 <script>
     import {InputErrorsByProps, RequiredRule} from "@dracul/common-frontend";
-    import {FileUploadExpress} from "../FileUploadExpiration";
+    import {FileUploadExpress} from "../FileUploadExpress";
 
     export default {
         name: "MediaField",
