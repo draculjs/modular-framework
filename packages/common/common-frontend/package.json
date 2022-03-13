@@ -1,6 +1,6 @@
 {
   "name": "@dracul/common-frontend",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "description": "vue common",
   "main": "./src/index.js",
   "scripts": {
@@ -38,11 +38,11 @@
     "@vue/cli-plugin-unit-jest": "^4.4.4",
     "@vue/cli-service": "~4.4.0",
     "@vue/test-utils": "^1.0.3",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-preset-vue": "^2.0.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-vuetify": "^2.0.6",

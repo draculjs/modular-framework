@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -19,8 +19,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.6.0",
-    "@dracul/dayjs-frontend": "^1.6.0"
+    "@dracul/common-frontend": "^1.6.5",
+    "@dracul/dayjs-frontend": "^1.6.5"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
@@ -40,6 +40,7 @@
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "apollo-upload-client": "^13.0.0",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-preset-vue": "^2.0.2",
     "chart.js": "^2.9.3",
@@ -48,7 +49,6 @@
     "deepmerge": "^4.2.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "babel-eslint": "^10.1.0",
     "fibers": "^5.0.0",
     "flush-promises": "^1.0.2",
     "graphql": "^15.0.0",

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-frontend",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "description": "vue settings",
   "main": "./src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "author": "Cristian Incarnato",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.6.0",
+    "@dracul/common-frontend": "^1.6.5",
     "vue": "^2.6.12",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.4.9",
@@ -32,10 +32,10 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@babel/register": "^7.12.13",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
     "babel-eslint": "^10.1.0",
     "cpx": "^1.5.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
     "mocha": "^8.2.0"
   },
   "bugs": {
