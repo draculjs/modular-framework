@@ -2,7 +2,7 @@
   "name": "@dracul/queue-frontend",
   "version": "1.6.0",
   "description": "Dracul Vue Queue",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-storybook": "build-storybook --no-dll",

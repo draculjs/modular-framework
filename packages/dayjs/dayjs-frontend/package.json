@@ -2,7 +2,7 @@
   "name": "@dracul/dayjs-frontend",
   "version": "1.6.0",
   "description": "vue dayjs utils",
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,6 +28,9 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@babel/register": "^7.12.13",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "babel-eslint": "^10.1.0",
     "cpx": "^1.5.0",
     "mocha": "^8.2.0"
   },

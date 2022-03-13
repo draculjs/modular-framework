@@ -1,7 +1,7 @@
 <template>
   <v-form ref="form" autocomplete="off">
     <v-row>
-      <v-col cols="12" >
+      <v-col cols="12">
         <v-text-field
             prepend-icon="text_snippet"
             name="value"

@@ -2,7 +2,7 @@
   "name": "@dracul/customize-frontend",
   "version": "1.6.0",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006",
@@ -44,6 +44,9 @@
     "@vue/cli-service": "^4.4.6",
     "babel-loader": "^8.2.2",
     "babel-preset-vue": "^2.0.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "babel-eslint": "^10.1.0",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "material-design-icons-iconfont": "^6.1.0",
