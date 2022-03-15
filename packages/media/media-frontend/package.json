@@ -36,7 +36,7 @@
     "vue-chartjs": "^3.5.0",
     "vue-i18n": "^8.18.1",
     "vue-map-chart": "0.0.2",
-    "vue-router": "^3.3.2",
+    "vue-router": "^3.5.3",
     "vuetify": "^2.6.4",
     "vuex": "^3.4.0",
     "vuex-persistedstate": "^3.0.1"
@@ -45,25 +45,25 @@
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
-    "babel-eslint": "^10.1.0",
     "babel-jest": "^25.4.0",
     "deepmerge": "^4.2.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "babel-eslint": "^10.1.0",
     "graphql-tag": "^2.10.3",
     "jest": "^25.4.0",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-vuetify": "~2.0.5",
     "vue-template-compiler": "^2.6.14",
-    "vuetify-loader": "^1.3.0",
+    "vuetify-loader": "^1.7.3",
     "webpack": "^4.1.0",
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "eslintConfig": {
-    "root": false,
+    "root": true,
     "env": {
-      "node": false
+      "node": true
     },
     "extends": [
       "plugin:vue/essential",

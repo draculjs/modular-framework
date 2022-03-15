@@ -22,7 +22,9 @@
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.6.12",
-    "@dracul/dayjs-frontend": "^1.6.9",
+    "@dracul/dayjs-frontend": "^1.6.9"
+  },
+  "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
@@ -31,10 +33,20 @@
     "subscriptions-transport-ws": "^0.9.18",
     "symbol-observable": "^3.0.0",
     "vue-i18n": "^8.18.1",
-    "vue-router": "^3.4.9",
+    "vue-router": "^3.5.3",
     "vuetify": "^2.6.4"
   },
   "devDependencies": {
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "apollo-link-error": "^1.1.13",
+    "apollo-upload-client": "^13.0.0",
+    "subscriptions-transport-ws": "^0.9.18",
+    "symbol-observable": "^3.0.0",
+    "vue-i18n": "^8.18.1",
+    "vue-router": "^3.5.3",
+    "vuetify": "^2.6.4",
     "@babel/core": "^7.12.3",
     "@storybook/addon-actions": "^6.0.28",
     "@storybook/addon-essentials": "^6.0.28",

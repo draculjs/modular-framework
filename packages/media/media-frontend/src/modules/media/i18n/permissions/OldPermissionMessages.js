@@ -1,4 +1,4 @@
-const messages = {
+const oldPermissionMessages = {
     en: {
         role: {
             permissions: {
@@ -56,4 +56,4 @@ const messages = {
 
 }
 
-export default messages
+export default oldPermissionMessages

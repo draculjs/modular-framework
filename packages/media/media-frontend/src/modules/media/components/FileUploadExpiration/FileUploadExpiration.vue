@@ -207,8 +207,11 @@ export default {
           this.uploadedFile = result.data.fileUpload
           this.setState(UPLOADED);
           this.$emit('fileUploaded', result.data.fileUpload)
-        }).catch(() => {
-          this.setErrorFileExceeded();
+        }).catch((err) => {
+          console.log("ERROR", err)
+          this.setState(ERROR);
+          this.setErrorMessage(err.message)
+          this.showErrorMessage = true
         }).finally(() => this.loading = false)
       } else {
         this.setErrorFileExceeded();

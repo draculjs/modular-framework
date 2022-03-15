@@ -1,5 +1,5 @@
 //Resources
-import i18nMessages from './modules/media/i18n/messages'
+import i18nMessages from './modules/media/i18n'
 import routes from './modules/media/routes'
 
 //Providers
