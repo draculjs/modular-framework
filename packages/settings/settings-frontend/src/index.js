@@ -1,5 +1,5 @@
 import SettingsPage from "./pages/SettingsPage"
-import i18nMessages from "./i18n/messages"
+import i18nMessages from "./i18n"
 import routes from "./routes"
 import SettingsModuleStore from "./store"
 import SettingsProvider from "./providers/SettingsProvider"
