@@ -3,7 +3,7 @@ import JobsPage from "./pages/JobsPage";
 import JobPage from "./pages/JobPage";
 import QueueStatsTable from "./components/QueueStatsTable";
 import routes from './routes'
-import i18nMessages from './i18n/messages'
+import i18nMessages from './i18n'
 import queueStatsProvider from "./providers/QueueStatsProvider";
 import QueueProvider from "./providers/QueueProvider";
 

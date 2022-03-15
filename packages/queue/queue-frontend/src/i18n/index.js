@@ -1,10 +1,12 @@
-import Vue from "vue";
-import VueI18n from 'vue-i18n'
-import messages from "./messages";
+import merge from 'deepmerge'
+import queueStatsMessages from './messages/queue-stats-messages'
+import queueMessages from './messages/queue-messages'
+import QueuePermissionMessages from './permissions/QueuePermissionMessages'
 
-Vue.use(VueI18n)
+export const index = merge.all([
+    queueStatsMessages,
+    queueMessages,
+    QueuePermissionMessages
+])
 
-export default new VueI18n({
-    locale: 'en',
-    messages: messages,
-})
+export default index
