@@ -71,6 +71,7 @@ export default {
       dialog: false,
       dialogTitle: null,
       title: 'media.file.creating',
+      showErrorMessage: false,
       errorMessage: '',
       inputErrors: {},
       file: null,
