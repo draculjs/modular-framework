@@ -3,30 +3,30 @@ const messages = {
     en: {
        role: {
             permissions: {
-                SETTING_SHOW : "View Settings",
-                SETTING_UPDATE: "Update Settings",
-                SETTING_CREATE : "Create Settings",
-                SETTING_DELETE : "Delete Settings",
+                SETTINGS_SHOW : "View Settings",
+                SETTINGS_UPDATE: "Update Settings",
+                SETTINGS_CREATE : "Create Settings",
+                SETTINGS_DELETE : "Delete Settings",
             }
        }
     },
     es: {
         role: {
             permissions: {
-                SETTING_SHOW : "Ver Ajustes",
-                SETTING_UPDATE: "Modificar Ajustes",
-                SETTING_CREATE : "Crear Ajustes",
-                SETTING_DELETE : "Eliminar Ajustes",
+                SETTINGS_SHOW : "Ver Ajustes",
+                SETTINGS_UPDATE: "Modificar Ajustes",
+                SETTINGS_CREATE : "Crear Ajustes",
+                SETTINGS_DELETE : "Eliminar Ajustes",
             }
        }
     },
     pt: {
        role: {
             permissions: {
-                SETTING_SHOW : "Ver Ajustes",
-                SETTING_UPDATE: "Modificar Ajustes",
-                SETTING_CREATE : "Crear Ajustes",
-                SETTING_DELETE : "Eliminar Ajustes",
+                SETTINGS_SHOW : "Ver Ajustes",
+                SETTINGS_UPDATE: "Modificar Ajustes",
+                SETTINGS_CREATE : "Crear Ajustes",
+                SETTINGS_DELETE : "Eliminar Ajustes",
             }
        }
     }
