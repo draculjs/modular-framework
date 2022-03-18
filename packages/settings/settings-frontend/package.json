@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-frontend",
-  "version": "1.6.16",
+  "version": "1.6.20",
   "description": "vue settings",
   "main": "./src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "author": "Cristian Incarnato",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.6.12"
+    "@dracul/common-frontend": "^1.6.20"
   },
   "peerDependencies": {
     "vue": "^2.6.14",
@@ -29,11 +29,6 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "vue": "^2.6.14",
-    "vue-i18n": "^8.18.1",
-    "vue-router": "^3.4.9",
-    "vuetify": "^2.6.4",
-    "vuex": "^3.6.2",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
@@ -43,7 +38,12 @@
     "cpx": "^1.5.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "mocha": "^8.2.0"
+    "mocha": "^8.2.0",
+    "vue": "^2.6.14",
+    "vue-i18n": "^8.18.1",
+    "vue-router": "^3.4.9",
+    "vuetify": "^2.6.4",
+    "vuex": "^3.6.2"
   },
   "bugs": {
     "url": "https://github.com/draculjs/modular-framework/issues"

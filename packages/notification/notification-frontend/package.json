@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-frontend",
-  "version": "1.6.19",
+  "version": "1.6.20",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
-    "@dracul/common-frontend": "^1.6.12",
-    "@dracul/dayjs-frontend": "^1.6.19"
+    "@dracul/common-frontend": "^1.6.20",
+    "@dracul/dayjs-frontend": "^1.6.20"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
@@ -67,9 +67,9 @@
     "sass-loader": "^8.0.2",
     "subscriptions-transport-ws": "^0.9.18",
     "symbol-observable": "^3.0.0",
+    "vue": "^2.6.14",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.5.3",
-    "vue": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
     "vuetify": "^2.6.4"
   },
