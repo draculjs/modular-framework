@@ -38,7 +38,7 @@
     "vue-map-chart": "0.0.2",
     "vue-router": "^3.5.3",
     "vuetify": "^2.6.4",
-    "vuex": "^3.4.0",
+    "vuex": "^3.6.2",
     "vuex-persistedstate": "^3.0.1"
   },
   "devDependencies": {

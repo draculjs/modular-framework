@@ -18,16 +18,18 @@
   "license": "MIT",
   "dependencies": {
     "@dracul/common-frontend": "^1.6.12",
-    "@dracul/dayjs-frontend": "^1.6.19",
+    "@dracul/dayjs-frontend": "^1.6.19"
+  },
+  "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "deepmerge": "^4.2.2",
-    "vue": "^2.6.11",
+    "vue": "^2.6.14",
     "vue-i18n": "^8.18.1",
     "vuetify": "^2.6.4",
-    "vuex": "^3.4.0"
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
@@ -51,7 +53,7 @@
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-vuetify": "^2.0.6",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.14"
   },
   "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"
 }

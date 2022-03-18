@@ -19,14 +19,21 @@
   "author": "Cristian Incarnato",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.6.12",
-    "vue": "^2.6.12",
+    "@dracul/common-frontend": "^1.6.12"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.14",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.4.9",
     "vuetify": "^2.6.4",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "vue": "^2.6.14",
+    "vue-i18n": "^8.18.1",
+    "vue-router": "^3.4.9",
+    "vuetify": "^2.6.4",
+    "vuex": "^3.6.2",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
