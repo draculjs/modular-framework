@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.6.18",
+  "version": "1.6.19",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.6.12",
-    "@dracul/customize-frontend": "^1.6.13",
-    "@dracul/dayjs-frontend": "^1.6.9",
-    "@dracul/user-frontend": "^1.6.13",
+    "@dracul/customize-frontend": "^1.6.19",
+    "@dracul/dayjs-frontend": "^1.6.19",
+    "@dracul/user-frontend": "^1.6.19",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
