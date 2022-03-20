@@ -25,7 +25,7 @@
     </template>
     <v-date-picker
         v-model="date"
-        type="month"
+        type="year"
         no-title
         scrollable
         @input="menu = false"
@@ -36,10 +36,10 @@
 
 <script>
 export default {
-  name: "MonthPicker",
+  name: "YearPicker",
   props: {
     value: {type: [String, Object]},
-    label: {type: String, default: "Mes"},
+    label: {type: String, default: "Año"},
     solo: {type: Boolean, default: false},
     clearable: {type:Boolean, default: true},
     outlined: {type:Boolean, default: false},
