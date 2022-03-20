@@ -48,7 +48,7 @@ export default {
     clearable: {type:Boolean, default: true},
     outlined: {type:Boolean, default: false},
     solo: {type:Boolean, default: false},
-    readonly: {type:Boolean, default:false},
+    readonly: {type:Boolean, default: true},
     disabled: {type:Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
     width: {type: String, default: null},
@@ -59,7 +59,9 @@ export default {
       get() {
         return this.getDateFormat(this.value)
       },
-      set(val) {this.$emit('input', this.convertStringDateToDayjs(val))}
+      set(val) {
+        this.$emit('input', this.convertStringDateToDayjs(val))
+      }
     }
   },
   data(){
