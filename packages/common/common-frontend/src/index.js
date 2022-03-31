@@ -10,6 +10,7 @@ import ListCombobox from "./components/ListCombobox";
 import MultiLangSubform from "./components/MultiLangSubform";
 import ConfirmDialog from "./components/ConfirmDialog";
 import ColorInput from "./components/ColorInput";
+import FormList from "./components/FormList";
 
 import AddButton from "./components/Crud/AddButton";
 import EditButton from "./components/Crud/EditButton";
@@ -44,6 +45,7 @@ export {
     MultiLangSubform,
     ConfirmDialog,
     ColorInput,
+    FormList,
 
     //Crud Buttons
     AddButton,
