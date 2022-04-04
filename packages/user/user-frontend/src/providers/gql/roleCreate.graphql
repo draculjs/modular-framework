@@ -4,6 +4,7 @@ mutation roleCreate($name:String!, $childRoles: [ID], $permissions: [String]){
         name
         childRoles
         permissions
+        readonly
     }
 }
 

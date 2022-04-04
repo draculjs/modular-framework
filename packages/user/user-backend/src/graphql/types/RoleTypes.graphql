@@ -3,6 +3,7 @@ type Role {
     name: String!
     childRoles: [ID]
     permissions: [String]
+    readonly: Boolean
 }
 
 input RoleInput{

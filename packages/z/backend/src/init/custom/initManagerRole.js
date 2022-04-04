@@ -1,5 +1,5 @@
 module.exports = {
-    name: "operator",
+    name: "manager",
     permissions: [
         "SECURITY_GROUP_SHOW"
     ],
