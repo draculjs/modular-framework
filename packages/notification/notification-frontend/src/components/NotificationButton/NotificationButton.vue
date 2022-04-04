@@ -63,7 +63,7 @@ export default {
           .then((res) => {
             this.notificationMethod = res.data.fetchNotificationMethod
             this.getNotifications()
-          }).catch(err => {
+          }).catch(() => {
         setTimeout(this.fetchNotificationMethod, 30000)
       })
     },
