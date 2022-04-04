@@ -12,7 +12,8 @@ const RoleSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
         required: false,
-    }]
+    }],
+    readonly: {type: Boolean, required: false, default: false},
 });
 
 RoleSchema.plugin(uniqueValidator, {message: 'validation.unique'});

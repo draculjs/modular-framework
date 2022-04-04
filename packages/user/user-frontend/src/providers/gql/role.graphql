@@ -4,5 +4,6 @@ query role($id:ID!){
         name
         childRoles
         permissions
+        readonly
     }
 }

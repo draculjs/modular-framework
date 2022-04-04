@@ -2,6 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
+    "@lerna/bootstrap": "^4.0.0",
     "mongoose": "^5.9.19"
   },
   "devDependencies": {

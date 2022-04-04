@@ -4,6 +4,7 @@ mutation roleUpdate($id: ID!, $name:String!, $childRoles: [ID], $permissions: [S
         name
         childRoles
         permissions
+        readonly
     }
 }
 

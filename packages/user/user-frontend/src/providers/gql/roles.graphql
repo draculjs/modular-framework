@@ -4,5 +4,6 @@ query roles{
         name
         childRoles
         permissions
+        readonly
     }
 }

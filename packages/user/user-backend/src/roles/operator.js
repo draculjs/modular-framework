@@ -2,7 +2,8 @@
 function operatorRole(){
     return {
         name: "operator",
-        permissions: []
+        permissions: [],
+        readonly: true
     }
 }
 

@@ -27,7 +27,8 @@ async function supervisorRole() {
             SECURITY_GROUP_SHOW,
             SECURITY_DASHBOARD_SHOW,
             SECURITY_ADMIN_MENU,
-        ]
+        ],
+        readonly: true
     }
 
     const operatorRole = await findRoleByName("operator")
