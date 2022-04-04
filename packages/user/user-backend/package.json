@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.6.4",
+  "version": "1.7.0",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@dracul/common-backend": "^1.6.3",
-    "@dracul/logger-backend": "^1.6.3",
+    "@dracul/logger-backend": "^1.7.0",
     "bcryptjs": "^2.4.3",
     "email-templates": "^6.0.3",
     "express": "^4.17.1",
