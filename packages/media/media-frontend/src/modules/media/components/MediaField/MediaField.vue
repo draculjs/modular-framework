@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col cols="9">
+        <v-col class="flex-grow-1 flex-shrink-0">
             <v-text-field
                     :prepend-icon="icon"
                     :name="fieldName"
@@ -13,7 +13,7 @@
 
             ></v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col class="flex-shrink-0 flex-grow-0">
             <file-upload-express :accept="accept"
                                  :auto-submit="true"
                                  @fileUploaded="imageUploaded"
