@@ -17,6 +17,7 @@
           :error="hasErrors"
           :error-messages="getMessageErrors"
           :color="color"
+          :clearable="clearable"
       >
         <template v-slot:append>
           <v-chip :class="colorValue" small :style="{background: colorValue}">
@@ -42,7 +43,8 @@ export default {
     label: String,
     getMessageErrors: Array,
     hasErrors: Boolean,
-    rules: Array
+    rules: Array,
+    clearable: {type: Boolean, default: true}
   },
   data() {
     return {
