@@ -79,7 +79,7 @@ export default {
       loading: false,
       orderBy: null,
       orderDesc: false,
-      itemsPerPage: 10,
+      itemsPerPage: 25,
       pageNumber: 1,
       search: ''
     }
