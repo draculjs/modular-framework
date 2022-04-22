@@ -25,7 +25,7 @@ export const fetchSettings = async function () {
     })
 }
 
-export const paginateSettings = function ( pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
+export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
 
     function qs(search) {
         let qs = {}
@@ -33,14 +33,14 @@ export const paginateSettings = function ( pageNumber = 1, itemsPerPage = 5, sea
             qs = {
                 $or: [
                     {key: {$regex: search, $options: 'i'}},
-{value: {$regex: search, $options: 'i'}}
+                    {value: {$regex: search, $options: 'i'}}
                 ]
             }
         }
         return qs
     }
 
-     function getSort(orderBy, orderDesc) {
+    function getSort(orderBy, orderDesc) {
         if (orderBy) {
             return (orderDesc ? '-' : '') + orderBy
         } else {
@@ -60,9 +60,6 @@ export const paginateSettings = function ( pageNumber = 1, itemsPerPage = 5, sea
         ).catch(err => reject(err))
     })
 }
-
-
-
 
 
 export const createSettings = async function (authUser, {key, value, label, type, options}) {
@@ -89,21 +86,27 @@ export const createSettings = async function (authUser, {key, value, label, type
 export const updateSettings = async function (authUser, id, {key, value, label, type, options}) {
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({_id: id},
-        {key, value, label, type, options},
-        {new: true, runValidators: true, context: 'query'},
-        (error,doc) => {
+            {
+                key,
+                value,
+                label,
+                ...(type ? {type} : {}),
+                ...(options ? {options} : {}),
+            },
+            {new: true, runValidators: true, context: 'query'},
+            (error, doc) => {
 
-            if (error) {
-                if (error.name == "ValidationError") {
-                 return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                if (error) {
+                    if (error.name == "ValidationError") {
+                        return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+
+                    }
+                    return rejects(error)
 
                 }
-                return rejects(error)
 
-            }
-
-            resolve(doc)
-        })
+                resolve(doc)
+            })
     })
 }
 

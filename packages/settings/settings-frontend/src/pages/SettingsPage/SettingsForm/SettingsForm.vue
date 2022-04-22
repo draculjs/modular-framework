@@ -30,6 +30,7 @@
             v-if="item.type === 'boolean' "
             prepend-icon="text_snippet"
             name="value"
+            value="enable"
             v-model="form.value"
             :label="form.label[getLanguage]"
             :placeholder="form.label[getLanguage]"
