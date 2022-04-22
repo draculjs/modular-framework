@@ -34,7 +34,7 @@
           </template>
 
           <template v-else>
-            {{ item.label[getLanguage] }}
+            {{ item.value }}
           </template>
 
         </template>

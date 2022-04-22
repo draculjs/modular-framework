@@ -47,11 +47,18 @@ export default {
       }
     }
   },
+  computed: {
+    getForm(){
+      let form = this.form
+      form.value = form.value.toString()
+      return form
+    }
+  },
   methods: {
     update() {
       if (this.$refs.form.validate()) {
         this.loading = true
-        SettingsProvider.updateSettings(this.form).then(r => {
+        SettingsProvider.updateSettings(this.getForm).then(r => {
               this.$store.dispatch('loadSettings')
               this.$emit('itemUpdated', r.data.settingsUpdate)
               this.$emit('close')
