@@ -4,9 +4,11 @@ query settingsFind($id:ID!){
         key
         value
         label{
-                en
-                es
-                pt
-            }
+            en
+            es
+            pt
+        }
+        type
+        options
     }
 }

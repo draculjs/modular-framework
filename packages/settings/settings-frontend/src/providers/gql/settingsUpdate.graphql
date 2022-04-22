@@ -4,10 +4,12 @@ mutation settingsUpdate($id: ID!, $key:String!, $value:String, $label:MultiLangI
         key
         value
         label{
-                en
-                es
-                pt
-            }
+            en
+            es
+            pt
+        }
+        type
+        options
     }
 }
 

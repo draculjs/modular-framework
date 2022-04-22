@@ -69,6 +69,12 @@ Object.defineProperty(exports, "InitMediaPermissions", {
     return _InitMediaPermissions.default;
   }
 });
+Object.defineProperty(exports, "userCreateListener", {
+  enumerable: true,
+  get: function () {
+    return _UserCreateListener.userCreateListener;
+  }
+});
 exports.userStoragePermissions = exports.filePermissions = exports.UserStorageService = exports.FileService = void 0;
 
 var _graphql = require("./modules/media/graphql");
@@ -94,6 +100,8 @@ exports.filePermissions = filePermissions;
 var userStoragePermissions = _interopRequireWildcard(require("./modules/media/permissions/UserStorage"));
 
 exports.userStoragePermissions = userStoragePermissions;
+
+var _UserCreateListener = require("./modules/media/listeners/UserCreateListener");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

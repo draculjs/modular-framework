@@ -75,7 +75,7 @@ export default {
     headers() {
       return [
         //Entity Headers
-        {text: this.$t('settings.settings.labels.key'), value: 'key'},
+        //{text: this.$t('settings.settings.labels.key'), value: 'key'},
         {text: this.$t('settings.settings.labels.label'), value: 'label'},
         {text: this.$t('settings.settings.labels.value'), value: 'value'},
         //Actions

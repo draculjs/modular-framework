@@ -8,5 +8,7 @@ query settingsFindByKey($key:String!){
             es
             pt
         }
+        type
+        options
     }
 }

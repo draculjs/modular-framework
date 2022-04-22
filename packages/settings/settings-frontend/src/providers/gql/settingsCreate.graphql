@@ -8,6 +8,8 @@ mutation settingsCreate($key:String!, $value:String, $label:MultiLangInput!){
                 es
                 pt
             }
+        type
+        options
     }
 }
 

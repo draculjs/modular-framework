@@ -3,14 +3,16 @@ query settingsPaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $o
         totalItems
         page
         items{
-          id
-          key
-        value
-        label{
+            id
+            key
+            value
+            label{
                 en
                 es
                 pt
             }
+            type
+            options
         }
     }
 }

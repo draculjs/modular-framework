@@ -3,6 +3,8 @@ type Settings{
     key: String!
     value: String
     label: MultiLang!
+    type: String
+    options: [String]
 }
 
 type SettingsPaginated{
@@ -24,6 +26,8 @@ input SettingsInput{
     key: String!
     value: String
     label: MultiLangInput!
+    type: String
+    options: [String]
 }
 
 type SettingsDelete{

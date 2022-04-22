@@ -11,7 +11,7 @@ const messages = {
                 labels: {
                     key: 'Key',
                     value: 'Value',
-                    label: 'Label'
+                    label: 'Variable'
                 },
 
             }
@@ -29,7 +29,7 @@ const messages = {
                 labels: {
                     key: 'Llave',
                     value: 'Valor',
-                    label: 'Label'
+                    label: 'Variable'
                 },
 
             }
@@ -47,7 +47,7 @@ const messages = {
                 labels: {
                     key: 'Chave',
                     value: 'Valor',
-                    label: 'Label'
+                    label: 'Variable'
                 },
 
             }

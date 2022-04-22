@@ -4,10 +4,12 @@ query settingsFetch{
         key
         value
         label{
-                en
-                es
-                pt
-            }
+            en
+            es
+            pt
+        }
+        type
+        options
     }
 }
 

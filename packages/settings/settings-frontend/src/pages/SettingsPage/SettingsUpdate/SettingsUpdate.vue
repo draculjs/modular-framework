@@ -6,7 +6,7 @@
                @update="update"
                @close="$emit('close')"
   >
-    <settings-form ref="form" v-model="form" :input-errors="inputErrors"/>
+    <settings-form ref="form" v-model="form" :item="item" :input-errors="inputErrors"/>
   </crud-update>
 </template>
 
