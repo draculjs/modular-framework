@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-frontend",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "description": "vue settings",
   "main": "./src/index.js",
   "scripts": {
