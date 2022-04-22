@@ -1,6 +1,6 @@
 {
   "name": "integration-frontend",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "private": true,
   "scripts": {
     "front": "vue-cli-service serve",
@@ -17,7 +17,7 @@
     "@dracul/common-frontend": "^1.7.3",
     "@dracul/customize-frontend": "^1.7.3",
     "@dracul/notification-frontend": "^1.7.3",
-    "@dracul/settings-frontend": "^1.7.3",
+    "@dracul/settings-frontend": "^1.7.4",
     "@dracul/user-frontend": "^1.7.3",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
