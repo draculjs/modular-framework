@@ -52,10 +52,9 @@ export default {
       if (this.$refs.form.validate()) {
         this.loading = true
         SettingsProvider.updateSettings(this.form).then(r => {
-              if (r) {
-                this.$emit('itemUpdated', r.data.settingsUpdate)
-                this.$emit('close')
-              }
+              this.$store.dispatch('loadSettings')
+              this.$emit('itemUpdated', r.data.settingsUpdate)
+              this.$emit('close')
             }
         ).catch(error => {
           let clientError = new ClientError(error)
