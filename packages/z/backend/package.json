@@ -2,6 +2,7 @@
   "name": "integration-backend",
   "version": "1.7.9",
   "description": "",
+  "private": true,
   "main": "src/index.js",
   "scripts": {
     "back": "BABEL_DISABLE_CACHE=1 nodemon src/index.js --exec babel-node -e js",
