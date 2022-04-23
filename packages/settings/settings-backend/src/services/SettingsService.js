@@ -17,13 +17,15 @@ export const findSettingsByKey = async function (key) {
     })
 }
 
-export const findSettingsByKeys = async function (keys) {
+export const findSettingsByKeys = async function (keys = []) {
     return new Promise((resolve, reject) => {
-        Settings.find({key: {$in: [keys]}}).exec((err, docs) => {
+
+        Settings.find({key: {$in: keys}}).exec((err, docs) => {
+
                 if (err) return reject(err)
 
                 let settings = {}
-                docs.forEach( doc => {
+                docs.forEach(doc => {
                     settings[doc.key] = doc
                 })
 
