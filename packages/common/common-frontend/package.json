@@ -1,6 +1,6 @@
 {
   "name": "@dracul/common-frontend",
-  "version": "1.7.3",
+  "version": "1.7.11",
   "description": "vue common",
   "main": "./src/index.js",
   "scripts": {
