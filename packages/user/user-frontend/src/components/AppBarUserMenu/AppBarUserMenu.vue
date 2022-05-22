@@ -19,6 +19,8 @@
           <v-list-item-title>{{ getUsername }}</v-list-item-title>
           <v-list-item-subtitle>{{ getEmail }}</v-list-item-subtitle>
         </v-list-item-content>
+
+        <role-visualization-card></role-visualization-card>
       </v-list-item>
 
       <v-divider></v-divider>
@@ -50,9 +52,11 @@
 <script>
 
 import {mapGetters, mapActions} from 'vuex'
+import { RoleVisualizationCard } from '../RoleVisualizationCard';
 
 export default {
   name: "AppBarUserMenu",
+  components:{ RoleVisualizationCard },
   data: () => ({
     src: '@/assets/user.png',
     avatarSize: 45,
@@ -68,7 +72,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuth', 'me', 'getAvatarUrl']),
+    ...mapGetters([
+      'isAuth',
+      'me',
+      'getAvatarUrl'
+      ]),
     getUsername: function () {
       if (this.me && this.me.username) {
         return this.me.username
