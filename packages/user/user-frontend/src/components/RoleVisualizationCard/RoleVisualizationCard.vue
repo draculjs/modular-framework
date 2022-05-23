@@ -1,25 +1,27 @@
 <template>
-    <v-card outlined class="role-class mt-n2 ml-n1">
-          <v-card-text class="mb-n6 text-center">
-            <v-icon>{{roleIcon}}</v-icon>
-            <p>{{getRole}}</p>
+    <v-card outlined class="role-class">
+          <v-card-text class="" v-if="sameLine">
+            <strong>{{$t('role.role')}}</strong>: {{getRole}}
           </v-card-text>
+
+          <v-card-text v-else>
+            <strong>{{$t('role.role')}}</strong><br> {{getRole}}
+          </v-card-text>
+
         </v-card>
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import { mapGetters } from 'vuex'
 
     export default {
-        computed: {
-            ...mapGetters([
-                'getRole'
-            ]),
+      props: {
+        'sameLine' : Boolean
+      },
 
-            roleIcon(){
-                return ((this.getRole === 'operator') ? 'mdi-account' : 'mdi-shield-account')
-            }
-        },
+      computed: {
+          ...mapGetters(['getRole']),
+      },
     }
 </script>
 

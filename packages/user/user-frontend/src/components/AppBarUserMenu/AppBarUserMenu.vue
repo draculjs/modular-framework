@@ -19,10 +19,18 @@
           <v-list-item-title>{{ getUsername }}</v-list-item-title>
           <v-list-item-subtitle>{{ getEmail }}</v-list-item-subtitle>
         </v-list-item-content>
-
-        <role-visualization-card></role-visualization-card>
       </v-list-item>
 
+      <v-divider/>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>
+            <role-visualization-card sameLine class="ml-n4 mt-n4 mb-n4"/>
+          </v-list-item-title>
+        </v-list-item-content>
+
+      </v-list-item>
       <v-divider></v-divider>
 
       <v-list-item :to="{name: 'me'}">
@@ -51,7 +59,7 @@
 
 <script>
 
-import {mapGetters, mapActions} from 'vuex'
+import { mapGetters, mapActions} from 'vuex'
 import { RoleVisualizationCard } from '../RoleVisualizationCard';
 
 export default {
@@ -72,11 +80,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-      'isAuth',
-      'me',
-      'getAvatarUrl'
-      ]),
+    ...mapGetters(['isAuth', 'me', 'getAvatarUrl']),
     getUsername: function () {
       if (this.me && this.me.username) {
         return this.me.username

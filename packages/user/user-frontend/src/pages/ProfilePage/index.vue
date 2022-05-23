@@ -5,8 +5,7 @@
 
             <v-card-text class="text-center">
                 <profile-avatar :me="me"/>
-
-                <role-visualization-card></role-visualization-card>
+                <role-visualization-card/>
             </v-card-text>
 
             <v-divider></v-divider>
@@ -30,7 +29,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import { mapGetters } from 'vuex'
     import { RoleVisualizationCard } from '../../components/RoleVisualizationCard';
     import ProfileAvatar from "./ProfileAvatar";
     import ProfileDetails from "./ProfileDetails";
@@ -45,10 +44,7 @@
             }
         },
         computed: {
-            ...mapGetters([
-                'isAuth',
-                'me'
-            ]),
+            ...mapGetters(['isAuth', 'me']),
         },
     }
 </script>
