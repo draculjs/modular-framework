@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.resolvers = exports.types = void 0;
+exports.types = exports.resolvers = void 0;
 
 var _path = _interopRequireDefault(require("path"));
 

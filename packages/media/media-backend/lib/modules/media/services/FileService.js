@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.findAndDeleteByExpirationDate = exports.findAndDeleteExpiredFiles = exports.deleteFile = exports.updateByRelativePath = exports.updateFileRest = exports.updateFile = exports.paginateFiles = exports.fetchFiles = exports.findFile = void 0;
+exports.updateFileRest = exports.updateFile = exports.updateByRelativePath = exports.paginateFiles = exports.findFile = exports.findAndDeleteExpiredFiles = exports.findAndDeleteByExpirationDate = exports.fetchFiles = exports.deleteFile = void 0;
 
 var _FileModel = _interopRequireDefault(require("./../models/FileModel"));
 

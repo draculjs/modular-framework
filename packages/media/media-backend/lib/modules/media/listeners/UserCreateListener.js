@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.userCreateListener = void 0;
+exports.userCreateListener = exports.default = void 0;
 
 var _userBackend = require("@dracul/user-backend");
 

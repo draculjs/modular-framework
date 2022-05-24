@@ -45,9 +45,9 @@ class ClientError extends Error {
     }
 
     processFrapjQLErrors(graphQLErrors) {
-        
+
         this.errorsQuantity = graphQLErrors.length
-        
+
         graphQLErrors.forEach(gqlError => {
 
             //BAD_USER_INPUT
@@ -62,6 +62,11 @@ class ClientError extends Error {
 
 
                 for(let inputError in gqlError.extensions.inputErrors ){
+
+                    if(!gqlError.extensions.inputErrors[inputError].properties){
+                        continue
+                    }
+
                     if(this.inputErrors[inputError] === undefined) {
                         this.inputErrors[inputError] = [gqlError.extensions.inputErrors[inputError].properties.message]
                     }else{

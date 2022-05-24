@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.FILE_DELETE_OWN = exports.FILE_DELETE_ALL = exports.FILE_CREATE = exports.FILE_UPDATE_OWN = exports.FILE_UPDATE_ALL = exports.FILE_SHOW_OWN = exports.FILE_SHOW_ALL = void 0;
+exports.FILE_UPDATE_OWN = exports.FILE_UPDATE_ALL = exports.FILE_SHOW_OWN = exports.FILE_SHOW_ALL = exports.FILE_DELETE_OWN = exports.FILE_DELETE_ALL = exports.FILE_CREATE = void 0;
 const FILE_SHOW_ALL = "FILE_SHOW_ALL";
 exports.FILE_SHOW_ALL = FILE_SHOW_ALL;
 const FILE_SHOW_OWN = "FILE_SHOW_OWN";

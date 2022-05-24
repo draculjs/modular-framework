@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.initService = void 0;
+exports.initService = exports.default = void 0;
 
 var _dotenv = _interopRequireDefault(require("dotenv"));
 

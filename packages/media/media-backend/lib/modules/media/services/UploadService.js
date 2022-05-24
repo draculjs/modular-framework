@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.fileUpload = void 0;
+exports.fileUpload = exports.default = void 0;
 
 var _loggerBackend = require("@dracul/logger-backend");
 

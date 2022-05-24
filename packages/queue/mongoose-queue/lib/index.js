@@ -3,6 +3,24 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+Object.defineProperty(exports, "Consumer", {
+  enumerable: true,
+  get: function () {
+    return _Consumer.default;
+  }
+});
+Object.defineProperty(exports, "Producer", {
+  enumerable: true,
+  get: function () {
+    return _Producer.default;
+  }
+});
+Object.defineProperty(exports, "Queue", {
+  enumerable: true,
+  get: function () {
+    return _Queue.default;
+  }
+});
 Object.defineProperty(exports, "QueueModel", {
   enumerable: true,
   get: function () {
@@ -13,24 +31,6 @@ Object.defineProperty(exports, "QueueStatsModel", {
   enumerable: true,
   get: function () {
     return _QueueStatsModel.default;
-  }
-});
-Object.defineProperty(exports, "Queue", {
-  enumerable: true,
-  get: function () {
-    return _Queue.default;
-  }
-});
-Object.defineProperty(exports, "Producer", {
-  enumerable: true,
-  get: function () {
-    return _Producer.default;
-  }
-});
-Object.defineProperty(exports, "Consumer", {
-  enumerable: true,
-  get: function () {
-    return _Consumer.default;
   }
 });
 Object.defineProperty(exports, "Worker", {
@@ -45,10 +45,10 @@ Object.defineProperty(exports, "WorkerManager", {
     return _WorkerManager.default;
   }
 });
-Object.defineProperty(exports, "fetchQueues", {
+Object.defineProperty(exports, "ackJob", {
   enumerable: true,
   get: function () {
-    return _QueueService.fetchQueues;
+    return _QueueService.ackJob;
   }
 });
 Object.defineProperty(exports, "addJob", {
@@ -57,76 +57,10 @@ Object.defineProperty(exports, "addJob", {
     return _QueueService.addJob;
   }
 });
-Object.defineProperty(exports, "ackJob", {
-  enumerable: true,
-  get: function () {
-    return _QueueService.ackJob;
-  }
-});
-Object.defineProperty(exports, "errorJob", {
-  enumerable: true,
-  get: function () {
-    return _QueueService.errorJob;
-  }
-});
-Object.defineProperty(exports, "getJob", {
-  enumerable: true,
-  get: function () {
-    return _QueueService.getJob;
-  }
-});
 Object.defineProperty(exports, "cleanQueue", {
   enumerable: true,
   get: function () {
     return _QueueService.cleanQueue;
-  }
-});
-Object.defineProperty(exports, "resetQueue", {
-  enumerable: true,
-  get: function () {
-    return _QueueService.resetQueue;
-  }
-});
-Object.defineProperty(exports, "fetchQueueStats", {
-  enumerable: true,
-  get: function () {
-    return _QueueStatsService.fetchQueueStats;
-  }
-});
-Object.defineProperty(exports, "incrementAddedStat", {
-  enumerable: true,
-  get: function () {
-    return _QueueStatsService.incrementAddedStat;
-  }
-});
-Object.defineProperty(exports, "incrementGottenStat", {
-  enumerable: true,
-  get: function () {
-    return _QueueStatsService.incrementGottenStat;
-  }
-});
-Object.defineProperty(exports, "incrementFailedStat", {
-  enumerable: true,
-  get: function () {
-    return _QueueStatsService.incrementFailedStat;
-  }
-});
-Object.defineProperty(exports, "incrementDoneStat", {
-  enumerable: true,
-  get: function () {
-    return _QueueStatsService.incrementDoneStat;
-  }
-});
-Object.defineProperty(exports, "findQueue", {
-  enumerable: true,
-  get: function () {
-    return _QueueCrudService.findQueue;
-  }
-});
-Object.defineProperty(exports, "paginateQueues", {
-  enumerable: true,
-  get: function () {
-    return _QueueCrudService.paginateQueues;
   }
 });
 Object.defineProperty(exports, "createQueue", {
@@ -135,22 +69,88 @@ Object.defineProperty(exports, "createQueue", {
     return _QueueCrudService.createQueue;
   }
 });
-Object.defineProperty(exports, "updateQueue", {
-  enumerable: true,
-  get: function () {
-    return _QueueCrudService.updateQueue;
-  }
-});
 Object.defineProperty(exports, "deleteQueue", {
   enumerable: true,
   get: function () {
     return _QueueCrudService.deleteQueue;
   }
 });
+Object.defineProperty(exports, "errorJob", {
+  enumerable: true,
+  get: function () {
+    return _QueueService.errorJob;
+  }
+});
+Object.defineProperty(exports, "fetchQueueStats", {
+  enumerable: true,
+  get: function () {
+    return _QueueStatsService.fetchQueueStats;
+  }
+});
+Object.defineProperty(exports, "fetchQueues", {
+  enumerable: true,
+  get: function () {
+    return _QueueService.fetchQueues;
+  }
+});
+Object.defineProperty(exports, "findQueue", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.findQueue;
+  }
+});
 Object.defineProperty(exports, "findQueueByTopicAndState", {
   enumerable: true,
   get: function () {
     return _QueueCrudService.findQueueByTopicAndState;
+  }
+});
+Object.defineProperty(exports, "getJob", {
+  enumerable: true,
+  get: function () {
+    return _QueueService.getJob;
+  }
+});
+Object.defineProperty(exports, "incrementAddedStat", {
+  enumerable: true,
+  get: function () {
+    return _QueueStatsService.incrementAddedStat;
+  }
+});
+Object.defineProperty(exports, "incrementDoneStat", {
+  enumerable: true,
+  get: function () {
+    return _QueueStatsService.incrementDoneStat;
+  }
+});
+Object.defineProperty(exports, "incrementFailedStat", {
+  enumerable: true,
+  get: function () {
+    return _QueueStatsService.incrementFailedStat;
+  }
+});
+Object.defineProperty(exports, "incrementGottenStat", {
+  enumerable: true,
+  get: function () {
+    return _QueueStatsService.incrementGottenStat;
+  }
+});
+Object.defineProperty(exports, "paginateQueues", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.paginateQueues;
+  }
+});
+Object.defineProperty(exports, "resetQueue", {
+  enumerable: true,
+  get: function () {
+    return _QueueService.resetQueue;
+  }
+});
+Object.defineProperty(exports, "updateQueue", {
+  enumerable: true,
+  get: function () {
+    return _QueueCrudService.updateQueue;
   }
 });
 

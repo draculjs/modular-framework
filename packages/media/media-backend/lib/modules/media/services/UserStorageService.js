@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.checkUserStorageLeft = exports.checkUserStorage = exports.updateUserStorage = exports.updateUserUsedStorage = exports.createUserStorage = exports.userStorageCheckAndCreate = exports.findUserStorageByUser = exports.fetchUserStorage = void 0;
+exports.userStorageCheckAndCreate = exports.updateUserUsedStorage = exports.updateUserStorage = exports.findUserStorageByUser = exports.fetchUserStorage = exports.createUserStorage = exports.checkUserStorageLeft = exports.checkUserStorage = void 0;
 
 var _UserStorageModel = _interopRequireDefault(require("../models/UserStorageModel"));
 

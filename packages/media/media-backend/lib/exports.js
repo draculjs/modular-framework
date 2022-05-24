@@ -3,22 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "resolvers", {
+exports.FileService = void 0;
+Object.defineProperty(exports, "InitMediaPermissions", {
   enumerable: true,
   get: function () {
-    return _graphql.resolvers;
+    return _InitMediaPermissions.default;
   }
 });
-Object.defineProperty(exports, "types", {
+exports.UserStorageService = void 0;
+Object.defineProperty(exports, "deleteFile", {
   enumerable: true,
   get: function () {
-    return _graphql.types;
-  }
-});
-Object.defineProperty(exports, "findFile", {
-  enumerable: true,
-  get: function () {
-    return FileService.findFile;
+    return FileService.deleteFile;
   }
 });
 Object.defineProperty(exports, "fetchFiles", {
@@ -27,30 +23,7 @@ Object.defineProperty(exports, "fetchFiles", {
     return FileService.fetchFiles;
   }
 });
-Object.defineProperty(exports, "deleteFile", {
-  enumerable: true,
-  get: function () {
-    return FileService.deleteFile;
-  }
-});
-Object.defineProperty(exports, "paginateFiles", {
-  enumerable: true,
-  get: function () {
-    return FileService.paginateFiles;
-  }
-});
-Object.defineProperty(exports, "updateFile", {
-  enumerable: true,
-  get: function () {
-    return FileService.updateFile;
-  }
-});
-Object.defineProperty(exports, "userStorageCheckAndCreate", {
-  enumerable: true,
-  get: function () {
-    return UserStorageService.userStorageCheckAndCreate;
-  }
-});
+exports.filePermissions = void 0;
 Object.defineProperty(exports, "fileUpload", {
   enumerable: true,
   get: function () {
@@ -63,10 +36,34 @@ Object.defineProperty(exports, "fileUploadAnonymous", {
     return _UploadAnonymousService.default;
   }
 });
-Object.defineProperty(exports, "InitMediaPermissions", {
+Object.defineProperty(exports, "findFile", {
   enumerable: true,
   get: function () {
-    return _InitMediaPermissions.default;
+    return FileService.findFile;
+  }
+});
+Object.defineProperty(exports, "paginateFiles", {
+  enumerable: true,
+  get: function () {
+    return FileService.paginateFiles;
+  }
+});
+Object.defineProperty(exports, "resolvers", {
+  enumerable: true,
+  get: function () {
+    return _graphql.resolvers;
+  }
+});
+Object.defineProperty(exports, "types", {
+  enumerable: true,
+  get: function () {
+    return _graphql.types;
+  }
+});
+Object.defineProperty(exports, "updateFile", {
+  enumerable: true,
+  get: function () {
+    return FileService.updateFile;
   }
 });
 Object.defineProperty(exports, "userCreateListener", {
@@ -75,7 +72,13 @@ Object.defineProperty(exports, "userCreateListener", {
     return _UserCreateListener.userCreateListener;
   }
 });
-exports.userStoragePermissions = exports.filePermissions = exports.UserStorageService = exports.FileService = void 0;
+Object.defineProperty(exports, "userStorageCheckAndCreate", {
+  enumerable: true,
+  get: function () {
+    return UserStorageService.userStorageCheckAndCreate;
+  }
+});
+exports.userStoragePermissions = void 0;
 
 var _graphql = require("./modules/media/graphql");
 
@@ -105,6 +108,6 @@ var _UserCreateListener = require("./modules/media/listeners/UserCreateListener"
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }

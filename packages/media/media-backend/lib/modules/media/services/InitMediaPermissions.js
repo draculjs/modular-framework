@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.initMediaPermissions = void 0;
+exports.initMediaPermissions = exports.default = void 0;
 
 var _File = require("../permissions/File");
 
