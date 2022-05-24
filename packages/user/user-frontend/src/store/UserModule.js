@@ -32,6 +32,9 @@ export default {
         getRefreshToken: (state) => {
             return state.refresh_token
         },
+        getRole: (state) => {
+            return state.me.role.name;
+        },
         isAuth: (state) => {
             return (state.access_token) ? true : false
         },
