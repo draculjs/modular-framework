@@ -234,8 +234,7 @@ const messages = {
         ENVIRONMENT_UPDATE: "Edición de Entornos",
         ENVIRONMENTSERVICE_CREATE: "Creación de Servicios de Entorno",
         ENVIRONMENTSERVICE_DELETE: "Eliminación Servicios de Entorno",
-        ENVIRONMENTSERVICE_MENU:
-          "Visualización de menu de Servicios de Entorno",
+        ENVIRONMENTSERVICE_MENU: "Visualización de menu de Servicios de Entorno",
         ENVIRONMENTSERVICE_SHOW: "Visualización de Servicios de Entorno",
         ENVIRONMENTSERVICE_UPDATE: "Edición de Servicios de Entorno",
         STACK_CREATE: "Creación de Stacks",
