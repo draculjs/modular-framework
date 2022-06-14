@@ -20,6 +20,7 @@
     "@dracul/customize-frontend": "^1.7.12",
     "@dracul/dayjs-frontend": "^1.7.12",
     "@dracul/user-frontend": "^1.7.12",
+    "@pdftron/pdfjs-express": "^8.4.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
