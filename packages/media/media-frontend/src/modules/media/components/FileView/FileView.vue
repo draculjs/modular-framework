@@ -13,7 +13,7 @@
         <source :src="getSrc" :type="file.mimetype" />
       </video>
 
-      <pdf-web-viewer :url="getSrc" v-if="isPdf"></pdf-web-viewer>
+      <pdf-web-viewer :url="bufferedURL" v-if="isPdf"></pdf-web-viewer>
 
       <a v-if="!isImage && !isAudio && !isVideo && !isPdf" target="_blank" :href="getSrc" class="text-uppercase">
         {{ $t('media.file.download') }}
@@ -28,14 +28,14 @@
 
       <v-list-item>
         <v-list-item-icon class="mr-5">
-          <v-btn small icon @click="copyToClipboard">
-            <v-icon>content_copy</v-icon>
+          <v-btn small icon color="black">
+            <v-icon>mdi-book-open</v-icon>
           </v-btn>
           <input type="hidden" id="url" :value="file.url">
         </v-list-item-icon>
 
         <v-list-item-content class="mr-0">
-          <span>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
+          <span>Abrir en nueva pestaña <v-btn x-small icon color="blue" target="_blank" :href="`http://localhost:8080/pdf-viewer?url=${encodedURL}`"><v-icon>launch</v-icon></v-btn></span>
 
         </v-list-item-content>
       </v-list-item>
@@ -100,6 +100,15 @@ export default {
     computedDateFormatted() {
       return this.formatDate(this.date)
     },
+    bufferedURL(){
+      return new Buffer.from(this.file.url);
+    },
+    encodedURL(){
+      const bufferedURL = new Buffer.from(this.file.url);
+      const uriEncodedURL = encodeURIComponent(bufferedURL.toString('base64'));
+
+      return uriEncodedURL;
+    }
   },
   methods: {
     copyToClipboard() {
