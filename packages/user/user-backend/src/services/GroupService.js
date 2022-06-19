@@ -130,7 +130,7 @@ export const findGroupByName = async function (name) {
                 reject(err)
             }
 
-            winston.debug("GroupService.findGroupByName successful")
+            winston.debug("GroupService.findGroupByName successful ")
             resolve(res)
 
         });
