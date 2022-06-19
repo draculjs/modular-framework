@@ -126,7 +126,7 @@ export const findGroupByName = async function (name) {
         Group.findOne({name: name}).exec((err, res) => {
 
             if (err) {
-                winston.error("GroupService.findGroupByName ", err)
+                winston.error("GroupService.findGroupByName", err)
                 reject(err)
             }
 
