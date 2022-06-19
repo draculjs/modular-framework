@@ -121,6 +121,22 @@ export const findGroup = async function (id) {
     })
 }
 
+export const findGroupByName = async function (name) {
+    return new Promise((resolve, reject) => {
+        Group.findOne({name: name}).exec((err, res) => {
+
+            if (err) {
+                winston.error("GroupService.findGroup ", err)
+                reject(err)
+            }
+
+            winston.debug("GroupService.findGroup successful")
+            resolve(res)
+
+        });
+    })
+}
+
 
 export const createGroup = async function (user, {name, color, users}) {
 
