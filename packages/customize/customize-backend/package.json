@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-backend",
-  "version": "1.7.14",
+  "version": "1.7.15",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   "dependencies": {
     "@dracul/common-backend": "^1.7.12",
     "@dracul/logger-backend": "^1.7.12",
-    "@dracul/user-backend": "^1.7.14"
+    "@dracul/user-backend": "^1.7.15"
   },
   "peerDependencies": {
     "apollo-server-express": "^2.25.3",
