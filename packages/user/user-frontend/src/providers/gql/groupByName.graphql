@@ -1,5 +1,5 @@
-query groups{
-    groups{
+query groupByName($name:String!){
+    groupByName(name:$name){
         id
         name
         color
@@ -14,4 +14,3 @@ query groups{
         }
     }
 }
-

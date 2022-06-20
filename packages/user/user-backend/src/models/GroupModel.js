@@ -2,6 +2,7 @@ import {mongoose} from '@dracul/common-backend';
 import softDelete from 'mongoose-softdelete'
 import mongoosePaginate from 'mongoose-paginate-v2';
 import uniqueValidator from 'mongoose-unique-validator';
+import {findGroupByName} from "../services/GroupService";
 
 const Schema = mongoose.Schema;
 
@@ -10,15 +11,8 @@ const GroupSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
-        index: true,
-        /*validate: {
-            validator: function (value) {
-                let r = /^[A-Za-z\s]+$/;
-                return r.test(value);
-            },
-            message: "validation.onlyLetters"
-        }*/
+        unique: false,
+        index: false,
     },
     color: {
         type: String,
@@ -50,6 +44,7 @@ GroupSchema.set('toJSON', {
         };
     }
 });
+
 
 const GroupModel = mongoose.model('Group', GroupSchema);
 
