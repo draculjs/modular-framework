@@ -170,7 +170,6 @@ export const createGroup = async function (user, {name, color, users}) {
                 }
 
                 winston.error("GroupService.createGroup ", error)
-
                 return reject(error)
             }
 
