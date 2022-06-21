@@ -1,27 +1,28 @@
 <template>
-  <crud-show :open="open"
+  <add-and-close-crud-show :open="open"
              :loading="loading"
              :title="title"
              :errorMessage="errorMessage"
              @close="$emit('close')"
+             @createFile="fileUploaded"
+             :filePicked="this.filePicked"
   >
     <div class="text-center">
       <file-upload-expiration v-if="!file" ref="form"
-                           autoSubmit
-                           x-large
-                           @fileUploaded="fileUploaded"
+          x-large
+          @filePicked="filePickedHandler"
       />
 
       <file-view v-if="file" :file="file"/>
     </div>
 
-  </crud-show>
+  </add-and-close-crud-show >
 </template>
 
 <script>
 
 
-import {CrudShow} from '@dracul/common-frontend'
+import {addAndCloseCrudShow} from '../../../../../../node_modules/@dracul/common-frontend/src/components/Crud/CrudShow/addAndCloseCrudShow'
 
 import FileUploadExpiration from "../../../components/FileUploadExpiration/FileUploadExpiration";
 import FileView from "../../../components/FileView/FileView";
@@ -29,7 +30,7 @@ import FileView from "../../../components/FileView/FileView";
 export default {
   name: "FileCreate",
 
-  components: {FileView, FileUploadExpiration, CrudShow},
+  components: {FileView, FileUploadExpiration, addAndCloseCrudShow},
 
   props: {
     open: {type: Boolean, default: true}
@@ -49,7 +50,10 @@ export default {
         absolutePath: '',
         size: '',
         url: '',
-      }
+      },
+      filePicked : false,
+      pickedFileSize : null,
+
     }
   },
 
@@ -58,10 +62,15 @@ export default {
       this.$refs.form.upload()
 
     },
-    fileUploaded(file) {
-      this.file = file
-      this.$emit('itemCreated')
+    async fileUploaded() {
+      this.file = await this.$refs.form.upload(this.pickedFileSize);
+      this.$emit('itemCreated');
     },
+
+    filePickedHandler(fileSize){
+      this.pickedFileSize = fileSize;
+      this.filePicked = true;    
+    }
 
   },
 }
