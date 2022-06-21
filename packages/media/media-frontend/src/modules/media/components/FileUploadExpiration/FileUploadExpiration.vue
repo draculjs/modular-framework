@@ -17,6 +17,12 @@
 
     </v-row>
 
+    <v-checkbox
+      v-model="publicFile"
+      :label="`Publico`"
+      class="ml-5"
+    ></v-checkbox>
+
     <input type="file"
            style="display: none"
            ref="file"
@@ -120,8 +126,10 @@ export default {
         error: {
           color: 'red darken-3',
           icon: 'error'
-        }
+        },
       },
+      
+      publicFile : false,
       loading: false,
       fileExpirationTimeRules: [
         () => {
@@ -183,6 +191,7 @@ export default {
       this.file = e.target.files[0]
       this.state = SELECTED
       const fileSize = e.target.files[0].size ? e.target.files[0].size / (1024 * 1024) : null;
+      this.$emit('filePicked', fileSize);
       if (this.autoSubmit) {
         this.upload(fileSize)
       }
@@ -198,21 +207,24 @@ export default {
           err => console.error(err)
       )
     },
-    upload(fileSize) {
+     async upload(fileSize) {
       if (this.file && this.state !== UPLOADED && fileSize <= this.maxFileSize && this.getDifferenceInDays <= this.fileExpirationTime) {
         this.loading = true;
-        let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null
+        let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
 
-        uploadProvider.uploadFile(this.file, expirationDateWithMinutes).then(result => {
-          this.uploadedFile = result.data.fileUpload
+        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes).then(result => {
+          this.uploadedFile = result.data.fileUpload;
           this.setState(UPLOADED);
-          this.$emit('fileUploaded', result.data.fileUpload)
+
         }).catch((err) => {
           console.log("ERROR", err)
           this.setState(ERROR);
-          this.setErrorMessage(err.message)
-          this.showErrorMessage = true
-        }).finally(() => this.loading = false)
+          this.setErrorMessage(err.message);
+          this.showErrorMessage = true;
+
+        }).finally(() => this.loading = false);
+        this.$emit('fileUploaded', this.uploadedFile);
+        return this.uploadedFile;
       } else {
         this.setErrorFileExceeded();
       }
