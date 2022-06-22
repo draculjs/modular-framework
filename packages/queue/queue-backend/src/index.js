@@ -8,6 +8,5 @@ export {
 
     //Graphql
     types,
-    resolvers,
-
+    resolvers
 }
