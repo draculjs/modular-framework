@@ -1,9 +1,11 @@
 <template>
-  <div>
+  <v-container>
     <v-row>
-      <v-col cols="12" sm="6" md="4" class="mt-3">
+      <v-col cols="12" sm="6" md="6" class="mt-3">
         <h3>Fecha de expiración (opcional):</h3>
       </v-col>
+
+      <v-spacer/>
 
       <v-col cols="12" sm="6" md="4" class="pt-0">
         <date-input
@@ -14,60 +16,76 @@
             hide-details
             :rules="fileExpirationTimeRules"/>
       </v-col>
-
+      <v-spacer/>
     </v-row>
 
-    <v-checkbox
-      v-model="publicFile"
-      :label="`Publico`"
-      class="ml-5"
-    ></v-checkbox>
+    <v-row>
+      <v-col cols="12" sm="6" md="6" class="mt-3">
+        <h3>Privacidad del archivo:</h3>
+      </v-col>
 
-    <input type="file"
-           style="display: none"
-           ref="file"
-           :accept="accept"
-           @change="onFilePicked"
-           :disabled="disableUploadButton"/>
+      <v-spacer/>
 
-    <v-menu
-        v-model="showErrorMessage"
-        :nudge-width="200"
-        :close-on-content-click="false"
-        :close-on-click="false"
-        offset-x
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn v-on:click="pickFile()"
-               fab dark
-               :color="getState.color"
-               :loading="loading"
-               :x-large="xLarge"
-               v-bind="attrs"
-        >
-          <v-avatar v-if="isImage">
-            <img :src="getSrc" alt="image"/>
-          </v-avatar>
-          <v-icon v-else-if="isAudio">headset</v-icon>
-          <v-icon v-else-if="isVideo">videocam</v-icon>
-          <v-icon v-else>{{ getState.icon }}</v-icon>
-        </v-btn>
-      </template>
+      <v-col cols="12" sm="6" md="4" class="pt-0">
+        <v-combobox
+          v-model="filePrivacy"
+          :items="['Publico', 'Privado']"
+          class="ml-5"
+          placeholder="Privacidad"
+        ></v-combobox>
+      </v-col>
+      <v-spacer/>
+    </v-row>
 
-      <v-card :style="{width: '280px'}" elevation="0">
-        <v-card-text class="pb-0 pa-0">
-          <v-alert class="mb-0" border="left" type="error" text outlined tile>
-            {{ errorMessage }}
-          </v-alert>
-        </v-card-text>
-        <v-card-actions class="justify-center">
-          <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-container class="mb-0 pb-0">
+      <input type="file"
+        style="display: none"
+        ref="file"
+        :accept="accept"
+        @change="onFilePicked"
+        :disabled="disableUploadButton"
+      />
 
-    </v-menu>
+      <v-menu
+          v-model="showErrorMessage"
+          :nudge-width="200"
+          :close-on-content-click="false"
+          :close-on-click="false"
+          offset-x
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-on:click="pickFile()"
+                fab dark
+                :color="getState.color"
+                :loading="loading"
+                :x-large="xLarge"
+                v-bind="attrs"
+          >
+            <v-avatar v-if="isImage">
+              <img :src="getSrc" alt="image"/>
+            </v-avatar>
+            <v-icon v-else-if="isAudio">headset</v-icon>
+            <v-icon v-else-if="isVideo">videocam</v-icon>
+            <v-icon v-else>{{ getState.icon }}</v-icon>
+          </v-btn>
+        </template>
 
-  </div>
+        <v-card :style="{width: '280px'}" elevation="0">
+          <v-card-text class="pb-0 pa-0">
+            <v-alert class="mb-0" border="left" type="error" text outlined tile>
+              {{ errorMessage }}
+            </v-alert>
+          </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
+          </v-card-actions>
+        </v-card>
+
+      </v-menu>
+
+      <p class="mb-0 mt-5">{{(this.file) == null ? '' : this.file.name}}</p>
+    </v-container>
+  </v-container>
 </template>
 
 <script>
@@ -129,7 +147,7 @@ export default {
         },
       },
       
-      publicFile : false,
+      filePrivacy : '',
       loading: false,
       fileExpirationTimeRules: [
         () => {
