@@ -64,7 +64,11 @@ export default {
     },
     async fileUploaded() {
       this.file = await this.$refs.form.upload(this.pickedFileSize);
-      this.$emit('itemCreated');
+
+      let succesfully = false;
+      if(this.$refs.form.state !== 'error') succesfully = true;
+      
+      this.$emit('itemCreated', succesfully);
     },
 
     filePickedHandler(fileSize){
