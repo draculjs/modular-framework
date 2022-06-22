@@ -13,13 +13,7 @@
         <source :src="getSrc" :type="file.mimetype" />
       </video>
 
-      <object v-if="isPdf"
-              :data="getSrc"
-              type="application/pdf" width="300"
-              height="200"
-      >
-        <a :href="getSrc" target="_blank" class="text-uppercase"> {{ $t('media.file.download') }}</a>
-      </object>
+      <pdf-web-viewer :url="getSrc" v-if="isPdf"></pdf-web-viewer>
 
       <a v-if="!isImage && !isAudio && !isVideo && !isPdf" target="_blank" :href="getSrc" class="text-uppercase">
         {{ $t('media.file.download') }}
@@ -66,11 +60,12 @@
 </template>
 
 <script>
-import {ShowField} from '@dracul/common-frontend'
+import {ShowField} from '@dracul/common-frontend';
+import PdfWebViewer from './pdfViewer/pdfWebViewer.vue';
 
 export default {
   name: "FileView",
-  components: {ShowField},
+  components: { ShowField, PdfWebViewer},
   props: {
     file: {type: Object}
   },
