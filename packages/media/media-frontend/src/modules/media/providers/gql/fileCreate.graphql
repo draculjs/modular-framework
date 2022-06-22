@@ -1,5 +1,5 @@
-mutation fileCreate($filename:String!, $extension:String!, $relativePath:String!, $absolutePath:String!, $size:String!, $url:String!){
-    fileCreate(input: {filename: $filename, extension: $extension, relativePath: $relativePath, absolutePath: $absolutePath, size: $size, url: $url }){
+mutation fileCreate($filename:String!, $extension:String!, $relativePath:String!, $absolutePath:String!, $size:String!, $url:String!, $publicFile:Boolean!){
+    fileCreate(input: {filename: $filename, extension: $extension, relativePath: $relativePath, absolutePath: $absolutePath, size: $size, url: $url, publicFile: $publicFile }){
         id
         filename
         mimetype
@@ -20,6 +20,7 @@ mutation fileCreate($filename:String!, $extension:String!, $relativePath:String!
         }
         lastAccess
         expirationDate
+        publicFile
     }
 }
 

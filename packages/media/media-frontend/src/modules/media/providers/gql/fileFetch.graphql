@@ -22,6 +22,7 @@ query fileFetch{
         }
         lastAccess
         expirationDate
+        publicFile
     }
 }
 

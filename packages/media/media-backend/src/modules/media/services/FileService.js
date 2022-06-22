@@ -153,7 +153,7 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 export const updateFile = async function (authUser, id, input, permissionType, userId) {
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, userId) },
-            { description, tags, expirationDate },
+            { description, tags, expirationDate, publicFile },
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {
@@ -173,6 +173,7 @@ export const updateFile = async function (authUser, id, input, permissionType, u
 
 // Rest service
 export const updateFileRest = function (id, user, permissionType, input) {
+    // VER
     return new Promise(async (resolve, reject) => {
 
         let updatedFile = purgeInput(input);
@@ -391,7 +392,7 @@ function validateExpirationDate(expirationTime) {
 function purgeInput(input) {
     let updatedFile = {};
     for (const key in input) {
-        if (key == 'description' || key == 'expirationDate' || key == 'tags') {
+        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'publicFile') {
             updatedFile[key] = input[key];
         }
     }
