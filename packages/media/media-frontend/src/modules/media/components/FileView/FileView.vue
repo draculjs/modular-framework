@@ -28,12 +28,16 @@
 
       <v-list-item>
         <v-list-item-icon class="mr-5">
-            <v-icon color="black">mdi-book-open</v-icon>
+            <v-icon v-if="isPdf" color="black">mdi-book-open</v-icon>
+            <v-btn v-if="!isPdf" small icon @click="copyToClipboard">
+              <v-icon color="black">content_copy</v-icon>
+            </v-btn>
           <input type="hidden" id="url" :value="file.url">
         </v-list-item-icon>
 
         <v-list-item-content class="mr-0">
-          <span>Abrir en nueva pestaña <v-btn x-small icon color="blue" target="_blank" :href="`http://localhost:7070/pdf-viewer?url=${encodedURL}`"><v-icon>launch</v-icon></v-btn></span>
+          <span v-if="isPdf">Abrir en nueva pestaña <v-btn x-small icon color="blue" target="_blank" :href="`/pdf-viewer?url=${encodedURL}`"><v-icon>launch</v-icon></v-btn></span>
+          <span v-else>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
         </v-list-item-content>
       </v-list-item>
     </v-col>
