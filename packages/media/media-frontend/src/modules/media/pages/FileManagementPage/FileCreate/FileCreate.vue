@@ -24,6 +24,7 @@
 <script>
 
 
+// import {addAndCloseCrudShow} from 'packages/common/common-frontend/src/components/Crud/CrudShow/addAndCloseCrudShow/addAndCloseCrudShow.vue'
 import {addAndCloseCrudShow} from '../../../../../../node_modules/@dracul/common-frontend/src/components/Crud/CrudShow/addAndCloseCrudShow'
 
 import FileUploadExpiration from "../../../components/FileUploadExpiration/FileUploadExpiration";
