@@ -17,7 +17,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <close-button color="grey" @click="$emit('close')"></close-button>
-        <v-btn text color="secondary" @click="$emit('createFile')" :disabled="!this.filePicked">Crear</v-btn>
+        <v-btn v-if="!createdFile"text color="secondary" @click="$emit('createFile')" :disabled="!this.filePicked">Crear</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,8 +35,19 @@ export default {
     open: {type: Boolean, default: false},
     fullscreen: {type: Boolean, default: false},
     filePicked : {type: Boolean, default: false},
+  },
+  data() {
+    return {
+      createdFile : false,
+    }
+  },
+  methods: {
+    fileWasCreated() {
+      this.createdFile = true;
+    }
   }
-}
+};
+
 </script>
 
 <style scoped>
