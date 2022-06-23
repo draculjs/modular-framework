@@ -32,10 +32,10 @@ class FileProvider {
     }
     
 
-    updateFile(form) {
+    updateFile(input) {
         return this.gqlc.mutate({
             mutation: require('./gql/fileUpdate.graphql'),
-            variables: form
+            variables: {input}
         })
     }
     

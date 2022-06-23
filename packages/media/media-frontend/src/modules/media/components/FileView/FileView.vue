@@ -24,6 +24,7 @@
       <show-field :value="file.filename" :label="$t('media.file.filename')" icon="description"/>
       <show-field :value="file.id" :label="$t('media.file.id')" icon="badge"/>
       <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
+      <show-field :value="filePrivacy" label="Privacidad del archivo" icon="mdi-cctv"/>
       <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
 
       <v-list-item>
@@ -109,6 +110,13 @@ export default {
       const uriEncodedURL = encodeURIComponent(bufferedURL.toString('base64'));
 
       return uriEncodedURL;
+    },
+    filePrivacy(){
+      if(this.file.filePrivacy === true){
+        return 'Privado';
+      }
+
+      return "Publico";
     }
   },
   methods: {

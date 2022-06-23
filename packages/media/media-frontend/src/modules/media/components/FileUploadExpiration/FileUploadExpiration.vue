@@ -1,6 +1,18 @@
 <template>
   <v-container>
     <v-row>
+
+    <v-col cols="12" sm="12">
+        <v-text-field
+            prepend-icon="description"
+            name="filename"
+            v-model="description"
+            :label="$t('media.file.description')"
+            :placeholder="$t('media.file.description')"
+            color="secondary"
+        ></v-text-field>
+      </v-col>
+
       <v-col cols="12" sm="6" md="6" class="mt-3">
         <h3>Fecha de expiración (opcional):</h3>
       </v-col>
@@ -147,7 +159,8 @@ export default {
         },
       },
       
-      filePrivacy : '',
+      filePrivacy : 'Privado',
+      description : null,
       loading: false,
       fileExpirationTimeRules: [
         () => {
@@ -190,6 +203,13 @@ export default {
         return Math.floor((expirationDate - today) / (1000 * 3600 * 24));
       }
       return null;
+    },
+    booleanFilePrivacy(){
+      if(this.filePrivacy === "Privado"){
+        return true;
+      }
+
+      return false;
     }
   },
   mounted() {
@@ -230,7 +250,7 @@ export default {
         this.loading = true;
         let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
 
-        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes).then(result => {
+        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes, this.booleanFilePrivacy, this.description).then(result => {
           this.uploadedFile = result.data.fileUpload;
           this.setState(UPLOADED);
 

@@ -28,11 +28,11 @@ export default {
         },
     },
     Mutation: {
-        fileUpdate: (_, { id, input }, { user, rbac }) => {
+        fileUpdate: (_, { input }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, FILE_UPDATE_ALL) && !rbac.isAllowed(user.id, FILE_UPDATE_OWN)) throw new ForbiddenError("Not Authorized")
             let permissionType = (rbac.isAllowed(user.id, FILE_UPDATE_ALL)) ? FILE_UPDATE_ALL : (rbac.isAllowed(user.id, FILE_UPDATE_OWN)) ? FILE_UPDATE_OWN : null;
-            return updateFile(user, id, input, permissionType, user.id)
+            return updateFile(user, input, permissionType, user.id)
         },
         fileDelete: (_, { id }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")

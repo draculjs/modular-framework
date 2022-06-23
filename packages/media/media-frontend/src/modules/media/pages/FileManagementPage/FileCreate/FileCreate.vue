@@ -1,11 +1,13 @@
 <template>
-  <add-and-close-crud-show :open="open"
-             :loading="loading"
-             :title="title"
-             :errorMessage="errorMessage"
-             @close="$emit('close')"
-             @createFile="fileUploaded"
-             :filePicked="this.filePicked"
+  <add-and-close-crud-show 
+    :open="open"
+      :loading="loading"
+      :title="title"
+      :errorMessage="errorMessage"
+      @close="$emit('close')"
+      @createFile="fileUploaded"
+      :filePicked="this.filePicked"
+      ref="crudShow"
   >
     <div class="text-center">
       <file-upload-expiration v-if="!file" ref="form"
@@ -67,6 +69,7 @@ export default {
 
       let succesfully = false;
       if(this.$refs.form.state !== 'error') succesfully = true;
+      await this.$refs.crudShow.fileWasCreated();
       
       this.$emit('itemCreated', succesfully);
     },

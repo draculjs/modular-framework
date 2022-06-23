@@ -1,4 +1,4 @@
 type Mutation {
-    fileUpload(file: Upload!, expirationDate: String, publicFile: Boolean): File!
+    fileUpload(file: Upload!, expirationDate: String, filePrivacy: Boolean, description: String): File!
     fileUploadAnonymous(file: Upload!): File!
 }

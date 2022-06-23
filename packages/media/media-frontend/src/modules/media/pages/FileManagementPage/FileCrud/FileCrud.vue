@@ -39,7 +39,7 @@
                          v-on:close="deleting=false"
         />
 
-        <snackbar timeout=10000 v-model="flash"/>
+        <snackbar :timeout="timeoutSnackbar" v-model="flash"/>
 
 </crud-layout>
 </template>
@@ -50,7 +50,7 @@
     import FileShow from "../FileShow";
     import FileList from "../FileList";
 
-     import {CrudLayout, AddButton, Snackbar} from "@dracul/common-frontend"
+    import {CrudLayout, AddButton, Snackbar} from "@dracul/common-frontend"
     import FileCreate from "../FileCreate/FileCreate";
 
     export default {
@@ -75,6 +75,7 @@
                 itemToEdit: null,
                 itemToDelete: null,
                 itemToShow: null,
+                timeoutSnackbar: 10000,
             }
         },
         methods: {

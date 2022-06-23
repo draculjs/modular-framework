@@ -11,10 +11,10 @@ import {
 export default {
 
     Mutation: {
-        fileUpload: (_, { file, expirationDate, publicFile }, { user, rbac }) => {
+        fileUpload: (_, { file, expirationDate, filePrivacy, description }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, FILE_CREATE)) throw new ForbiddenError("Not Authorized")
-            return fileUpload(user, file, expirationDate, publicFile)
+            return fileUpload(user, file, expirationDate, filePrivacy, description)
         },
         fileUploadAnonymous: (_, { file }) => {
             if (process.env.MEDIA_UPLOAD_ANONYMOUS === 'enable' || process.env.MEDIA_UPLOAD_ANONYMOUS === 'true') {
