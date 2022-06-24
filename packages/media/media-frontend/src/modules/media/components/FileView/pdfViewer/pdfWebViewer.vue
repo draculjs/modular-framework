@@ -1,28 +1,62 @@
 <template>
-  <div ref='viewer'></div>
+  <div id="app" class="pdfViewer">
+    <div class="app-header">
+      <template v-if="isLoading">
+        Loading...
+      </template>
+
+      <template v-else>
+
+        <span class="d-flex">
+          <v-spacer/>
+          <button :disabled="page <= 1" @click="page--">❮</button>
+          <v-spacer/>
+          {{ page }} / {{ totalPages }}
+          <v-spacer/>
+          <button :disabled="page >= totalPages" @click="page++">❯</button>
+          <v-spacer/>
+
+        </span>
+      </template>
+    </div>
+
+    <v-card height="100%" flat>
+      <v-spacer/>
+        <vue-pdf-embed
+          ref="pdfRef"
+          :source="pdfSource"
+          :page="page"
+          @rendered="handleDocumentRender"
+        />
+    </v-card>
+  </div>
 </template>
 
 <script>
-    import WebViewer from '@pdftron/pdfjs-express'
-    export default {
-        name: 'WebViewer',
-        props: ['url'],
+import VuePdfEmbed from 'vue-pdf-embed/dist/vue2-pdf-embed'
 
-        mounted: function () {
-            WebViewer({
-                licenseKey: 't8aqS5zBEnL0qpxr5pWj',
-                path: '/public',
-                initialDoc: Buffer.from(this.url, 'base64'),
-            }, this.$refs.viewer).then((instance) => {
-                instance.disableFeatures([instance.Feature.Print, instance.Feature.Copy, instance.Feature.Download]);
-            });
+export default {
+    components: {
+        VuePdfEmbed,
+    },
+
+    props: ['url', 'width'],
+
+    data() {
+        return {
+            pdfSource: Buffer.from(this.url, 'base64').toString("utf-8"),
+            page: 1,
+            totalPages: null,
+            isLoading : true,
         }
-    }
-</script>
+    },
 
-<style scoped>
-div {
-  width: 100%; 
-  height: 100%;
+    methods: {
+      handleDocumentRender() {
+        this.isLoading = false
+        this.totalPages = this.$refs.pdfRef.pageCount
+      },
+    },
+    }
 }
-</style>
+</script>

@@ -13,7 +13,7 @@
         <source :src="getSrc" :type="file.mimetype" />
       </video>
 
-      <pdf-web-viewer :url="bufferedURL" v-if="isPdf"></pdf-web-viewer>
+        <pdf-web-viewer :url="bufferedURL" v-if="isPdf"></pdf-web-viewer>
 
       <a v-if="!isImage && !isAudio && !isVideo && !isPdf" target="_blank" :href="getSrc" class="text-uppercase">
         {{ $t('media.file.download') }}
@@ -37,7 +37,7 @@
         </v-list-item-icon>
 
         <v-list-item-content class="mr-0">
-          <span v-if="isPdf">Abrir en nueva pestaña <v-btn x-small icon color="blue" target="_blank" :href="`/pdf-viewer?url=${encodedURL}`"><v-icon>launch</v-icon></v-btn></span>
+          <span v-if="isPdf">Abrir en nueva pestaña <v-btn x-small icon color="blue" target="_blank" :href="`/pdf-viewer?url=${bufferedURL}`"><v-icon>launch</v-icon></v-btn></span>
           <span v-else>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
         </v-list-item-content>
       </v-list-item>
@@ -103,13 +103,7 @@ export default {
       return this.formatDate(this.date)
     },
     bufferedURL(){
-      return new Buffer.from(this.file.url);
-    },
-    encodedURL(){
-      const bufferedURL = new Buffer.from(this.file.url);
-      const uriEncodedURL = encodeURIComponent(bufferedURL.toString('base64'));
-
-      return uriEncodedURL;
+      return new Buffer.from(this.file.url).toString('base64');
     },
     filePrivacy(){
       if(this.file.filePrivacy === true){
@@ -153,5 +147,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
