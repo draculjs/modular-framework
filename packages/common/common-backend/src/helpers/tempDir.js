@@ -3,7 +3,7 @@ const os = require('os');
 const path = require('path');
 
 
-export const tempDir = (name) => {
+const tempDir = (name) => {
     let tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), name));
     return {
         dir: tmpDir,
@@ -16,4 +16,5 @@ export const tempDir = (name) => {
     }
 }
 
-export default tempDir
+module.exports.tempDir = tempDir
+module.exports = tempDir
