@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-backend",
-  "version": "1.7.23",
+  "version": "1.7.24",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "scripts": {
@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/cincarnato/ci-custom-module#readme",
   "dependencies": {
-    "@dracul/common-backend": "^1.7.23",
+    "@dracul/common-backend": "^1.7.24",
     "@dracul/logger-backend": "^1.7.12",
-    "@dracul/user-backend": "^1.7.23"
+    "@dracul/user-backend": "^1.7.24"
   },
   "peerDependencies": {
     "apollo-server-express": "^2.25.3",
