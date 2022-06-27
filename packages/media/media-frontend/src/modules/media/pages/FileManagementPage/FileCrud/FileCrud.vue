@@ -39,7 +39,7 @@
                          v-on:close="deleting=false"
         />
 
-        <snackbar v-model="flash"/>
+        <snackbar :timeout="timeoutSnackbar" v-model="flash"/>
 
 </crud-layout>
 </template>
@@ -50,7 +50,7 @@
     import FileShow from "../FileShow";
     import FileList from "../FileList";
 
-     import {CrudLayout, AddButton, Snackbar} from "@dracul/common-frontend"
+    import {CrudLayout, AddButton, Snackbar} from "@dracul/common-frontend"
     import FileCreate from "../FileCreate/FileCreate";
 
     export default {
@@ -75,37 +75,40 @@
                 itemToEdit: null,
                 itemToDelete: null,
                 itemToShow: null,
+                timeoutSnackbar: 10000,
             }
         },
         methods: {
             //On
-            onItemCreated() {
-                this.$refs.list.fetch()
-                this.flash=  this.$t("common.created")
+            onItemCreated(succesfully) {
+                if (succesfully){
+                    this.$refs.list.fetch();
+                    this.flash=  this.$t("common.created");
+                }
             },
             onItemUpdated() {
                 this.$refs.list.fetch()
-                this.flash= this.$t("common.updated")
+                this.flash= this.$t("common.updated");
             },
             onItemDeleted() {
                 this.$refs.list.fetch()
-                this.flash=  this.$t("common.deleted")
+                this.flash=  this.$t("common.deleted");
             },
             //Open
             create() {
-                this.creating = true
+                this.creating = true;
             },
             update(item) {
-                this.updating = true
-                this.itemToEdit = item
+                this.updating = true;
+                this.itemToEdit = item;
             },
             show(item) {
-                this.showing = true
-                this.itemToShow = item
+                this.showing = true;
+                this.itemToShow = item;
             },
             remove(item) {
-                this.deleting = true
-                this.itemToDelete = item
+                this.deleting = true;
+                this.itemToDelete = item;
             },
         }
 

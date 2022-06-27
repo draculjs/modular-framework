@@ -1,9 +1,23 @@
 <template>
-  <div>
+  <v-container>
     <v-row>
-      <v-col cols="12" sm="6" md="4" class="mt-3">
+
+    <v-col cols="12" sm="12">
+        <v-text-field
+            prepend-icon="description"
+            name="filename"
+            v-model="description"
+            :label="$t('media.file.description')"
+            :placeholder="$t('media.file.description')"
+            color="secondary"
+        ></v-text-field>
+      </v-col>
+
+      <v-col cols="12" sm="6" md="6" class="mt-3">
         <h3>Fecha de expiración (opcional):</h3>
       </v-col>
+
+      <v-spacer/>
 
       <v-col cols="12" sm="6" md="4" class="pt-0">
         <date-input
@@ -14,54 +28,76 @@
             hide-details
             :rules="fileExpirationTimeRules"/>
       </v-col>
-
+      <v-spacer/>
     </v-row>
 
-    <input type="file"
-           style="display: none"
-           ref="file"
-           :accept="accept"
-           @change="onFilePicked"
-           :disabled="disableUploadButton"/>
+    <v-row>
+      <v-col cols="12" sm="6" md="6" class="mt-3">
+        <h3>Privacidad del archivo:</h3>
+      </v-col>
 
-    <v-menu
-        v-model="showErrorMessage"
-        :nudge-width="200"
-        :close-on-content-click="false"
-        :close-on-click="false"
-        offset-x
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn v-on:click="pickFile()"
-               fab dark
-               :color="getState.color"
-               :loading="loading"
-               :x-large="xLarge"
-               v-bind="attrs"
-        >
-          <v-avatar v-if="isImage">
-            <img :src="getSrc" alt="image"/>
-          </v-avatar>
-          <v-icon v-else-if="isAudio">headset</v-icon>
-          <v-icon v-else-if="isVideo">videocam</v-icon>
-          <v-icon v-else>{{ getState.icon }}</v-icon>
-        </v-btn>
-      </template>
+      <v-spacer/>
 
-      <v-card :style="{width: '280px'}" elevation="0">
-        <v-card-text class="pb-0 pa-0">
-          <v-alert class="mb-0" border="left" type="error" text outlined tile>
-            {{ errorMessage }}
-          </v-alert>
-        </v-card-text>
-        <v-card-actions class="justify-center">
-          <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
-        </v-card-actions>
-      </v-card>
+      <v-col cols="12" sm="6" md="4" class="pt-0">
+        <v-combobox
+          v-model="filePrivacy"
+          :items="['Publico', 'Privado']"
+          class="ml-5"
+          placeholder="Privacidad"
+        ></v-combobox>
+      </v-col>
+      <v-spacer/>
+    </v-row>
 
-    </v-menu>
+    <v-container class="mb-0 pb-0">
+      <input type="file"
+        style="display: none"
+        ref="file"
+        :accept="accept"
+        @change="onFilePicked"
+        :disabled="disableUploadButton"
+      />
 
-  </div>
+      <v-menu
+          v-model="showErrorMessage"
+          :nudge-width="200"
+          :close-on-content-click="false"
+          :close-on-click="false"
+          offset-x
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-on:click="pickFile()"
+                fab dark
+                :color="getState.color"
+                :loading="loading"
+                :x-large="xLarge"
+                v-bind="attrs"
+          >
+            <v-avatar v-if="isImage">
+              <img :src="getSrc" alt="image"/>
+            </v-avatar>
+            <v-icon v-else-if="isAudio">headset</v-icon>
+            <v-icon v-else-if="isVideo">videocam</v-icon>
+            <v-icon v-else>{{ getState.icon }}</v-icon>
+          </v-btn>
+        </template>
+
+        <v-card :style="{width: '280px'}" elevation="0">
+          <v-card-text class="pb-0 pa-0">
+            <v-alert class="mb-0" border="left" type="error" text outlined tile>
+              {{ errorMessage }}
+            </v-alert>
+          </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
+          </v-card-actions>
+        </v-card>
+
+      </v-menu>
+
+      <p class="mb-0 mt-5">{{(this.file) == null ? '' : this.file.name}}</p>
+    </v-container>
+  </v-container>
 </template>
 
 <script>
@@ -120,8 +156,11 @@ export default {
         error: {
           color: 'red darken-3',
           icon: 'error'
-        }
+        },
       },
+      
+      filePrivacy : 'Privado',
+      description : null,
       loading: false,
       fileExpirationTimeRules: [
         () => {
@@ -164,6 +203,13 @@ export default {
         return Math.floor((expirationDate - today) / (1000 * 3600 * 24));
       }
       return null;
+    },
+    booleanFilePrivacy(){
+      if(this.filePrivacy === "Privado"){
+        return true;
+      }
+
+      return false;
     }
   },
   mounted() {
@@ -183,6 +229,7 @@ export default {
       this.file = e.target.files[0]
       this.state = SELECTED
       const fileSize = e.target.files[0].size ? e.target.files[0].size / (1024 * 1024) : null;
+      this.$emit('filePicked', fileSize);
       if (this.autoSubmit) {
         this.upload(fileSize)
       }
@@ -198,21 +245,24 @@ export default {
           err => console.error(err)
       )
     },
-    upload(fileSize) {
+     async upload(fileSize) {
       if (this.file && this.state !== UPLOADED && fileSize <= this.maxFileSize && this.getDifferenceInDays <= this.fileExpirationTime) {
         this.loading = true;
-        let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null
+        let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
 
-        uploadProvider.uploadFile(this.file, expirationDateWithMinutes).then(result => {
-          this.uploadedFile = result.data.fileUpload
+        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes, this.booleanFilePrivacy, this.description).then(result => {
+          this.uploadedFile = result.data.fileUpload;
           this.setState(UPLOADED);
-          this.$emit('fileUploaded', result.data.fileUpload)
+
         }).catch((err) => {
           console.log("ERROR", err)
           this.setState(ERROR);
-          this.setErrorMessage(err.message)
-          this.showErrorMessage = true
-        }).finally(() => this.loading = false)
+          this.setErrorMessage(err.message);
+          this.showErrorMessage = true;
+
+        }).finally(() => this.loading = false);
+        this.$emit('fileUploaded', this.uploadedFile);
+        return this.uploadedFile;
       } else {
         this.setErrorFileExceeded();
       }

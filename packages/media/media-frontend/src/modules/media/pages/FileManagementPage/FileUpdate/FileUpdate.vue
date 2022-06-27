@@ -31,11 +31,13 @@ export default {
       errorMessage: '',
       inputErrors: {},
       loading: false,
+      filePrivacy: false,
       form: {
         id: this.item.id,
         description: this.item.description,
         tags: this.item.tags,
-        expirationDate: this.item.expirationDate
+        expirationDate: this.item.expirationDate,
+        filePrivacy: this.item.filePrivacy
       }
     }
   },

@@ -24,7 +24,7 @@ const FileSchema = new Schema({
         username: { type: String, required: true }
     },
     expirationDate: { type: Date, required: false },
-    publicFile: { type: Boolean, required: false },
+    filePrivacy: { type: Boolean, required: false },
 
 
 });

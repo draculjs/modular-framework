@@ -150,10 +150,10 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 }
 
 
-export const updateFile = async function (authUser, id, input, permissionType, userId) {
+export const updateFile = async function (authUser, input, permissionType, userId) {
     return new Promise((resolve, rejects) => {
-        File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, userId) },
-            { description, tags, expirationDate, publicFile },
+        File.findOneAndUpdate({ _id: input.id, ...filterByFileOwner(permissionType, userId) },
+            { description: input.description, tags:input.tags, expirationDate:input.expirationDate, filePrivacy:input.filePrivacy},
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {
@@ -392,7 +392,7 @@ function validateExpirationDate(expirationTime) {
 function purgeInput(input) {
     let updatedFile = {};
     for (const key in input) {
-        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'publicFile') {
+        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'filePrivacy') {
             updatedFile[key] = input[key];
         }
     }

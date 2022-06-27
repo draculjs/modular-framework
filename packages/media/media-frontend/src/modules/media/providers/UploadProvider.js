@@ -9,10 +9,10 @@ class UploadProvider {
         this.gqlc = gqlc
     }
 
-    uploadFile(file, expirationDate, publicFile) {
+    uploadFile(file, expirationDate, filePrivacy, description) {
         return this.gqlc.mutate({
             mutation: require('./gql/fileUpload.graphql'),
-            variables: { file: file, expirationDate: expirationDate, publicFile: publicFile }
+            variables: { file: file, expirationDate: expirationDate, filePrivacy: filePrivacy, description : description}
         })
     }
 
