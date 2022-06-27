@@ -17,6 +17,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <close-button @click="$emit('close')"></close-button>
+        <slot v-if="showSubmitButton" name="submitButton"></slot>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -32,8 +33,19 @@ export default {
   props: {
     title: {type: String, default: 'common.show'},
     open: {type: Boolean, default: false},
-    fullscreen: {type: Boolean, default: false}
-  }
+    fullscreen: {type: Boolean, default: false},
+    showSubmitButton: {type: Boolean, default: false},
+  },
+   data() {
+    return {
+      created: false
+    }
+  },
+  methods: {
+    toggleCreated() {
+      this.created = !this.created;
+    }
+  },
 }
 </script>
 

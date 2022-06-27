@@ -36,6 +36,8 @@ const messages = {
                 sizeLt: 'Size less than',
                 expirationDate: 'Expiration date',
                 days: 'days',
+                visibility: 'Visibility',
+                chooseFile: 'Choose a file',
                 dashboard: {
                     fileUserMetrics: {
                         title: "File indicators of the last 5 months",
@@ -91,6 +93,8 @@ const messages = {
                 sizeLt: 'Tamaño menor a',
                 expirationDate: 'Fecha de expiración',
                 days: 'días',
+                visibility: 'Visibilidad',
+                chooseFile: 'Elegir archivo',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de archivos de los últimos 5 meses",
@@ -149,6 +153,8 @@ const messages = {
                 sizeLt: 'Tamanho menor que',
                 expirationDate: 'Data de validade',
                 days: 'dias',
+                visibility: 'Visibilidade',
+                chooseFile: 'Escolher arquivo',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de arquivo dos últimos 5 meses",

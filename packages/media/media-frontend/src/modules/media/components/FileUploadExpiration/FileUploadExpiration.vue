@@ -1,25 +1,7 @@
 <template>
   <v-container>
     <v-row>
-
-    <v-col cols="12" sm="12">
-        <v-text-field
-            prepend-icon="description"
-            name="filename"
-            v-model="description"
-            :label="$t('media.file.description')"
-            :placeholder="$t('media.file.description')"
-            color="secondary"
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" sm="6" md="6" class="mt-3">
-        <h3>Fecha de expiración (opcional):</h3>
-      </v-col>
-
-      <v-spacer/>
-
-      <v-col cols="12" sm="6" md="4" class="pt-0">
+      <v-col cols="12" sm="6" md="6">
         <date-input
             v-model="expirationDate"
             :label="$t('media.file.expirationDate')"
@@ -28,37 +10,37 @@
             hide-details
             :rules="fileExpirationTimeRules"/>
       </v-col>
-      <v-spacer/>
-    </v-row>
 
-    <v-row>
-      <v-col cols="12" sm="6" md="6" class="mt-3">
-        <h3>Privacidad del archivo:</h3>
-      </v-col>
-
-      <v-spacer/>
-
-      <v-col cols="12" sm="6" md="4" class="pt-0">
+      <v-col cols="12" sm="6" md="6">
         <v-combobox
+          prepend-icon="mdi-cctv"
           v-model="filePrivacy"
           :items="['Publico', 'Privado']"
-          class="ml-5"
-          placeholder="Privacidad"
+          :label="$t('media.file.visibility')"
         ></v-combobox>
       </v-col>
-      <v-spacer/>
-    </v-row>
 
-    <v-row>
-      <v-col cols="12" md="4" sm="6">
+      <v-col cols="12" sm="12" md="12" >
           <v-combobox
               prepend-icon="loyalty"
               v-model="tags"
               :label="$t('media.file.tags')"
               multiple
+              chips
               color="secondary"
               item-color="secondary"
           ></v-combobox>
+      </v-col>
+
+      <v-col cols="12" sm="12" md="12" >
+        <v-text-field
+            prepend-icon="description"
+            name="filename"
+            v-model="description"
+            :label="$t('media.file.description')"
+            :placeholder="$t('media.file.description')"
+            color="secondary"
+        ></v-text-field>
       </v-col>
     </v-row>
 
@@ -108,7 +90,7 @@
 
       </v-menu>
 
-      <p class="mb-0 mt-5">{{(this.file) == null ? '' : this.file.name}}</p>
+      <p class="mb-0 mt-5">{{(this.file) == null ? $t('media.file.chooseFile') : this.file.name}}</p>
     </v-container>
   </v-container>
 </template>

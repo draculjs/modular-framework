@@ -6,7 +6,11 @@
                @update="update"
                @close="$emit('close')"
   >
-    <file-form ref="form" v-model="form" :input-errors="inputErrors"/>
+    <v-card flat class="mb-3">
+      <v-card-text>
+        <file-form ref="form" v-model="form" :input-errors="inputErrors"/>
+      </v-card-text>
+    </v-card>
     <file-view :file="item"></file-view>
 
   </crud-update>

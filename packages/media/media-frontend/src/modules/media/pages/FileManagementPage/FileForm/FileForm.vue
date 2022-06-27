@@ -1,7 +1,38 @@
 <template>
     <v-form ref="form" autocomplete="off" @submit.prevent="save" >
         <v-row>
-           
+            <v-col cols="12" md="6" sm="6">
+                <date-input
+                    v-model="form.expirationDate"
+                    :label="$t('media.file.expirationDate')"
+                    prepend-icon="event"
+                    persistent-hint
+                    color="secondary"
+                    :rules="fileExpirationTimeRules"
+                />
+            </v-col>
+
+            <v-col cols="12" md="6" sm="6">
+                <v-combobox
+                prepend-icon="mdi-cctv"
+                v-model="filePrivacy"
+                :items="['Publico','Privado']"
+                placeholder="Privacidad"
+                ></v-combobox>
+            </v-col>
+
+            <v-col cols="12" sm="12" md="12" >
+                <v-combobox
+                    prepend-icon="loyalty"
+                    v-model="form.tags"
+                    :label="$t('media.file.tags')"
+                    chips
+                    multiple
+                    color="secondary"
+                    item-color="secondary"
+                ></v-combobox>
+            </v-col>
+
             <v-col cols="12" sm="12">
                 <v-text-field
                     prepend-icon="description"
@@ -14,38 +45,6 @@
                     color="secondary"
                 ></v-text-field>
             </v-col>
-
-            <v-col cols="12" md="4" sm="6">
-                <v-combobox
-                    prepend-icon="loyalty"
-                    v-model="form.tags"
-                    :label="$t('media.file.tags')"
-                    multiple
-                    color="secondary"
-                    item-color="secondary"
-                ></v-combobox>
-            </v-col>
-
-            <v-col cols="12" md="4" sm="6">
-                <date-input
-                    v-model="form.expirationDate"
-                    :label="$t('media.file.expirationDate')"
-                    prepend-icon="event"
-                    persistent-hint
-                    color="secondary"
-                    :rules="fileExpirationTimeRules"
-                />
-            </v-col>
-
-            <v-col cols="12" md="4" sm="6">
-                <v-combobox
-                prepend-icon="mdi-cctv"
-                v-model="filePrivacy"
-                :items="['Publico','Privado']"
-                placeholder="Privacidad"
-                ></v-combobox>
-            </v-col>
-
         </v-row>
     </v-form>
 </template>
