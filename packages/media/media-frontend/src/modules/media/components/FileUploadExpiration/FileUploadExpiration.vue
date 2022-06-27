@@ -49,6 +49,19 @@
       <v-spacer/>
     </v-row>
 
+    <v-row>
+      <v-col cols="12" md="4" sm="6">
+          <v-combobox
+              prepend-icon="loyalty"
+              v-model="tags"
+              :label="$t('media.file.tags')"
+              multiple
+              color="secondary"
+              item-color="secondary"
+          ></v-combobox>
+      </v-col>
+    </v-row>
+
     <v-container class="mb-0 pb-0">
       <input type="file"
         style="display: none"
@@ -158,9 +171,8 @@ export default {
           icon: 'error'
         },
       },
-      
-      filePrivacy : 'Privado',
-      description : null,
+      filePrivacy: 'Privado',
+      description: null,
       loading: false,
       fileExpirationTimeRules: [
         () => {
@@ -173,7 +185,8 @@ export default {
           this.disableUploadButton = false;
           return true
         }
-      ]
+      ],
+      tags: []
     }
   },
   computed: {
@@ -250,7 +263,7 @@ export default {
         this.loading = true;
         let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
 
-        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes, this.booleanFilePrivacy, this.description).then(result => {
+        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes, this.booleanFilePrivacy, this.description, this.tags).then(result => {
           this.uploadedFile = result.data.fileUpload;
           this.setState(UPLOADED);
 

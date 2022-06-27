@@ -1,7 +1,7 @@
 import FileManagementPage from '../pages/FileManagementPage'
 import FileDashboardPage from '../pages/FileDashboardPage'
 import UserStoragePage from '../pages/UserStoragePage'
-import pdfWebViewer from '../components/FileView/pdfViewer';
+import PdfWebViewer from '../components/PdfWebViewer'
 
 const routes = [
     {
@@ -28,9 +28,9 @@ const routes = [
         }
     },
     {
-        name: 'pdfWebViewer',
+        name: 'PdfWebViewer',
         path: '/pdf-viewer',
-        component: pdfWebViewer,
+        component: PdfWebViewer,
         props: route => ({ url: route.query.url })
     }
 ]

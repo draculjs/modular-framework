@@ -24,21 +24,18 @@
 <script>
 
 
-// import {addAndCloseCrudShow} from 'packages/common/common-frontend/src/components/Crud/CrudShow/addAndCloseCrudShow/addAndCloseCrudShow.vue'
-import {addAndCloseCrudShow} from '../../../../../../node_modules/@dracul/common-frontend/src/components/Crud/CrudShow/addAndCloseCrudShow'
+import {AddAndCloseCrudShow} from '../../../../../../../../common/common-frontend/src/components/AddAndCloseCrudShow'
+// import {AddAndCloseCrudShow} from "@dracul/common-frontend"
 
 import FileUploadExpiration from "../../../components/FileUploadExpiration/FileUploadExpiration";
 import FileView from "../../../components/FileView/FileView";
 
 export default {
   name: "FileCreate",
-
-  components: {FileView, FileUploadExpiration, addAndCloseCrudShow},
-
+  components: {FileView, FileUploadExpiration, AddAndCloseCrudShow},
   props: {
     open: {type: Boolean, default: true}
   },
-
   data() {
     return {
       title: 'media.file.creating',
@@ -59,7 +56,6 @@ export default {
 
     }
   },
-
   methods: {
     create() {
       this.$refs.form.upload()
@@ -79,7 +75,6 @@ export default {
       this.pickedFileSize = fileSize;
       this.filePicked = true;    
     }
-
   },
 }
 </script>
@@ -87,4 +82,3 @@ export default {
 <style scoped>
 
 </style>
-

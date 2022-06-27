@@ -1,5 +1,5 @@
-mutation fileUpload( $file: Upload!, $expirationDate: String, $filePrivacy: Boolean, $description: String){
-    fileUpload(file: $file, expirationDate: $expirationDate, filePrivacy: $filePrivacy, description: $description){
+mutation fileUpload( $file: Upload!, $expirationDate: String, $filePrivacy: Boolean, $description: String, $tags: [String]){
+    fileUpload(file: $file, expirationDate: $expirationDate, filePrivacy: $filePrivacy, description: $description, tags: $tags){
         id
         filename
         description

@@ -36,6 +36,7 @@
 import VuePdfEmbed from 'vue-pdf-embed/dist/vue2-pdf-embed'
 
 export default {
+    name: "PdfWebViewer",
     components: {
         VuePdfEmbed,
     },
@@ -57,6 +58,6 @@ export default {
         this.totalPages = this.$refs.pdfRef.pageCount
       },
     },
-    }
+
 }
 </script>

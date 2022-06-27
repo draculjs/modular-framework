@@ -6,7 +6,7 @@ import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 
-const fileUpload = function (user, inputFile, expirationDate, filePrivacy = false, description) {
+const fileUpload = function (user, inputFile, expirationDate, filePrivacy = false, description, tags) {
   return new Promise(async (resolve, rejects) => {
     try {
 
@@ -69,7 +69,8 @@ const fileUpload = function (user, inputFile, expirationDate, filePrivacy = fals
           createdBy: { user: user.id, username: user.username },
           expirationDate: expirationDate,
           filePrivacy: filePrivacy,
-          description: description
+          description: description,
+          tags: tags
         });
         winston.info("fileUploadAnonymous saving file")
         await doc.save()

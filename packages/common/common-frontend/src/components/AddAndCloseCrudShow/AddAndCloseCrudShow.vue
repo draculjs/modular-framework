@@ -17,18 +17,18 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <close-button color="grey" @click="$emit('close')"></close-button>
-        <v-btn v-if="!createdFile"text color="secondary" @click="$emit('createFile')" :disabled="!this.filePicked">Crear</v-btn>
+        <v-btn v-if="!createdFile" text color="secondary" @click="$emit('createFile')" :disabled="!this.filePicked">Crear</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import ToolbarDialog from "../../../ToolbarDialog";
-import CloseButton from "../../../CloseButton/CloseButton";
+import ToolbarDialog from "../ToolbarDialog"
+import CloseButton from "../CloseButton"
 
 export default {
-  name: "addAndCloseCrudShow",
+  name: "AddAndCloseCrudShow",
   components: {CloseButton, ToolbarDialog},
   props: {
     title: {type: String, default: 'common.show'},

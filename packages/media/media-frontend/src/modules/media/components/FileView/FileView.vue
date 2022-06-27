@@ -63,7 +63,7 @@
 
 <script>
 import {ShowField} from '@dracul/common-frontend';
-import PdfWebViewer from './pdfViewer/pdfWebViewer.vue';
+import PdfWebViewer from '../PdfWebViewer'
 
 export default {
   name: "FileView",
