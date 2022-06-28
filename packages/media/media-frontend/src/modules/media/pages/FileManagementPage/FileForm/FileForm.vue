@@ -1,7 +1,38 @@
 <template>
     <v-form ref="form" autocomplete="off" @submit.prevent="save" >
         <v-row>
-           
+            <v-col cols="12" md="6" sm="6">
+                <date-input
+                    v-model="form.expirationDate"
+                    :label="$t('media.file.expirationDate')"
+                    prepend-icon="event"
+                    persistent-hint
+                    color="secondary"
+                    :rules="fileExpirationTimeRules"
+                />
+            </v-col>
+
+            <v-col cols="12" md="6" sm="6">
+                <v-combobox
+                prepend-icon="mdi-cctv"
+                v-model="filePrivacy"
+                :items="['Publico','Privado']"
+                placeholder="Privacidad"
+                ></v-combobox>
+            </v-col>
+
+            <v-col cols="12" sm="12" md="12" >
+                <v-combobox
+                    prepend-icon="loyalty"
+                    v-model="form.tags"
+                    :label="$t('media.file.tags')"
+                    chips
+                    multiple
+                    color="secondary"
+                    item-color="secondary"
+                ></v-combobox>
+            </v-col>
+
             <v-col cols="12" sm="12">
                 <v-text-field
                     prepend-icon="description"
@@ -14,30 +45,6 @@
                     color="secondary"
                 ></v-text-field>
             </v-col>
-
-            <v-col cols="12" md="6" sm="6">
-                <v-combobox
-                    prepend-icon="loyalty"
-                    v-model="form.tags"
-                    :label="$t('media.file.tags')"
-                    multiple
-                    chips
-                    color="secondary"
-                    item-color="secondary"
-                ></v-combobox>
-            </v-col>
-
-            <v-col cols="12" md="6" sm="6" class="mt-3">
-                <date-input
-                    v-model="form.expirationDate"
-                    :label="$t('media.file.expirationDate')"
-                    prepend-icon="event"
-                    persistent-hint
-                    color="secondary"
-                    :rules="fileExpirationTimeRules"
-                />
-            </v-col>
-
         </v-row>
     </v-form>
 </template>
@@ -49,7 +56,6 @@
     import { DateInput } from '@dracul/dayjs-frontend';
 
     import UserStorageProvider from "../../../providers/UserStorageProvider"
-
 
     export default {
         name: "FileForm",
@@ -73,7 +79,8 @@
                             return true
                         }
                     }
-                ]
+                ],
+                filePrivacy: (() => this.value.filePrivacy === true ? "Privado" : "Publico")()
             }
         },
         props:{
@@ -90,6 +97,13 @@
                 get() { return this.value },
                 set(val) {this.$emit('input', val)}
             },
+            booleanFilePrivacy(){
+                if(this.filePrivacy === "Privado"){
+                    return true;
+                }
+
+                return false;
+            }
         },
         watch: {
             form: {
@@ -106,6 +120,11 @@
                         this.differenceInDays = Math.floor((expirationDate - today)/(1000 * 3600 * 24));
                     }
                     return null;
+                }
+            },
+            'filePrivacy':{
+                handler(){
+                    this.form.filePrivacy = this.booleanFilePrivacy
                 }
             }
         },
@@ -128,7 +147,7 @@
                 }).catch(
                     err => console.error(err)
                 )
-            },
+            }
         }
     }
 </script>

@@ -13,13 +13,7 @@
         <source :src="getSrc" :type="file.mimetype" />
       </video>
 
-      <object v-if="isPdf"
-              :data="getSrc"
-              type="application/pdf" width="300"
-              height="200"
-      >
-        <a :href="getSrc" target="_blank" class="text-uppercase"> {{ $t('media.file.download') }}</a>
-      </object>
+        <pdf-web-viewer :url="bufferedURL" v-if="isPdf"></pdf-web-viewer>
 
       <a v-if="!isImage && !isAudio && !isVideo && !isPdf" target="_blank" :href="getSrc" class="text-uppercase">
         {{ $t('media.file.download') }}
@@ -30,19 +24,21 @@
       <show-field :value="file.filename" :label="$t('media.file.filename')" icon="description"/>
       <show-field :value="file.id" :label="$t('media.file.id')" icon="badge"/>
       <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
+      <show-field :value="filePrivacy" label="Privacidad del archivo" icon="mdi-cctv"/>
       <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
 
       <v-list-item>
         <v-list-item-icon class="mr-5">
-          <v-btn small icon @click="copyToClipboard">
-            <v-icon>content_copy</v-icon>
-          </v-btn>
+            <v-icon v-if="isPdf" color="black">mdi-book-open</v-icon>
+            <v-btn v-if="!isPdf" small icon @click="copyToClipboard">
+              <v-icon color="black">content_copy</v-icon>
+            </v-btn>
           <input type="hidden" id="url" :value="file.url">
         </v-list-item-icon>
 
         <v-list-item-content class="mr-0">
-          <span>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
-
+          <span v-if="isPdf">Abrir en nueva pestaña <v-btn x-small icon color="blue" target="_blank" :href="`/pdf-viewer?url=${bufferedURL}`"><v-icon>launch</v-icon></v-btn></span>
+          <span v-else>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
         </v-list-item-content>
       </v-list-item>
     </v-col>
@@ -66,11 +62,12 @@
 </template>
 
 <script>
-import {ShowField} from '@dracul/common-frontend'
+import {ShowField} from '@dracul/common-frontend';
+import PdfWebViewer from '../PdfWebViewer'
 
 export default {
   name: "FileView",
-  components: {ShowField},
+  components: { ShowField, PdfWebViewer},
   props: {
     file: {type: Object}
   },
@@ -105,6 +102,16 @@ export default {
     computedDateFormatted() {
       return this.formatDate(this.date)
     },
+    bufferedURL(){
+      return new Buffer.from(this.file.url).toString('base64');
+    },
+    filePrivacy(){
+      if(this.file.filePrivacy === true){
+        return 'Privado';
+      }
+
+      return "Publico";
+    }
   },
   methods: {
     copyToClipboard() {
@@ -140,5 +147,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

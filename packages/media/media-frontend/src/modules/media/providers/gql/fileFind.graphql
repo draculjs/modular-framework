@@ -22,5 +22,6 @@ query fileFind($id:ID!){
         }
         lastAccess
         expirationDate
+        filePrivacy
     }
 }
