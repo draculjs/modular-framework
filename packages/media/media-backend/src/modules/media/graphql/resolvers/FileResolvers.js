@@ -9,7 +9,8 @@ import {
     FILE_UPDATE_ALL,
     FILE_UPDATE_OWN,
     FILE_DELETE_ALL,
-    FILE_DELETE_OWN
+    FILE_DELETE_OWN,
+    FILE_SHOW_PUBLIC
 } from "../../permissions/File";
 
 export default {
@@ -23,8 +24,10 @@ export default {
         filePaginate: (_, { input }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, FILE_SHOW_ALL) && !rbac.isAllowed(user.id, FILE_SHOW_OWN)) throw new ForbiddenError("Not Authorized")
+
             let permissionType = (rbac.isAllowed(user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (rbac.isAllowed(user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
-            return paginateFiles(input, permissionType, user.id)
+            let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
+            return paginateFiles(input, permissionType, user.id, publicAllowed)
         },
     },
     Mutation: {

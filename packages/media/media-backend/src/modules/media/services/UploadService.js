@@ -6,7 +6,7 @@ import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 
-const fileUpload = function (user, inputFile, expirationDate, filePrivacy = false, description, tags) {
+const fileUpload = function (user, inputFile, expirationDate, isPublic = false, description, tags) {
   return new Promise(async (resolve, rejects) => {
     try {
 
@@ -68,7 +68,7 @@ const fileUpload = function (user, inputFile, expirationDate, filePrivacy = fals
           url: url,
           createdBy: { user: user.id, username: user.username },
           expirationDate: expirationDate,
-          filePrivacy: filePrivacy,
+          isPublic: isPublic,
           description: description,
           tags: tags
         });

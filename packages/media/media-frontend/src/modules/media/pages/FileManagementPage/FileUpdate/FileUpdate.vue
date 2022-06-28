@@ -35,13 +35,13 @@ export default {
       errorMessage: '',
       inputErrors: {},
       loading: false,
-      filePrivacy: false,
+      isPublic: false,
       form: {
         id: this.item.id,
         description: this.item.description,
         tags: this.item.tags,
         expirationDate: this.item.expirationDate,
-        filePrivacy: this.item.filePrivacy
+        isPublic: this.item.isPublic
       }
     }
   },

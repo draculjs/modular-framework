@@ -13,12 +13,12 @@
             </v-col>
 
             <v-col cols="12" md="6" sm="6">
-                <v-combobox
-                prepend-icon="mdi-cctv"
-                v-model="filePrivacy"
-                :items="['Publico','Privado']"
-                placeholder="Privacidad"
-                ></v-combobox>
+                <v-select
+                  prepend-icon="visibility"
+                  v-model="form.isPublic"
+                  :items="[{text: 'Público', value: true}, {text: 'Privado', value: false}]"
+                  :label="$t('media.file.visibility')"
+                ></v-select>
             </v-col>
 
             <v-col cols="12" sm="12" md="12" >
@@ -80,7 +80,6 @@
                         }
                     }
                 ],
-                filePrivacy: (() => this.value.filePrivacy === true ? "Privado" : "Publico")()
             }
         },
         props:{
@@ -97,13 +96,6 @@
                 get() { return this.value },
                 set(val) {this.$emit('input', val)}
             },
-            booleanFilePrivacy(){
-                if(this.filePrivacy === "Privado"){
-                    return true;
-                }
-
-                return false;
-            }
         },
         watch: {
             form: {
@@ -122,11 +114,6 @@
                     return null;
                 }
             },
-            'filePrivacy':{
-                handler(){
-                    this.form.filePrivacy = this.booleanFilePrivacy
-                }
-            }
         },
         methods: {
             validate(){

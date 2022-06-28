@@ -57,7 +57,7 @@ export const fetchFiles = async function (expirationDate = null) {
     })
 }
 
-export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false }, permissionType = null, userId = null) {
+export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false }, permissionType = null, userId = null, publicAllowed = false) {
 
     function qs(search) {
         let qs = {}
@@ -133,7 +133,7 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 
     let query = {
         ...qs(search),
-        ...filterByFileOwner(permissionType, userId),
+        ...filterByFileOwner(permissionType, userId, publicAllowed),
         ...filterValues(filters)
     }
 
@@ -153,7 +153,7 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 export const updateFile = async function (authUser, input, permissionType, userId) {
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ _id: input.id, ...filterByFileOwner(permissionType, userId) },
-            { description: input.description, tags:input.tags, expirationDate:input.expirationDate, filePrivacy:input.filePrivacy},
+            { description: input.description, tags:input.tags, expirationDate:input.expirationDate, isPublic:input.isPublic},
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {
@@ -365,17 +365,22 @@ function deleteManyById(ids) {
     });
 }
 
-function filterByFileOwner(permissionType, userId) {
+function filterByFileOwner(permissionType, userId, publicAllowed) {
     let query;
-    switch (permissionType) {
-        // Si el user es dueño del archivo (o es admin), puede encontrarlo, actualizarlo o borrarlo
-        case FILE_SHOW_OWN:
-        case FILE_UPDATE_OWN:
-        case FILE_DELETE_OWN:
-            query = { 'createdBy.user': userId }
-            break;
-        default:
-            break;
+
+    if (!permissionType) {
+      if (publicAllowed) {
+        query = { 'isPublic': true }
+      } else {
+        
+      }
+       
+    }
+
+
+    if (permissionType === FILE_SHOW_OWN) {
+      query = { 'createdBy.user': userId }
+      
     }
     return query;
 }
@@ -392,7 +397,7 @@ function validateExpirationDate(expirationTime) {
 function purgeInput(input) {
     let updatedFile = {};
     for (const key in input) {
-        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'filePrivacy') {
+        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'isPublic') {
             updatedFile[key] = input[key];
         }
     }
