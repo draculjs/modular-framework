@@ -25,7 +25,7 @@
 
 
     <v-alert v-if="invalidSize" class="mb-0" border="left" type="error" text outlined tile>
-      {{ $t("media.file.fileSizeExceeded") }}
+      {{ $t("media.file.fileSizeExceeded") }} {{maxFileSize}} Mb
       <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
     </v-alert>
 

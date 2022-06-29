@@ -11,7 +11,11 @@
       />
     </template>
 
-    <add-button @click="create"></add-button>
+    <add-button
+        v-if="$store.getters.hasPermission('FILE_CREATE')"
+        @click="create"
+
+    ></add-button>
 
     <file-create v-if="creating"
                  :open="creating"

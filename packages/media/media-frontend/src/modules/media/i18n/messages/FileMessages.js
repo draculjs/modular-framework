@@ -38,6 +38,7 @@ const messages = {
                 days: 'days',
                 visibility: 'Visibility',
                 chooseFile: 'Choose a file',
+                isPublic: 'Public',
                 dashboard: {
                     fileUserMetrics: {
                         title: "File indicators of the last 5 months",
@@ -95,6 +96,7 @@ const messages = {
                 days: 'días',
                 visibility: 'Visibilidad',
                 chooseFile: 'Elegir archivo',
+                isPublic: 'Público',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de archivos de los últimos 5 meses",
@@ -155,6 +157,7 @@ const messages = {
                 days: 'dias',
                 visibility: 'Visibilidade',
                 chooseFile: 'Escolher arquivo',
+                isPublic: 'Público',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de arquivo dos últimos 5 meses",

@@ -23,11 +23,12 @@ export default {
         },
         filePaginate: (_, { input }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
-            if (!rbac.isAllowed(user.id, FILE_SHOW_ALL) && !rbac.isAllowed(user.id, FILE_SHOW_OWN)) throw new ForbiddenError("Not Authorized")
+            if (!rbac.isAllowed(user.id, FILE_SHOW_ALL) && !rbac.isAllowed(user.id, FILE_SHOW_OWN) && !rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)) throw new ForbiddenError("Not Authorized")
 
-            let permissionType = (rbac.isAllowed(user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (rbac.isAllowed(user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
+            let allFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_ALL)
+            let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
-            return paginateFiles(input, permissionType, user.id, publicAllowed)
+            return paginateFiles(input,  user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
         },
     },
     Mutation: {

@@ -1,19 +1,23 @@
 <template>
+
+  <crud-show v-if="uploadedFile"  :open="open" :title="title" @close="$emit('close')">
+    <file-view v-if="uploadedFile" :file="uploadedFile"/>
+  </crud-show>
+
   <crud-create
+      v-else
       :open="open"
       :loading="loading"
       :title="title"
       :errorMessage="errorMessage"
       @close="$emit('close')"
-      @create="create"
+      @create="onCreate"
+      :fullscreen="false"
   >
 
     <div class="text-center">
 
-      <file-view v-if="uploadedFile" :file="uploadedFile"/>
-
       <file-form
-          v-else
           v-model="form"
           :input-errors="inputErrors"
           ref="form"
@@ -24,21 +28,25 @@
     </div>
 
   </crud-create>
+
+
 </template>
 
 <script>
 
-import {CrudCreate} from "@dracul/common-frontend";
+import {CrudCreate, CrudShow} from "@dracul/common-frontend";
 import FileView from "../../../components/FileView/FileView";
 import FileForm from "@/modules/media/pages/FileManagementPage/FileForm/FileForm";
 import uploadProvider from "@/modules/media/providers/UploadProvider";
 
 export default {
   name: "FileCreate",
-  components: {FileForm, FileView, CrudCreate},
+  components: {FileForm, FileView, CrudCreate, CrudShow},
   props: {
     open: {type: Boolean, default: true},
-    succesButtonText: {type: String, default: 'Crear'},
+  },
+  mounted() {
+    console.log("uploadedFile", this.uploadedFile)
   },
   data() {
     return {
@@ -60,7 +68,7 @@ export default {
     onFileSelected(file) {
       this.form.file = file
     },
-    async create() {
+    async onCreate() {
       if (this.form.file) {
         this.loading = true;
 
@@ -73,7 +81,7 @@ export default {
             .then(result => {
               this.uploadedFile = result.data.fileUpload
               this.$emit('itemCreated')
-              this.$emit('close')
+              //this.$emit('close')
             })
             .catch((err) => {
               console.log("UploadFile ERROR", err)
