@@ -57,6 +57,24 @@ export const fetchFiles = async function (expirationDate = null) {
     })
 }
 
+function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+  let q = {};
+
+  if (allFilesAllowed) return q
+
+  if (ownFilesAllowed && publicAllowed) {
+      q = {$or: [{'createdBy.user': userId}, {'isPublic': true}]}
+  } else if (ownFilesAllowed) {
+      q = {'createdBy.user': userId}
+  } else if (publicAllowed){
+      q = {'isPublic': true}
+  } else{
+      throw new Error("User doesn't have permissions for reading files")
+  }
+
+  return q;
+}
+
 export const paginateFiles = function (
     { pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false },
     userId = null,
@@ -136,23 +154,6 @@ export const paginateFiles = function (
 
     }
 
-    function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
-        let q = {};
-
-        if (allFilesAllowed) return q
-
-        if (ownFilesAllowed && publicAllowed) {
-            q = {$or: [{'createdBy.user': userId}, {'isPublic': true}]}
-        } else if (ownFilesAllowed) {
-            q = {'createdBy.user': userId}
-        } else if (publicAllowed){
-            q = {'isPublic': true}
-        } else{
-            throw new Error("User doesn't have permissions for reading files")
-        }
-
-        return q;
-    }
 
     let query = {
         ...qs(search),
