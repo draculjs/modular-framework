@@ -12,12 +12,12 @@
       </v-col>
 
       <v-col cols="12" sm="6" md="6">
-        <v-combobox
-          prepend-icon="mdi-cctv"
-          v-model="filePrivacy"
-          :items="['Publico', 'Privado']"
+        <v-select
+          prepend-icon="visibility"
+          v-model="isPublic"
+          :items="[{text: 'Público', value: true}, {text: 'Privado', value: false}]"
           :label="$t('media.file.visibility')"
-        ></v-combobox>
+        ></v-select>
       </v-col>
 
       <v-col cols="12" sm="12" md="12" >
@@ -153,7 +153,7 @@ export default {
           icon: 'error'
         },
       },
-      filePrivacy: 'Privado',
+      isPublic: false,
       description: null,
       loading: false,
       fileExpirationTimeRules: [
@@ -198,13 +198,6 @@ export default {
         return Math.floor((expirationDate - today) / (1000 * 3600 * 24));
       }
       return null;
-    },
-    booleanFilePrivacy(){
-      if(this.filePrivacy === "Privado"){
-        return true;
-      }
-
-      return false;
     }
   },
   mounted() {
@@ -245,7 +238,7 @@ export default {
         this.loading = true;
         let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
 
-        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes, this.booleanFilePrivacy, this.description, this.tags).then(result => {
+        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes, this.isPublic, this.description, this.tags).then(result => {
           this.uploadedFile = result.data.fileUpload;
           this.setState(UPLOADED);
 

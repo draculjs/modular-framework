@@ -64,7 +64,7 @@
             <v-col v-if="isUserAuthorized()" cols="12" md="4">
               <user-autocomplete
                 v-model="filters[3].value"
-                :label="$t('media.file.createdBy')"
+                :label="'media.file.createdBy'"
                 solo>
               </user-autocomplete>
             </v-col>
@@ -111,10 +111,10 @@ export default {
   data() {
     return {
       selectType: [
-        { text: this.$t("text"), value: "text" },
-        { text: this.$t("image"), value: "image" },
-        { text: this.$t("application"), value: "application" },
-        { text: this.$t("audio"), value: "audio" }
+        { text: "text", value: "text" },
+        { text: "image", value: "image" },
+        { text: "application", value: "application" },
+        { text: "audio", value: "audio" }
       ]
     }
   },

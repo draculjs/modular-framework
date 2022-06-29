@@ -1,46 +1,52 @@
 <template>
-  <crud-show
+
+  <crud-show v-if="uploadedFile"  :open="open" :title="title" @close="$emit('close')">
+    <file-view v-if="uploadedFile" :file="uploadedFile"/>
+  </crud-show>
+
+  <crud-create
+      v-else
       :open="open"
       :loading="loading"
       :title="title"
       :errorMessage="errorMessage"
       @close="$emit('close')"
-      @createFile="fileUploaded"
-      :filePicked="this.filePicked"
-      :showSubmitButton="showSubmitButton"
+      @create="onCreate"
+      :fullscreen="false"
   >
 
-    <template v-slot:submitButton>
-      <v-btn text color="secondary" @click="fileUploaded">{{succesButtonText}}</v-btn>
-    </template>
-
     <div class="text-center">
-      <file-upload-expiration v-if="!file" ref="form"
-          x-large
-          @filePicked="filePickedHandler"
+
+      <file-form
+          v-model="form"
+          :input-errors="inputErrors"
+          ref="form"
+          @fileSelected="onFileSelected"
+          creating
       />
 
-      <file-view v-if="file" :file="file"/>
     </div>
 
-  </crud-show>
+  </crud-create>
+
+
 </template>
 
 <script>
 
-
-// import {CrudShow} from "@dracul/common-frontend";
-import {CrudShow} from '../../../../../../../../common/common-frontend/src/components/Crud/CrudShow';
-
-import FileUploadExpiration from "../../../components/FileUploadExpiration/FileUploadExpiration";
+import {CrudCreate, CrudShow} from "@dracul/common-frontend";
 import FileView from "../../../components/FileView/FileView";
+import FileForm from "@/modules/media/pages/FileManagementPage/FileForm/FileForm";
+import uploadProvider from "@/modules/media/providers/UploadProvider";
 
 export default {
   name: "FileCreate",
-  components: {FileView, FileUploadExpiration, CrudShow},
+  components: {FileForm, FileView, CrudCreate, CrudShow},
   props: {
     open: {type: Boolean, default: true},
-    succesButtonText: {type: String, default: 'Crear'},
+  },
+  mounted() {
+    console.log("uploadedFile", this.uploadedFile)
   },
   data() {
     return {
@@ -48,42 +54,44 @@ export default {
       errorMessage: '',
       inputErrors: {},
       loading: false,
-      file: null,
       form: {
-        filename: '',
-        extension: '',
-        relativePath: '',
-        absolutePath: '',
-        size: '',
-        url: '',
+        file: null,
+        expirationDate: null,
+        isPublic: false,
+        description: '',
+        tags:[]
       },
-      filePicked: false,
-      pickedFileSize: null,
-      showSubmitButton: true
+      uploadedFile: null
     }
   },
   methods: {
-    create() {
-      this.$refs.form.upload()
-
+    onFileSelected(file) {
+      this.form.file = file
     },
-    async fileUploaded() {
-      this.file = await this.$refs.form.upload(this.pickedFileSize);
+    async onCreate() {
+      if (this.form.file) {
+        this.loading = true;
 
-      let succesfully = false;
-      if(this.$refs.form.state !== 'error'){
-        succesfully = true;
-        this.showSubmitButton = false;
+        await uploadProvider.uploadFile(
+            this.form.file,
+            this.form.expirationDate,
+            this.form.isPublic,
+            this.form.description,
+            this.form.tags)
+            .then(result => {
+              this.uploadedFile = result.data.fileUpload
+              this.$emit('itemCreated')
+              //this.$emit('close')
+            })
+            .catch((err) => {
+              console.log("UploadFile ERROR", err)
+              this.errorMessage = err.message
+            })
+            .finally(() => this.loading = false)
+
       }
-
-      this.$emit('itemCreated', succesfully);
-    },
-
-    filePickedHandler(fileSize){
-      this.pickedFileSize = fileSize;
-      this.filePicked = true;    
     }
-  },
+  }
 }
 </script>
 

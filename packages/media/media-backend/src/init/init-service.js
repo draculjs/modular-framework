@@ -10,6 +10,7 @@ import { InitService } from '@dracul/user-backend'
 import { initPermissionsCustomization } from '@dracul/customize-backend'
 import { initCustomization } from './custom/initCustomization'
 import uploaderRole from './custom/initUploaderRole'
+import visualizerRole from './custom/initVisualizerRole';
 import initMediaPermissions from '../modules/media/services/InitMediaPermissions'
 import { userStorageCheckAndCreate } from '../modules/media/services/UserStorageService'
 
@@ -21,7 +22,7 @@ const initService = async () => {
     // await userStorageCheckAndCreate()
 
     await InitService.initAdminRole()
-    await InitService.initRoles([uploaderRole])
+    await InitService.initRoles([uploaderRole, visualizerRole])
     await InitService.initRootUser()
 
     await initCustomization()

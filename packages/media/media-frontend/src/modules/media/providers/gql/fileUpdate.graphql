@@ -22,7 +22,7 @@ mutation fileUpdate($input: FileUpdateInput!){
         }
         lastAccess
         expirationDate
-        filePrivacy
+        isPublic
     }
 }
 

@@ -14,7 +14,7 @@ type File{
     createdBy: CreatedBy
     lastAccess: String
     expirationDate: String
-    filePrivacy: Boolean
+    isPublic: Boolean
 }
 
 type CreatedBy{
@@ -53,11 +53,11 @@ input FileInput{
 }
 
 input FileUpdateInput{
+    id: ID!
     description: String
     tags: [String]
     expirationDate: String
-    filePrivacy: Boolean
-    id: ID!
+    isPublic: Boolean
 }
 
 type FileDelete{

@@ -10,7 +10,7 @@ export const findFile = async function (id, permissionType = null, userId = null
 
     if (id) {
         return new Promise((resolve, reject) => {
-            File.findOne({ _id: id, ...filterByFileOwner(permissionType, userId) }).populate('createdBy.user').exec((err, res) => (
+            File.findOne({ _id: id, ...filterByPermissions(permissionType, userId) }).populate('createdBy.user').exec((err, res) => (
                 err ? reject(err) : resolve(res)
             ));
         })
@@ -57,7 +57,12 @@ export const fetchFiles = async function (expirationDate = null) {
     })
 }
 
-export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false }, permissionType = null, userId = null) {
+export const paginateFiles = function (
+    { pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false },
+    userId = null,
+    allFilesAllowed = false,
+    ownFilesAllowed = false,
+    publicAllowed= false) {
 
     function qs(search) {
         let qs = {}
@@ -131,10 +136,28 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 
     }
 
+    function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+        let q = {};
+
+        if (allFilesAllowed) return q
+
+        if (ownFilesAllowed && publicAllowed) {
+            q = {$or: [{'createdBy.user': userId}, {'isPublic': true}]}
+        } else if (ownFilesAllowed) {
+            q = {'createdBy.user': userId}
+        } else if (publicAllowed){
+            q = {'isPublic': true}
+        } else{
+            throw new Error("User doesn't have permissions for reading files")
+        }
+
+        return q;
+    }
+
     let query = {
         ...qs(search),
-        ...filterByFileOwner(permissionType, userId),
-        ...filterValues(filters)
+        ...filterValues(filters),
+        ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
     }
 
     let populate = ['createdBy.user']
@@ -152,8 +175,8 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 
 export const updateFile = async function (authUser, input, permissionType, userId) {
     return new Promise((resolve, rejects) => {
-        File.findOneAndUpdate({ _id: input.id, ...filterByFileOwner(permissionType, userId) },
-            { description: input.description, tags:input.tags, expirationDate:input.expirationDate, filePrivacy:input.filePrivacy},
+        File.findOneAndUpdate({ _id: input.id, ...filterByPermissions(permissionType, userId) },
+            { description: input.description, tags:input.tags, expirationDate:input.expirationDate, isPublic:input.isPublic},
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {
@@ -194,7 +217,7 @@ export const updateFileRest = function (id, user, permissionType, input) {
         }
 
         // Find file and update it with the request body
-        File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, user.id) },
+        File.findOneAndUpdate({ _id: id, ...filterByPermissions(permissionType, user.id) },
             { $set: updatedFile },
             { new: true })
             .then(file => {
@@ -365,20 +388,7 @@ function deleteManyById(ids) {
     });
 }
 
-function filterByFileOwner(permissionType, userId) {
-    let query;
-    switch (permissionType) {
-        // Si el user es dueño del archivo (o es admin), puede encontrarlo, actualizarlo o borrarlo
-        case FILE_SHOW_OWN:
-        case FILE_UPDATE_OWN:
-        case FILE_DELETE_OWN:
-            query = { 'createdBy.user': userId }
-            break;
-        default:
-            break;
-    }
-    return query;
-}
+
 
 function validateExpirationDate(expirationTime) {
     const today = new Date();
@@ -392,7 +402,7 @@ function validateExpirationDate(expirationTime) {
 function purgeInput(input) {
     let updatedFile = {};
     for (const key in input) {
-        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'filePrivacy') {
+        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'isPublic') {
             updatedFile[key] = input[key];
         }
     }

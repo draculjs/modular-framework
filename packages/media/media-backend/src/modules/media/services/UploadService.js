@@ -6,7 +6,7 @@ import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 
-const fileUpload = function (user, inputFile, expirationDate, filePrivacy = false, description, tags) {
+const fileUpload = function (user, inputFile, expirationDate, isPublic = false, description, tags) {
   return new Promise(async (resolve, rejects) => {
     try {
 
@@ -37,14 +37,14 @@ const fileUpload = function (user, inputFile, expirationDate, filePrivacy = fals
 
         if (!timeDiffExpirationDate) {
           winston.error("Expiration date must be older than current date")
-          rejects(new Error("Expiration date must be older than current date"))
+          return rejects(new Error("Expiration date must be older than current date"))
         }
 
         let userStorage = await findUserStorageByUser(user)
 
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
           winston.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
-          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
+          return rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
         }
       }
 
@@ -68,7 +68,7 @@ const fileUpload = function (user, inputFile, expirationDate, filePrivacy = fals
           url: url,
           createdBy: { user: user.id, username: user.username },
           expirationDate: expirationDate,
-          filePrivacy: filePrivacy,
+          isPublic: isPublic,
           description: description,
           tags: tags
         });
@@ -80,12 +80,12 @@ const fileUpload = function (user, inputFile, expirationDate, filePrivacy = fals
 
       } else {
         winston.error("Upload Fail")
-        rejects(new Error("Upload Fail"))
+        return  rejects(new Error("Upload Fail"))
       }
 
     } catch (err) {
       winston.error('UploadService error' + err)
-      rejects(err)
+      return  rejects(err)
     }
   })
 

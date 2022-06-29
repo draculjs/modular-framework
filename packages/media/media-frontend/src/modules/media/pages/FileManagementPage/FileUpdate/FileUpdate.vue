@@ -6,11 +6,17 @@
                @update="update"
                @close="$emit('close')"
   >
+
     <v-card flat class="mb-3">
       <v-card-text>
-        <file-form ref="form" v-model="form" :input-errors="inputErrors"/>
+        <file-form
+            ref="form"
+            v-model="form"
+            :input-errors="inputErrors"
+        />
       </v-card-text>
     </v-card>
+
     <file-view :file="item"></file-view>
 
   </crud-update>
@@ -35,13 +41,13 @@ export default {
       errorMessage: '',
       inputErrors: {},
       loading: false,
-      filePrivacy: false,
+      isPublic: false,
       form: {
         id: this.item.id,
         description: this.item.description,
         tags: this.item.tags,
         expirationDate: this.item.expirationDate,
-        filePrivacy: this.item.filePrivacy
+        isPublic: this.item.isPublic
       }
     }
   },

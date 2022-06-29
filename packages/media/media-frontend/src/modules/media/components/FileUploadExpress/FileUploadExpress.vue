@@ -49,8 +49,6 @@
 
 <script>
 import uploadProvider from "../../providers/UploadProvider";
-import {ToolbarDialog} from '@dracul/common-frontend'
-import FileView from "../FileView/FileView";
 import UserStorageProvider from "../../../media/providers/UserStorageProvider"
 
 const INITIAL = 'initial'
@@ -60,7 +58,6 @@ const ERROR = 'error'
 
 export default {
   name: "FileUploadExpress",
-  components: {FileView, ToolbarDialog},
   props: {
     autoSubmit: {type: Boolean, default: false},
     accept: {type: String, default: '*'},
