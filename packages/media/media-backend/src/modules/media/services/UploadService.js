@@ -37,14 +37,14 @@ const fileUpload = function (user, inputFile, expirationDate, isPublic = false, 
 
         if (!timeDiffExpirationDate) {
           winston.error("Expiration date must be older than current date")
-          rejects(new Error("Expiration date must be older than current date"))
+          return rejects(new Error("Expiration date must be older than current date"))
         }
 
         let userStorage = await findUserStorageByUser(user)
 
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
           winston.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
-          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
+          return rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
         }
       }
 
@@ -80,12 +80,12 @@ const fileUpload = function (user, inputFile, expirationDate, isPublic = false, 
 
       } else {
         winston.error("Upload Fail")
-        rejects(new Error("Upload Fail"))
+        return  rejects(new Error("Upload Fail"))
       }
 
     } catch (err) {
       winston.error('UploadService error' + err)
-      rejects(err)
+      return  rejects(err)
     }
   })
 

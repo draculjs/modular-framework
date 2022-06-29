@@ -53,11 +53,11 @@ input FileInput{
 }
 
 input FileUpdateInput{
+    id: ID!
     description: String
     tags: [String]
     expirationDate: String
     isPublic: Boolean
-    id: ID!
 }
 
 type FileDelete{

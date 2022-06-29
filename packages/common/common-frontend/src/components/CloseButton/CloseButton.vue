@@ -12,7 +12,7 @@
 export default {
   name: "CloseButton",
   props: {
-    text: {type: String, default: "common.cancel"},
+    text: {type: String, default: "common.close"},
     loading: {type: Boolean, default: false},
     color: {type: String, default: 'secondary'}
   }
