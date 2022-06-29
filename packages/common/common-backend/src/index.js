@@ -13,4 +13,3 @@ module.exports.randomNumber = randomNumber
 module.exports.createDirIfNotExist = createDirIfNotExist
 module.exports.commonTypes = types
 module.exports.mongoose = mongoose
-
