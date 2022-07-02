@@ -3,16 +3,7 @@
 
     <v-col cols="12" sm="6">
 
-      <template v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
-        <v-img v-if="isImage" contain :src="getSrc"/>
-      </template>
-
-      <template v-else>
-          <v-img v-if="isImage" contain :src="getSrc">
-            <v-img src="@/assets/img/Transparent.png"  width="100%" height="100%" />
-          </v-img>
-      </template>
-
+      <v-img v-if="isImage" contain :src="getSrc"/>
 
       <audio v-if="isAudio" controls>
         <source :src="getSrc" :type="file.mimetype">
