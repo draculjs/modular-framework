@@ -22,7 +22,7 @@
           :clearable="clearable"
       ></v-text-field>
     </template>
-    <v-time-picker v-model="item"   :format="format">
+    <v-time-picker v-model="item"  :format="format">
     </v-time-picker>
   </v-menu>
 </template>
