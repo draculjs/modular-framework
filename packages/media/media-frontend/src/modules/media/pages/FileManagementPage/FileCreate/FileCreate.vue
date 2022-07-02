@@ -36,8 +36,8 @@
 
 import {CrudCreate, CrudShow} from "@dracul/common-frontend";
 import FileView from "../../../components/FileView/FileView";
-import FileForm from "@/modules/media/pages/FileManagementPage/FileForm/FileForm";
-import uploadProvider from "@/modules/media/providers/UploadProvider";
+import FileForm from "../FileForm";
+import uploadProvider from "../../../providers/UploadProvider";
 
 export default {
   name: "FileCreate",
