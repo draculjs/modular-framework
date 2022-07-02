@@ -17,6 +17,8 @@ var _initCustomization = require("./custom/initCustomization");
 
 var _initUploaderRole = _interopRequireDefault(require("./custom/initUploaderRole"));
 
+var _initVisualizerRole = _interopRequireDefault(require("./custom/initVisualizerRole"));
+
 var _InitMediaPermissions = _interopRequireDefault(require("../modules/media/services/InitMediaPermissions"));
 
 var _UserStorageService = require("../modules/media/services/UserStorageService");
@@ -40,7 +42,7 @@ const initService = async () => {
   await (0, _InitMediaPermissions.default)(); // await userStorageCheckAndCreate()
 
   await _userBackend.InitService.initAdminRole();
-  await _userBackend.InitService.initRoles([_initUploaderRole.default]);
+  await _userBackend.InitService.initRoles([_initUploaderRole.default, _initVisualizerRole.default]);
   await _userBackend.InitService.initRootUser();
   await (0, _initCustomization.initCustomization)();
 };

@@ -3,11 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.FILE_UPDATE_OWN = exports.FILE_UPDATE_ALL = exports.FILE_SHOW_OWN = exports.FILE_SHOW_ALL = exports.FILE_DELETE_OWN = exports.FILE_DELETE_ALL = exports.FILE_CREATE = void 0;
+exports.FILE_UPDATE_OWN = exports.FILE_UPDATE_ALL = exports.FILE_SHOW_PUBLIC = exports.FILE_SHOW_OWN = exports.FILE_SHOW_ALL = exports.FILE_DOWNLOAD = exports.FILE_DELETE_OWN = exports.FILE_DELETE_ALL = exports.FILE_CREATE = void 0;
 const FILE_SHOW_ALL = "FILE_SHOW_ALL";
 exports.FILE_SHOW_ALL = FILE_SHOW_ALL;
 const FILE_SHOW_OWN = "FILE_SHOW_OWN";
 exports.FILE_SHOW_OWN = FILE_SHOW_OWN;
+const FILE_SHOW_PUBLIC = "FILE_SHOW_PUBLIC";
+exports.FILE_SHOW_PUBLIC = FILE_SHOW_PUBLIC;
+const FILE_DOWNLOAD = "FILE_DOWNLOAD";
+exports.FILE_DOWNLOAD = FILE_DOWNLOAD;
 const FILE_UPDATE_ALL = "FILE_UPDATE_ALL";
 exports.FILE_UPDATE_ALL = FILE_UPDATE_ALL;
 const FILE_UPDATE_OWN = "FILE_UPDATE_OWN";

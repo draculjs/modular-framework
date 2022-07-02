@@ -1,6 +1,10 @@
 "use strict";
 
+var _File = require("../../modules/media/permissions/File");
+
+var _UserStorage = require("../../modules/media/permissions/UserStorage");
+
 module.exports = {
   name: "uploader",
-  permissions: ["FILE_CREATE", "FILE_SHOW_OWN", "FILE_UPDATE_OWN", "FILE_DELETE_OWN", "USER_STORAGE_SHOW_OWN"]
+  permissions: [_File.FILE_CREATE, _File.FILE_SHOW_OWN, _File.FILE_SHOW_PUBLIC, _File.FILE_UPDATE_OWN, _File.FILE_DELETE_OWN, _UserStorage.USER_STORAGE_SHOW_OWN, _File.FILE_DOWNLOAD]
 };

@@ -32,6 +32,7 @@ const userStorageSchema = new Schema({
     type: Number,
     required: false
   },
+  //in days
   deleteByLastAccess: {
     type: Boolean,
     required: false,

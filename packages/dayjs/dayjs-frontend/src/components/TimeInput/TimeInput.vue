@@ -22,8 +22,7 @@
           :clearable="clearable"
       ></v-text-field>
     </template>
-    <v-time-picker :value="item"
-                   @input="menu = false">
+    <v-time-picker v-model="item"   :format="format">
     </v-time-picker>
   </v-menu>
 </template>
@@ -40,7 +39,8 @@ export default {
     errorMessages: {type: Array},
     label: {type: String},
     rules: {type: Array, default: () => []},
-    clearable: {type:Boolean, default: true}
+    clearable: {type:Boolean, default: true},
+    format: {type: String, default: "24hr"}
   },
   mixins: [DayjsMixin],
   computed: {

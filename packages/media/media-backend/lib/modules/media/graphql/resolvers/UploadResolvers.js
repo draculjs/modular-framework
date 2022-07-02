@@ -19,14 +19,17 @@ var _default = {
   Mutation: {
     fileUpload: (_, {
       file,
-      expirationDate
+      expirationDate,
+      isPublic,
+      description,
+      tags
     }, {
       user,
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
       if (!rbac.isAllowed(user.id, _File.FILE_CREATE)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _UploadService.fileUpload)(user, file, expirationDate);
+      return (0, _UploadService.fileUpload)(user, file, expirationDate, isPublic, description, tags);
     },
     fileUploadAnonymous: (_, {
       file
