@@ -65,7 +65,7 @@ import {InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
 import {DateInput} from '@dracul/dayjs-frontend';
 
 import UserStorageProvider from "../../../providers/UserStorageProvider"
-import FileUploadButton from "@/modules/media/components/FileUploadButton/FileUploadButton";
+import FileUploadButton from "../../../components/FileUploadButton";
 
 export default {
   name: "FileForm",

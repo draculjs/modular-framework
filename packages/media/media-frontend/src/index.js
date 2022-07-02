@@ -12,6 +12,7 @@ import UserStorageProvider from './modules/media/providers/UserStorageProvider'
 import FileUploadExpiration from './modules/media/components/FileUploadExpiration'
 import FileUploadExpress from './modules/media/components/FileUploadExpress'
 import FileUpload from './modules/media/components/FileUpload'
+import FileUploadButton from './modules/media/components/FileUploadButton'
 import FileView from './modules/media/components/FileView'
 import MediaField from './modules/media/components/MediaField'
 
@@ -43,6 +44,7 @@ export {
     FileUpload,
     FileView,
     MediaField,
+    FileUploadButton,
 
     //Pages
     FileManagementPage,
