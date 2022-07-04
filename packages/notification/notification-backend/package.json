@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-backend",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "description": "Modulo de notificaciones de usuario",
   "main": "./lib/index.js",
   "scripts": {
@@ -18,13 +18,13 @@
     "pubsub"
   ],
   "dependencies": {
-    "@dracul/common-backend": "^1.8.0",
-    "@dracul/logger-backend": "^1.7.12",
+    "@dracul/common-backend": "^2.0.0",
+    "@dracul/logger-backend": "^2.0.0",
     "dayjs": "^1.10.7"
   },
   "peerDependencies": {
-    "express": "^4.17.3",
     "apollo-server-express": "^2.25.3 || ^3.9.0",
+    "express": "^4.17.3",
     "graphql": "^15.8.0 || ^16.3.0",
     "graphql-subscriptions": "^2.0.0",
     "graphql-tools": "^8.2.0",
