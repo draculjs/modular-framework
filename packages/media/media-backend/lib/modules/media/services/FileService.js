@@ -75,6 +75,33 @@ const fetchFiles = async function (expirationDate = null) {
 
 exports.fetchFiles = fetchFiles;
 
+function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+  let q = {};
+  if (allFilesAllowed) return q;
+
+  if (ownFilesAllowed && publicAllowed) {
+    q = {
+      $or: [{
+        'createdBy.user': userId
+      }, {
+        'isPublic': true
+      }]
+    };
+  } else if (ownFilesAllowed) {
+    q = {
+      'createdBy.user': userId
+    };
+  } else if (publicAllowed) {
+    q = {
+      'isPublic': true
+    };
+  } else {
+    throw new Error("User doesn't have permissions for reading files");
+  }
+
+  return q;
+}
+
 const paginateFiles = function ({
   pageNumber = 1,
   itemsPerPage = 5,
@@ -192,33 +219,6 @@ const paginateFiles = function ({
       });
       return qsFilter;
     }
-  }
-
-  function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
-    let q = {};
-    if (allFilesAllowed) return q;
-
-    if (ownFilesAllowed && publicAllowed) {
-      q = {
-        $or: [{
-          'createdBy.user': userId
-        }, {
-          'isPublic': true
-        }]
-      };
-    } else if (ownFilesAllowed) {
-      q = {
-        'createdBy.user': userId
-      };
-    } else if (publicAllowed) {
-      q = {
-        'isPublic': true
-      };
-    } else {
-      throw new Error("User doesn't have permissions for reading files");
-    }
-
-    return q;
   }
 
   let query = { ...qs(search),
