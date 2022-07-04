@@ -31,8 +31,8 @@
     "graphql-type-json": "^0.3.2"
   },
   "peerDependencies": {
-    "apollo-server-express": "^2.25.3",
-    "graphql": "^15.8.0",
+    "apollo-server-express": "^2.25.3 || ^3.9.0",
+    "graphql": "^15.8.0 || ^16.3.0",
     "graphql-tools": "^8.2.0",
     "merge-graphql-schemas": "^1.7.8",
     "mongoose": "5.13.14",

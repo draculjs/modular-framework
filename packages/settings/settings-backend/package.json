@@ -20,9 +20,8 @@
     "@dracul/common-backend": "^1.8.0"
   },
   "peerDependencies": {
-    "apollo-server-express": "^2.25.3",
-    "express": "^4.17.1",
-    "graphql": "^15.8.0",
+    "apollo-server-express": "^2.25.3 || ^3.9.0",
+    "graphql": "^15.8.0 || ^16.3.0",
     "graphql-tools": "^8.2.0",
     "merge-graphql-schemas": "^1.7.8",
     "mongoose": "5.13.14",
