@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Cristian Incarnato",
   "main": "./lib/exports.js",
   "scripts": {
@@ -27,9 +27,9 @@
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
     "@dracul/common-backend": "^2.0.1",
-    "@dracul/customize-backend": "^2.0.1",
+    "@dracul/customize-backend": "^2.0.2",
     "@dracul/logger-backend": "^2.0.0",
-    "@dracul/user-backend": "^2.0.1",
+    "@dracul/user-backend": "^2.0.2",
     "@graphql-tools/load-files": "^8.3.0",
     "@graphql-tools/merge": "^8.3.0",
     "apollo-server-express": "^2.25.3 || ^3.9.0",
