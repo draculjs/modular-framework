@@ -33,7 +33,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" sm="6" md="2">
               <v-select
                 v-model="filters[4].value"
                 :label="$t('media.file.type')"
@@ -42,6 +42,14 @@
                 color="secondary"
                 hide-details
               />
+            </v-col>
+             <v-col v-if="isUserAuthorized('FILE_SHOW_OWN')" cols="12" sm="6" md="2">
+              <v-select
+                  prepend-icon="visibility"
+                  v-model="filters[7].value"
+                  :items="[{text: 'Público', value: 'true'}, {text: 'Privado', value: 'false'}]"
+                  :label="$t('media.file.visibility')"
+              ></v-select>
             </v-col>
             <v-col cols="12" sm="6"  md="2">
               <v-text-field
@@ -61,7 +69,7 @@
                 hide-details
               />
             </v-col>
-            <v-col v-if="isUserAuthorized()" cols="12" md="4">
+            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4">
               <user-autocomplete
                 v-model="filters[3].value"
                 :label="'media.file.createdBy'"
@@ -125,8 +133,8 @@ export default {
     cleanFilters() {
       this.$emit("clearFilter", this.filters);
     },
-    isUserAuthorized() {
-      return this.me.role.permissions.includes('FILE_SHOW_ALL')
+    isUserAuthorized(permission) {
+      return this.me.role.permissions.includes(permission)
     }
   },
 };

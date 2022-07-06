@@ -145,6 +145,9 @@ export const paginateFiles = function (
                             }
                         }
                         break
+                    case 'isPublic':
+                        value && (qsFilter.isPublic = { [operator]: value })
+                        break
                     default:
                         break;
                 }

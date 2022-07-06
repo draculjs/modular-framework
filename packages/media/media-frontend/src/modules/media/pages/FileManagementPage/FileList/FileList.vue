@@ -138,6 +138,11 @@ export default {
           field: 'maxSize',
           operator: '$lte',
           value: null
+        },
+        {
+          field: 'isPublic',
+          operator: '$eq',
+          value: null
         }
       ]
     }
