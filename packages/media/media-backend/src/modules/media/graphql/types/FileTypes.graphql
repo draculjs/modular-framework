@@ -15,6 +15,7 @@ type File{
     lastAccess: String
     expirationDate: String
     isPublic: Boolean
+    hits: Int
 }
 
 type CreatedBy{

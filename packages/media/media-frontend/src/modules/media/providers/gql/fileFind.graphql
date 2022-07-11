@@ -23,5 +23,6 @@ query fileFind($id:ID!){
         lastAccess
         expirationDate
         isPublic
+        hits
     }
 }

@@ -41,7 +41,6 @@ export default {
       errorMessage: '',
       inputErrors: {},
       loading: false,
-      isPublic: false,
       form: {
         id: this.item.id,
         description: this.item.description,

@@ -138,6 +138,11 @@ export default {
           field: 'maxSize',
           operator: '$lte',
           value: null
+        },
+        {
+          field: 'isPublic',
+          operator: '$eq',
+          value: null
         }
       ]
     }
@@ -193,6 +198,7 @@ export default {
         {text: this.$t('media.file.lastAccess'), value: 'lastAccess'},
         {text: this.$t('media.file.createdBy'), value: 'createdBy.username'},
         {text: this.$t('media.file.isPublic'), value: 'isPublic'},
+        {text: this.$t('media.file.hits'), value: 'hits'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},
       ]

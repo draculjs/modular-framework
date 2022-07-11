@@ -1,8 +1,8 @@
-import {mongoose} from '@dracul/common-backend';
+import { mongoose } from '@dracul/common-backend'
 const softDelete = require('mongoose-softdelete')
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const FileSchema = new Schema({
 
@@ -25,12 +25,12 @@ const FileSchema = new Schema({
     },
     expirationDate: { type: Date, required: false },
     isPublic: { type: Boolean, required: false },
-
+    hits: { type: Number, require: false, default: 0 },
 
 });
 
-FileSchema.plugin(mongoosePaginate);
+FileSchema.plugin(mongoosePaginate)
 
-const File = mongoose.model('File', FileSchema);
+const File = mongoose.model('File', FileSchema)
 
-module.exports = File;
+module.exports = File

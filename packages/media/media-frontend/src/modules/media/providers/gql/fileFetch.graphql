@@ -23,6 +23,7 @@ query fileFetch{
         lastAccess
         expirationDate
         isPublic
+        hits
     }
 }
 
