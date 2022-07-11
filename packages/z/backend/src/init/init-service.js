@@ -15,7 +15,10 @@ import {
     permissions as settingsPermissions
 } from '@dracul/settings-backend'
 
-
+import {
+    InitMediaPermissions,
+    userStorageCheckAndCreate
+} from '@dracul/media-backend'
 
 import {initSettings} from './custom/initSettings'
 import {testNotification} from './custom/testNotification'
@@ -26,6 +29,10 @@ const initService = async () => {
     console.log("INIT SERVICE")
     //Default user Permissions
     await InitService.initPermissions()
+
+    //Dracul Media Permissions
+    await InitMediaPermissions()
+    await userStorageCheckAndCreate()
 
     //Notification permissions
     await InitService.initPermissions([

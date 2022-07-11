@@ -6,24 +6,23 @@ import expressApp from './express-app'
 import apolloServer from './apollo-server'
 import initService from "./init/init-service";
 import defaultRoute from "./routes/DefaultRoute";
+import { userCreateListener } from '@dracul/media-backend'
 
 
+async function startApp(){
 
-DefaultLogger.info("Starting APP")
+    try{
+        DefaultLogger.info("Starting APP")
 
+        userCreateListener()
+        await mongoConnect()
+        //Link ApolloServer with ExpressApp
+        apolloServer.applyMiddleware({app: expressApp})
 
-//Link ApolloServer with ExpressApp
-apolloServer.applyMiddleware({app: expressApp})
+        //Default route to frontend web on monorepo strategy
+        expressApp.use(defaultRoute)
 
-//Default route to frontend web on monorepo strategy
-expressApp.use(defaultRoute)
-
-
-//Connect to MongoDb
-mongoConnect()
-    //initialize permissions, roles, users, customs, seeds
-    .then(initService)
-    .then(() => {
+        await initService()
 
         const PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000"
         const URL = process.env.APP_API_URL ? process.env.APP_API_URL : "http://localhost" + PORT
@@ -33,8 +32,13 @@ mongoConnect()
             DefaultLogger.info(`Graphql Server ready: ${URL}${apolloServer.graphqlPath}`)
         })
         server.setTimeout(420000);
+    }catch (e) {
+        DefaultLogger.error(err.message, err)
+    }
 
-    }).catch(err => {
-    DefaultLogger.error(err.message, err)
-})
+
+}
+
+
+startApp()
 

@@ -75,6 +75,33 @@ const fetchFiles = async function (expirationDate = null) {
 
 exports.fetchFiles = fetchFiles;
 
+function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+  let q = {};
+  if (allFilesAllowed) return q;
+
+  if (ownFilesAllowed && publicAllowed) {
+    q = {
+      $or: [{
+        'createdBy.user': userId
+      }, {
+        'isPublic': true
+      }]
+    };
+  } else if (ownFilesAllowed) {
+    q = {
+      'createdBy.user': userId
+    };
+  } else if (publicAllowed) {
+    q = {
+      'isPublic': true
+    };
+  } else {
+    throw new Error("User doesn't have permissions for reading files");
+  }
+
+  return q;
+}
+
 const paginateFiles = function ({
   pageNumber = 1,
   itemsPerPage = 5,
@@ -186,39 +213,18 @@ const paginateFiles = function ({
 
             break;
 
+          case 'isPublic':
+            value && (qsFilter.isPublic = {
+              [operator]: value
+            });
+            break;
+
           default:
             break;
         }
       });
       return qsFilter;
     }
-  }
-
-  function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
-    let q = {};
-    if (allFilesAllowed) return q;
-
-    if (ownFilesAllowed && publicAllowed) {
-      q = {
-        $or: [{
-          'createdBy.user': userId
-        }, {
-          'isPublic': true
-        }]
-      };
-    } else if (ownFilesAllowed) {
-      q = {
-        'createdBy.user': userId
-      };
-    } else if (publicAllowed) {
-      q = {
-        'isPublic': true
-      };
-    } else {
-      throw new Error("User doesn't have permissions for reading files");
-    }
-
-    return q;
   }
 
   let query = { ...qs(search),
@@ -345,7 +351,10 @@ const updateByRelativePath = function (relativePath) {
     _FileModel.default.findOneAndUpdate({
       relativePath: relativePath
     }, {
-      lastAccess: Date.now()
+      lastAccess: Date.now(),
+      '$inc': {
+        hits: 1
+      }
     }, {
       runValidators: true,
       context: 'query'

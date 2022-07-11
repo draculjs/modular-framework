@@ -26,9 +26,9 @@
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "deepmerge": "^4.2.2",
-    "vue": "^2.6.14",
+    "vue": "^2.7.4",
     "vue-i18n": "^8.18.1",
-    "vuetify": "^2.6.4",
+    "vuetify": "2.6.7",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -53,7 +53,7 @@
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-vuetify": "^2.0.6",
-    "vue-template-compiler": "^2.6.14"
+    "vue-template-compiler": "^2.7.4"
   },
   "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"
 }

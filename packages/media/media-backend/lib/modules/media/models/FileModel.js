@@ -81,6 +81,11 @@ const FileSchema = new Schema({
   isPublic: {
     type: Boolean,
     required: false
+  },
+  hits: {
+    type: Number,
+    require: false,
+    default: 0
   }
 });
 FileSchema.plugin(mongoosePaginate);

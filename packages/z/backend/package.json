@@ -34,6 +34,7 @@
     "@dracul/notification-backend": "^1.8.6",
     "@dracul/settings-backend": "^1.8.6",
     "@dracul/user-backend": "^1.8.6",
+    "@dracul/media-backend": "^1.8.6",
     "apollo-server-express": "^2.25.3",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
