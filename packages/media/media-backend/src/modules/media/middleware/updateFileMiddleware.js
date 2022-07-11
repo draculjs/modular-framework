@@ -1,4 +1,4 @@
-import { updateByRelativePath } from "../modules/media/services/FileService"
+import { updateByRelativePath } from "../services/FileService"
 
 
 export default function (req, res, next) {

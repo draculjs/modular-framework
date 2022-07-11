@@ -21,7 +21,7 @@ var _FileRouter = require("./modules/media/rest/routers/FileRouter");
 
 var _initService = _interopRequireDefault(require("./init/init-service"));
 
-var _middleware = require("./middleware");
+var _middleware = require("./modules/media/middleware");
 
 var _cron = require("./cron");
 

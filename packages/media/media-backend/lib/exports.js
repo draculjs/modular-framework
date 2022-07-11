@@ -66,6 +66,12 @@ Object.defineProperty(exports, "updateFile", {
     return FileService.updateFile;
   }
 });
+Object.defineProperty(exports, "updateFileMiddleware", {
+  enumerable: true,
+  get: function () {
+    return _middleware.updateFileMiddleware;
+  }
+});
 Object.defineProperty(exports, "userCreateListener", {
   enumerable: true,
   get: function () {
@@ -105,6 +111,8 @@ var userStoragePermissions = _interopRequireWildcard(require("./modules/media/pe
 exports.userStoragePermissions = userStoragePermissions;
 
 var _UserCreateListener = require("./modules/media/listeners/UserCreateListener");
+
+var _middleware = require("./modules/media/middleware");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

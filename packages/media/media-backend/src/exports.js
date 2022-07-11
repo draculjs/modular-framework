@@ -8,6 +8,7 @@ import InitMediaPermissions from './modules/media/services/InitMediaPermissions'
 import * as filePermissions from './modules/media/permissions/File'
 import * as userStoragePermissions from './modules/media/permissions/UserStorage'
 import { userCreateListener } from './modules/media/listeners/UserCreateListener'
+import { updateFileMiddleware } from "./modules/media/middleware"
 
 import {
     findFile,
@@ -27,6 +28,9 @@ export {
     fileUploadAnonymous,
     InitMediaPermissions,
     userCreateListener,
+
+    //Middleware
+    updateFileMiddleware,
 
     //Permissions
     filePermissions,

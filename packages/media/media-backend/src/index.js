@@ -12,7 +12,7 @@ import { jwtMiddleware, corsMiddleware, rbacMiddleware, sessionMiddleware } from
 import { router as fileRouter } from './modules/media/rest/routers/FileRouter'
 import initService from "./init/init-service";
 import { ResponseTimeMiddleware, RequestMiddleware, GqlErrorLog, GqlResponseLog } from '@dracul/logger-backend'
-import { updateFileMiddleware } from "./middleware"
+import { updateFileMiddleware } from "./modules/media/middleware"
 import { cronManager } from "./cron";
 import { userCreateListener } from './modules/media/listeners/UserCreateListener'
 
