@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.8.2",
+  "version": "1.9.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -19,8 +19,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.8.0",
-    "@dracul/dayjs-frontend": "^1.8.2"
+    "@dracul/common-frontend": "^1.9.0",
+    "@dracul/dayjs-frontend": "^1.9.0"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
