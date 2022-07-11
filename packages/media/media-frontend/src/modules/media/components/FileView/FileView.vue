@@ -27,6 +27,7 @@
       <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
       <show-field :value="isPublic" label="Privacidad del archivo" icon="mdi-cctv"/>
       <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
+      <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
 
       <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
         <v-list-item-icon class="mr-5">
@@ -111,6 +112,9 @@ export default {
     },
     getSizeInMegaBytes() {
       return this.file.size.toFixed(5) + ' Megabyte'
+    },
+    hits() {
+      return (this.file && String(this.file.hits))
     },
     computedDateFormatted() {
       return this.formatDate(this.date)

@@ -23,6 +23,7 @@ mutation fileUpdate($input: FileUpdateInput!){
         lastAccess
         expirationDate
         isPublic
+        hits
     }
 }
 

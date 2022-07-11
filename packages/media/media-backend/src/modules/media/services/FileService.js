@@ -242,7 +242,7 @@ export const updateByRelativePath = function (relativePath) {
 
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ relativePath: relativePath },
-            { lastAccess: Date.now() },
+            { lastAccess: Date.now(), '$inc': { hits: 1 } },
             { runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {

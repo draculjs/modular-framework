@@ -23,5 +23,6 @@ mutation fileUpload( $file: Upload!, $expirationDate: String, $isPublic: Boolean
         lastAccess
         expirationDate
         isPublic
+        hits
     }
 }
