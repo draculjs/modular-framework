@@ -34,6 +34,7 @@
 
 <script>
 import VuePdfEmbed from 'vue-pdf-embed/dist/vue2-pdf-embed'
+import { mapGetters } from 'vuex'
 
 export default {
     name: "PdfWebViewer",
@@ -51,11 +52,27 @@ export default {
             isLoading : true,
         }
     },
-
+    computed: {
+      ...mapGetters([
+        'me'
+      ]),
+    },
+    mounted() {
+      this.avoidPrint()
+    },
     methods: {
       handleDocumentRender() {
         this.isLoading = false
         this.totalPages = this.$refs.pdfRef.pageCount
+      },
+      avoidPrint() {
+        if (!this.me.role.permissions.includes('FILE_SHOW_OWN')) {
+          window.onbeforeprint = () => {
+            let url = window.location.href
+            window.location.href = url
+            alert("No tiene permisos para imprimir")
+          }
+        }
       },
     },
 
