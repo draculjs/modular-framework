@@ -26,6 +26,8 @@ const FileSchema = new Schema({
     expirationDate: { type: Date, required: false },
     isPublic: { type: Boolean, required: false },
     hits: { type: Number, require: false, default: 0 },
+    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group", required: false }],
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }],
 
 });
 

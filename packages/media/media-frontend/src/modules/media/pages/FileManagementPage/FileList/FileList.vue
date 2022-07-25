@@ -143,6 +143,16 @@ export default {
           field: 'isPublic',
           operator: '$eq',
           value: null
+        },
+        {
+          field: 'groups',
+          operator: '$eq',
+          value: null
+        },
+        {
+          field: 'users',
+          operator: '$eq',
+          value: null
         }
       ]
     }

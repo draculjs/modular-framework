@@ -27,6 +27,8 @@ query filePaginate($input: FilterPaginateInput){
             expirationDate
             isPublic
             hits
+            groups
+            users
         }
     }
 }

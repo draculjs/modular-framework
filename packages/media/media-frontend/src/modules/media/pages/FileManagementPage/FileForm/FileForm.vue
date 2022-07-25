@@ -47,6 +47,22 @@
         ></v-text-field>
       </v-col>
 
+      <v-col cols="12" md="6" sm="12">
+        <group-autocomplete
+          v-model="form.groups"
+          multiple
+          :label="$t('media.file.groups')"
+        ></group-autocomplete>
+      </v-col>
+
+      <v-col cols="12" md="6" sm="12">
+        <user-autocomplete
+          v-model="form.users"
+          multiple
+          :label="$t('media.file.users')"
+        ></user-autocomplete>
+      </v-col>
+
       <v-col v-if="creating" cols="12">
        <file-upload-button
            @fileSelected="onFileSelected"
@@ -66,11 +82,12 @@ import {DateInput} from '@dracul/dayjs-frontend';
 
 import UserStorageProvider from "../../../providers/UserStorageProvider"
 import FileUploadButton from "../../../components/FileUploadButton";
+import { GroupAutocomplete, UserAutocomplete } from '@dracul/user-frontend'
 
 export default {
   name: "FileForm",
   mixins: [InputErrorsByProps, RequiredRule],
-  components: {FileUploadButton, DateInput},
+  components: {FileUploadButton, DateInput, GroupAutocomplete, UserAutocomplete},
   props: {
     value: {type: Object, required: true},
     creating: {type: Boolean, default: false},

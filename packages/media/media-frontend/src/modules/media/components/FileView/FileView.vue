@@ -28,6 +28,7 @@
       <show-field :value="isPublic" label="Privacidad del archivo" icon="mdi-cctv"/>
       <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
       <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
+      <show-field :value="file.tags ? file.tags.join(', ') : ''" :label="$t('media.file.tags')" icon="tag"/>
 
       <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
         <v-list-item-icon class="mr-5">

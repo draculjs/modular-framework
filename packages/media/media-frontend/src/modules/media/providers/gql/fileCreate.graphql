@@ -22,6 +22,8 @@ mutation fileCreate($filename:String!, $extension:String!, $relativePath:String!
         expirationDate
         isPublic
         hits
+        groups
+        users
     }
 }
 

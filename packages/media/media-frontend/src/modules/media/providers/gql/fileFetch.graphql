@@ -24,6 +24,8 @@ query fileFetch{
         expirationDate
         isPublic
         hits
+        groups
+        users
     }
 }
 

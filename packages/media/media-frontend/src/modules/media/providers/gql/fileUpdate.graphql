@@ -24,6 +24,8 @@ mutation fileUpdate($input: FileUpdateInput!){
         expirationDate
         isPublic
         hits
+        groups
+        users
     }
 }
 
