@@ -24,7 +24,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="4" sm="6">
               <v-text-field
                 v-model="filters[2].value"
                 :label="$t('media.file.filename')"
@@ -69,10 +69,24 @@
                 hide-details
               />
             </v-col>
-            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4">
+            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4" sm="6">
               <user-autocomplete
                 v-model="filters[3].value"
-                :label="'media.file.createdBy'"
+                :label="$t('media.file.createdBy')"
+                solo>
+              </user-autocomplete>
+            </v-col>
+            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4" sm="6">
+              <group-autocomplete
+                v-model="filters[8].value"
+                :label="$t('media.file.group')"
+                solo>
+              </group-autocomplete>
+            </v-col>
+            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4" sm="6">
+              <user-autocomplete
+                v-model="filters[9].value"
+                :label="$t('media.file.user')"
                 solo>
               </user-autocomplete>
             </v-col>
@@ -95,13 +109,13 @@
 <script>
 
 import { DateInput } from '@dracul/dayjs-frontend';
-import { UserAutocomplete} from '@dracul/user-frontend'
+import { GroupAutocomplete, UserAutocomplete} from '@dracul/user-frontend'
 import { mapGetters } from 'vuex'
 
 
 export default {
   name: "FileFilters",
-  components: { DateInput, UserAutocomplete },
+  components: { DateInput, GroupAutocomplete, UserAutocomplete },
   props: {
     value: Array
   },

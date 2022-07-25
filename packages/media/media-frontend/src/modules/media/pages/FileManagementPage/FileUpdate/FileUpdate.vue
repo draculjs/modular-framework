@@ -46,7 +46,9 @@ export default {
         description: this.item.description,
         tags: this.item.tags,
         expirationDate: this.item.expirationDate,
-        isPublic: this.item.isPublic
+        isPublic: this.item.isPublic ? this.item.isPublic : false,
+        groups: this.item.groups ? this.item.group : [],
+        users: this.item.users ? this.item.users : []
       }
     }
   },

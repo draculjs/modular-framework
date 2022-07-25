@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
+import { GroupService } from '@dracul/user-backend';
 
 export const findFile = async function (id, permissionType = null, userId = null) {
 
@@ -57,17 +58,17 @@ export const fetchFiles = async function (expirationDate = null) {
     })
 }
 
-function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
   let q = {};
 
   if (allFilesAllowed) return q
 
   if (ownFilesAllowed && publicAllowed) {
-      q = {$or: [{'createdBy.user': userId}, {'isPublic': true}]}
+      q = {$or: [{'createdBy.user': userId}, {'isPublic': true}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
   } else if (ownFilesAllowed) {
-      q = {'createdBy.user': userId}
+      q = {$or: [{'createdBy.user': userId}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
   } else if (publicAllowed){
-      q = {'isPublic': true}
+      q = {$or: [{'isPublic': true}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
   } else{
       throw new Error("User doesn't have permissions for reading files")
   }
@@ -75,7 +76,7 @@ function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAll
   return q;
 }
 
-export const paginateFiles = function (
+export const paginateFiles = async function (
     { pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false },
     userId = null,
     allFilesAllowed = false,
@@ -148,6 +149,12 @@ export const paginateFiles = function (
                     case 'isPublic':
                         value && (qsFilter.isPublic = { [operator]: value })
                         break
+                    case 'groups':
+                        value && (qsFilter.groups = { [operator]: value })
+                        break
+                    case 'users':
+                        value && (qsFilter.users = { [operator]: value })
+                        break
                     default:
                         break;
                 }
@@ -157,11 +164,11 @@ export const paginateFiles = function (
 
     }
 
-
+    let userGroups = await GroupService.fetchMyGroups(userId)
     let query = {
         ...qs(search),
         ...filterValues(filters),
-        ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
+        ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
     }
 
     let populate = ['createdBy.user']
@@ -177,10 +184,10 @@ export const paginateFiles = function (
 }
 
 
-export const updateFile = async function (authUser, input, permissionType, userId) {
+export const updateFile = async function (authUser, {id, description, tags, expirationDate, isPublic, groups, users}, permissionType, userId) {
     return new Promise((resolve, rejects) => {
-        File.findOneAndUpdate({ _id: input.id, ...filterByPermissions(permissionType, userId) },
-            { description: input.description, tags:input.tags, expirationDate:input.expirationDate, isPublic:input.isPublic},
+        File.findOneAndUpdate({ _id: id, ...filterByPermissions(permissionType, userId) },
+            { description, tags, expirationDate, isPublic, groups, users},
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {

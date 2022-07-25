@@ -40,6 +40,10 @@ const messages = {
                 chooseFile: 'Choose a file',
                 isPublic: 'Public',
                 hits: 'Hits',
+                group: 'Shared with group',
+                user: 'Shared with user',
+                groups: 'Shared with groups',
+                users: 'Shared with users',
                 dashboard: {
                     fileUserMetrics: {
                         title: "File indicators of the last 5 months",
@@ -99,6 +103,10 @@ const messages = {
                 chooseFile: 'Elegir archivo',
                 isPublic: 'Público',
                 hits: 'Vistas',
+                group: 'Compartido con grupo',
+                user: 'Compartido con usuario',
+                groups: 'Compartido con grupos',
+                users: 'Compartido con usuarios',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de archivos de los últimos 5 meses",
@@ -161,6 +169,10 @@ const messages = {
                 chooseFile: 'Escolher arquivo',
                 isPublic: 'Público',
                 hits: 'Visualizações',
+                group: 'Compartilhado com o grupo',
+                user: 'Compartilhado com o usuário',
+                groups: 'Compartilhado com grupos',
+                users: 'Compartilhado com usuários',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de arquivo dos últimos 5 meses",

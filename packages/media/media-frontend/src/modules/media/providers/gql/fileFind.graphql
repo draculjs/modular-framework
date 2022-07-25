@@ -24,5 +24,7 @@ query fileFind($id:ID!){
         expirationDate
         isPublic
         hits
+        groups
+        users
     }
 }

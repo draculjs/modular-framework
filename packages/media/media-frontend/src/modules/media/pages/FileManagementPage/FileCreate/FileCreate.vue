@@ -45,9 +45,6 @@ export default {
   props: {
     open: {type: Boolean, default: true},
   },
-  mounted() {
-    console.log("uploadedFile", this.uploadedFile)
-  },
   data() {
     return {
       title: 'media.file.creating',
@@ -59,7 +56,9 @@ export default {
         expirationDate: null,
         isPublic: false,
         description: '',
-        tags:[]
+        tags: [],
+        groups: [],
+        users: []
       },
       uploadedFile: null
     }
@@ -77,7 +76,9 @@ export default {
             this.form.expirationDate,
             this.form.isPublic,
             this.form.description,
-            this.form.tags)
+            this.form.tags,
+            this.form.groups,
+            this.form.users)
             .then(result => {
               this.uploadedFile = result.data.fileUpload
               this.$emit('itemCreated')
