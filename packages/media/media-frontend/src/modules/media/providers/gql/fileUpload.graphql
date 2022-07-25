@@ -1,4 +1,4 @@
-mutation fileUpload( $file: Upload!, $expirationDate: String, $isPublic: Boolean, $description: String, $tags: [String], $groups: [String], $users: [String] ){
+mutation fileUpload( $file: Upload!, $expirationDate: String, $isPublic: Boolean, $description: String, $tags: [String], $groups: [ID], $users: [ID] ){
     fileUpload(file: $file, expirationDate: $expirationDate, isPublic: $isPublic, description: $description, tags: $tags, groups: $groups, users: $users){
         id
         filename
