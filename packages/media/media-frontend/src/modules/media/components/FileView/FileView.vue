@@ -29,6 +29,8 @@
       <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
       <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
       <show-field :value="file.tags ? file.tags.join(', ') : ''" :label="$t('media.file.tags')" icon="tag"/>
+      <groups-show :fileIdGroups="file.groups"></groups-show>
+      <users-show :fileIdUsers="file.users"></users-show>
 
       <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
         <v-list-item-icon class="mr-5">
@@ -77,12 +79,14 @@
 </template>
 
 <script>
-import {ShowField} from '@dracul/common-frontend';
+import {ShowField} from '@dracul/common-frontend'
 import PdfWebViewer from '../PdfWebViewer'
+import GroupsShow from '../GroupsShow'
+import UsersShow from '../UsersShow'
 
 export default {
   name: "FileView",
-  components: {ShowField, PdfWebViewer},
+  components: { ShowField, PdfWebViewer, GroupsShow, UsersShow },
   props: {
     file: {type: Object}
   },
@@ -121,7 +125,7 @@ export default {
       return this.formatDate(this.date)
     },
     bufferedURL() {
-      return new Buffer.from(this.file.url).toString('base64');
+      return new Buffer.from(this.file.url).toString('base64')
     },
     isPublic() {
       return this.file.isPublic ? 'Público' : 'Privado'
@@ -134,9 +138,9 @@ export default {
       toCopy.select()
 
       try {
-        this.copyResult = document.execCommand('copy');
+        this.copyResult = document.execCommand('copy')
       } catch (err) {
-        alert('Oops, unable to copy');
+        alert('Oops, unable to copy')
       }
 
       /* unselect the range */
