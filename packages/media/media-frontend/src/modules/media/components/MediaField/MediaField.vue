@@ -10,7 +10,7 @@
                     :error="hasInputErrors(fieldName)"
                     :error-messages="getInputErrors(fieldName)"
                     color="secondary"
-
+                    :rules="isRequired ? required : []"
             ></v-text-field>
         </v-col>
         <v-col class="flex-shrink-0 flex-grow-0">
@@ -34,13 +34,11 @@
         mixins: [InputErrorsByProps, RequiredRule],
         props: {
             fieldName: {type: String, required: true},
-            value: {
-                type: String,
-                required: true
-            },
+            value: {type: String, required: true},
             label: {type: String, required: true},
             accept: {type: String, default: "*"},
-            icon: {type: String, required: true}
+            icon: {type: String, required: true},
+            isRequired: {type: Boolean, default: false}
         },
         computed: {
             field: {
