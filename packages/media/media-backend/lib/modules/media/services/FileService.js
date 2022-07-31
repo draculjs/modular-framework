@@ -19,6 +19,8 @@ var _fs = _interopRequireDefault(require("fs"));
 
 var _loggerBackend = require("@dracul/logger-backend");
 
+var _userBackend = require("@dracul/user-backend");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const findFile = async function (id, permissionType = null, userId = null) {
@@ -75,7 +77,7 @@ const fetchFiles = async function (expirationDate = null) {
 
 exports.fetchFiles = fetchFiles;
 
-function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
   let q = {};
   if (allFilesAllowed) return q;
 
@@ -85,15 +87,43 @@ function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAll
         'createdBy.user': userId
       }, {
         'isPublic': true
+      }, {
+        'groups': {
+          $in: userGroups
+        }
+      }, {
+        'users': {
+          $in: [userId]
+        }
       }]
     };
   } else if (ownFilesAllowed) {
     q = {
-      'createdBy.user': userId
+      $or: [{
+        'createdBy.user': userId
+      }, {
+        'groups': {
+          $in: userGroups
+        }
+      }, {
+        'users': {
+          $in: [userId]
+        }
+      }]
     };
   } else if (publicAllowed) {
     q = {
-      'isPublic': true
+      $or: [{
+        'isPublic': true
+      }, {
+        'groups': {
+          $in: userGroups
+        }
+      }, {
+        'users': {
+          $in: [userId]
+        }
+      }]
     };
   } else {
     throw new Error("User doesn't have permissions for reading files");
@@ -102,7 +132,7 @@ function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAll
   return q;
 }
 
-const paginateFiles = function ({
+const paginateFiles = async function ({
   pageNumber = 1,
   itemsPerPage = 5,
   search = null,
@@ -219,6 +249,18 @@ const paginateFiles = function ({
             });
             break;
 
+          case 'groups':
+            value && (qsFilter.groups = {
+              [operator]: value
+            });
+            break;
+
+          case 'users':
+            value && (qsFilter.users = {
+              [operator]: value
+            });
+            break;
+
           default:
             break;
         }
@@ -227,9 +269,10 @@ const paginateFiles = function ({
     }
   }
 
+  let userGroups = await _userBackend.GroupService.fetchMyGroups(userId);
   let query = { ...qs(search),
     ...filterValues(filters),
-    ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
+    ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
   };
   let populate = ['createdBy.user'];
   let sort = getSort(orderBy, orderDesc);
@@ -252,16 +295,26 @@ const paginateFiles = function ({
 
 exports.paginateFiles = paginateFiles;
 
-const updateFile = async function (authUser, input, permissionType, userId) {
+const updateFile = async function (authUser, {
+  id,
+  description,
+  tags,
+  expirationDate,
+  isPublic,
+  groups,
+  users
+}, permissionType, userId) {
   return new Promise((resolve, rejects) => {
     _FileModel.default.findOneAndUpdate({
-      _id: input.id,
+      _id: id,
       ...filterByPermissions(permissionType, userId)
     }, {
-      description: input.description,
-      tags: input.tags,
-      expirationDate: input.expirationDate,
-      isPublic: input.isPublic
+      description,
+      tags,
+      expirationDate,
+      isPublic,
+      groups,
+      users
     }, {
       new: true,
       runValidators: true,

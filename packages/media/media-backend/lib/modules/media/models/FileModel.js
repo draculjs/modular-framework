@@ -86,7 +86,17 @@ const FileSchema = new Schema({
     type: Number,
     require: false,
     default: 0
-  }
+  },
+  groups: [{
+    type: _commonBackend.mongoose.Schema.Types.ObjectId,
+    ref: "Group",
+    required: false
+  }],
+  users: [{
+    type: _commonBackend.mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: false
+  }]
 });
 FileSchema.plugin(mongoosePaginate);
 

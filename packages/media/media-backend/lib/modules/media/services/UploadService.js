@@ -21,7 +21,7 @@ var _UserStorageService = require("./UserStorageService");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fileUpload = function (user, inputFile, expirationDate, isPublic = false, description, tags) {
+const fileUpload = function (user, inputFile, expirationDate, isPublic = false, description, tags, groups, users) {
   return new Promise(async (resolve, rejects) => {
     try {
       if (!user) {
@@ -94,7 +94,9 @@ const fileUpload = function (user, inputFile, expirationDate, isPublic = false, 
           expirationDate: expirationDate,
           isPublic: isPublic,
           description: description,
-          tags: tags
+          tags: tags,
+          groups: groups,
+          users: users
         });
 
         _loggerBackend.DefaultLogger.info("fileUploadAnonymous saving file");

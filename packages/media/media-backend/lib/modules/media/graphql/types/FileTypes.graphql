@@ -16,6 +16,8 @@ type File{
     expirationDate: String
     isPublic: Boolean
     hits: Int
+    groups: [ID]
+    users: [ID]
 }
 
 type CreatedBy{
@@ -59,6 +61,8 @@ input FileUpdateInput{
     tags: [String]
     expirationDate: String
     isPublic: Boolean
+    groups: [ID]
+    users: [ID]
 }
 
 type FileDelete{

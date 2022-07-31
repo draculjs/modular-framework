@@ -22,14 +22,16 @@ var _default = {
       expirationDate,
       isPublic,
       description,
-      tags
+      tags,
+      groups,
+      users
     }, {
       user,
       rbac
     }) => {
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
       if (!rbac.isAllowed(user.id, _File.FILE_CREATE)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return (0, _UploadService.fileUpload)(user, file, expirationDate, isPublic, description, tags);
+      return (0, _UploadService.fileUpload)(user, file, expirationDate, isPublic, description, tags, groups, users);
     },
     fileUploadAnonymous: (_, {
       file
