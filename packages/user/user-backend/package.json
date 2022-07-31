@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.8.6",
+  "version": "1.9.2",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "Cristian Incarnato & Dracul Team",
   "license": "ISC",
   "dependencies": {
-    "@dracul/common-backend": "^1.8.6",
+    "@dracul/common-backend": "^1.9.2",
     "@dracul/logger-backend": "^1.7.12",
     "bcryptjs": "^2.4.3",
     "email-templates": "^6.0.3",

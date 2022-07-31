@@ -1,6 +1,6 @@
 {
   "name": "@dracul/common-backend",
-  "version": "1.8.6",
+  "version": "1.9.2",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -23,14 +23,14 @@
   },
   "homepage": "https://github.com/cincarnato/ci-common-module#readme",
   "peerDependencies": {
+    "apollo-server-errors": "^2.5.0",
     "graphql": "^15.8.0",
     "graphql-tools": "^8.2.0",
     "merge-graphql-schemas": "^1.7.8",
     "mongoose": "5.13.14",
     "mongoose-paginate-v2": "^1.6.3",
     "mongoose-softdelete": "1.1.0",
-    "mongoose-unique-validator": "^2.0.3",
-    "apollo-server-errors": "^2.5.0"
+    "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
