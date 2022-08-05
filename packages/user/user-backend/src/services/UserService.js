@@ -23,7 +23,7 @@ export const hashPassword = function (password) {
     return hashPassword;
 }
 
-export const restoreDeletedUser = function (id, {username, name, email, phone, role, groups, active, refreshToken}, actionBy = null) {
+export const restoreDeletedUser = function (id, {username, password, name, email, phone, role, groups, active, refreshToken}, actionBy = null) {
 
     return new Promise(async (resolve, reject) => {
         winston.info('UserService.restoreDeletedUser restoring id: '+id+ ' username: ' + username)
@@ -47,6 +47,7 @@ export const restoreDeletedUser = function (id, {username, name, email, phone, r
                 name: name.trim(),
                 username: username.trim(),
                 email: email.trim(),
+                password: hashPassword(password),
                 phone, role, groups, active, updatedAt, refreshToken,
                 deleted: false, deletedAt: null
             }, {
