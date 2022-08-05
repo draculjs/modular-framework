@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-frontend",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
   "main": "./src/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "gitHead": "b1d8d12bcfb26a4f3af17ce25bff224f2a65ba9b",
   "dependencies": {
     "@dracul/common-frontend": "^1.9.2",
-    "@dracul/user-frontend": "^1.9.2"
+    "@dracul/user-frontend": "^1.9.3"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
