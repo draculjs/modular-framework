@@ -44,7 +44,10 @@ export const restoreDeletedUser = function (id, {username, name, email, phone, r
         User.findOneAndUpdate(
             {_id: id},
             {
-                username, name, email, phone, role, groups, active, updatedAt, refreshToken,
+                name: name.trim(),
+                username: username.trim(),
+                email: email.trim(),
+                phone, role, groups, active, updatedAt, refreshToken,
                 deleted: false, deletedAt: null
             }, {
                 new: true,
@@ -103,10 +106,10 @@ export const createUser = async function ({username, password, name, email, phon
     }
 
     const newUser = new User({
-        username,
-        email,
+        name: name.trim(),
+        username: username.trim(),
+        email: email.trim(),
         password: hashPassword(password),
-        name,
         phone,
         active,
         role,
@@ -166,7 +169,11 @@ export const updateUser = function (id, {username, name, email, phone, role, gro
 
         User.findOneAndUpdate(
             {_id: id},
-            {username, name, email, phone, role, groups, active, updatedAt, refreshToken}, {
+            {
+                name: name.trim(),
+                username: username.trim(),
+                email: email.trim(),
+                phone, role, groups, active, updatedAt, refreshToken}, {
                 new: true,
                 runValidators: true,
                 context: 'query'
