@@ -9,6 +9,7 @@ import SimpleDialog from "./components/SimpleDialog";
 import ListCombobox from "./components/ListCombobox";
 import MultiLangSubform from "./components/MultiLangSubform";
 import ConfirmDialog from "./components/ConfirmDialog";
+import ConfirmSelectDialog from "./components/ConfirmSelectDialog";
 import ColorInput from "./components/ColorInput";
 import FormList from "./components/FormList";
 
@@ -44,6 +45,7 @@ export {
     ListCombobox,
     MultiLangSubform,
     ConfirmDialog,
+    ConfirmSelectDialog,
     ColorInput,
     FormList,
 
