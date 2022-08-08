@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.9.3",
+  "version": "1.9.6",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.9.2",
+    "@dracul/common-frontend": "^1.9.6",
     "@dracul/dayjs-frontend": "^1.9.0"
   },
   "peerDependencies": {

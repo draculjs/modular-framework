@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-frontend",
-  "version": "1.9.2",
+  "version": "1.9.6",
   "description": "Dracul Vue Queue",
   "main": "./src/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "author": "Cristian Incarnato & Dracul Team",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.9.2",
+    "@dracul/common-frontend": "^1.9.6",
     "@dracul/dayjs-frontend": "^1.9.0"
   },
   "peerDependencies": {
