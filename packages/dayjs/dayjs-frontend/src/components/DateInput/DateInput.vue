@@ -27,7 +27,12 @@
           :style="{width: width, maxWidth: width}"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="item" scrollable @input="menu = false">
+    <v-date-picker
+        v-model="item"
+        scrollable
+        @input="menu = false"
+        :allowed-dates="allowedDates"
+    >
     </v-date-picker>
   </v-menu>
 </template>
@@ -52,6 +57,7 @@ export default {
     disabled: {type:Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
     width: {type: String, default: null},
+    allowedDates: {type: [Object,Function,Array], default: null},
   },
   mixins: [DayjsMixin],
   computed: {
