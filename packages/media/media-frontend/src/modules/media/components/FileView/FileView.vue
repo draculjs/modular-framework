@@ -16,7 +16,7 @@
 
       <pdf-web-viewer :url="bufferedURL" v-if="isPdf"></pdf-web-viewer>
 
-      <a v-if="!isImage && !isAudio && !isVideo && !isPdf" target="_blank" :href="getSrc" class="text-uppercase">
+      <a v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" target="_blank" :href="getSrc" class="text-uppercase">
         {{ $t('media.file.download') }}
       </a>
     </v-col>
@@ -29,8 +29,8 @@
       <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
       <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
       <show-field :value="file.tags ? file.tags.join(', ') : ''" :label="$t('media.file.tags')" icon="tag"/>
-      <groups-show :fileIdGroups="file.groups"></groups-show>
-      <users-show :fileIdUsers="file.users"></users-show>
+      <groups-show v-if="$store.getters.hasPermission('SECURITY_GROUP_SHOW')" :fileIdGroups="file.groups"></groups-show>
+      <users-show v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users"></users-show>
 
       <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
         <v-list-item-icon class="mr-5">
