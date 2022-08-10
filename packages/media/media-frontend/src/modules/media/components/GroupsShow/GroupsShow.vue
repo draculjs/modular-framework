@@ -1,5 +1,5 @@
 <template>
-  <show-field :value="stringGroups" :label="$t('media.file.groups')" icon="group" />
+  <show-field :value="sharedWith" :label="$t('media.file.groups')" icon="group" />
 </template>
 
 <script>
@@ -15,13 +15,18 @@ export default {
   data() {
     return {
       fileGroups: [],
-      stringGroups: ''
+      sharedWith: '-'
     }
   },
   mounted() {
     groupProvider.groups().then((result) => {
       this.fileGroups = result.data.groups.filter((group) => this.fileIdGroups.includes(group.id))
-      this.stringGroups = this.fileGroups.length > 0 ? this.fileGroups.reduce((a, b) => (a.name || a) + ", " + b.name) : "-"
+    
+      if(this.fileGroups.length > 1){
+        this.sharedWith = this.fileGroups.reduce((a, b) => `${a.name}, ${b.name}`)
+      }else if (this.fileGroups.length == 1){
+        this.sharedWith = this.fileGroups[0].name
+      }
     })
   }
 }
