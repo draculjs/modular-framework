@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import {mongoose} from '@dracul/common-backend';
 
 const osSchema = new mongoose.Schema({
     family: {type: String, required: false},

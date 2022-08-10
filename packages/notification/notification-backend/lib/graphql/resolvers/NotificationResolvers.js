@@ -49,7 +49,7 @@ var _default = {
           rbac = _ref6.rbac;
       if (!user) throw new _apolloServerExpress.AuthenticationError("Unauthenticated");
       if (!rbac.isAllowed(user.id, _permissions.NOTIFICATION_SHOW)) throw new _apolloServerExpress.ForbiddenError("Not Authorized");
-      return fetchNotificationMethodService(user.id);
+      return (0, _NotificationService.fetchNotificationMethodService)();
     }
   },
   Mutation: {

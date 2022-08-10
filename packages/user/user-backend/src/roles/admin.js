@@ -30,7 +30,7 @@ async function adminRole() {
         ]
     }
 
-    return {name: "admin", permissions: permissions}
+    return {name: "admin", permissions: permissions, readonly: true}
 }
 
 export default adminRole

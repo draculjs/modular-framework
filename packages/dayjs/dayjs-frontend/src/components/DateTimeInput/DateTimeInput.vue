@@ -5,7 +5,7 @@
     </v-col>
 
     <v-col cols="12" sm="6">
-      <time-input ref="time" :value="item" :rules="timeRules" @input="setTime" :clearable="clearable"></time-input>
+      <time-input ref="time" :value="item" :rules="timeRules" @input="setTime" :clearable="clearable" :format="timeFormat"></time-input>
     </v-col>
 
   </v-row>
@@ -30,7 +30,8 @@ export default {
     label: {type: String},
     dateRules: {type: Array, default: () => []},
     timeRules: {type: Array, default: () => []},
-    clearable: {type:Boolean, default: true}
+    clearable: {type: Boolean, default: true},
+    timeFormat: {type: String, default: "24hr"}
   },
   mixins: [DayjsMixin],
   computed: {

@@ -5,7 +5,7 @@ import {
     findGroup,
     fetchGroups,
     paginateGroup,
-    fetchMyGroups
+    fetchMyGroups, findGroupByName
 } from '../../services/GroupService'
 import {
     SECURITY_GROUP_CREATE,
@@ -32,6 +32,11 @@ export default {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
             return findGroup(id)
+        },
+        groupByName: (_, {name}, {user, rbac}) => {
+            if (!user) throw new AuthenticationError("Unauthenticated")
+            if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
+            return findGroupByName(name)
         },
         groupsPaginate: (_, {limit, pageNumber, search, orderBy, orderDesc, myGroups}, {user, rbac}) => {
             if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")

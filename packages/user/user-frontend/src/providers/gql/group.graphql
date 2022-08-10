@@ -3,5 +3,14 @@ query group($id:ID!){
         id
         name
         color
+        users{
+            id
+            name
+            username
+            email
+            phone
+            active
+            avatarurl
+        }
     }
 }

@@ -21,6 +21,16 @@
         </v-list-item-content>
       </v-list-item>
 
+      <v-divider/>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>
+            <role-visualization-card sameLine class="ml-n4 mt-n4 mb-n4"/>
+          </v-list-item-title>
+        </v-list-item-content>
+
+      </v-list-item>
       <v-divider></v-divider>
 
       <v-list-item :to="{name: 'me'}">
@@ -49,10 +59,12 @@
 
 <script>
 
-import {mapGetters, mapActions} from 'vuex'
+import { mapGetters, mapActions} from 'vuex'
+import { RoleVisualizationCard } from '../RoleVisualizationCard';
 
 export default {
   name: "AppBarUserMenu",
+  components:{ RoleVisualizationCard },
   data: () => ({
     src: '@/assets/user.png',
     avatarSize: 45,

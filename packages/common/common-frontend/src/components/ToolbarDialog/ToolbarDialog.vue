@@ -3,7 +3,7 @@
         <v-toolbar-title :class="(danger || info)?'white--text':'onPrimary--text'" v-t="title"></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-            <v-btn icon
+            <v-btn icon text
                    :class="(danger || info)?'white--text':'onPrimary--text'"
                    @click="$emit('close')"
             >

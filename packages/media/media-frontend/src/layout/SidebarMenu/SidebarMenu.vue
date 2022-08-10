@@ -11,7 +11,7 @@
         <v-list-item slot="activator">
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t(item.text) }}
+              {{ $te(item.text) ? $t(item.text) : item.text }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -27,7 +27,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t(child.text) }}
+              {{ $te(child.text) ? $t(child.text) : child.text }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -41,7 +41,7 @@
         </v-list-item-action>
         <v-list-item-content>
           <v-list-item-title>
-            {{ $t(item.text) }}
+            {{ $te(item.text) ? $t(item.text) : item.text }}
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>

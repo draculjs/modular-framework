@@ -6,7 +6,7 @@
                @update="update"
                @close="$emit('close')"
   >
-    <settings-form ref="form" v-model="form" :input-errors="inputErrors"/>
+    <settings-form ref="form" v-model="form" :item="item" :input-errors="inputErrors"/>
   </crud-update>
 </template>
 
@@ -47,15 +47,21 @@ export default {
       }
     }
   },
+  computed: {
+    getForm(){
+      let form = this.form
+      form.value = form.value.toString()
+      return form
+    }
+  },
   methods: {
     update() {
       if (this.$refs.form.validate()) {
         this.loading = true
-        SettingsProvider.updateSettings(this.form).then(r => {
-              if (r) {
-                this.$emit('itemUpdated', r.data.settingsUpdate)
-                this.$emit('close')
-              }
+        SettingsProvider.updateSettings(this.getForm).then(r => {
+              this.$store.dispatch('loadSettings')
+              this.$emit('itemUpdated', r.data.settingsUpdate)
+              this.$emit('close')
             }
         ).catch(error => {
           let clientError = new ClientError(error)

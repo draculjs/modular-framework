@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.findAndDeleteByExpirationDate = exports.findAndDeleteExpiredFiles = exports.deleteFile = exports.updateByRelativePath = exports.updateFileRest = exports.updateFile = exports.paginateFiles = exports.fetchFiles = exports.findFile = void 0;
+exports.updateFileRest = exports.updateFile = exports.updateByRelativePath = exports.paginateFiles = exports.findFile = exports.findAndDeleteExpiredFiles = exports.findAndDeleteByExpirationDate = exports.fetchFiles = exports.deleteFile = void 0;
 
 var _FileModel = _interopRequireDefault(require("./../models/FileModel"));
 
@@ -19,6 +19,8 @@ var _fs = _interopRequireDefault(require("fs"));
 
 var _loggerBackend = require("@dracul/logger-backend");
 
+var _userBackend = require("@dracul/user-backend");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const findFile = async function (id, permissionType = null, userId = null) {
@@ -26,7 +28,7 @@ const findFile = async function (id, permissionType = null, userId = null) {
     return new Promise((resolve, reject) => {
       _FileModel.default.findOne({
         _id: id,
-        ...filterByFileOwner(permissionType, userId)
+        ...filterByPermissions(permissionType, userId)
       }).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
     });
   } else {
@@ -75,14 +77,69 @@ const fetchFiles = async function (expirationDate = null) {
 
 exports.fetchFiles = fetchFiles;
 
-const paginateFiles = function ({
+function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
+  let q = {};
+  if (allFilesAllowed) return q;
+
+  if (ownFilesAllowed && publicAllowed) {
+    q = {
+      $or: [{
+        'createdBy.user': userId
+      }, {
+        'isPublic': true
+      }, {
+        'groups': {
+          $in: userGroups
+        }
+      }, {
+        'users': {
+          $in: [userId]
+        }
+      }]
+    };
+  } else if (ownFilesAllowed) {
+    q = {
+      $or: [{
+        'createdBy.user': userId
+      }, {
+        'groups': {
+          $in: userGroups
+        }
+      }, {
+        'users': {
+          $in: [userId]
+        }
+      }]
+    };
+  } else if (publicAllowed) {
+    q = {
+      $or: [{
+        'isPublic': true
+      }, {
+        'groups': {
+          $in: userGroups
+        }
+      }, {
+        'users': {
+          $in: [userId]
+        }
+      }]
+    };
+  } else {
+    throw new Error("User doesn't have permissions for reading files");
+  }
+
+  return q;
+}
+
+const paginateFiles = async function ({
   pageNumber = 1,
   itemsPerPage = 5,
   search = null,
   filters,
   orderBy = null,
   orderDesc = false
-}, permissionType = null, userId = null) {
+}, userId = null, allFilesAllowed = false, ownFilesAllowed = false, publicAllowed = false) {
   function qs(search) {
     let qs = {};
 
@@ -186,6 +243,24 @@ const paginateFiles = function ({
 
             break;
 
+          case 'isPublic':
+            value && (qsFilter.isPublic = {
+              [operator]: value
+            });
+            break;
+
+          case 'groups':
+            value && (qsFilter.groups = {
+              [operator]: value
+            });
+            break;
+
+          case 'users':
+            value && (qsFilter.users = {
+              [operator]: value
+            });
+            break;
+
           default:
             break;
         }
@@ -194,9 +269,10 @@ const paginateFiles = function ({
     }
   }
 
+  let userGroups = await _userBackend.GroupService.fetchMyGroups(userId);
   let query = { ...qs(search),
-    ...filterByFileOwner(permissionType, userId),
-    ...filterValues(filters)
+    ...filterValues(filters),
+    ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
   };
   let populate = ['createdBy.user'];
   let sort = getSort(orderBy, orderDesc);
@@ -219,15 +295,26 @@ const paginateFiles = function ({
 
 exports.paginateFiles = paginateFiles;
 
-const updateFile = async function (authUser, id, input, permissionType, userId) {
+const updateFile = async function (authUser, {
+  id,
+  description,
+  tags,
+  expirationDate,
+  isPublic,
+  groups,
+  users
+}, permissionType, userId) {
   return new Promise((resolve, rejects) => {
     _FileModel.default.findOneAndUpdate({
       _id: id,
-      ...filterByFileOwner(permissionType, userId)
+      ...filterByPermissions(permissionType, userId)
     }, {
       description,
       tags,
-      expirationDate
+      expirationDate,
+      isPublic,
+      groups,
+      users
     }, {
       new: true,
       runValidators: true,
@@ -256,6 +343,7 @@ const updateFile = async function (authUser, id, input, permissionType, userId) 
 exports.updateFile = updateFile;
 
 const updateFileRest = function (id, user, permissionType, input) {
+  // VER
   return new Promise(async (resolve, reject) => {
     let updatedFile = purgeInput(input);
 
@@ -279,7 +367,7 @@ const updateFileRest = function (id, user, permissionType, input) {
 
     _FileModel.default.findOneAndUpdate({
       _id: id,
-      ...filterByFileOwner(permissionType, user.id)
+      ...filterByPermissions(permissionType, user.id)
     }, {
       $set: updatedFile
     }, {
@@ -316,7 +404,10 @@ const updateByRelativePath = function (relativePath) {
     _FileModel.default.findOneAndUpdate({
       relativePath: relativePath
     }, {
-      lastAccess: Date.now()
+      lastAccess: Date.now(),
+      '$inc': {
+        hits: 1
+      }
     }, {
       runValidators: true,
       context: 'query'
@@ -488,26 +579,6 @@ function deleteManyById(ids) {
   });
 }
 
-function filterByFileOwner(permissionType, userId) {
-  let query;
-
-  switch (permissionType) {
-    // Si el user es dueño del archivo (o es admin), puede encontrarlo, actualizarlo o borrarlo
-    case _File.FILE_SHOW_OWN:
-    case _File.FILE_UPDATE_OWN:
-    case _File.FILE_DELETE_OWN:
-      query = {
-        'createdBy.user': userId
-      };
-      break;
-
-    default:
-      break;
-  }
-
-  return query;
-}
-
 function validateExpirationDate(expirationTime) {
   const today = new Date();
   const expirationDate = new Date(expirationTime);
@@ -523,7 +594,7 @@ function purgeInput(input) {
   let updatedFile = {};
 
   for (const key in input) {
-    if (key == 'description' || key == 'expirationDate' || key == 'tags') {
+    if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'isPublic') {
       updatedFile[key] = input[key];
     }
   }

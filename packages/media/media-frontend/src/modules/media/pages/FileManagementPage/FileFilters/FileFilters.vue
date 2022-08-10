@@ -24,7 +24,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="4" sm="6">
               <v-text-field
                 v-model="filters[2].value"
                 :label="$t('media.file.filename')"
@@ -33,7 +33,7 @@
                 hide-details
               />
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" sm="6" md="2">
               <v-select
                 v-model="filters[4].value"
                 :label="$t('media.file.type')"
@@ -42,6 +42,14 @@
                 color="secondary"
                 hide-details
               />
+            </v-col>
+             <v-col v-if="isUserAuthorized('FILE_SHOW_OWN')" cols="12" sm="6" md="2">
+              <v-select
+                  prepend-icon="visibility"
+                  v-model="filters[7].value"
+                  :items="[{text: 'Público', value: 'true'}, {text: 'Privado', value: 'false'}]"
+                  :label="$t('media.file.visibility')"
+              ></v-select>
             </v-col>
             <v-col cols="12" sm="6"  md="2">
               <v-text-field
@@ -61,10 +69,24 @@
                 hide-details
               />
             </v-col>
-            <v-col v-if="isUserAuthorized()" cols="12" md="4">
+            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4" sm="6">
               <user-autocomplete
                 v-model="filters[3].value"
                 :label="$t('media.file.createdBy')"
+                solo>
+              </user-autocomplete>
+            </v-col>
+            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4" sm="6">
+              <group-autocomplete
+                v-model="filters[8].value"
+                :label="$t('media.file.group')"
+                solo>
+              </group-autocomplete>
+            </v-col>
+            <v-col v-if="isUserAuthorized('FILE_SHOW_ALL')" cols="12" md="4" sm="6">
+              <user-autocomplete
+                v-model="filters[9].value"
+                :label="$t('media.file.user')"
                 solo>
               </user-autocomplete>
             </v-col>
@@ -87,13 +109,13 @@
 <script>
 
 import { DateInput } from '@dracul/dayjs-frontend';
-import { UserAutocomplete} from '@dracul/user-frontend'
+import { GroupAutocomplete, UserAutocomplete} from '@dracul/user-frontend'
 import { mapGetters } from 'vuex'
 
 
 export default {
   name: "FileFilters",
-  components: { DateInput, UserAutocomplete },
+  components: { DateInput, GroupAutocomplete, UserAutocomplete },
   props: {
     value: Array
   },
@@ -111,10 +133,10 @@ export default {
   data() {
     return {
       selectType: [
-        { text: this.$t("text"), value: "text" },
-        { text: this.$t("image"), value: "image" },
-        { text: this.$t("application"), value: "application" },
-        { text: this.$t("audio"), value: "audio" }
+        { text: "text", value: "text" },
+        { text: "image", value: "image" },
+        { text: "application", value: "application" },
+        { text: "audio", value: "audio" }
       ]
     }
   },
@@ -125,8 +147,8 @@ export default {
     cleanFilters() {
       this.$emit("clearFilter", this.filters);
     },
-    isUserAuthorized() {
-      return this.me.role.permissions.includes('FILE_SHOW_ALL')
+    isUserAuthorized(permission) {
+      return this.me.role.permissions.includes(permission)
     }
   },
 };

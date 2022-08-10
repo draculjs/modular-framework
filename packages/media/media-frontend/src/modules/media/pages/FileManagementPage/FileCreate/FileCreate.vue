@@ -1,73 +1,101 @@
 <template>
-  <crud-show :open="open"
-             :loading="loading"
-             :title="title"
-             :errorMessage="errorMessage"
-             @close="$emit('close')"
+
+  <crud-show v-if="uploadedFile"  :open="open" :title="title" @close="$emit('close')">
+    <file-view v-if="uploadedFile" :file="uploadedFile"/>
+  </crud-show>
+
+  <crud-create
+      v-else
+      :open="open"
+      :loading="loading"
+      :title="title"
+      :errorMessage="errorMessage"
+      @close="$emit('close')"
+      @create="onCreate"
+      :fullscreen="false"
   >
+
     <div class="text-center">
-      <file-upload-express v-if="!file" ref="form"
-                           autoSubmit
-                           x-large
-                           @fileUploaded="fileUploaded"
+
+      <file-form
+          v-model="form"
+          :input-errors="inputErrors"
+          ref="form"
+          @fileSelected="onFileSelected"
+          creating
       />
 
-      <file-view v-if="file" :file="file"/>
     </div>
 
-  </crud-show>
+  </crud-create>
+
+
 </template>
 
 <script>
 
-
-import {CrudShow} from '@dracul/common-frontend'
-
-import FileUploadExpress from "../../../components/FileUploadExpress/FileUploadExpress";
+import {CrudCreate, CrudShow} from "@dracul/common-frontend";
 import FileView from "../../../components/FileView/FileView";
+import FileForm from "../FileForm";
+import uploadProvider from "../../../providers/UploadProvider";
 
 export default {
   name: "FileCreate",
-
-  components: {FileView, FileUploadExpress, CrudShow},
-
+  components: {FileForm, FileView, CrudCreate, CrudShow},
   props: {
-    open: {type: Boolean, default: true}
+    open: {type: Boolean, default: true},
   },
-
   data() {
     return {
       title: 'media.file.creating',
       errorMessage: '',
       inputErrors: {},
       loading: false,
-      file: null,
       form: {
-        filename: '',
-        extension: '',
-        relativePath: '',
-        absolutePath: '',
-        size: '',
-        url: '',
-      }
+        file: null,
+        expirationDate: null,
+        isPublic: false,
+        description: '',
+        tags: [],
+        groups: [],
+        users: []
+      },
+      uploadedFile: null
     }
   },
-
   methods: {
-    create() {
-      this.$refs.form.upload()
-
+    onFileSelected(file) {
+      this.form.file = file
     },
-    fileUploaded(file) {
-      this.file = file
-      this.$emit('itemCreated')
-    },
+    async onCreate() {
+      if (this.form.file) {
+        this.loading = true;
 
-  },
+        await uploadProvider.uploadFile(
+            this.form.file,
+            this.form.expirationDate,
+            this.form.isPublic,
+            this.form.description,
+            this.form.tags,
+            this.form.groups,
+            this.form.users)
+            .then(result => {
+              this.uploadedFile = result.data.fileUpload
+              this.$emit('itemCreated')
+              //this.$emit('close')
+            })
+            .catch((err) => {
+              console.log("UploadFile ERROR", err)
+              this.errorMessage = err.message
+            })
+            .finally(() => this.loading = false)
+
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
 
 </style>
-

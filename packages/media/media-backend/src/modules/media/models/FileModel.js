@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+import { mongoose } from '@dracul/common-backend'
 const softDelete = require('mongoose-softdelete')
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require('mongoose-paginate-v2')
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const FileSchema = new Schema({
 
@@ -24,12 +24,15 @@ const FileSchema = new Schema({
         username: { type: String, required: true }
     },
     expirationDate: { type: Date, required: false },
-
+    isPublic: { type: Boolean, required: false },
+    hits: { type: Number, require: false, default: 0 },
+    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group", required: false }],
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }],
 
 });
 
-FileSchema.plugin(mongoosePaginate);
+FileSchema.plugin(mongoosePaginate)
 
-const File = mongoose.model('File', FileSchema);
+const File = mongoose.model('File', FileSchema)
 
-module.exports = File;
+module.exports = File

@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mx-auto" max-width="280" max-height="300">
+    <v-card class="mx-auto"  max-height="500">
         <v-toolbar
                 class="mb-n6 mt-n3"
                 color="secondary"
@@ -91,7 +91,7 @@
             </v-list>
         </v-card-text>
 
-        <v-card-actions justify="center" class="text-center mt-n1 mb-n3">
+        <v-card-actions justify="center" class="text-center">
             <v-btn small text class=" blue--text" to="/notifications"
             >{{ this.$t("notification.seeEverything") }}
             </v-btn>

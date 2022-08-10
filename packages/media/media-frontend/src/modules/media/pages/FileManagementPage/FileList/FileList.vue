@@ -2,9 +2,9 @@
   <v-row row wrap>
 
     <file-filters
-      v-on:updateFilters="setFilters"
-      v-on:clearFilter="clearFilters"
-      v-model="filters"
+        v-on:updateFilters="setFilters"
+        v-on:clearFilter="clearFilters"
+        v-model="filters"
     />
 
     <v-col cols="12">
@@ -27,6 +27,15 @@
           @update:sort-desc="fetch"
           @update:items-per-page="fetch"
       >
+
+        <template v-slot:item.isPublic="{ item }">
+          <div v-if="item.isPublic">
+            <v-icon color="success">check_circle</v-icon>
+          </div>
+          <div v-else>
+            <v-icon color="error">highlight_off</v-icon>
+          </div>
+        </template>
 
         <template slot="no-data">
           <div class="text-xs-center" v-t="'common.noData'"></div>
@@ -54,8 +63,16 @@
 
         <template v-slot:item.action="{ item }">
           <show-button @click="$emit('show', item)"/>
-          <edit-button @click="$emit('update', item)"/>
-          <delete-button @click="$emit('delete', item)"/>
+          <edit-button
+              v-if="$store.getters.hasPermission('FILE_UPDATE_ALL') ||
+              ($store.getters.hasPermission('FILE_UPDATE_OWN') && item.createdBy.user.id === $store.getters.me.id)"
+              @click="$emit('update', item)"
+          />
+          <delete-button
+              v-if="$store.getters.hasPermission('FILE_DELETE_ALL') ||
+              ($store.getters.hasPermission('FILE_DELETE_OWN') && item.createdBy.user.id === $store.getters.me.id)"
+              @click="$emit('delete', item)"
+          />
         </template>
 
       </v-data-table>
@@ -73,7 +90,7 @@ import {DayjsMixin} from "@dracul/dayjs-frontend"
 
 export default {
   name: "FileList",
-  mixins: [redeableBytesMixin,DayjsMixin],
+  mixins: [redeableBytesMixin, DayjsMixin],
   components: {DeleteButton, EditButton, ShowButton, FileFilters},
 
   data() {
@@ -121,6 +138,21 @@ export default {
           field: 'maxSize',
           operator: '$lte',
           value: null
+        },
+        {
+          field: 'isPublic',
+          operator: '$eq',
+          value: null
+        },
+        {
+          field: 'groups',
+          operator: '$eq',
+          value: null
+        },
+        {
+          field: 'users',
+          operator: '$eq',
+          value: null
         }
       ]
     }
@@ -159,7 +191,7 @@ export default {
     }
   },
   watch: {
-    message: function(value) {
+    message: function (value) {
       if (value) {
         this.filters = true;
       }
@@ -175,6 +207,8 @@ export default {
         {text: this.$t('media.file.createdAt'), value: 'createdAt'},
         {text: this.$t('media.file.lastAccess'), value: 'lastAccess'},
         {text: this.$t('media.file.createdBy'), value: 'createdBy.username'},
+        {text: this.$t('media.file.isPublic'), value: 'isPublic'},
+        {text: this.$t('media.file.hits'), value: 'hits'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},
       ]

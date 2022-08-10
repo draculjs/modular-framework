@@ -26,6 +26,20 @@
           @update:items-per-page="fetch"
       >
 
+        <template v-slot:item.value="{item}">
+
+          <template v-if="item.type === 'boolean'">
+            <v-icon v-if="item.value === 'enable' " color="green">done</v-icon>
+            <v-icon v-else color="red">clear</v-icon>
+          </template>
+
+          <template v-else>
+            {{ item.value }}
+          </template>
+
+        </template>
+
+
         <template v-slot:item.label="{item}">
           {{ item.label[getLanguage] }}
         </template>
@@ -65,7 +79,7 @@ export default {
       loading: false,
       orderBy: null,
       orderDesc: false,
-      itemsPerPage: 10,
+      itemsPerPage: 25,
       pageNumber: 1,
       search: ''
     }
@@ -75,7 +89,7 @@ export default {
     headers() {
       return [
         //Entity Headers
-        {text: this.$t('settings.settings.labels.key'), value: 'key'},
+        //{text: this.$t('settings.settings.labels.key'), value: 'key'},
         {text: this.$t('settings.settings.labels.label'), value: 'label'},
         {text: this.$t('settings.settings.labels.value'), value: 'value'},
         //Actions

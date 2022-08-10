@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.initService = void 0;
+exports.initService = exports.default = void 0;
 
 var _dotenv = _interopRequireDefault(require("dotenv"));
 
@@ -16,6 +16,8 @@ var _customizeBackend = require("@dracul/customize-backend");
 var _initCustomization = require("./custom/initCustomization");
 
 var _initUploaderRole = _interopRequireDefault(require("./custom/initUploaderRole"));
+
+var _initVisualizerRole = _interopRequireDefault(require("./custom/initVisualizerRole"));
 
 var _InitMediaPermissions = _interopRequireDefault(require("../modules/media/services/InitMediaPermissions"));
 
@@ -40,7 +42,7 @@ const initService = async () => {
   await (0, _InitMediaPermissions.default)(); // await userStorageCheckAndCreate()
 
   await _userBackend.InitService.initAdminRole();
-  await _userBackend.InitService.initRoles([_initUploaderRole.default]);
+  await _userBackend.InitService.initRoles([_initUploaderRole.default, _initVisualizerRole.default]);
   await _userBackend.InitService.initRootUser();
   await (0, _initCustomization.initCustomization)();
 };

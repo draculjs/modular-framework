@@ -1,8 +1,8 @@
 {
   "name": "@dracul/common-frontend",
-  "version": "1.5.0",
+  "version": "1.9.6",
   "description": "vue common",
-  "main": "src/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-storybook": "build-storybook",
@@ -16,12 +16,12 @@
   ],
   "author": "Cristian Incarnato",
   "license": "MIT",
-  "dependencies": {
+  "peerDependencies": {
     "deepmerge": "^4.2.2",
-    "vue": "^2.6.11",
+    "vue": "^2.7.4",
     "vue-i18n": "^8.18.1",
-    "vuetify": "^2.3.2",
-    "vuex": "^3.4.0"
+    "vuetify": "2.6.7",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
@@ -41,9 +41,16 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-preset-vue": "^2.0.2",
+    "deepmerge": "^4.2.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
+    "vue": "^2.7.4",
     "vue-cli-plugin-vuetify": "^2.0.6",
-    "vue-template-compiler": "^2.6.11"
+    "vue-i18n": "^8.18.1",
+    "vue-template-compiler": "^2.7.4",
+    "vuetify": "2.6.7",
+    "vuex": "^3.6.2"
   }
 }

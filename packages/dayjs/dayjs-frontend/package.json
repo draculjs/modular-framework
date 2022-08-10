@@ -1,8 +1,8 @@
 {
   "name": "@dracul/dayjs-frontend",
-  "version": "1.5.13",
+  "version": "1.9.7",
   "description": "vue dayjs utils",
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,9 +17,10 @@
   ],
   "author": "Cristian Incarnato",
   "license": "MIT",
-  "dependencies": {
+  "peerDependencies": {
     "dayjs": "^1.10.7",
-    "vue": "^2.6.12"
+    "vue": "^2.7.4",
+    "vuetify": "2.6.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -27,8 +28,15 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@babel/register": "^7.12.13",
+    "babel-eslint": "^10.1.0",
     "cpx": "^1.5.0",
-    "mocha": "^8.2.0"
+    "dayjs": "^1.10.7",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "mocha": "^8.2.0",
+    "vue": "^2.7.4",
+    "vue-template-compiler": "^2.7.4",
+    "vuetify": "2.6.7"
   },
   "bugs": {
     "url": "https://github.com/draculjs/modular-framework/issues"

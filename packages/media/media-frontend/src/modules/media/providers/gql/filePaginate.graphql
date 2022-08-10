@@ -25,6 +25,10 @@ query filePaginate($input: FilterPaginateInput){
             }
             lastAccess
             expirationDate
+            isPublic
+            hits
+            groups
+            users
         }
     }
 }

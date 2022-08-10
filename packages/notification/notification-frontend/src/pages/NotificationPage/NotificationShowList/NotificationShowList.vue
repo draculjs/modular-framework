@@ -111,7 +111,7 @@ export default {
   markAllRead() {
     notificationProvider
         .markAllReadOrNotRead(false)
-        .then(res => {
+        .then(() => {
             this.getNotificationsForPolling();
         })
         .catch((err) => {

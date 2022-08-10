@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cantidadArchivosPorUsuario = exports.almacenamientoPorUsuario = exports.fileUserMetrics = exports.fileGlobalMetrics = void 0;
+exports.fileUserMetrics = exports.fileGlobalMetrics = exports.cantidadArchivosPorUsuario = exports.almacenamientoPorUsuario = void 0;
 
 var _FileModel = _interopRequireDefault(require("./../models/FileModel"));
 

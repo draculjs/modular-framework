@@ -1,13 +1,13 @@
 "use strict";
 
-var mongoose = require("mongoose");
+var _commonBackend = require("@dracul/common-backend");
 
 var mongoosePaginate = require("mongoose-paginate-v2");
 
-var Schema = mongoose.Schema;
+var Schema = _commonBackend.mongoose.Schema;
 var NotificationSchema = new Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: _commonBackend.mongoose.Schema.Types.ObjectId,
     required: true
   },
   title: {
@@ -41,5 +41,7 @@ var NotificationSchema = new Schema({
   }
 });
 NotificationSchema.plugin(mongoosePaginate);
-var Notification = mongoose.model("Notification", NotificationSchema);
+
+var Notification = _commonBackend.mongoose.model("Notification", NotificationSchema);
+
 module.exports = Notification;

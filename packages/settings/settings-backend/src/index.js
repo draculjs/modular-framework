@@ -7,6 +7,7 @@ import * as permissions from "./permissions/Settings"
 //Services
 import {
     findSettingsByKey,
+    findSettingsByKeys,
     findSettings,
     fetchSettings,
     createSettings,
@@ -25,6 +26,7 @@ export {
     permissions,
     //Services
     findSettingsByKey,
+    findSettingsByKeys,
     findSettings,
     fetchSettings,
     createSettings,

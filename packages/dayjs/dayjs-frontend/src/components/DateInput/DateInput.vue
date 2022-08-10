@@ -13,7 +13,6 @@
           v-model="item"
           :label="label"
           prepend-icon="date_range"
-          readonly
           v-on="on"
           :rules="rules"
           :error="error"
@@ -28,8 +27,12 @@
           :style="{width: width, maxWidth: width}"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="item" scrollable @input="menu = false">
-    </v-date-picker>
+    <v-date-picker
+        v-model="item"
+        scrollable
+        @input="menu = false"
+        :allowed-dates="allowedDates"
+    ></v-date-picker>
   </v-menu>
 </template>
 
@@ -49,10 +52,11 @@ export default {
     clearable: {type:Boolean, default: true},
     outlined: {type:Boolean, default: false},
     solo: {type:Boolean, default: false},
-    readonly: {type:Boolean, default:false},
+    readonly: {type:Boolean, default: true},
     disabled: {type:Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
     width: {type: String, default: null},
+    allowedDates: {type: [Object,Function,Array], default: null},
   },
   mixins: [DayjsMixin],
   computed: {
@@ -60,7 +64,9 @@ export default {
       get() {
         return this.getDateFormat(this.value)
       },
-      set(val) {this.$emit('input', this.convertStringDateToDayjs(val))}
+      set(val) {
+        this.$emit('input', this.convertStringDateToDayjs(val))
+      }
     }
   },
   data(){

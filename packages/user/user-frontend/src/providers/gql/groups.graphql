@@ -3,6 +3,15 @@ query groups{
         id
         name
         color
+        users{
+            id
+            name
+            username
+            email
+            phone
+            active
+            avatarurl
+        }
     }
 }
 

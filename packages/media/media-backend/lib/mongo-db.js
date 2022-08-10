@@ -1,5 +1,7 @@
 "use strict";
 
+var _commonBackend = require("@dracul/common-backend");
+
 const {
   DefaultLogger
 } = require('@dracul/logger-backend');
@@ -7,8 +9,6 @@ const {
 const dotenv = require('dotenv');
 
 dotenv.config();
-
-const mongoose = require('mongoose');
 
 const mongoConnect = async function () {
   if (!process.env.MONGO_URI) {
@@ -18,7 +18,7 @@ const mongoConnect = async function () {
 
   try {
     await connectToMongo(process.env.MONGO_URI);
-    const db = mongoose.connection;
+    const db = _commonBackend.mongoose.connection;
     db.on('error', function () {
       console.error.bind(console, 'connection error:');
       DefaultLogger.info("Reconnecting with MongoDB");
@@ -29,7 +29,7 @@ const mongoConnect = async function () {
     });
     const {
       ObjectId
-    } = mongoose.Types;
+    } = _commonBackend.mongoose.Types;
 
     ObjectId.prototype.valueOf = function () {
       return this.toString();
@@ -42,8 +42,9 @@ const mongoConnect = async function () {
 
 const connectToMongo = function (mongoUri) {
   return new Promise((resolve, reject) => {
-    mongoose.Promise = global.Promise;
-    mongoose.connect(mongoUri, {
+    _commonBackend.mongoose.Promise = global.Promise;
+
+    _commonBackend.mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false

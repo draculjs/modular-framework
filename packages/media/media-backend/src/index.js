@@ -3,7 +3,7 @@ import { DefaultLogger } from "@dracul/logger-backend";
 DefaultLogger.info("Starting APP")
 
 import express from 'express';
-import './mongo-db'
+const mongoConnect = require('./mongo-db')
 import { ApolloServer, GraphQLExtension } from 'apollo-server-express'
 import { resolvers, typeDefs } from './modules-merge'
 import path from 'path'
@@ -12,7 +12,7 @@ import { jwtMiddleware, corsMiddleware, rbacMiddleware, sessionMiddleware } from
 import { router as fileRouter } from './modules/media/rest/routers/FileRouter'
 import initService from "./init/init-service";
 import { ResponseTimeMiddleware, RequestMiddleware, GqlErrorLog, GqlResponseLog } from '@dracul/logger-backend'
-import { updateFileMiddleware } from "./middleware"
+import { updateFileMiddleware } from "./modules/media/middleware"
 import { cronManager } from "./cron";
 import { userCreateListener } from './modules/media/listeners/UserCreateListener'
 
@@ -103,8 +103,11 @@ app.get('/status', function (req, res) {
     res.send("RUNNING")
 })
 
-//initialize permissions, roles, users, customs, seeds
-initService().then(() => {
+//Connect to MongoDb
+mongoConnect()
+    //initialize permissions, roles, users, customs, seeds
+    .then(initService)
+    .then(() => {
 
     let PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000"
     let URL = process.env.APP_API_URL ? process.env.APP_API_URL : "http://localhost" + PORT

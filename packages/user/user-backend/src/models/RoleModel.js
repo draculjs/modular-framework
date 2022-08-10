@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import {mongoose} from '@dracul/common-backend';
 import softDelete from 'mongoose-softdelete'
 import mongoosePaginate from 'mongoose-paginate-v2';
 import uniqueValidator from 'mongoose-unique-validator';
@@ -12,7 +12,8 @@ const RoleSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
         required: false,
-    }]
+    }],
+    readonly: {type: Boolean, required: false, default: false},
 });
 
 RoleSchema.plugin(uniqueValidator, {message: 'validation.unique'});

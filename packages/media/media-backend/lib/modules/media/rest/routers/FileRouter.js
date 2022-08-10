@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.router = void 0;
+exports.router = exports.default = void 0;
 
 var _apolloServerExpress = require("apollo-server-express");
 
@@ -97,7 +97,8 @@ router.post('/file', upload.single('file'), async function (req, res) {
     message: "Not Authorized"
   });
   const {
-    expirationTime
+    expirationTime,
+    isPublic
   } = req.body;
   let file = {
     filename: req.file.originalname,
@@ -105,7 +106,7 @@ router.post('/file', upload.single('file'), async function (req, res) {
     createReadStream: () => streamifier.createReadStream(req.file.buffer),
     encoding: req.file.encoding
   };
-  (0, _UploadService.fileUpload)(req.user, file, expirationTime).then(result => {
+  (0, _UploadService.fileUpload)(req.user, file, expirationTime, isPublic).then(result => {
     res.status(201).json(result);
   }).catch(err => {
     res.status(409).json({
@@ -120,7 +121,8 @@ router.patch('/file/:id', async function (req, res) {
   if (!req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN)) res.status(403).json({
     message: "Not Authorized"
   });
-  let permissionType = req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null;
+  let permissionType = req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_ALL) ? _File.FILE_SHOW_ALL : req.rbac.isAllowed(req.user.id, _File.FILE_SHOW_OWN) ? _File.FILE_SHOW_OWN : null; // VER
+
   (0, _FileService.updateFileRest)(req.params.id, req.user, permissionType, req.body).then(result => {
     res.status(200).json(result);
   }).catch(err => {

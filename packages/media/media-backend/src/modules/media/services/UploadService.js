@@ -6,8 +6,7 @@ import randomString from './helpers/randomString'
 import baseUrl from "./helpers/baseUrl";
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 
-const fileUpload = function (user, inputFile, expirationDate) {
-
+const fileUpload = function (user, inputFile, expirationDate, isPublic = false, description, tags, groups, users) {
   return new Promise(async (resolve, rejects) => {
     try {
 
@@ -38,14 +37,14 @@ const fileUpload = function (user, inputFile, expirationDate) {
 
         if (!timeDiffExpirationDate) {
           winston.error("Expiration date must be older than current date")
-          rejects(new Error("Expiration date must be older than current date"))
+          return rejects(new Error("Expiration date must be older than current date"))
         }
 
         let userStorage = await findUserStorageByUser(user)
 
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
           winston.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
-          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
+          return rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`))
         }
       }
 
@@ -68,8 +67,13 @@ const fileUpload = function (user, inputFile, expirationDate) {
           size: fileSizeMB,
           url: url,
           createdBy: { user: user.id, username: user.username },
-          expirationDate: expirationDate
-        })
+          expirationDate: expirationDate,
+          isPublic: isPublic,
+          description: description,
+          tags: tags,
+          groups: groups,
+          users: users
+        });
         winston.info("fileUploadAnonymous saving file")
         await doc.save()
         winston.info("fileUploadAnonymous file saved: " + doc._id)
@@ -78,12 +82,12 @@ const fileUpload = function (user, inputFile, expirationDate) {
 
       } else {
         winston.error("Upload Fail")
-        rejects(new Error("Upload Fail"))
+        return  rejects(new Error("Upload Fail"))
       }
 
     } catch (err) {
       winston.error('UploadService error' + err)
-      rejects(err)
+      return  rejects(err)
     }
   })
 

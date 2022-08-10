@@ -1,7 +1,7 @@
+import {mongoose} from '@dracul/common-backend';
 const {DefaultLogger} = require('@dracul/logger-backend')
 const dotenv = require('dotenv')
 dotenv.config()
-const mongoose = require('mongoose')
 
 const mongoConnect = async function(){
 

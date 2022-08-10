@@ -86,7 +86,8 @@ const initAdminRole = async () => {
 
         let adminRoleUpdated = await updateRole(adminRole.id, {
             name: adminRoleT.name,
-            permissions: adminRoleT.permissions
+            permissions: adminRoleT.permissions,
+            readonly: true
         })
         loggingEvent("updated", "role", adminRoleUpdated.name, adminRoleUpdated.id)
     } else {
@@ -105,7 +106,8 @@ const initSupervisorRole = async () => {
             {
                 name: supervisorRoleT.name,
                 childRoles: supervisorRoleT.childRoles,
-                permissions: supervisorRoleT.permissions
+                permissions: supervisorRoleT.permissions,
+                readonly: true
             })
         loggingEvent("updated", "role", supervisorRoleUpdated.name, supervisorRoleUpdated.id)
     } else {
@@ -123,7 +125,8 @@ const initOperatorRole = async () => {
         let operatorRoleUpdated = await updateRole(operatorRole.id,
             {
                 name: operatorRoleT.name,
-                permissions: operatorRoleT.permissions
+                permissions: operatorRoleT.permissions,
+                readonly: true
             })
 
         loggingEvent("updated", "role", operatorRoleUpdated.name, operatorRoleUpdated.id)
@@ -192,7 +195,7 @@ const initRoles = async (roles) => {
                 }
             }
         }
-        role = await updateRole(role.id, {name: role.name, permissions: p, childRoles: childRoles})
+        role = await updateRole(role.id, {name: role.name, permissions: p, childRoles: childRoles, readonly: role.readonly})
         console.log(`Updated ${role.name}`)
 
         return [...results, role];

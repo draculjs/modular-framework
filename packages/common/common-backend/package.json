@@ -1,6 +1,6 @@
 {
   "name": "@dracul/common-backend",
-  "version": "1.2.32",
+  "version": "1.9.2",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -22,8 +22,15 @@
     "url": "https://github.com/cincarnato/ci-common-module/issues"
   },
   "homepage": "https://github.com/cincarnato/ci-common-module#readme",
-  "dependencies": {
-    "merge-graphql-schemas": "^1.7.8"
+  "peerDependencies": {
+    "apollo-server-errors": "^2.5.0",
+    "graphql": "^15.8.0",
+    "graphql-tools": "^8.2.0",
+    "merge-graphql-schemas": "^1.7.8",
+    "mongoose": "5.13.14",
+    "mongoose-paginate-v2": "^1.6.3",
+    "mongoose-softdelete": "1.1.0",
+    "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -31,6 +38,13 @@
     "@babel/node": "^7.8.7",
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.8.7",
-    "jest": "^26.1.0"
+    "graphql": "^15.8.0",
+    "graphql-tools": "^8.2.0",
+    "jest": "^26.1.0",
+    "merge-graphql-schemas": "^1.7.8",
+    "mongoose": "5.13.14",
+    "mongoose-paginate-v2": "^1.6.3",
+    "mongoose-softdelete": "1.1.0",
+    "mongoose-unique-validator": "^2.0.3"
   }
 }

@@ -5,12 +5,13 @@ import dayjs from 'dayjs'
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
+import { GroupService } from '@dracul/user-backend';
 
 export const findFile = async function (id, permissionType = null, userId = null) {
 
     if (id) {
         return new Promise((resolve, reject) => {
-            File.findOne({ _id: id, ...filterByFileOwner(permissionType, userId) }).populate('createdBy.user').exec((err, res) => (
+            File.findOne({ _id: id, ...filterByPermissions(permissionType, userId) }).populate('createdBy.user').exec((err, res) => (
                 err ? reject(err) : resolve(res)
             ));
         })
@@ -57,7 +58,30 @@ export const fetchFiles = async function (expirationDate = null) {
     })
 }
 
-export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false }, permissionType = null, userId = null) {
+function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
+  let q = {};
+
+  if (allFilesAllowed) return q
+
+  if (ownFilesAllowed && publicAllowed) {
+      q = {$or: [{'createdBy.user': userId}, {'isPublic': true}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
+  } else if (ownFilesAllowed) {
+      q = {$or: [{'createdBy.user': userId}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
+  } else if (publicAllowed){
+      q = {$or: [{'isPublic': true}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
+  } else{
+      throw new Error("User doesn't have permissions for reading files")
+  }
+
+  return q;
+}
+
+export const paginateFiles = async function (
+    { pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false },
+    userId = null,
+    allFilesAllowed = false,
+    ownFilesAllowed = false,
+    publicAllowed= false) {
 
     function qs(search) {
         let qs = {}
@@ -122,6 +146,15 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
                             }
                         }
                         break
+                    case 'isPublic':
+                        value && (qsFilter.isPublic = { [operator]: value })
+                        break
+                    case 'groups':
+                        value && (qsFilter.groups = { [operator]: value })
+                        break
+                    case 'users':
+                        value && (qsFilter.users = { [operator]: value })
+                        break
                     default:
                         break;
                 }
@@ -131,10 +164,11 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 
     }
 
+    let userGroups = await GroupService.fetchMyGroups(userId)
     let query = {
         ...qs(search),
-        ...filterByFileOwner(permissionType, userId),
-        ...filterValues(filters)
+        ...filterValues(filters),
+        ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
     }
 
     let populate = ['createdBy.user']
@@ -150,10 +184,10 @@ export const paginateFiles = function ({ pageNumber = 1, itemsPerPage = 5, searc
 }
 
 
-export const updateFile = async function (authUser, id, input, permissionType, userId) {
+export const updateFile = async function (authUser, {id, description, tags, expirationDate, isPublic, groups, users}, permissionType, userId) {
     return new Promise((resolve, rejects) => {
-        File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, userId) },
-            { description, tags, expirationDate },
+        File.findOneAndUpdate({ _id: id, ...filterByPermissions(permissionType, userId) },
+            { description, tags, expirationDate, isPublic, groups, users},
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {
@@ -173,6 +207,7 @@ export const updateFile = async function (authUser, id, input, permissionType, u
 
 // Rest service
 export const updateFileRest = function (id, user, permissionType, input) {
+    // VER
     return new Promise(async (resolve, reject) => {
 
         let updatedFile = purgeInput(input);
@@ -193,7 +228,7 @@ export const updateFileRest = function (id, user, permissionType, input) {
         }
 
         // Find file and update it with the request body
-        File.findOneAndUpdate({ _id: id, ...filterByFileOwner(permissionType, user.id) },
+        File.findOneAndUpdate({ _id: id, ...filterByPermissions(permissionType, user.id) },
             { $set: updatedFile },
             { new: true })
             .then(file => {
@@ -214,7 +249,7 @@ export const updateByRelativePath = function (relativePath) {
 
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ relativePath: relativePath },
-            { lastAccess: Date.now() },
+            { lastAccess: Date.now(), '$inc': { hits: 1 } },
             { runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {
@@ -364,20 +399,7 @@ function deleteManyById(ids) {
     });
 }
 
-function filterByFileOwner(permissionType, userId) {
-    let query;
-    switch (permissionType) {
-        // Si el user es dueño del archivo (o es admin), puede encontrarlo, actualizarlo o borrarlo
-        case FILE_SHOW_OWN:
-        case FILE_UPDATE_OWN:
-        case FILE_DELETE_OWN:
-            query = { 'createdBy.user': userId }
-            break;
-        default:
-            break;
-    }
-    return query;
-}
+
 
 function validateExpirationDate(expirationTime) {
     const today = new Date();
@@ -391,7 +413,7 @@ function validateExpirationDate(expirationTime) {
 function purgeInput(input) {
     let updatedFile = {};
     for (const key in input) {
-        if (key == 'description' || key == 'expirationDate' || key == 'tags') {
+        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'isPublic') {
             updatedFile[key] = input[key];
         }
     }

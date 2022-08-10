@@ -38,7 +38,13 @@ class GroupProvider {
         })
     }
 
-
+    groupByName(name) {
+        return this.gqlc.query({
+            query: require('./gql/groupByName.graphql'),
+            variables: {name},
+            fetchPolicy: "network-only",
+        })
+    }
 
     createGroup(form) {
         return this.gqlc.mutate({

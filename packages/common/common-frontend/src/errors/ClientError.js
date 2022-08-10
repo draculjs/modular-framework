@@ -9,6 +9,7 @@ const MESSAGE_UNAUTHENTICATED = "client.error.unauthenticated"
 const BAD_USER_INPUT = "BAD_USER_INPUT"
 const FORBIDDEN = "FORBIDDEN"
 const UNAUTHENTICATED = "UNAUTHENTICATED"
+const CUSTOM_ERROR = "CUSTOM_ERROR"
 
 class ClientError extends Error {
     constructor(error) {
@@ -45,9 +46,9 @@ class ClientError extends Error {
     }
 
     processFrapjQLErrors(graphQLErrors) {
-        
+
         this.errorsQuantity = graphQLErrors.length
-        
+
         graphQLErrors.forEach(gqlError => {
 
             //BAD_USER_INPUT
@@ -62,6 +63,11 @@ class ClientError extends Error {
 
 
                 for(let inputError in gqlError.extensions.inputErrors ){
+
+                    if(!gqlError.extensions.inputErrors[inputError].properties){
+                        continue
+                    }
+
                     if(this.inputErrors[inputError] === undefined) {
                         this.inputErrors[inputError] = [gqlError.extensions.inputErrors[inputError].properties.message]
                     }else{
@@ -90,6 +96,16 @@ class ClientError extends Error {
                 this.i18nMessage = MESSAGE_UNAUTHENTICATED
                 this.showMessage = MESSAGE_UNAUTHENTICATED
                 this.i18nMessages.push(MESSAGE_UNAUTHENTICATED)
+            }
+            //CUSTOM_ERROR
+            else if (gqlError.extensions.code == CUSTOM_ERROR) {
+
+                this.code = CUSTOM_ERROR
+                this.errorMessage = gqlError.message
+
+                this.i18nMessage = gqlError.message
+                this.showMessage = gqlError.message
+                this.i18nMessages.push(gqlError.message)
             }
 
             //OTHERS

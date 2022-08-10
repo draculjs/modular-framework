@@ -1,8 +1,8 @@
 "use strict";
 
-const mongoose = require('mongoose');
+var _commonBackend = require("@dracul/common-backend");
 
-const Schema = mongoose.Schema;
+const Schema = _commonBackend.mongoose.Schema;
 
 const mongoosePaginate = require('mongoose-paginate-v2');
 
@@ -67,7 +67,7 @@ const QueueSchema = new Schema({
   },
   // Payload is a reference to another mongoose object
   payload: {
-    type: mongoose.Schema.Types.Mixed,
+    type: _commonBackend.mongoose.Schema.Types.Mixed,
     required: true
   },
   // Is the job done or not (Does not matter if successful or not)
@@ -85,5 +85,7 @@ const QueueSchema = new Schema({
   timestamps: true
 });
 QueueSchema.plugin(mongoosePaginate);
-const QueueModel = mongoose.model('Queue', QueueSchema);
+
+const QueueModel = _commonBackend.mongoose.model('Queue', QueueSchema);
+
 module.exports = QueueModel;

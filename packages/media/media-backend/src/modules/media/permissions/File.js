@@ -1,6 +1,8 @@
 
 export const FILE_SHOW_ALL = "FILE_SHOW_ALL"
 export const FILE_SHOW_OWN = "FILE_SHOW_OWN"
+export const FILE_SHOW_PUBLIC = "FILE_SHOW_PUBLIC"
+export const FILE_DOWNLOAD = "FILE_DOWNLOAD"
 export const FILE_UPDATE_ALL = "FILE_UPDATE_ALL"
 export const FILE_UPDATE_OWN = "FILE_UPDATE_OWN"
 export const FILE_CREATE = "FILE_CREATE"

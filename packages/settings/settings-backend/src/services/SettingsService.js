@@ -17,6 +17,24 @@ export const findSettingsByKey = async function (key) {
     })
 }
 
+export const findSettingsByKeys = async function (keys = []) {
+    return new Promise((resolve, reject) => {
+
+        Settings.find({key: {$in: keys}}).exec((err, docs) => {
+
+                if (err) return reject(err)
+
+                let settings = {}
+                docs.forEach(doc => {
+                    settings[doc.key] = doc
+                })
+
+                resolve(settings)
+            }
+        );
+    })
+}
+
 export const fetchSettings = async function () {
     return new Promise((resolve, reject) => {
         Settings.find({}).exec((err, res) => (
@@ -25,7 +43,7 @@ export const fetchSettings = async function () {
     })
 }
 
-export const paginateSettings = function ( pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
+export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
 
     function qs(search) {
         let qs = {}
@@ -33,14 +51,14 @@ export const paginateSettings = function ( pageNumber = 1, itemsPerPage = 5, sea
             qs = {
                 $or: [
                     {key: {$regex: search, $options: 'i'}},
-{value: {$regex: search, $options: 'i'}}
+                    {value: {$regex: search, $options: 'i'}}
                 ]
             }
         }
         return qs
     }
 
-     function getSort(orderBy, orderDesc) {
+    function getSort(orderBy, orderDesc) {
         if (orderBy) {
             return (orderDesc ? '-' : '') + orderBy
         } else {
@@ -62,13 +80,10 @@ export const paginateSettings = function ( pageNumber = 1, itemsPerPage = 5, sea
 }
 
 
-
-
-
-export const createSettings = async function (authUser, {key, value, label}) {
+export const createSettings = async function (authUser, {key, value, label, type, options}) {
 
     const doc = new Settings({
-        key, value, label
+        key, value, label, type, options
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -86,24 +101,30 @@ export const createSettings = async function (authUser, {key, value, label}) {
     })
 }
 
-export const updateSettings = async function (authUser, id, {key, value, label}) {
+export const updateSettings = async function (authUser, id, {key, value, label, type, options}) {
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({_id: id},
-        {key, value, label},
-        {new: true, runValidators: true, context: 'query'},
-        (error,doc) => {
+            {
+                key,
+                value,
+                label,
+                ...(type ? {type} : {}),
+                ...(options ? {options} : {}),
+            },
+            {new: true, runValidators: true, context: 'query'},
+            (error, doc) => {
 
-            if (error) {
-                if (error.name == "ValidationError") {
-                 return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                if (error) {
+                    if (error.name == "ValidationError") {
+                        return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+
+                    }
+                    return rejects(error)
 
                 }
-                return rejects(error)
 
-            }
-
-            resolve(doc)
-        })
+                resolve(doc)
+            })
     })
 }
 

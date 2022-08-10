@@ -1,5 +1,5 @@
 //Resources
-import i18nMessages from './modules/media/i18n/messages'
+import i18nMessages from './modules/media/i18n'
 import routes from './modules/media/routes'
 
 //Providers
@@ -9,8 +9,10 @@ import FileMetricsProvider from './modules/media/providers/FileMetricsProvider'
 import UserStorageProvider from './modules/media/providers/UserStorageProvider'
 
 //Components
+import FileUploadExpiration from './modules/media/components/FileUploadExpiration'
 import FileUploadExpress from './modules/media/components/FileUploadExpress'
 import FileUpload from './modules/media/components/FileUpload'
+import FileUploadButton from './modules/media/components/FileUploadButton'
 import FileView from './modules/media/components/FileView'
 import MediaField from './modules/media/components/MediaField'
 
@@ -37,10 +39,12 @@ export {
     UserStorageProvider,
 
     //Components
+    FileUploadExpiration,
     FileUploadExpress,
     FileUpload,
     FileView,
     MediaField,
+    FileUploadButton,
 
     //Pages
     FileManagementPage,

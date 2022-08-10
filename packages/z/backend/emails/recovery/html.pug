@@ -1,0 +1,24 @@
+include mixins
+doctype transitional
+html(xmlns='http://www.w3.org/1999/xhtml')
+    +head(title)
+    body(style='margin: 0; padding: 0; background-color:#dddddd;')
+        +tablesec
+            tr
+                td(style='padding: 10px 0 10px 0;')
+                    +tablesix
+                        tr
+                            +headerh1(`${appName}`)
+                        tr
+                            td(bgcolor='#ffffff', style='padding: 40px 30px 40px 30px;')
+                                +tablesec
+                                    +title(title)
+                                    +description(`Hola ${name} `)
+                                    +description(description)
+                                    +button(url,btnText)
+                        tr
+                            +footer(copyright)
+
+
+
+

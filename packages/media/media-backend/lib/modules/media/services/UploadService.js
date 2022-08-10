@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.fileUpload = void 0;
+exports.fileUpload = exports.default = void 0;
 
 var _loggerBackend = require("@dracul/logger-backend");
 
@@ -21,7 +21,7 @@ var _UserStorageService = require("./UserStorageService");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fileUpload = function (user, inputFile, expirationDate) {
+const fileUpload = function (user, inputFile, expirationDate, isPublic = false, description, tags, groups, users) {
   return new Promise(async (resolve, rejects) => {
     try {
       if (!user) {
@@ -60,7 +60,7 @@ const fileUpload = function (user, inputFile, expirationDate) {
         if (!timeDiffExpirationDate) {
           _loggerBackend.DefaultLogger.error("Expiration date must be older than current date");
 
-          rejects(new Error("Expiration date must be older than current date"));
+          return rejects(new Error("Expiration date must be older than current date"));
         }
 
         let userStorage = await (0, _UserStorageService.findUserStorageByUser)(user);
@@ -68,7 +68,7 @@ const fileUpload = function (user, inputFile, expirationDate) {
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
           _loggerBackend.DefaultLogger.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`);
 
-          rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`));
+          return rejects(new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`));
         }
       }
 
@@ -91,7 +91,12 @@ const fileUpload = function (user, inputFile, expirationDate) {
             user: user.id,
             username: user.username
           },
-          expirationDate: expirationDate
+          expirationDate: expirationDate,
+          isPublic: isPublic,
+          description: description,
+          tags: tags,
+          groups: groups,
+          users: users
         });
 
         _loggerBackend.DefaultLogger.info("fileUploadAnonymous saving file");
@@ -104,12 +109,12 @@ const fileUpload = function (user, inputFile, expirationDate) {
       } else {
         _loggerBackend.DefaultLogger.error("Upload Fail");
 
-        rejects(new Error("Upload Fail"));
+        return rejects(new Error("Upload Fail"));
       }
     } catch (err) {
       _loggerBackend.DefaultLogger.error('UploadService error' + err);
 
-      rejects(err);
+      return rejects(err);
     }
   });
 };

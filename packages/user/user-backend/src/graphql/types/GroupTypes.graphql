@@ -16,6 +16,7 @@ type Query {
     myGroups: [Group]
     groupsPaginate(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean, myGroups: Boolean): GroupPaginated
     group(id:ID!): Group
+    groupByName(name: String!): Group
 }
 
 input GroupInput{

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import {mongoose} from '@dracul/common-backend';
 
 const mongoosePaginate = require("mongoose-paginate-v2");
 const uniqueValidator = require("mongoose-unique-validator");
@@ -10,7 +10,7 @@ const userStorageSchema = new Schema({
   capacity: { type: Number, required: true },
   usedSpace: { type: Number, required: false },
   maxFileSize: { type: Number, required: false },
-  fileExpirationTime: { type: Number, required: false },
+  fileExpirationTime: { type: Number, required: false }, //in days
   deleteByLastAccess: { type: Boolean, required: false, default: true },
   deleteByCreatedAt: { type: Boolean, required: false, default: false },
 });

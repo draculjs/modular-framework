@@ -12,6 +12,7 @@ class SettingsProvider {
     findSettings(id) {
         return this.gqlc.query({
             query: require('./gql/settingsFind.graphql'),
+            fetchPolicy: "network-only",
             variables: {id:id}
         })
     }
@@ -19,12 +20,16 @@ class SettingsProvider {
     findSettingsByKey(key) {
         return this.gqlc.query({
             query: require('./gql/settingsFindByKey.graphql'),
+            fetchPolicy: "network-only",
             variables: {key}
         })
     }
 
     fetchSettings() {
-        return this.gqlc.query({query: require('./gql/settingsFetch.graphql')})
+        return this.gqlc.query({
+            query: require('./gql/settingsFetch.graphql'),
+            fetchPolicy: "network-only"
+        })
     }
 
     paginateSettings(pageNumber, itemsPerPage, search = null,  orderBy = null, orderDesc = false) {

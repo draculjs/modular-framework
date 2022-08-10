@@ -32,6 +32,9 @@ export default {
         getRefreshToken: (state) => {
             return state.refresh_token
         },
+        getRole: (state) => {
+            return state.me.role.name;
+        },
         isAuth: (state) => {
             return (state.access_token) ? true : false
         },
@@ -43,23 +46,19 @@ export default {
             if (!state.me) return false
             return state.me.role.permissions.includes(permission)
         },
-        tokenIsExpired: (state) => {
+        tokenIsExpired: (state) => () => {
             try {
 
-                if (!state.access_token) {
-                    return true
-                }
+                if (!state.access_token) return true
 
                 let payload = jwt_decode(state.access_token)
 
-                if (!payload.exp) {
-                    return true
-                }
+                if (!payload.exp) return true
 
                 let dateToken = new Date(payload.exp * 1000)
-                if (state.now > dateToken) {
-                    return true
-                }
+
+                let now = new Date()
+                if (now > dateToken) return true
 
                 return false
 
@@ -69,7 +68,7 @@ export default {
             }
 
         },
-        refreshTokenIsExpired: (state) => {
+        refreshTokenIsExpired: (state) => () => {
 
             if (!state.refresh_token || !state.refresh_token.expiryDate) {
                 return true
@@ -77,7 +76,8 @@ export default {
 
             let expiryDate = new Date(parseInt(state.refresh_token.expiryDate))
 
-            if (state.now > expiryDate) {
+            let now = new Date()
+            if (now > expiryDate) {
                 return true
             }
 
@@ -165,7 +165,7 @@ export default {
         },
 
         checkAuth: ({state, dispatch, getters}) => {
-            if (getters.refreshTokenIsExpired) {
+            if (getters.refreshTokenIsExpired() === true) {
                 dispatch('logout')
             } else if (state.me === null) {
                 dispatch('fetchMe')
@@ -174,10 +174,9 @@ export default {
 
         validateSession: ({dispatch, getters, commit}) => {
             return new Promise((resolve) => {
-                commit('refreshNow')
-                if (getters.tokenIsExpired === true) {
+                if (getters.tokenIsExpired() === true) {
 
-                    if (getters.refreshTokenIsExpired === false) {
+                    if (getters.refreshTokenIsExpired() === false) {
                         //Puedo Renovar
                         dispatch('renewToken')
                             .then(token => {
@@ -229,9 +228,6 @@ export default {
         },
         setMe(state, me) {
             state.me = me
-        },
-        refreshNow(state) {
-            state.now = new Date()
         },
         avatarUpdate(state, avatarurl) {
             state.avatarurl = avatarurl

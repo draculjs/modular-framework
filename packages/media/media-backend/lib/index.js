@@ -9,8 +9,6 @@ var _loggerBackend = require("@dracul/logger-backend");
 
 var _express = _interopRequireDefault(require("express"));
 
-require("./mongo-db");
-
 var _apolloServerExpress = require("apollo-server-express");
 
 var _modulesMerge = require("./modules-merge");
@@ -23,7 +21,7 @@ var _FileRouter = require("./modules/media/rest/routers/FileRouter");
 
 var _initService = _interopRequireDefault(require("./init/init-service"));
 
-var _middleware = require("./middleware");
+var _middleware = require("./modules/media/middleware");
 
 var _cron = require("./cron");
 
@@ -36,6 +34,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 require('dotenv').config();
 
 _loggerBackend.DefaultLogger.info("Starting APP");
+
+const mongoConnect = require('./mongo-db');
 
 (0, _UserCreateListener.userCreateListener)();
 
@@ -115,9 +115,10 @@ app.get('*', async function (request, response) {
 
 app.get('/status', function (req, res) {
   res.send("RUNNING");
-}); //initialize permissions, roles, users, customs, seeds
+}); //Connect to MongoDb
 
-(0, _initService.default)().then(() => {
+mongoConnect() //initialize permissions, roles, users, customs, seeds
+.then(_initService.default).then(() => {
   let PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000";
   let URL = process.env.APP_API_URL ? process.env.APP_API_URL : "http://localhost" + PORT;
   app.listen(process.env.APP_PORT, () => {

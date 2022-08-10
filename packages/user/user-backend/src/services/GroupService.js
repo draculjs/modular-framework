@@ -23,7 +23,7 @@ export const removeUserToGroup = function (groupId, userId) {
 
 export const fetchGroups = async function () {
     return new Promise((resolve, reject) => {
-        Group.find({}).isDeleted(false).exec((err, res) => {
+        Group.find({}).isDeleted(false).populate('users').exec((err, res) => {
 
             if (err) {
                 winston.error("GroupService.fetchGroups ", err)
@@ -38,7 +38,7 @@ export const fetchGroups = async function () {
 
 export const fetchMyGroups = async function (userId) {
     return new Promise((resolve, reject) => {
-        Group.find({users: {$in: [userId]}}).isDeleted(false).exec((err, res) => {
+        Group.find({users: {$in: [userId]}}).isDeleted(false).populate('users').exec((err, res) => {
 
             if (err) {
                 winston.error("GroupService.fetchMyGroups ", err)
@@ -107,15 +107,35 @@ export const paginateGroup = function (limit, pageNumber = 1, search = null, ord
 
 export const findGroup = async function (id) {
     return new Promise((resolve, reject) => {
-        Group.findOne({_id: id}).exec((err, res) => {
+        Group.findOne({_id: id}).populate('users').exec((err, doc) => {
 
             if (err) {
                 winston.error("GroupService.findGroup ", err)
-                reject(err)
+                return reject(err)
             }
 
             winston.debug("GroupService.findGroup successful")
-            resolve(res)
+            resolve(doc)
+
+        });
+    })
+}
+
+export const findGroupByName = async function (name) {
+    return new Promise((resolve, reject) => {
+        Group.findOne({name: {$eq:name}}).isDeleted(false).populate('users').exec((err, doc) => {
+
+            if (err) {
+                winston.error("GroupService.findGroupByName", err)
+                return reject(err)
+            }
+
+            if(Array.isArray(doc) && doc.length === 0) return resolve(null)
+
+            if(Array.isArray(doc) && doc.length === 1) return resolve(doc[0])
+
+
+            resolve(doc)
 
         });
     })
@@ -124,23 +144,33 @@ export const findGroup = async function (id) {
 
 export const createGroup = async function (user, {name, color, users}) {
 
+    if(await findGroupByName(name)){
+        return Promise.reject(new UserInputError('Group validation fail', {
+            inputErrors: {
+                name:{
+                    name:"ValidatorError", message:"validation.unique",
+                    properties:{message:"validation.unique",type:"unique",path:"name",value:name}
+                }
+            }
+        }));
+    }
+
     const doc = new Group({
         name, color, users
     })
     doc.id = doc._id;
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         doc.save(async error => {
 
             if (error) {
 
                 if (error.name == "ValidationError") {
                     winston.warn("GroupService.createGroup.ValidationError ", error)
-                    rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                    return reject(new UserInputError(error.message, {inputErrors: error.errors}));
                 }
 
                 winston.error("GroupService.createGroup ", error)
-
-                rejects(error)
+                return reject(error)
             }
 
             await setUsersGroups(doc, users)
@@ -152,7 +182,21 @@ export const createGroup = async function (user, {name, color, users}) {
 }
 
 export const updateGroup = async function (user, id, {name, color, users = []}) {
-    return new Promise((resolve, rejects) => {
+
+    let ge = await findGroupByName(name)
+
+    if(ge && ge._id.toString() != id){
+        return Promise.reject(new UserInputError('Group validation fail', {
+            inputErrors: {
+                name:{
+                    name:"ValidatorError", message:"validation.unique",
+                    properties:{message:"validation.unique",type:"unique",path:"name",value:name}
+                }
+            }
+        }));
+    }
+
+    return new Promise((resolve, reject) => {
         Group.findOneAndUpdate({_id: id},
             {name, color, users},
             {new: true, runValidators: true, context: 'query'},
@@ -162,12 +206,12 @@ export const updateGroup = async function (user, id, {name, color, users = []}) 
 
                     if (error.name == "ValidationError") {
                         winston.warn("GroupService.updateGroup.ValidationError ", error)
-                        rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                        reject(new UserInputError(error.message, {inputErrors: error.errors}));
                     }
 
                     winston.error("GroupService.updateGroup ", error)
 
-                    rejects(error)
+                    reject(error)
                 }
 
                 await setUsersGroups(doc, users)
@@ -180,7 +224,7 @@ export const updateGroup = async function (user, id, {name, color, users = []}) 
 }
 
 export const deleteGroup = function (id) {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         findGroup(id).then((doc) => {
             doc.softdelete(function (err) {
 

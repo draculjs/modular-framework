@@ -2,7 +2,8 @@
   <v-menu
       v-model="menu"
       :close-on-content-click="false"
-      offset-x
+      :z-index="9099" eager
+      max-width="250"
   >
     <template v-slot:activator="{ on }">
       <v-text-field
@@ -12,21 +13,25 @@
           v-model="colorValue"
           :label="label"
           :placeholder="label"
-          class="pa-3"
           :rules="rules"
           :error="hasErrors"
           :error-messages="getMessageErrors"
           :color="color"
+          :clearable="clearable"
       >
         <template v-slot:append>
-          <v-chip :class="colorValue" small>
-            {{colorValue}}
+          <v-chip :class="colorValue" small :style="{background: colorValue}">
+            {{ colorValue }}
           </v-chip>
         </template>
       </v-text-field>
     </template>
-    <v-color-picker v-model="colorValue" class="ma-2" flat
-                    mode="hexa"></v-color-picker>
+    <v-color-picker
+
+        v-model="colorValue"
+        flat
+        mode="hexa"
+    />
   </v-menu>
 </template>
 <script>
@@ -38,7 +43,8 @@ export default {
     label: String,
     getMessageErrors: Array,
     hasErrors: Boolean,
-    rules: Array
+    rules: Array,
+    clearable: {type: Boolean, default: true}
   },
   data() {
     return {

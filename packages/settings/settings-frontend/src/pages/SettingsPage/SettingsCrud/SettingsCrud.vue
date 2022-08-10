@@ -66,15 +66,15 @@ export default {
     //On
     onItemCreated() {
       this.$refs.list.fetch()
-      this.flash = "common.created"
+      this.flash = this.$t("common.created")
     },
     onItemUpdated() {
       this.$refs.list.fetch()
-      this.flash = "common.updated"
+      this.flash = this.$t("common.updated")
     },
     onItemDeleted() {
       this.$refs.list.fetch()
-      this.flash = "common.deleted"
+      this.flash = this.$t("common.deleted")
     },
     //Open
     create() {

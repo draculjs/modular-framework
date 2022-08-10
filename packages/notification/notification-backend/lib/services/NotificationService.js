@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fetchNotificationMethodService = exports.deleteNotificationsService = exports.markAllReadOrNotReadService = exports.markAsReadOrNotReadService = exports.notificationsPaginateFilterService = exports.fetchNotificationsService = exports.createNotificationService = void 0;
+exports.notificationsPaginateFilterService = exports.markAsReadOrNotReadService = exports.markAllReadOrNotReadService = exports.fetchNotificationsService = exports.fetchNotificationMethodService = exports.deleteNotificationsService = exports.createNotificationService = void 0;
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
@@ -19,9 +19,9 @@ var _PubSub = require("../PubSub");
 
 var _mongoose = _interopRequireDefault(require("mongoose"));
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 /**
  * Create an user notification
@@ -334,16 +334,12 @@ var fetchNotificationMethodService = function fetchNotificationMethodService() {
   return new Promise(function (resolve, reject) {
     var WEB_SOCKET_STATE = ["enable", "disable"];
     if (!process.env.NOTIFICATION_TIME_POLLING && !/^[0-9]+$/.test(process.env.NOTIFICATION_TIME_POLLING)) return reject(new Error("ENV VAR NOTIFICATION_TIME_POLLING must be a number!"));
-    if (WEB_SOCKET_STATE.includes(process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET)) return reject(new Error("ENV VAR NOTIFICATION_ACTIVATE_WEB_SOCKET must be 'enable' or 'disable'!"));
-    var wayToGetNotifications = process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET == "enable" ? true : false;
-    var timePollingNotifications = !process.env.NOTIFICATION_TIME_POLLING ? parseInt(process.env.NOTIFICATION_TIME_POLLING) : 30000;
-    console.log({
-      enableWs: wayToGetNotifications,
-      timePolling: timePollingNotifications
-    });
+    if (!WEB_SOCKET_STATE.includes(process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET)) return reject(new Error("ENV VAR NOTIFICATION_ACTIVATE_WEB_SOCKET must be 'enable' or 'disable'!"));
+    var enableWs = process.env.NOTIFICATION_ACTIVATE_WEB_SOCKET == "enable" ? true : false;
+    var timePolling = !process.env.NOTIFICATION_TIME_POLLING ? parseInt(process.env.NOTIFICATION_TIME_POLLING) : 30000;
     resolve({
-      enableWs: wayToGetNotifications,
-      timePolling: timePollingNotifications
+      enableWs: enableWs,
+      timePolling: timePolling
     });
   });
 };

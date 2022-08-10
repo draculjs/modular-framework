@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = exports.startNotificacionWs = void 0;
+exports.startNotificacionWs = exports["default"] = void 0;
 
 var _http = require("http");
 
