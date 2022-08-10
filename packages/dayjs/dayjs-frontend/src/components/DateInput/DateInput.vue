@@ -32,8 +32,7 @@
         scrollable
         @input="menu = false"
         :allowed-dates="allowedDates"
-    >
-    </v-date-picker>
+    ></v-date-picker>
   </v-menu>
 </template>
 
