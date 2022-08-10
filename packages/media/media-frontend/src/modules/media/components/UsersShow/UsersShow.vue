@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       fileUsers: [],
-      sharedWith: '-'
+      sharedWith: ''
     }
   },
   mounted() {
@@ -23,9 +23,19 @@ export default {
       this.fileUsers = result.data.users.filter((user) => this.fileIdUsers.includes(user.id))
 
       if(this.fileUsers.length > 1){
-        this.sharedWith = this.fileUsers.reduce((a, b) => `${a.name}, ${b.name}`)
+        
+        for (let userCounter = 0; userCounter < this.fileUsers.length; userCounter++) {
+          if (userCounter == 0){
+            this.sharedWith += `${this.fileUsers[userCounter].name}`
+          }else{
+            this.sharedWith += `, ${this.fileUsers[userCounter].name}`
+          }
+        }
+        
       }else if (this.fileUsers.length == 1){
         this.sharedWith = this.fileUsers[0].name
+      }else{
+        this.sharedWith = '-'
       }
     })
   },
