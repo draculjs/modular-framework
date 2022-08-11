@@ -82,6 +82,17 @@ export default {
       timeoutSnackbar: 10000,
     }
   },
+  beforeMount(){
+    const userIsVisualizer = () =>{
+      return !(
+          this.$store.getters.hasPermission('FILE_CREATE') &&
+          this.$store.getters.hasPermission('FILE_EDIT') && 
+          this.$store.getters.hasPermission('FILE_DELETE')
+      )
+    }
+    
+    userIsVisualizer ? this.subtitle = 'media.file.visualizerSubtitle' : null;
+  },
   methods: {
     //On
     onItemCreated() {
