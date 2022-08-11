@@ -83,15 +83,9 @@ export default {
     }
   },
   beforeMount(){
-    const userIsVisualizer = () =>{
-      return !(
-          this.$store.getters.hasPermission('FILE_CREATE') &&
-          this.$store.getters.hasPermission('FILE_EDIT') && 
-          this.$store.getters.hasPermission('FILE_DELETE')
-      )
+    if(this.$store.getters.getRole === "visualizer"){
+      this.subtitle = 'media.file.visualizerSubtitle'
     }
-    
-    userIsVisualizer ? this.subtitle = 'media.file.visualizerSubtitle' : null;
   },
   methods: {
     //On
