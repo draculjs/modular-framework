@@ -7,11 +7,12 @@ import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import { GroupService } from '@dracul/user-backend';
 
-export const findFile = async function (id, permissionType = null, userId = null) {
+export const findFile = async function (id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
 
     if (id) {
+        let userGroups = await GroupService.fetchMyGroups(userId)
         return new Promise((resolve, reject) => {
-            File.findOne({ _id: id, ...filterByPermissions(permissionType, userId) }).populate('createdBy.user').exec((err, res) => (
+            File.findOne({ _id: id, ...filterByPermissions(userId,allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) }).populate('createdBy.user').exec((err, res) => (
                 err ? reject(err) : resolve(res)
             ));
         })
@@ -184,9 +185,12 @@ export const paginateFiles = async function (
 }
 
 
-export const updateFile = async function (authUser, {id, description, tags, expirationDate, isPublic, groups, users}, permissionType, userId) {
-    return new Promise((resolve, rejects) => {
-        File.findOneAndUpdate({ _id: id, ...filterByPermissions(permissionType, userId) },
+export const updateFile = async function (authUser, {id, description, tags, expirationDate, isPublic, groups, users}, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+    return new Promise(async (resolve, rejects) => {
+
+        let userGroups = await GroupService.fetchMyGroups(userId)
+
+        File.findOneAndUpdate({ _id: id, ...filterByPermissions( userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
             { description, tags, expirationDate, isPublic, groups, users},
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
@@ -264,18 +268,19 @@ export const updateByRelativePath = function (relativePath) {
     })
 }
 
-export const deleteFile = function (id, permissionType, userId) {
+export const deleteFile = function (id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
 
     return new Promise((resolve, rejects) => {
-        findFile(id, permissionType, userId).then(async (doc) => {
+        findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed).then(async (doc) => {
             if (doc) {
                 try {
-                    updateUserUsedStorage(userId, -doc.size)
+
                     fs.unlink(doc.relativePath, (error) => {
                         if (error) winston.error(error)
                         else winston.info('Se eliminó el archivo ' + doc.relativePath)
                     });
-                    await File.deleteOne({ _id: id });
+                    await File.deleteOne({ _id: id })
+                    await updateUserUsedStorage(userId, -doc.size)
                     resolve({ id: id, success: true })
                 } catch (err) {
                     rejects(err)
