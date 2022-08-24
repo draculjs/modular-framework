@@ -5,12 +5,13 @@ type RefreshToken {
 }
 
 type AuthResponse {
-    token:String!
+    token: String!
     refreshToken: RefreshToken!
+    useLDAP: Boolean!
 }
 
 type RefreshResponse {
-    token:String!
+    token: String!
 }
 
 type Query {
@@ -18,7 +19,8 @@ type Query {
 }
 
 type Mutation {
-    auth(username: String!, password:String!): AuthResponse!
+    auth(username: String!, password: String!, useLDAP: Boolean!): AuthResponse!
     refreshToken(refreshTokenId: String!): RefreshResponse!
     apikey(userid: ID!): AuthResponse!
+    
 }

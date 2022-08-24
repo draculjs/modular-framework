@@ -8,13 +8,13 @@ class AuthProvider {
         this.gqlc = gqlc
     }
 
-    auth(username, password) {
+    auth(username, password, useLDAP) {
         return this.gqlc.mutate({
             mutation: require('./gql/auth.graphql'),
             variables: {
-                username: username,
-                password: password,
-
+                username,
+                password,
+                useLDAP
             }
         })
     }

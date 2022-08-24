@@ -14,12 +14,12 @@ export default {
         },
     },
     Mutation: {
-        auth: (_, {username, password}, {req}) => {
+        auth: (_, {username, password, useLDAP}, {req}) => {
 
             return new Promise((resolve, reject) => {
 
-                auth({username, password}, req)
-                    .then(r => resolve({token: r.token, refreshToken: r.refreshToken}))
+                auth({username, password, useLDAP}, req)
+                    .then(r => resolve({token: r.token, refreshToken: r.refreshToken, useLDAP: r.useLDAP}))
                     .catch(err => {
                         console.warn('Auth error: ', err.message)
                         reject(new AuthenticationError("BadCredentials"))

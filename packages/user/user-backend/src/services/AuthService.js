@@ -6,6 +6,8 @@ import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername, updateUser} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
+import { checkIfUserIsInLDAP, getUserInfoFromLDAP } from './ldapService';
+// import { registerUser } from './RegisterService';
 
 const {v4: uuidv4} = require('uuid');
 
@@ -13,25 +15,33 @@ const {v4: uuidv4} = require('uuid');
 export const tokenSignPayload = function (user, sessionId) {
     return {
         id: user.id,
-        //name: user.name,
         username: user.username,
-        //email: user.email,
-        //phone: user.phone,
         role: {id: user.role.id, name: user.role.name, childRoles: user.role.childRoles},
         groups: user.groups.map(g => {
             id: g.id
         }),
-        //avatarurl: user.avatarurl,
         idSession: sessionId
     };
 }
 
 
-export const auth = async function ({username, password}, req) {
+export const auth = async function ({username, password, useLDAP}, req) {
+    let userExistsInLDAP
+
+    if(useLDAP){
+        userExistsInLDAP = await checkIfUserIsInLDAP(username)
+        console.log(userExistsInLDAP)
+    }
+
     return new Promise((resolve, reject) => {
         findUserByUsername(username).then(user => {
 
-            if (!user) {
+            if (!user && useLDAP && userExistsInLDAP) { //conseguir info de ldap para registrar al usuario en db de dracul
+                const userInfo = getUserInfoFromLDAP(username)
+                console.log(`LDAP userInfo: ${userInfo}`)
+                // await registerUser()
+                
+            }else if(!user){
                 winston.warn('AuthService.auth: UserDoesntExist => ' + username)
                 reject('UserDoesntExist')
             }
@@ -41,15 +51,20 @@ export const auth = async function ({username, password}, req) {
                 reject('DisabledUser')
             }
 
-            if (user) {
+            if (user) { //Already is in local DB
                 let decodedPassword = decodePassword(password)
+
+                if (useLDAP && !userExistsInLDAP){
+                    winston.warn(username + 'is not registered in LDAP')
+                    reject('User is not in LDAP')
+                }
+
                 if (bcryptjs.compareSync(decodedPassword, user.password)) {
 
                     createSession(user, req).then(async session => {
 
                         //GENERAMOS ACCESS TOKEN
                         let {token, payload, options} = generateToken(user, session.id)
-
 
                         //ELIMINAMOS REFRESHTOKENS CADUCADOS
                         if(user.refreshToken && user.refreshToken.length > 0){
@@ -74,7 +89,7 @@ export const auth = async function ({username, password}, req) {
 
 
                         winston.info('AuthService.auth successful by ' + user.username)
-                        resolve({token, payload, options, refreshToken})
+                        resolve({token, payload, options, refreshToken, useLDAP})
 
                     }).catch(err => {
                         winston.error('AuthService.auth.createSession ', err)
@@ -146,10 +161,9 @@ export const refreshAuth = function (refreshTokenId) {
                 return reject(new Error("Invalid RefreshToken"))
             }
 
-        }catch (e) {
-            return reject(e)
+        }catch (error) {
+            return reject(error)
         }
-
     })
 }
 
@@ -173,9 +187,7 @@ const generateToken = (user, sessionId) => {
 export const generateRefreshToken = (sessionId) => {
 
     const DEFAULT_REFRESHTOKEN_EXPIRED_IN = '24h'
-
     const duration = process.env.JWT_REFRESHTOKEN_EXPIRED_IN || DEFAULT_REFRESHTOKEN_EXPIRED_IN
-
 
     if (!/[0-9]+[dwMyhms(ms)]/.test(duration)) {
         throw new Error("JWT_REFRESHTOKEN_EXPIRED_IN invalid format /[0-9]+[dwMyhms(ms)/")
@@ -194,4 +206,3 @@ export const generateRefreshToken = (sessionId) => {
 
     return refreshToken
 }
-
