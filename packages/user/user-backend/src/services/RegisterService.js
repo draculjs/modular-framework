@@ -9,8 +9,7 @@ import {hashPassword} from "./UserService";
 import {session, tokenSignPayload} from "./AuthService";
 import {createSession} from "./SessionService";
 
-export const registerUser = function ({username, password, name, email, phone}) {
-
+export const registerUser = function ({username, password, name, email, phone, fromLDAP}) {
 
     return new Promise(async (resolve, rejects) => {
         const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "operator";
@@ -25,8 +24,8 @@ export const registerUser = function ({username, password, name, email, phone}) 
             phone,
             active,
             role: roleObject,
-            createdAt: Date.now()
-
+            createdAt: Date.now(),
+            fromLDAP
         })
         newUser.id = newUser._id;
 

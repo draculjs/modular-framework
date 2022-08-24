@@ -1,10 +1,11 @@
-mutation auth( $username: String!, $password: String!){
-    auth(username: $username, password: $password){
+ mutation auth( $username: String!, $password: String!, $useLDAP: Boolean!){
+    auth(username: $username, password: $password, useLDAP: $useLDAP){
         token
         refreshToken{
             id
             expiryDate
             sessionId
         }
+        useLDAP
     }
 }

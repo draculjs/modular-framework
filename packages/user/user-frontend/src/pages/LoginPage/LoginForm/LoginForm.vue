@@ -24,15 +24,33 @@
                   :rules="[v => !!v || ' ']"
     />
 
-    <v-btn
-        :disabled="!isFormValid"
-        ref="loginBtn"
-        :loading="loading"
-        min-width="100%"
-        color="secondary"
-        class="onSecondary--text"
-        @click="signIn" v-t="'auth.signIn'">
-    </v-btn>
+    <v-row >
+      <v-col
+        cols="8"
+      >
+
+        <v-btn
+          :disabled="!isFormValid"
+          ref="loginBtn"
+          :loading="loading"
+          min-width="100%"
+          color="secondary"
+          class="onSecondary--text mt-3"
+          @click="signIn" v-t="'auth.signIn'">
+        </v-btn>
+      </v-col>
+
+      <v-col
+        cols="2"
+      >
+        <v-checkbox
+          v-model="useLDAP"
+          :label="`LDAP`"
+          color="secondary"
+          class="onSecondary--text"
+        ></v-checkbox>
+      </v-col>
+    </v-row>
 
   </v-form>
 
@@ -52,7 +70,8 @@ export default {
         username: "",
         password: ""
       },
-      isFormValid: false
+      isFormValid: false,
+      useLDAP: false
     }
   },
 
@@ -80,7 +99,8 @@ export default {
       this.loading = true
       this.login({
         username: this.form.username,
-        password: b64EncodeUnicode(this.form.password)
+        password: b64EncodeUnicode(this.form.password),
+        useLDAP: this.useLDAP
       })
           .then(() => {
             this.$router.push({name:'home'})
