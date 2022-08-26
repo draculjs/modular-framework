@@ -98,10 +98,9 @@ export const restoreDeletedUser = function (id, {username, password, name, email
 }
 
 
-export const createUser = async function ({username, password, name, email, phone, role, groups, active}, actionBy = null) {
+export const createUser = async function ({username, password, name, email, phone, role, groups, active, fromLDAP}, actionBy = null) {
+    const existingUser = await findUserByUsernameOrEmailDeleted(username,email)
 
-    let existingUser = await findUserByUsernameOrEmailDeleted(username,email)
-   // console.log("EXISTING USER:",existingUser)
     if(existingUser){
         return restoreDeletedUser(existingUser._id, {username, password, name, email, phone, role, groups, active}, actionBy = null)
     }
@@ -116,7 +115,8 @@ export const createUser = async function ({username, password, name, email, phon
         role,
         groups,
         createdAt: Date.now(),
-        refreshToken: []
+        refreshToken: [],
+        fromLDAP
     })
 
     return new Promise((resolve, reject) => {
@@ -124,14 +124,13 @@ export const createUser = async function ({username, password, name, email, phon
             if (error) {
                 if (error.name == "ValidationError") {
                     winston.warn("createUser ValidationError ", error)
-                    reject(new UserInputError(error.message, {inputErrors: error.errors}));
+                    reject(new UserInputError(error.message, {inputErrors: error.errors}))
                 } else {
                     winston.error("UserService.createUser ", error)
                 }
                 reject(error)
             } else {
 
-                //Add user to groups
                 if (groups && groups.length) {
                     for (let group of groups) {
                         await addUserToGroup(group, doc._id)
@@ -419,13 +418,13 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
 
     if (password == passwordVerify) {
 
-        return new Promise((resolve, rejects) => {
+        return new Promise((resolve, reject) => {
             User.findOneAndUpdate(
                 {_id: id}, {password: hashPassword(password)}, {new: true},
                 (err, doc) => {
                     if (err) {
                         winston.error("UserService.changePasswordAdmin ", err)
-                        rejects({status: false, message: "Change password fail"})
+                        reject({status: false, message: "Change password fail"})
                     } else {
                         winston.debug('UserService.changePasswordAdmin successful')
                         createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'changePasswordAdmin')
@@ -437,7 +436,7 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
 
 
     } else {
-        return new Promise((resolve, rejects) => {
+        return new Promise((resolve, _reject) => {
             resolve({status: false, message: "Password doesn't match"})
         })
     }

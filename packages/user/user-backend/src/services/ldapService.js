@@ -1,7 +1,6 @@
 const ldap = require('ldapjs');
 
 function connectToLDAP(ip){
-    let connectionResult
     let developmentLDAPConnection
   
     return new Promise((resolve, reject) => {
@@ -14,44 +13,36 @@ function connectToLDAP(ip){
         resolve('connected')
       })
   
-      developmentLDAPConnection.on('error', () =>{
-        reject('error')
+      developmentLDAPConnection.on('error', (error) =>{
+        reject(error)
       })
     }).then(
-      function isResolved(result){
-        connectionResult = result
-  
-        return {
-          connectionResult: connectionResult,
-          client: developmentLDAPConnection
-        }
+      function isResolved(){
+        return {client: developmentLDAPConnection}
       },
 
-      function isRejected(error){
-        connectionResult = error
-  
-        return {
-          connectionResult,
-        }
+      function isRejected(result){
+        return {result}
       }
     )
 }
 
-async function loginAsAdmin(){
-  const client = (await connectToLDAP(process.env.LDAP_IP)).client
-
-  try {
-    await client.bind(`cn=${process.env.LDAP_ADMIN_NAME}, dc=snd, dc=int`, `${process.env.LDAP_ADMIN_PASS}`)
-    return client;
-} catch (error) {
-    console.error(`ERROR WHEN TRYING TO LOG IN LDAP AS ADMIN: '${error}'`)
-  }
+function loginAsAdmin(){
+  return new Promise((resolve, reject) => {
+    connectToLDAP(process.env.LDAP_IP).then(
+      function onSuccess({client}){
+        client.bind(`cn=${process.env.LDAP_ADMIN_NAME}, dc=snd, dc=int`, `${process.env.LDAP_ADMIN_PASS}`,
+          (error) => error ? reject(error) : resolve(client)
+        )
+      }
+      
+    ).catch(error => reject(error))
+  })
 }
 
 async function checkIfUserIsInLDAP(username){
-    return new Promise((resolve, reject) => {
-      const client = await loginAsAdmin()
-
+  return new Promise((resolve, reject) => {
+    loginAsAdmin().then((client) => {
       client.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
         if (error) reject(error)
     
@@ -63,48 +54,28 @@ async function checkIfUserIsInLDAP(username){
           resolve(false)
         })
       })
-
-    }).then((result) => console.log(result)).catch(error => console.error(error))
+    })
+      
+  }).then((result) => result).catch(error => console.error(error))
 }
 
 async function getUserInfoFromLDAP(username){
   return new Promise((resolve, reject) => {
-    const client = await loginAsAdmin()
 
-    client.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
-      if (error) reject(error)
+    const client = loginAsAdmin().then((client) => {
+      client.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
+        if (error) reject(error)
+    
+        response.on('searchEntry', (entry) =>{
+          resolve(entry)
+        })
   
-      response.on('searchEntry', (entry) =>{
-        resolve(entry)
-      })
-
-      response.on('error', () => {
-        reject('No entries were found!')
+        response.on('error', () => {
+          reject('No entries were found!')
+        })
       })
     })
-
-  }).then((result) => console.log(result)).catch(error => console.error(error))
+  }).then((result) => result).catch(error => console.error(error))
 }
 
-async function createUserInLDAP(username, password){
-  const {createHash} = require("crypto")
-  const client = await loginAsAdmin()
-
-  const userEntry = {
-    uid: uuidv4(),
-    cn: `${username}`,
-    sn: `${username}`,
-    homeDirectory: `/home/${username}`,
-    objectClass: 'inetOrgPerson',
-    userPassword: createHash('sha256').update(password)
-  }
-
-  try {
-    client.add(`cn=${username}, ou=People,dc=snd,dc=int`, userEntry)
-  } catch (error) {
-    console.error(`ERROR WHEN TRYING TO ADD USER TO LDAP: '${error}'`)
-  }
-
-}
-
-module.exports = {checkIfUserIsInLDAP, createUserInLDAP, getUserInfoFromLDAP}
+module.exports = {checkIfUserIsInLDAP, getUserInfoFromLDAP}
