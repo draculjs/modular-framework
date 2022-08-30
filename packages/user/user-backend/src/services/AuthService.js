@@ -27,44 +27,36 @@ export const tokenSignPayload = function (user, sessionId) {
 
 export const auth = async function ({username, password, useLDAP}, req) {
     let userExistsInLDAP
-
-    console.log(`has to use LDAP: '${useLDAP}'`)
+    let decodedPassword = decodePassword(password)
 
     if(useLDAP){
         try {
             userExistsInLDAP = await checkIfUserIsInLDAP(username)
         } catch (error) {
-            console.error(`error while checking user in ldap: '${error}'`)
+            reject(`error while checking user in ldap: '${error}'`)
         }
-        console.log(`'${username}' is in LDAP?: '${userExistsInLDAP}'`)
     }
 
     return new Promise((resolve, reject) => {
-
         function loginAs(user){
-            let decodedPassword = decodePassword(password)
-
             if (bcryptjs.compareSync(decodedPassword, user.password)) {
 
                 createSession(user, req).then(async session => {
-
-                    //GENERAMOS ACCESS TOKEN
                     let {token, payload, options} = generateToken(user, session.id)
 
-                    //ELIMINAMOS REFRESHTOKENS CADUCADOS
                     if(user.refreshToken && user.refreshToken.length > 0){
-                        let now = new Date()
-                        let refreshTokenToDelete = user.refreshToken.filter(rf => {
-                            let expiryDate = new Date(rf.expiryDate)
+                        const now = new Date()
+                        const refreshTokensToDelete = user.refreshToken.filter(rf => {
+                            const expiryDate = new Date(rf.expiryDate)
                             return (now > expiryDate) ? true: false
                         })
-                        for(let rf of refreshTokenToDelete){
-                            user.refreshToken.pull(rf)
+                        for(let refreshToken of refreshTokensToDelete){
+                            user.refreshToken.pull(refreshToken)
                         }
                     }
 
                     //AGREGAMOS NUEVO REFRESH TOKEN
-                    let refreshToken = generateRefreshToken(session.id)
+                    const refreshToken = generateRefreshToken(session.id)
                     if(!user.refreshToken){
                         user.refreshToken = []
                     }
@@ -75,9 +67,9 @@ export const auth = async function ({username, password, useLDAP}, req) {
                     winston.info('AuthService.auth successful by ' + user.username)
                     resolve({token, payload, options, refreshToken, useLDAP})
 
-                }).catch(err => {
-                    winston.error('AuthService.auth.createSession ', err)
-                    reject(err)
+                }).catch(error => {
+                    winston.error('AuthService.auth.createSession ', error)
+                    reject(error)
                 })
 
             } else {
@@ -88,37 +80,41 @@ export const auth = async function ({username, password, useLDAP}, req) {
         }
 
         findUserByUsername(username).then(async (user) => {
-            let createdFromLDAP = false
+            if (user && user.active === false) {
+                winston.warn('AuthService.auth: DisabledUser => ' + username)
+                reject('DisabledUser')
+            }else if (user){
+                loginAs(user)
+            }
 
-            console.log(`USER: ${user}`)
-            if (useLDAP && userExistsInLDAP && !user) { //conseguir info de ldap para registrar al usuario en db de dracul
+            if(useLDAP && userExistsInLDAP && !user){
                 const userInfo = await getUserInfoFromLDAP(username)
                 const name = username
                 const fromLDAP = true
 
-                let email, password 
+                let email, password
 
                 for (const key in userInfo.attributes) {
-                    console.log(`userInfo - '${key}': '${userInfo.attributes[key]}'`)
                     switch (userInfo.attributes[key].type) {
                         case 'mail':
                             email = userInfo.attributes[key].vals[0]
                             break;
-
                         case 'userPassword':
                             password = userInfo.attributes[key].vals[0]
+                            if(password !== decodedPassword){
+                                reject(`Wrong credentials: '${password}' vs '${decodedPassword}'`)
+                            }
+
                             break;
                     }
                 }
-
-                console.log(`linea 65: ${name}, ${username}, ${email}, ${password}`)
                 
                 if(name && username && email && password){
                     try {
                         await registerUser({username, password, name, email, fromLDAP})
-                        createdFromLDAP = true
+                        findUserByUsername(username).then(newUserFromLDAP => loginAs(newUserFromLDAP))
                     } catch (error) {
-                        console.error(`error when trying to register user that exists in ${process.env.LDAP_IP}'s LDAP ${error}`)
+                        reject(`error when trying to register user that exists in ${process.env.LDAP_IP}'s LDAP ${error}`)
                     }
                 }else{
                     reject(`The User's entry in LDAP does not have the required info`)
@@ -126,18 +122,9 @@ export const auth = async function ({username, password, useLDAP}, req) {
                 
                 
             }else if(!user){
-                winston.warn('AuthService.auth: UserDoesntExist => ' + username)
+                winston.error(`AuthService.auth: UserDoesntExist => ${username}`)
                 reject('UserDoesntExist')
             }
-
-            if (user && user.active === false) {
-                winston.warn('AuthService.auth: DisabledUser => ' + username)
-                reject('DisabledUser')
-            }
-
-            if(createdFromLDAP && !user) findUserByUsername(username).then(newUserFromLDAP => loginAs(newUserFromLDAP))
-
-            if (user) loginAs(user)
         })
     })
 }
@@ -176,10 +163,8 @@ export const apiKey = function (userId, req) {
 export const refreshAuth = function (refreshTokenId) {
 
     return new Promise(async (resolve, reject) => {
-
         try{
-            let user = await findUserByRefreshToken(refreshTokenId)
-
+            const user = await findUserByRefreshToken(refreshTokenId)
             if (user) {
                 let sessionId
                 for (let refreshToken of user.refreshToken) {
@@ -196,9 +181,7 @@ export const refreshAuth = function (refreshTokenId) {
                 return reject(new Error("Invalid RefreshToken"))
             }
 
-        }catch (error) {
-            return reject(error)
-        }
+        }catch (error) { () => reject(error) }
     })
 }
 
@@ -230,10 +213,9 @@ export const generateRefreshToken = (sessionId) => {
 
     let number = duration.match(/[0-9]+/)[0]
     let unit = duration.match(/[dwMyhms(ms)]/)[0]
-
     let expiredAt = dayjs().add(number, unit)
 
-    let refreshToken = {
+    const refreshToken = {
         id: uuidv4(),
         expiryDate: expiredAt.valueOf(),
         sessionId: sessionId
