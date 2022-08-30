@@ -1,11 +1,15 @@
 import {initSettings} from "../InitSettings";
-import {createSettings, findSettingsByKey, findSettingsByKeys} from "../../src";
+import {createSettings, findSettingsByKey, findSettingsByKeys, fetchSettings} from "../../src";
 import {expect} from 'chai'
+import mongoInMemoryConnect from "../mongoInMemory";
 
 describe("SettingsService", () => {
 
 
     beforeEach(async () => {
+        await mongoInMemoryConnect()
+        let settings = await fetchSettings()
+        console.log("fetchSettings", settings)
         for(let setting of initSettings){
             await createSettings(null, setting)
         }

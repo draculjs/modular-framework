@@ -17,6 +17,14 @@ export const findSettingsByKey = async function (key) {
     })
 }
 
+export const getSettingsValueByKey = async function (key) {
+    return new Promise((resolve, reject) => {
+        Settings.findOne({key: key}).exec((err, doc) => (
+            err ? reject(err) : resolve(doc ? doc.value : null)
+        ));
+    })
+}
+
 export const findSettingsByKeys = async function (keys = []) {
     return new Promise((resolve, reject) => {
 
@@ -106,6 +114,32 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
         Settings.findOneAndUpdate({_id: id},
             {
                 key,
+                value,
+                label,
+                ...(type ? {type} : {}),
+                ...(options ? {options} : {}),
+            },
+            {new: true, runValidators: true, context: 'query'},
+            (error, doc) => {
+
+                if (error) {
+                    if (error.name == "ValidationError") {
+                        return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+
+                    }
+                    return rejects(error)
+
+                }
+
+                resolve(doc)
+            })
+    })
+}
+
+export const updateSettingsByKey = async function (authUser, {key, value, label, type, options}) {
+    return new Promise((resolve, rejects) => {
+        Settings.findOneAndUpdate({key: key},
+            {
                 value,
                 label,
                 ...(type ? {type} : {}),
