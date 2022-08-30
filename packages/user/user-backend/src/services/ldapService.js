@@ -18,11 +18,11 @@ function connectToLDAP(ip){
       })
     }).then(
       function isResolved(){
-        return {client: developmentLDAPConnection}
+        return developmentLDAPConnection
       },
 
       function isRejected(result){
-        return {result}
+        return result
       }
     )
 }
@@ -30,13 +30,19 @@ function connectToLDAP(ip){
 function loginAsAdmin(){
   return new Promise((resolve, reject) => {
     connectToLDAP(process.env.LDAP_IP).then(
-      function onSuccess({client}){
-        client.bind(`cn=${process.env.LDAP_ADMIN_NAME}, dc=snd, dc=int`, `${process.env.LDAP_ADMIN_PASS}`,
-          (error) => error ? reject(error) : resolve(client)
-        )
+      function onSuccess(client){
+        try {
+          client.bind(`cn=${process.env.LDAP_ADMIN_NAME}, dc=snd, dc=int`, `${process.env.LDAP_ADMIN_PASS}`, (error) => {
+            return error ? reject(error) : resolve(client)
+          })
+
+        } catch (error) {
+          console.error(`Error while trying to authenticate in ldap (bind): '${error}'`)
+          reject(error)
+        }
+
       }
-      
-    ).catch(error => reject(error))
+      ).catch(error => reject(error))
   })
 }
 
