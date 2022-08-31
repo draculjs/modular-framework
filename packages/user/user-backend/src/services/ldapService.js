@@ -1,29 +1,37 @@
-import {fetchSettings} from '@dracul/settings-backend'
-const ldap = require('ldapjs');
+import {DefaultLogger as winston} from '@dracul/logger-backend';
+import {fetchSettings} from '@dracul/settings-backend';
 
-let ldapIP, ldapAdmin, ldapPass
+const ldap = require('ldapjs')
 
-fetchSettings().then(response => {
-    for (const index in response) {
-        console.log(`RESPONSE #${index}: '${response[index]}'`)
-        console.log(`RESPONSE #${index} key: '${response[index]['key']}'`)
+function getLdapSettings(){
+  return new Promise((resolve, reject) => {
 
+    fetchSettings().then(response => {
+      let ldapIP, ldapAdmin, ldapPass
+  
+      for (const index in response) {
         switch (response[index]['key']) {
           case "ldapIP":
             ldapIP = response[index]['value']
-
             break
           case "ldapAdmin":
             ldapAdmin = response[index]['value']
-
             break
           case "ldapPass":
             ldapPass = response[index]['value']
-
             break
         }
-    }
-}).catch(error => console.error(`ERROR AL FETCHEAR SETTINGS LPTM: '${error}'`))
+      }
+  
+    resolve({ldapIP, ldapAdmin, ldapPass})
+  
+    }).catch(error => {
+      winston.error(`Error while trying to fetch LDAP settings: '${error}'`)
+      reject(error)
+    })
+  })
+
+}
 
 function connectToLDAP(ip){
     let developmentLDAPConnection
@@ -54,20 +62,27 @@ function connectToLDAP(ip){
 
 function loginAsAdmin(){
   return new Promise((resolve, reject) => {
-    connectToLDAP(process.env.LDAP_IP).then(
-      function onSuccess(client){
-        try {
-          client.bind(`cn=${process.env.LDAP_ADMIN_NAME}, dc=snd, dc=int`, `${process.env.LDAP_ADMIN_PASS}`, (error) => {
-            return error ? reject(error) : resolve(client)
-          })
 
-        } catch (error) {
-          console.error(`Error while trying to authenticate in ldap (bind): '${error}'`)
-          reject(error)
-        }
+    getLdapSettings().then(({ldapIP, ldapAdmin, ldapPass} ) => {
 
-      }
-      ).catch(error => reject(error))
+        connectToLDAP(ldapIP).then(
+          function onSuccess(client){
+            try {
+              client.bind(`cn=${ldapAdmin}, dc=snd, dc=int`, `${ldapPass}`, (error) => {
+                return error ? reject(error) : resolve(client)
+              })
+
+            } catch (error) {
+              winston.error(`Error while trying to authenticate in ldap (bind): '${error}'`)
+              reject(error)
+            }
+          },
+
+          function onError(error){ 
+            reject(error)
+          }
+        )
+    })
   })
 }
 
@@ -106,7 +121,7 @@ async function getUserInfoFromLDAP(username){
         })
       })
     })
-  }).then((result) => result).catch(error => console.error(error))
+  }).then((result) => result).catch(error => winston.error(`error when trying to get user info from LDAP: '${error}'`))
 }
 
 module.exports = {checkIfUserIsInLDAP, getUserInfoFromLDAP}
