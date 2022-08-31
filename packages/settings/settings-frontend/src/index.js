@@ -13,6 +13,5 @@ export {
     routes,
     //Providers
     SettingsProvider,
-    //Store
     SettingsModuleStore
 }
