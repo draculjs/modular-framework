@@ -80,12 +80,6 @@ export const auth = async function ({username, password, useLDAP}, req) {
         }
 
         findUserByUsername(username).then(async (user) => {
-            if (user && user.active === false) {
-                winston.warn('AuthService.auth: DisabledUser => ' + username)
-                reject('DisabledUser')
-            }else if (user){
-                loginAs(user)
-            }
 
             if(useLDAP && userExistsInLDAP && !user){
                 const userInfo = await getUserInfoFromLDAP(username)
@@ -111,10 +105,11 @@ export const auth = async function ({username, password, useLDAP}, req) {
                 
                 if(name && username && email && password){
                     try {
-                        await registerUser({username, password, name, email, fromLDAP})
-                        findUserByUsername(username).then(newUserFromLDAP => loginAs(newUserFromLDAP))
+                        registerUser({username, password, name, email, fromLDAP}).then((response) => {
+                            findUserByUsername(username).then(newUserFromLDAP => loginAs(newUserFromLDAP))
+                        })
                     } catch (error) {
-                        reject(`error when trying to register user that exists in ${process.env.LDAP_IP}'s LDAP ${error}`)
+                        reject(`error when trying to register user that exists in LDAP: '${error}'`)
                     }
                 }else{
                     reject(`The User's entry in LDAP does not have the required info`)
@@ -124,6 +119,13 @@ export const auth = async function ({username, password, useLDAP}, req) {
             }else if(!user){
                 winston.error(`AuthService.auth: UserDoesntExist => ${username}`)
                 reject('UserDoesntExist')
+            }
+
+            if (user && user.active === false) {
+                winston.warn('AuthService.auth: DisabledUser => ' + username)
+                reject('DisabledUser')
+            }else if (user){
+                loginAs(user)
             }
         })
     })
