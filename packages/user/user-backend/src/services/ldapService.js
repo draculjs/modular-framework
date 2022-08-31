@@ -1,4 +1,29 @@
+import {fetchSettings} from '@dracul/settings-backend'
 const ldap = require('ldapjs');
+
+let ldapIP, ldapAdmin, ldapPass
+
+fetchSettings().then(response => {
+    for (const index in response) {
+        console.log(`RESPONSE #${index}: '${response[index]}'`)
+        console.log(`RESPONSE #${index} key: '${response[index]['key']}'`)
+
+        switch (response[index]['key']) {
+          case "ldapIP":
+            ldapIP = response[index]['value']
+
+            break
+          case "ldapAdmin":
+            ldapAdmin = response[index]['value']
+
+            break
+          case "ldapPass":
+            ldapPass = response[index]['value']
+
+            break
+        }
+    }
+}).catch(error => console.error(`ERROR AL FETCHEAR SETTINGS LPTM: '${error}'`))
 
 function connectToLDAP(ip){
     let developmentLDAPConnection
