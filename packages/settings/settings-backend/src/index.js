@@ -8,13 +8,17 @@ import * as permissions from "./permissions/Settings"
 import {
     findSettingsByKey,
     findSettingsByKeys,
+    getSettingsValueByKey,
     findSettings,
     fetchSettings,
     createSettings,
     updateSettings,
+    updateSettingsByKey,
     paginateSettings,
     deleteSettings
 } from "./services/SettingsService"
+
+import SettingCache from "./cache/SettingCache";
 
 export {
     //Types and resolvers
@@ -27,10 +31,14 @@ export {
     //Services
     findSettingsByKey,
     findSettingsByKeys,
+    getSettingsValueByKey,
     findSettings,
     fetchSettings,
     createSettings,
     updateSettings,
+    updateSettingsByKey,
     paginateSettings,
-    deleteSettings
+    deleteSettings,
+    //CACHE
+    SettingCache
 }

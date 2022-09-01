@@ -23,12 +23,13 @@ var _userBackend = require("@dracul/user-backend");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const findFile = async function (id, permissionType = null, userId = null) {
+const findFile = async function (id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
   if (id) {
+    let userGroups = await _userBackend.GroupService.fetchMyGroups(userId);
     return new Promise((resolve, reject) => {
       _FileModel.default.findOne({
         _id: id,
-        ...filterByPermissions(permissionType, userId)
+        ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
       }).populate('createdBy.user').exec((err, res) => err ? reject(err) : resolve(res));
     });
   } else {
@@ -303,11 +304,13 @@ const updateFile = async function (authUser, {
   isPublic,
   groups,
   users
-}, permissionType, userId) {
-  return new Promise((resolve, rejects) => {
+}, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+  return new Promise(async (resolve, rejects) => {
+    let userGroups = await _userBackend.GroupService.fetchMyGroups(userId);
+
     _FileModel.default.findOneAndUpdate({
       _id: id,
-      ...filterByPermissions(permissionType, userId)
+      ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
     }, {
       description,
       tags,
@@ -427,13 +430,11 @@ const updateByRelativePath = function (relativePath) {
 
 exports.updateByRelativePath = updateByRelativePath;
 
-const deleteFile = function (id, permissionType, userId) {
+const deleteFile = function (id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
   return new Promise((resolve, rejects) => {
-    findFile(id, permissionType, userId).then(async doc => {
+    findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed).then(async doc => {
       if (doc) {
         try {
-          (0, _UserStorageService.updateUserUsedStorage)(userId, -doc.size);
-
           _fs.default.unlink(doc.relativePath, error => {
             if (error) _loggerBackend.DefaultLogger.error(error);else _loggerBackend.DefaultLogger.info('Se eliminó el archivo ' + doc.relativePath);
           });
@@ -441,6 +442,7 @@ const deleteFile = function (id, permissionType, userId) {
           await _FileModel.default.deleteOne({
             _id: id
           });
+          await (0, _UserStorageService.updateUserUsedStorage)(userId, -doc.size);
           resolve({
             id: id,
             success: true

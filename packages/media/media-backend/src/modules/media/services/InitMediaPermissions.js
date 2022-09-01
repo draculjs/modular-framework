@@ -6,7 +6,8 @@ import {
     FILE_UPDATE_OWN,
     FILE_DELETE_ALL,
     FILE_DELETE_OWN,
-    FILE_SHOW_PUBLIC, FILE_DOWNLOAD
+    FILE_SHOW_PUBLIC,
+    FILE_DOWNLOAD
 } from '../permissions/File'
 
 import {
@@ -23,6 +24,7 @@ const initMediaPermissions = async function () {
     let permissions = [
         FILE_SHOW_ALL,
         FILE_SHOW_OWN,
+        FILE_SHOW_PUBLIC,
         FILE_CREATE,
         FILE_UPDATE_ALL,
         FILE_UPDATE_OWN,

@@ -5,8 +5,7 @@ import { AuthService, UserService, InitService } from "@dracul/user-backend";
 import uploadMultiFiles from "../../../utils/uploadMultiFilesSimulator";
 import { fetchFiles } from "../../../../src/modules/media/services/FileService";
 import path from "path";
-import uploadFileSimulator from "../../../utils/uploadFileSimulator";
-import fileUpload from "../../../../src/modules/media/services/UploadService";
+
 
 describe("media routes", () => {
 

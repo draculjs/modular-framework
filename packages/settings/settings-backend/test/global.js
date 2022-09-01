@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('@dracul/common-backend');
 var { MongoMemoryServer } = require('mongodb-memory-server');
 
 

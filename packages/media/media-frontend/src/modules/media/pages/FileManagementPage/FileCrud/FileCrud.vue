@@ -82,6 +82,11 @@ export default {
       timeoutSnackbar: 10000,
     }
   },
+  beforeMount(){
+    if(this.$store.getters.getRole === "visualizer"){
+      this.subtitle = 'media.file.visualizerSubtitle'
+    }
+  },
   methods: {
     //On
     onItemCreated() {
