@@ -26,7 +26,7 @@
 
     <v-row >
       <v-col
-        cols="8"
+        cols="7"
       >
 
         <v-btn
@@ -40,16 +40,23 @@
         </v-btn>
       </v-col>
 
+      <v-spacer></v-spacer>
+
       <v-col
+      class="mr-5"
         cols="2"
       >
         <v-checkbox
           v-model="useLDAP"
           :label="`LDAP`"
           color="secondary"
-          class="onSecondary--text"
+          class="onSecondary--tex"
         ></v-checkbox>
+
       </v-col>
+
+      <v-spacer></v-spacer>
+      
     </v-row>
 
   </v-form>
