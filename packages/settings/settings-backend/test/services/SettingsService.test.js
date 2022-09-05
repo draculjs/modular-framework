@@ -25,6 +25,7 @@ describe("SettingsService", () => {
         console.log("Setting",setting)
         expect(setting.key).equal('pricePerKm')
         expect(setting.value).equal("1")
+        return
     });
 
 
@@ -36,6 +37,7 @@ describe("SettingsService", () => {
 
         expect(minCost.key).equal('minCost')
         expect(minCost.value).equal("2")
+        return
     });
 
 })
