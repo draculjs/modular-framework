@@ -35,7 +35,6 @@ const initMediaPermissions = async function () {
         USER_STORAGE_UPDATE,
         USER_STORAGE_CREATE,
         USER_STORAGE_DELETE,
-        FILE_SHOW_PUBLIC,
         FILE_DOWNLOAD
     ]
     await InitService.initPermissions(permissions)
