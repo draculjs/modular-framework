@@ -15,6 +15,7 @@
   "dependencies": {
     "@dracul/common-backend": "^1.9.2",
     "@dracul/logger-backend": "^1.7.12",
+    "@dracul/settings-backend": "^1.9.10",
     "bcryptjs": "^2.4.3",
     "email-templates": "^6.0.3",
     "express": "^4.17.1",

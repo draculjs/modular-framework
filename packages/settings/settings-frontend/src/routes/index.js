@@ -1,7 +1,7 @@
-import SettingsManagementPage from '../pages/SettingsManagementPage/index'
+import SettingsPage from '../pages/SettingsPage'
 
 const routes = [
-     {name: 'SettingsPage', path: '/settings', component: SettingsManagementPage}
+     {name: 'SettingsPage', path: '/settings', component: SettingsPage}
 ]
 
 export default routes;

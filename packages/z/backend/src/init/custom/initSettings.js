@@ -2,18 +2,12 @@ import {createSettings, findSettingsByKey} from "@dracul/settings-backend";
 
 
 const settings = [
-    //{key:'',value: '',label: {en: '', es:'', pt:''} },
     {
         key: 'sample',
+        type: 'string',
         value: '',
         label: {en: 'Sample', es: 'Ejemplo', pt: 'Ejemplo'}
-    },
-  /*  {
-        key: 'xxxxx',
-        value: '60',
-        label: {en: 'ENENEN', es: 'ESESES', pt: 'PTPTPT'}
-    },*/
-
+    }
 ]
 
 export const initSettings = async function () {

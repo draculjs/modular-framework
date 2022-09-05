@@ -27,6 +27,8 @@ import modulesPermissions from './custom/modulesPermissions'
 
 const initService = async () => {
     console.log("INIT SERVICE")
+
+    await InitService.initLdapSettings()
     //Default user Permissions
     await InitService.initPermissions()
 
