@@ -86,7 +86,7 @@ function loginAsAdmin(){
   })
 }
 
-async function checkIfUserIsInLDAP(username){
+async function checkIfUserIsInLdap(username){
   return new Promise((resolve, reject) => {
     loginAsAdmin().then((client) => {
       client.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
@@ -124,4 +124,37 @@ async function getUserInfoFromLDAP(username){
   }).then((result) => result).catch(error => winston.error(`error when trying to get user info from LDAP: '${error}'`))
 }
 
-module.exports = {checkIfUserIsInLDAP, getUserInfoFromLDAP}
+async function getLdapUserRegisterInfo(username, decodedPassword){
+  const userInfo = await getUserInfoFromLDAP(username)
+  const userInfoNeededForRegister = {}
+
+  userInfoNeededForRegister.username = username
+  userInfoNeededForRegister.name = username
+  userInfoNeededForRegister.fromLDAP = true 
+
+  for (const key in userInfo.attributes) {
+    switch (userInfo.attributes[key].type) {
+      case "mail":
+        userInfoNeededForRegister.email = userInfo.attributes[key].vals[0]
+        break;
+      case "userPassword":
+        const userPassFromLDAP = userInfo.attributes[key].vals[0]
+
+        if (userPassFromLDAP !== decodedPassword) {
+          reject(
+            `Wrong credentials: '${userPassFromLDAP}' vs '${decodedPassword}'`
+          );
+        }
+
+        userInfoNeededForRegister.password = userPassFromLDAP
+        break;
+    }
+  }
+
+  const succesfullyGotUserInfo =  userInfoNeededForRegister.name && userInfoNeededForRegister.username && userInfoNeededForRegister.email && userInfoNeededForRegister.password
+  if(succesfullyGotUserInfo) return userInfoNeededForRegister
+
+  throw new Error(`The User's entry in LDAP does not have the required info`)
+}
+
+module.exports = {checkIfUserIsInLdap, getUserInfoFromLDAP, getLdapUserRegisterInfo}
