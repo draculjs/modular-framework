@@ -56,6 +56,7 @@ export const auth = function ({username, password}, req) {
 
 
     return new Promise(async (resolve, reject) => {
+        let decodedPassword = decodePassword(password)
 
         /*
         let userExistsInLdap = null
@@ -63,9 +64,16 @@ export const auth = function ({username, password}, req) {
 
         if (process.env.LDAP_AUTH.toLowerCase() === 'true') {
             try {
-                userExistsInLdap = await checkIfUserIsInLdap(username)
+                userLdapInfo = await checkIfUserIsInLdap(username, decodedPassword)
+
+                //
+                if(userExistsInLdap){
+                    //userLdapInfo = {username, password, email, role} role ==> primary Group de LDAP
+                    checkLocalUserOrCreate(userLdapInfo)
+                }
+
             } catch (error) {
-                reject(`error while checking user in ldap: '${error}'`)
+              reject('LdapUserDoesntExist')
             }
         }*/
 
@@ -82,7 +90,7 @@ export const auth = function ({username, password}, req) {
         }
 
 
-        let decodedPassword = decodePassword(password)
+
         if (checkPassword(decodedPassword, user.password)) {
 
             try {
