@@ -11,6 +11,58 @@ import {registerUser} from './RegisterService';
 
 const {v4: uuidv4} = require('uuid');
 
+export const auth = function ({username, password}, req) {
+
+    return new Promise(async (resolve, reject) => {
+        const useLDAP = process.env.LDAP_AUTH.toLowerCase() === 'true'
+        let decodedPassword = decodePassword(password)
+
+        if (useLDAP) {
+            try {
+                const userLdapInfo = await getLdapUserInfo(username, decodedPassword)
+                await createLdapUserIfItDoesntExists(userLdapInfo)
+            } catch (error) {
+              reject(`LdapUserDoesntExist or ${error}`)
+            }
+        }
+
+        const user =  await findUserByUsername(username)
+
+        if (!user) {
+            winston.warn('AuthService.auth: UserDoesntExist => ' + username)
+            reject('UserDoesntExist')
+
+        } else if (user && user.active === false) {
+            winston.warn('AuthService.auth: DisabledUser => ' + username)
+            reject('DisabledUser')
+        }
+
+        //Chequeo de password si existe el usuario
+        if (checkPassword(decodedPassword, user.password)) {
+
+            try {
+                const session = await createSession(user, req)
+
+                let {token, payload, options} = generateToken(user, session.id)
+                const refreshToken = await updateRefreshToken(user, session);
+
+                winston.info('AuthService.auth successful by ' + user.username)
+                resolve({token, payload, options, refreshToken})
+
+            } catch (error) {
+                winston.error('AuthService.auth.createSession ', error)
+                reject(error)
+            }
+
+
+        } else {
+            winston.warn('AuthService.auth: BadCredentials => ' + username)
+
+            createLoginFail(username, req)
+            reject('BadCredentials')
+        }
+    })
+}
 
 export const tokenSignPayload = function (user, sessionId) {
     return {
@@ -53,85 +105,15 @@ function checkPassword(decodedPassword, userPassword) {
 }
 
 async function createLdapUserIfItDoesntExists(userLdapInfo){
-    const user = findUserByUsername(userLdapInfo.username)
-    if (!user) registerUser(userLdapInfo)
-}
+    const user = await findUserByUsername(userLdapInfo.username)
 
-export const auth = function ({username, password}, req) {
-
-
-    return new Promise(async (resolve, reject) => {
-        const useLDAP = process.env.LDAP_AUTH.toLowerCase() === 'true'
-        console.log(`useLDAP: ${useLDAP} `)
-
-        let decodedPassword = decodePassword(password)
-
-        if (useLDAP) {
-            console.log(`decodedPassword: ${decodedPassword} `)
-            try {
-                const userLdapInfo = await getLdapUserInfo(username, decodedPassword)
-                console.log(`userLDAP INFO:   ${userLdapInfo} `)
-                createLdapUserIfItDoesntExists(userLdapInfo)
-            } catch (error) {
-              reject(`LdapUserDoesntExist or ${error}`)
-            }
+    if (user) {
+        try {
+            registerUser(userLdapInfo)
+        } catch (error) {
+            winston.error(`Error while trying to register user: '${error}'`)
         }
-
-        const user =  await findUserByUsername(username)
-        console.log(`USER: '${user}'`)
-        if (!user) {
-            winston.warn('AuthService.auth: UserDoesntExist => ' + username)
-            reject('UserDoesntExist')
-        }
-
-        if (user && user.active === false) {
-            winston.warn('AuthService.auth: DisabledUser => ' + username)
-            reject('DisabledUser')
-        }
-
-
-
-        if (checkPassword(decodedPassword, user.password)) {
-
-            try {
-                const session = await createSession(user, req)
-
-                let {token, payload, options} = generateToken(user, session.id)
-                const refreshToken = await updateRefreshToken(user, session);
-
-                winston.info('AuthService.auth successful by ' + user.username)
-                resolve({token, payload, options, refreshToken})
-
-            } catch (error) {
-                winston.error('AuthService.auth.createSession ', error)
-                reject(error)
-            }
-
-
-        } else {
-            winston.warn('AuthService.auth: BadCredentials => ' + username)
-
-            createLoginFail(username, req)
-            reject('BadCredentials')
-        }
-
-        findUserByUsername(username).then(async (user) => {
-
-            if (!user) {
-                winston.error(`AuthService.auth: UserDoesntExist => ${username}`)
-                reject('UserDoesntExist')
-
-            } else if (user && user.active === false) {
-                winston.warn('AuthService.auth: DisabledUser => ' + username)
-                reject('DisabledUser')
-
-            } else if (user) {
-                loginAs(user)
-            }
-        })
-
-
-    })
+    }
 }
 
 
