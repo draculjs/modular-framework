@@ -9,14 +9,14 @@ import {hashPassword} from "./UserService";
 import {session, tokenSignPayload} from "./AuthService";
 import {createSession} from "./SessionService";
 
-export const registerUser = function ({username, password, name, email, phone, fromLDAP}) {
-    console.log(`DATA!: '${username, password, name, email, phone, fromLDAP}'`)
+export const registerUser = function ({username, password, name, email, phone}) {
+    console.log(`DATA!: '${username, password, name, email, phone}'`)
 
     return new Promise(async (resolve, reject) => {
         const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "operator"
 
         let roleObject = await findRoleByName(ROLE_NAME)
-        let active = fromLDAP ? true : false
+        let active = false
 
         const newUser = new User({
             username,
@@ -26,8 +26,7 @@ export const registerUser = function ({username, password, name, email, phone, f
             phone,
             active,
             role: roleObject,
-            createdAt: Date.now(),
-            fromLDAP
+            createdAt: Date.now()
         })
         newUser.id = newUser._id
 
@@ -50,11 +49,11 @@ export const registerUser = function ({username, password, name, email, phone, f
                     {expiresIn: process.env.JWT_REGISTER_EXPIRED_IN || '30d'}
                 )
 
-                if(!fromLDAP){
-                    const url = `${process.env.APP_WEB_URL}/activation/${token}`
-                    createUserAudit(newUser.id, newUser.id, 'userRegistered')
-                    UserEmailManager.activation(newUser.email, url, newUser);
-                }
+
+                const url = `${process.env.APP_WEB_URL}/activation/${token}`
+                createUserAudit(newUser.id, newUser.id, 'userRegistered')
+                UserEmailManager.activation(newUser.email, url, newUser);
+
 
                 winston.info("RegisterService.registerUser successful for " + newUser.username)
                 resolve({status: true, id: newUser.id, email: newUser.email});

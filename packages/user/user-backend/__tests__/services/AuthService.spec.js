@@ -1,8 +1,10 @@
 //Utils
+import {initializeSettings} from "@dracul/settings-backend";
+
 const mongoHandler = require('../utils/mongo-handler');
 
 //Init DB
-import {initPermissions, initAdminRole, initRootUser} from "../../src/services/InitService";
+import {initPermissions, initAdminRole, initRootUser, initRoles} from "../../src/services/InitService";
 
 //Service to Test
 
@@ -13,6 +15,8 @@ import {
 import {encodePassword} from "../../src/services/PasswordService"
 import {findUserByUsername} from "../../src/services/UserService";
 import AuthResolvers from "../../src/graphql/resolvers/AuthResolvers"
+import {LDAP_SETTINGS_TEST} from "../data/settings.data";
+import {DESARROLLO_ROLE} from "../data/roles.data";
 
 describe("UserService", () => {
 
@@ -21,6 +25,8 @@ describe("UserService", () => {
         await initPermissions()
         await initAdminRole()
         await initRootUser()
+        await initRoles([DESARROLLO_ROLE])
+        await initializeSettings(LDAP_SETTINGS_TEST)
     });
 
     afterAll(async () => {
@@ -71,7 +77,7 @@ describe("UserService", () => {
         let user = {username: 'refact', password: 'refact'}
         user.password = encodePassword(user.password)
 
-        let result = await auth(user, null)
+        let result = await auth(user, undefined)
 
         expect(result).toBeInstanceOf(Object)
         expect(!!result.payload).toBe(true)

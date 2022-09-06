@@ -7,22 +7,25 @@ import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserServic
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
 import {authLdapAndGetUserInfo} from './ldapService';
-import {registerUser} from './RegisterService';
+import {createUser} from "./UserService";
+import {findRoleByName} from "./RoleService";
 
 const {v4: uuidv4} = require('uuid');
 
 export const auth = function ({username, password}, req) {
 
     return new Promise(async (resolve, reject) => {
-        const useLDAP = process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true'
+
         let decodedPassword = decodePassword(password)
+
+        const useLDAP = process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true'
 
         if (useLDAP) {
             try {
                 const userLdapInfo = await authLdapAndGetUserInfo(username, decodedPassword)
-                await createLdapUserIfItDoesntExists(userLdapInfo)
+                await getLocalUserOrCreateIfItDoesntExists(userLdapInfo)
             } catch (error) {
-              reject(`LdapUserDoesntExist or ${error}`)
+                winston.error('LDAP AUTH ERROR ' + error)
             }
         }
 
@@ -41,7 +44,7 @@ export const auth = function ({username, password}, req) {
         if (checkLocalPassword(decodedPassword, user.password)) {
 
             try {
-                const session = await createSession(user, req = null)
+                const session = await createSession(user, req)
 
                 let {token, payload, options} = generateToken(user, session.id)
                 const refreshToken = await updateRefreshToken(user, session);
@@ -104,16 +107,29 @@ function checkLocalPassword(decodedPassword, userPassword) {
     return bcryptjs.compareSync(decodedPassword, userPassword);
 }
 
-async function createLdapUserIfItDoesntExists(userLdapInfo){
-    const user = await findUserByUsername(userLdapInfo.username)
+async function getLocalUserOrCreateIfItDoesntExists(userLdapInfo){
+    let user = await findUserByUsername(userLdapInfo.username)
 
-    if (user) {
+    if (!user) {
         try {
-            registerUser(userLdapInfo)
+
+            if(!userLdapInfo.role) {
+                const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "Desarrollo"
+                let role = await findRoleByName(ROLE_NAME)
+                if(!role){
+                    return Promise.reject(`getLocalUserOrCreateIfItDoesntExists ${ROLE_NAME} role doesn't exist`)
+                }
+                userLdapInfo.role = role
+            }
+            userLdapInfo.active = true
+            user =  await createUser(userLdapInfo)
+            return user
         } catch (error) {
-            winston.error(`Error while trying to register user: '${error}'`)
+            winston.error(`Error while trying to create user: '${error}'`)
         }
     }
+
+    return user
 }
 
 

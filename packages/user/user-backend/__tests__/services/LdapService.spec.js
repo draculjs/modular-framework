@@ -108,15 +108,6 @@ describe("LdapService", () => {
     }, 2000);
 
 
-    /*
-        test('Apikey', async () => {
-
-            let user = await findUserByUsername('root')
-            let result = await apiKey(user.id, null)
-            await expect(result).toHaveProperty('token',)
-
-        }, 2000);
-        */
 
 
 })

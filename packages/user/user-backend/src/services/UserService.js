@@ -98,11 +98,11 @@ export const restoreDeletedUser = function (id, {username, password, name, email
 }
 
 
-export const createUser = async function ({username, password, name, email, phone, role, groups, active, fromLDAP}, actionBy = null) {
+export const createUser = async function ({username, password, name, email, phone, role, groups, active, fromLDAP = false}, actionBy = null) {
     const existingUser = await findUserByUsernameOrEmailDeleted(username,email)
 
     if(existingUser){
-        return restoreDeletedUser(existingUser._id, {username, password, name, email, phone, role, groups, active}, actionBy = null)
+        return restoreDeletedUser(existingUser._id, {username, password, name, email, phone, role, groups, active, fromLDAP}, actionBy = null)
     }
 
     const newUser = new User({
