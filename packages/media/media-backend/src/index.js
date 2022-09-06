@@ -48,7 +48,7 @@ app.use('/media/files', updateFileMiddleware)
 
 app.use('/api', fileRouter)
 
-const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load(__dirname + '/swagger.yaml'); 
 
 let PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000"
 let API_URL = process.env.APP_API_URL ? process.env.APP_API_URL + "/api" : "http://localhost" + PORT + "/api"

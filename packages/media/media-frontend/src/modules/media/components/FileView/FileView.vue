@@ -3,7 +3,7 @@
 
     <v-col cols="12" sm="6">
 
-      <v-img v-if="isImage" contain :src="getSrc"/>
+      <img v-if="isImage" :style="{width: '100%'}" :src="getSrc"/>
 
       <audio v-if="isAudio" controls>
         <source :src="getSrc" :type="file.mimetype">
