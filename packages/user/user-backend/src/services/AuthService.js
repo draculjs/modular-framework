@@ -6,8 +6,8 @@ import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername, updateUser} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
-import { checkIfUserIsInLdap, getLdapUserRegisterInfo } from './ldapService';
-import { registerUser } from './RegisterService';
+import {checkIfUserIsInLdap, getLdapUserRegisterInfo} from './ldapService';
+import {registerUser} from './RegisterService';
 
 const {v4: uuidv4} = require('uuid');
 
@@ -25,66 +25,92 @@ export const tokenSignPayload = function (user, sessionId) {
 }
 
 
-export const auth = async function ({username, password}, req) {
-    let decodedPassword = decodePassword(password)
-    let userExistsInLdap = null
-    let useLDAP = false
-
-    if(process.env.useLDAP){
-        useLDAP = true
-        
-        try {
-            userExistsInLdap = await checkIfUserIsInLdap(username)
-        } catch (error) {
-            reject(`error while checking user in ldap: '${error}'`)
+async function updateRefreshToken(user, session) {
+    if (user.refreshToken && user.refreshToken.length > 0) {
+        const now = new Date()
+        const refreshTokensToDelete = user.refreshToken.filter(rf => {
+            const expiryDate = new Date(rf.expiryDate)
+            return (now > expiryDate) ? true : false
+        })
+        for (let refreshToken of refreshTokensToDelete) {
+            user.refreshToken.pull(refreshToken)
         }
     }
 
-    return new Promise((resolve, reject) => {
-        function loginAs(user){
-            if (bcryptjs.compareSync(decodedPassword, user.password)) {
+    //AGREGAMOS NUEVO REFRESH TOKEN
+    const refreshToken = generateRefreshToken(session.id)
+    if (!user.refreshToken) {
+        user.refreshToken = []
+    }
 
-                createSession(user, req).then(async session => {
-                    let {token, payload, options} = generateToken(user, session.id)
+    user.refreshToken.push(refreshToken)
+    await user.save()
+    return refreshToken;
+}
 
-                    if(user.refreshToken && user.refreshToken.length > 0){
-                        const now = new Date()
-                        const refreshTokensToDelete = user.refreshToken.filter(rf => {
-                            const expiryDate = new Date(rf.expiryDate)
-                            return (now > expiryDate) ? true: false
-                        })
-                        for(let refreshToken of refreshTokensToDelete){
-                            user.refreshToken.pull(refreshToken)
-                        }
-                    }
+function checkPassword(decodedPassword, userPassword) {
+    return bcryptjs.compareSync(decodedPassword, userPassword);
+}
 
-                    //AGREGAMOS NUEVO REFRESH TOKEN
-                    const refreshToken = generateRefreshToken(session.id)
-                    if(!user.refreshToken){
-                        user.refreshToken = []
-                    }
+export const auth = function ({username, password}, req) {
 
-                    user.refreshToken.push(refreshToken)
-                    await user.save()
 
-                    winston.info('AuthService.auth successful by ' + user.username)
-                    resolve({token, payload, options, refreshToken, useLDAP})
+    return new Promise(async (resolve, reject) => {
 
-                }).catch(error => {
-                    winston.error('AuthService.auth.createSession ', error)
-                    reject(error)
-                })
+        /*
+        let userExistsInLdap = null
+        let useLDAP = false
 
-            } else {
-                winston.warn('AuthService.auth: BadCredentials => ' + username)
-                createLoginFail(username, req)
-                reject('BadCredentials')
+        if (process.env.LDAP_AUTH.toLowerCase() === 'true') {
+            try {
+                userExistsInLdap = await checkIfUserIsInLdap(username)
+            } catch (error) {
+                reject(`error while checking user in ldap: '${error}'`)
             }
+        }*/
+
+        const user =  await findUserByUsername(username)
+        console.log(user)
+        if (!user) {
+            winston.warn('AuthService.auth: UserDoesntExist => ' + username)
+            reject('UserDoesntExist')
         }
 
-        findUserByUsername(username).then(async (user) => {
+        if (user && user.active === false) {
+            winston.warn('AuthService.auth: DisabledUser => ' + username)
+            reject('DisabledUser')
+        }
 
-            if(useLDAP && userExistsInLdap && !user){
+
+        let decodedPassword = decodePassword(password)
+        if (checkPassword(decodedPassword, user.password)) {
+
+            try {
+                const session = await createSession(user, req)
+
+                let {token, payload, options} = generateToken(user, session.id)
+
+                const refreshToken = await updateRefreshToken(user, session);
+
+                winston.info('AuthService.auth successful by ' + user.username)
+
+                resolve({token, payload, options, refreshToken})
+
+            } catch (error) {
+                winston.error('AuthService.auth.createSession ', error)
+                reject(error)
+            }
+
+
+        } else {
+            winston.warn('AuthService.auth: BadCredentials => ' + username)
+            createLoginFail(username, req)
+            reject('BadCredentials')
+        }
+
+        /*findUserByUsername(username).then(async (user) => {
+
+            if (useLDAP && userExistsInLdap && !user) {
                 try {
                     const infoFromLdapUser = await getLdapUserRegisterInfo(username, decodedPassword)
                     registerUser(infoFromLdapUser).then(userFromLdap => {
@@ -93,8 +119,8 @@ export const auth = async function ({username, password}, req) {
                 } catch (error) {
                     reject(error)
                 }
-                
-            }else if(!user){
+
+            } else if (!user) {
                 winston.error(`AuthService.auth: UserDoesntExist => ${username}`)
                 reject('UserDoesntExist')
             }
@@ -102,10 +128,12 @@ export const auth = async function ({username, password}, req) {
             if (user && user.active === false) {
                 winston.warn('AuthService.auth: DisabledUser => ' + username)
                 reject('DisabledUser')
-            }else if (user){
+            } else if (user) {
                 loginAs(user)
             }
-        })
+        })*/
+
+
     })
 }
 
@@ -143,7 +171,7 @@ export const apiKey = function (userId, req) {
 export const refreshAuth = function (refreshTokenId) {
 
     return new Promise(async (resolve, reject) => {
-        try{
+        try {
             const user = await findUserByRefreshToken(refreshTokenId)
             if (user) {
                 let sessionId
@@ -161,7 +189,9 @@ export const refreshAuth = function (refreshTokenId) {
                 return reject(new Error("Invalid RefreshToken"))
             }
 
-        }catch (error) { () => reject(error) }
+        } catch (error) {
+            () => reject(error)
+        }
     })
 }
 

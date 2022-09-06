@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const {mongoose} = require('@dracul/common-backend');
 
 /**
  * Connect to the in-memory database.

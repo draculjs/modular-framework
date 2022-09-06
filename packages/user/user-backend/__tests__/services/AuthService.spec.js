@@ -28,7 +28,21 @@ describe("UserService", () => {
         await mongoHandler.closeDatabase();
     })
 
-    test('LoginOk', async (done) => {
+    test('LoginOk simple', async (done) => {
+
+        let user = {username: 'root', password: 'root.123'}
+        user.password = encodePassword(user.password)
+
+        let result = await auth(user, null)
+
+        expect(result).toBeInstanceOf(Object)
+        expect(!!result.payload).toBe(true)
+        expect(!!result.refreshToken).toBe(true)
+        done()
+
+    }, 5000);
+
+    test('LoginOk and check Refresh Token', async (done) => {
 
         let user = {username: 'root', password: 'root.123'}
         user.password = encodePassword(user.password)
@@ -50,20 +64,13 @@ describe("UserService", () => {
     }, 5000);
 
     test('LoginFail', async () => {
-
         let user = {username: 'root', password: 'badpassword'}
-
-        await expect(auth(user, null))
-            .rejects.toMatch('BadCredentials');
-
+        await expect(auth(user, null)).rejects.toMatch('BadCredentials');
     }, 2000);
 
     test('LoginUserDoesntExist', async () => {
-
         let user = {username: 'iamlegend', password: '321'}
-
-        await expect(auth(user, null))
-            .rejects.toMatch('UserDoesntExist');
+        await expect(auth(user, null)).rejects.toMatch('UserDoesntExist');
 
     }, 2000);
 
