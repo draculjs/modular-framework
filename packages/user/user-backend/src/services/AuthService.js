@@ -3,10 +3,10 @@ import bcryptjs from "bcryptjs";
 import {createSession} from "./SessionService";
 import jsonwebtoken from "jsonwebtoken";
 import {createLoginFail} from "./LoginFailService";
-import {findUser, findUserByRefreshToken, findUserByUsername, updateUser} from "./UserService";
+import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
-import {checkIfUserIsInLdap, getLdapUserRegisterInfo} from './ldapService';
+import {getLdapUserInfo} from './ldapService';
 import {registerUser} from './RegisterService';
 
 const {v4: uuidv4} = require('uuid');
@@ -52,33 +52,33 @@ function checkPassword(decodedPassword, userPassword) {
     return bcryptjs.compareSync(decodedPassword, userPassword);
 }
 
+async function createLdapUserIfItDoesntExists(userLdapInfo){
+    const user = findUserByUsername(userLdapInfo.username)
+    if (!user) registerUser(userLdapInfo)
+}
+
 export const auth = function ({username, password}, req) {
 
 
     return new Promise(async (resolve, reject) => {
+        const useLDAP = process.env.LDAP_AUTH.toLowerCase() === 'true'
+        console.log(`useLDAP: ${useLDAP} `)
+
         let decodedPassword = decodePassword(password)
 
-        /*
-        let userExistsInLdap = null
-        let useLDAP = false
-
-        if (process.env.LDAP_AUTH.toLowerCase() === 'true') {
+        if (useLDAP) {
+            console.log(`decodedPassword: ${decodedPassword} `)
             try {
-                userLdapInfo = await checkIfUserIsInLdap(username, decodedPassword)
-
-                //
-                if(userExistsInLdap){
-                    //userLdapInfo = {username, password, email, role} role ==> primary Group de LDAP
-                    checkLocalUserOrCreate(userLdapInfo)
-                }
-
+                const userLdapInfo = await getLdapUserInfo(username, decodedPassword)
+                console.log(`userLDAP INFO:   ${userLdapInfo} `)
+                createLdapUserIfItDoesntExists(userLdapInfo)
             } catch (error) {
-              reject('LdapUserDoesntExist')
+              reject(`LdapUserDoesntExist or ${error}`)
             }
-        }*/
+        }
 
         const user =  await findUserByUsername(username)
-        console.log(user)
+        console.log(`USER: '${user}'`)
         if (!user) {
             winston.warn('AuthService.auth: UserDoesntExist => ' + username)
             reject('UserDoesntExist')
@@ -97,11 +97,9 @@ export const auth = function ({username, password}, req) {
                 const session = await createSession(user, req)
 
                 let {token, payload, options} = generateToken(user, session.id)
-
                 const refreshToken = await updateRefreshToken(user, session);
 
                 winston.info('AuthService.auth successful by ' + user.username)
-
                 resolve({token, payload, options, refreshToken})
 
             } catch (error) {
@@ -112,34 +110,25 @@ export const auth = function ({username, password}, req) {
 
         } else {
             winston.warn('AuthService.auth: BadCredentials => ' + username)
+
             createLoginFail(username, req)
             reject('BadCredentials')
         }
 
-        /*findUserByUsername(username).then(async (user) => {
+        findUserByUsername(username).then(async (user) => {
 
-            if (useLDAP && userExistsInLdap && !user) {
-                try {
-                    const infoFromLdapUser = await getLdapUserRegisterInfo(username, decodedPassword)
-                    registerUser(infoFromLdapUser).then(userFromLdap => {
-                        findUser(userFromLdap.id).then((user) => loginAs(user))
-                    })
-                } catch (error) {
-                    reject(error)
-                }
-
-            } else if (!user) {
+            if (!user) {
                 winston.error(`AuthService.auth: UserDoesntExist => ${username}`)
                 reject('UserDoesntExist')
-            }
 
-            if (user && user.active === false) {
+            } else if (user && user.active === false) {
                 winston.warn('AuthService.auth: DisabledUser => ' + username)
                 reject('DisabledUser')
+
             } else if (user) {
                 loginAs(user)
             }
-        })*/
+        })
 
 
     })

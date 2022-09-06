@@ -86,52 +86,29 @@ function loginAsAdmin(){
   })
 }
 
-async function checkIfUserIsInLdap(username){
-  return new Promise((resolve, reject) => {
-    loginAsAdmin().then((client) => {
-      client.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
-        if (error) reject(error)
-    
-        response.on('searchEntry', () =>{
-          resolve(true)
-        })
-
-        response.on('error', () => {
-          resolve(false)
-        })
-      })
-    })
-      
-  }).then((result) => result).catch(error => console.error(error))
-}
-
-async function getUserInfoFromLDAP(username){
+function checkIfUserIsInLdap(username){
   return new Promise((resolve, reject) => {
 
     const client = loginAsAdmin().then((client) => {
       client.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
         if (error) reject(error)
     
-        response.on('searchEntry', (entry) =>{
-          resolve(entry)
-        })
-  
-        response.on('error', () => {
-          reject('No entries were found!')
-        })
+        response.on('searchEntry', (entry) =>resolve(entry))
+        response.on('error', () => reject('LDAP user not found'))
       })
     })
   }).then((result) => result).catch(error => winston.error(`error when trying to get user info from LDAP: '${error}'`))
 }
 
-async function getLdapUserRegisterInfo(username, decodedPassword){
-  const userInfo = await getUserInfoFromLDAP(username)
+async function getLdapUserInfo(username, decodedPassword){
+  const userInfo = await checkIfUserIsInLdap(username)
   const userInfoNeededForRegister = {}
 
   userInfoNeededForRegister.username = username
   userInfoNeededForRegister.name = username
   userInfoNeededForRegister.fromLDAP = true 
 
+                    //userLdapInfo = {username, password, email, role} role ==> primary Group de LDAP
   for (const key in userInfo.attributes) {
     switch (userInfo.attributes[key].type) {
       case "mail":
@@ -157,4 +134,4 @@ async function getLdapUserRegisterInfo(username, decodedPassword){
   throw new Error(`The User's entry in LDAP does not have the required info`)
 }
 
-module.exports = {checkIfUserIsInLdap, getUserInfoFromLDAP, getLdapUserRegisterInfo}
+module.exports = {getLdapUserInfo}
