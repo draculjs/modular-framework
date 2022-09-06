@@ -14,11 +14,11 @@ export default {
         },
     },
     Mutation: {
-        auth: (_, {username, password, useLDAP}, {req}) => {
+        auth: (_, {username, password}, {req}) => {
 
             return new Promise((resolve, reject) => {
 
-                auth({username, password, useLDAP}, req)
+                auth({username, password}, req)
                     .then(r => resolve({token: r.token, refreshToken: r.refreshToken}))
                     .catch(err => {
                         console.warn('Auth error: ', err.message)
