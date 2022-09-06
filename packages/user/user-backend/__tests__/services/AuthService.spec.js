@@ -28,7 +28,8 @@ describe("UserService", () => {
         await mongoHandler.closeDatabase();
     })
 
-    test('LoginOk simple', async (done) => {
+    test('Auth local ok', async (done) => {
+        process.env.LDAP_AUTH = 'false'
 
         let user = {username: 'root', password: 'root.123'}
         user.password = encodePassword(user.password)
@@ -42,8 +43,8 @@ describe("UserService", () => {
 
     }, 5000);
 
-    test('LoginOk and check Refresh Token', async (done) => {
-
+    test('Auth local with check refresh token ok', async (done) => {
+        process.env.LDAP_AUTH = 'false'
         let user = {username: 'root', password: 'root.123'}
         user.password = encodePassword(user.password)
 
@@ -63,18 +64,36 @@ describe("UserService", () => {
 
     }, 5000);
 
-    test('LoginFail', async () => {
+
+    test('Auth ldap ok (real ldap)', async (done) => {
+        process.env.LDAP_AUTH = 'true'
+
+        let user = {username: 'refact', password: 'refact'}
+        user.password = encodePassword(user.password)
+
+        let result = await auth(user, null)
+
+        expect(result).toBeInstanceOf(Object)
+        expect(!!result.payload).toBe(true)
+        expect(!!result.refreshToken).toBe(true)
+        done()
+
+    }, 5000);
+
+
+    test('AuthFail', async () => {
         let user = {username: 'root', password: 'badpassword'}
         await expect(auth(user, null)).rejects.toMatch('BadCredentials');
     }, 2000);
 
-    test('LoginUserDoesntExist', async () => {
+    test('AuthUserDoesntExist', async () => {
         let user = {username: 'iamlegend', password: '321'}
         await expect(auth(user, null)).rejects.toMatch('UserDoesntExist');
 
     }, 2000);
 
 
+/*
     test('Apikey', async () => {
 
         let user = await findUserByUsername('root')
@@ -82,6 +101,7 @@ describe("UserService", () => {
         await expect(result).toHaveProperty('token',)
 
     }, 2000);
+    */
 
 
 })

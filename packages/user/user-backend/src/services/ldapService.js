@@ -1,137 +1,115 @@
-import {DefaultLogger as winston} from '@dracul/logger-backend';
-import {fetchSettings} from '@dracul/settings-backend';
+import {DefaultLogger, DefaultLogger as winston} from '@dracul/logger-backend';
+import {fetchSettings, SettingCache} from '@dracul/settings-backend';
 
 const ldap = require('ldapjs')
 
-function getLdapSettings(){
-  return new Promise((resolve, reject) => {
 
-    fetchSettings().then(response => {
-      let ldapIP, ldapAdmin, ldapPass
-  
-      for (const index in response) {
-        switch (response[index]['key']) {
-          case "ldapIP":
-            ldapIP = response[index]['value']
-            break
-          case "ldapAdmin":
-            ldapAdmin = response[index]['value']
-            break
-          case "ldapPass":
-            ldapPass = response[index]['value']
-            break
-        }
-      }
-  
-    resolve({ldapIP, ldapAdmin, ldapPass})
-  
-    }).catch(error => {
-      winston.error(`Error while trying to fetch LDAP settings: '${error}'`)
-      reject(error)
-    })
-  })
+function connectToLDAP(ip, port = '389') {
 
-}
-
-function connectToLDAP(ip){
-    let developmentLDAPConnection
-  
     return new Promise((resolve, reject) => {
-      developmentLDAPConnection = ldap.createClient({
-        url: `ldap://${ip}:389`,
-        connectTimeout: 2000
-      })
-      
-      developmentLDAPConnection.on('connect', () =>{
-        resolve('connected')
-      })
-  
-      developmentLDAPConnection.on('error', (error) =>{
-        reject(error)
-      })
-    }).then(
-      function isResolved(){
-        return developmentLDAPConnection
-      },
+        let ldapClient
 
-      function isRejected(result){
-        return result
-      }
-    )
-}
+        ldapClient = ldap.createClient({
+            url: `ldap://${ip}:${port}`,
+            connectTimeout: 2000
+        })
 
-function loginAsAdmin(){
-  return new Promise((resolve, reject) => {
+        ldapClient.on('connect', () => {
+            resolve(ldapClient)
+        })
 
-    getLdapSettings().then(({ldapIP, ldapAdmin, ldapPass} ) => {
-
-        connectToLDAP(ldapIP).then(
-          function onSuccess(client){
-            try {
-              client.bind(`cn=${ldapAdmin}, dc=snd, dc=int`, `${ldapPass}`, (error) => {
-                return error ? reject(error) : resolve(client)
-              })
-
-            } catch (error) {
-              winston.error(`Error while trying to authenticate in ldap (bind): '${error}'`)
-              reject(error)
-            }
-          },
-
-          function onError(error){ 
+        ldapClient.on('error', (error) => {
             reject(error)
-          }
-        )
+        })
     })
-  })
 }
 
-function checkIfUserIsInLdap(username){
-  return new Promise((resolve, reject) => {
+function loginAsAdmin(adminUser, adminPass) {
 
-    const client = loginAsAdmin().then((client) => {
-      client.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
-        if (error) reject(error)
-    
-        response.on('searchEntry', (entry) =>resolve(entry))
-        response.on('error', () => reject('LDAP user not found'))
-      })
-    })
-  }).then((result) => result).catch(error => winston.error(`error when trying to get user info from LDAP: '${error}'`))
-}
+    return new Promise(async (resolve, reject) => {
 
-async function getLdapUserInfo(username, decodedPassword){
-  const userInfo = await checkIfUserIsInLdap(username)
-  const userInfoNeededForRegister = {}
+        const ldapIP = await SettingCache('ldapIP')
+        const ldapAdmin = adminUser ? adminUser : await SettingCache('ldapAdmin')
+        const ldapPass = adminPass ? adminPass : await SettingCache('ldapPass')
 
-  userInfoNeededForRegister.username = username
-  userInfoNeededForRegister.name = username
-  userInfoNeededForRegister.fromLDAP = true 
+        const ldapClient = await connectToLDAP(ldapIP)
 
-                    //userLdapInfo = {username, password, email, role} role ==> primary Group de LDAP
-  for (const key in userInfo.attributes) {
-    switch (userInfo.attributes[key].type) {
-      case "mail":
-        userInfoNeededForRegister.email = userInfo.attributes[key].vals[0]
-        break;
-      case "userPassword":
-        const userPassFromLDAP = userInfo.attributes[key].vals[0]
-
-        if (userPassFromLDAP !== decodedPassword) {
-          reject(
-            `Wrong credentials: '${userPassFromLDAP}' vs '${decodedPassword}'`
-          );
+        try {
+            ldapClient.bind(
+                `cn=${ldapAdmin}, dc=snd, dc=int`,
+                ldapPass,
+                error => {
+                    if (error) {
+                        DefaultLogger.error(`Error while trying to authenticate in ldap (bind): '${error}'`);
+                        return reject(error.message)
+                    }
+                    return resolve(ldapClient);
+                }
+            )
+        } catch (e) {
+            return reject(e.message)
         }
 
-        userInfoNeededForRegister.password = userPassFromLDAP
-        break;
-    }
-  }
 
-  const succesfullyGotUserInfo =  userInfoNeededForRegister.name && userInfoNeededForRegister.username && userInfoNeededForRegister.email && userInfoNeededForRegister.password
-  if(succesfullyGotUserInfo) return userInfoNeededForRegister
+    })
 
-  throw new Error(`The User's entry in LDAP does not have the required info`)
 }
 
-module.exports = {getLdapUserInfo}
+function mapLdapAttributesToUserObject(entry){
+
+    let obj = {}
+
+    for (const attribute of entry.attributes) {
+        switch (attribute.type) {
+            case "cn":
+                obj.username = attribute.vals[0]
+                obj.name = attribute.vals[0]
+                break;
+            case "mail":
+                obj.email = attribute.vals[0]
+                break;
+            case "userPassword":
+                obj.password = attribute.vals[0]
+                break;
+            case "gidNumber":
+                obj.groupId = attribute.vals[0]
+                break;
+        }
+    }
+
+    return obj
+
+}
+
+function searchUserInLdap(username) {
+    return new Promise(async (resolve, reject) => {
+
+        let ldapClient = await loginAsAdmin()
+
+        ldapClient.search(`cn=${username},ou=People,dc=snd,dc=int`, {}, (error, response) => {
+                    if (error) return reject(error)
+
+                    response.on('searchEntry', (entry) => resolve(entry))
+                    response.on('error', () => reject('LDAP user not found'))
+                })
+    })
+}
+
+async function authLdapAndGetUserInfo(username, decodedPassword) {
+    const entry = await searchUserInLdap(username)
+    const userInfo = mapLdapAttributesToUserObject(entry)
+
+    if(userInfo.password === decodedPassword){
+        return Promise.resolve(userInfo)
+    }else{
+        return Promise.reject('LdapInvalidCredentials')
+    }
+}
+
+module.exports = {
+    authLdapAndGetUserInfo,
+    searchUserInLdap,
+    connectToLDAP,
+    loginAsAdmin,
+    mapLdapAttributesToUserObject
+}

@@ -6,7 +6,7 @@ import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
-import {getLdapUserInfo} from './ldapService';
+import {authLdapAndGetUserInfo} from './ldapService';
 import {registerUser} from './RegisterService';
 
 const {v4: uuidv4} = require('uuid');
@@ -14,12 +14,12 @@ const {v4: uuidv4} = require('uuid');
 export const auth = function ({username, password}, req) {
 
     return new Promise(async (resolve, reject) => {
-        const useLDAP = process.env.LDAP_AUTH.toLowerCase() === 'true'
+        const useLDAP = process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true'
         let decodedPassword = decodePassword(password)
 
         if (useLDAP) {
             try {
-                const userLdapInfo = await getLdapUserInfo(username, decodedPassword)
+                const userLdapInfo = await authLdapAndGetUserInfo(username, decodedPassword)
                 await createLdapUserIfItDoesntExists(userLdapInfo)
             } catch (error) {
               reject(`LdapUserDoesntExist or ${error}`)
@@ -38,10 +38,10 @@ export const auth = function ({username, password}, req) {
         }
 
         //Chequeo de password si existe el usuario
-        if (checkPassword(decodedPassword, user.password)) {
+        if (checkLocalPassword(decodedPassword, user.password)) {
 
             try {
-                const session = await createSession(user, req)
+                const session = await createSession(user, req = null)
 
                 let {token, payload, options} = generateToken(user, session.id)
                 const refreshToken = await updateRefreshToken(user, session);
@@ -100,7 +100,7 @@ async function updateRefreshToken(user, session) {
     return refreshToken;
 }
 
-function checkPassword(decodedPassword, userPassword) {
+function checkLocalPassword(decodedPassword, userPassword) {
     return bcryptjs.compareSync(decodedPassword, userPassword);
 }
 
