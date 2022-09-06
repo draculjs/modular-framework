@@ -6,7 +6,7 @@ import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername, updateUser} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
-import { checkIfUserIsInLDAP, getUserInfoFromLDAP } from './ldapService';
+import { checkIfUserIsInLdap, getLdapUserRegisterInfo } from './ldapService';
 import { registerUser } from './RegisterService';
 
 const {v4: uuidv4} = require('uuid');
@@ -25,13 +25,16 @@ export const tokenSignPayload = function (user, sessionId) {
 }
 
 
-export const auth = async function ({username, password, useLDAP}, req) {
-    let userExistsInLDAP
+export const auth = async function ({username, password}, req) {
     let decodedPassword = decodePassword(password)
+    let userExistsInLdap = null
+    let useLDAP = false
 
-    if(useLDAP){
+    if(process.env.useLDAP){
+        useLDAP = true
+        
         try {
-            userExistsInLDAP = await checkIfUserIsInLDAP(username)
+            userExistsInLdap = await checkIfUserIsInLdap(username)
         } catch (error) {
             reject(`error while checking user in ldap: '${error}'`)
         }
@@ -81,40 +84,15 @@ export const auth = async function ({username, password, useLDAP}, req) {
 
         findUserByUsername(username).then(async (user) => {
 
-            if(useLDAP && userExistsInLDAP && !user){
-                const userInfo = await getUserInfoFromLDAP(username)
-                const name = username
-                const fromLDAP = true
-
-                let email, password
-
-                for (const key in userInfo.attributes) {
-                    switch (userInfo.attributes[key].type) {
-                        case 'mail':
-                            email = userInfo.attributes[key].vals[0]
-                            break;
-                        case 'userPassword':
-                            password = userInfo.attributes[key].vals[0]
-                            if(password !== decodedPassword){
-                                reject(`Wrong credentials: '${password}' vs '${decodedPassword}'`)
-                            }
-
-                            break;
-                    }
+            if(useLDAP && userExistsInLdap && !user){
+                try {
+                    const infoFromLdapUser = await getLdapUserRegisterInfo(username, decodedPassword)
+                    registerUser(infoFromLdapUser).then(userFromLdap => {
+                        findUser(userFromLdap.id).then((user) => loginAs(user))
+                    })
+                } catch (error) {
+                    reject(error)
                 }
-                
-                if(name && username && email && password){
-                    try {
-                        registerUser({username, password, name, email, fromLDAP}).then((response) => {
-                            findUserByUsername(username).then(newUserFromLDAP => loginAs(newUserFromLDAP))
-                        })
-                    } catch (error) {
-                        reject(`error when trying to register user that exists in LDAP: '${error}'`)
-                    }
-                }else{
-                    reject(`The User's entry in LDAP does not have the required info`)
-                }
-                
                 
             }else if(!user){
                 winston.error(`AuthService.auth: UserDoesntExist => ${username}`)
