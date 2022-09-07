@@ -34,8 +34,23 @@ describe("UserService", () => {
         await mongoHandler.closeDatabase();
     })
 
-    test('Auth local ok', async (done) => {
+    test('Auth local ok with LDAP OFF', async (done) => {
         process.env.LDAP_AUTH = 'false'
+
+        let user = {username: 'root', password: 'root.123'}
+        user.password = encodePassword(user.password)
+
+        let result = await auth(user, null)
+
+        expect(result).toBeInstanceOf(Object)
+        expect(!!result.payload).toBe(true)
+        expect(!!result.refreshToken).toBe(true)
+        done()
+
+    }, 5000);
+
+    test('Auth local ok with LDAP ON', async (done) => {
+        process.env.LDAP_AUTH = 'true'
 
         let user = {username: 'root', password: 'root.123'}
         user.password = encodePassword(user.password)
@@ -73,6 +88,9 @@ describe("UserService", () => {
 
     test('Auth ldap ok (real ldap)', async (done) => {
         process.env.LDAP_AUTH = 'true'
+        process.env.LDAP_ROLE = 'Desarrollo'
+        process.env.LDAP_DN = 'dc=snd,dc=int'
+        process.env.LDAP_OU = 'ou=People'
 
         let user = {username: 'refact', password: 'refact'}
         user.password = encodePassword(user.password)

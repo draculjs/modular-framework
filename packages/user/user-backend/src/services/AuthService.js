@@ -6,64 +6,67 @@ import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
-import {authLdapAndGetUserInfo} from './ldapService';
-import {createUser} from "./UserService";
-import {findRoleByName} from "./RoleService";
+import {authLdapAndGetUser, isLdapAuthEnable} from './LdapService';
+import {SettingCache} from "@dracul/settings-backend";
 
 const {v4: uuidv4} = require('uuid');
 
 export const auth = function ({username, password}, req) {
 
     return new Promise(async (resolve, reject) => {
-
+        let user = null
         let decodedPassword = decodePassword(password)
 
-        const useLDAP = process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true'
-
-        if (useLDAP) {
+        if (await isLdapAuthEnable()) {
             try {
-                const userLdapInfo = await authLdapAndGetUserInfo(username, decodedPassword)
-                await getLocalUserOrCreateIfItDoesntExists(userLdapInfo)
+                const user = await authLdapAndGetUser(username, decodedPassword)
+
+                if (!user) {
+                    winston.error('No se pudo obtener ni crear el usuario local para LDAP')
+                }
+
             } catch (error) {
                 winston.error('LDAP AUTH ERROR ' + error)
             }
         }
 
-        const user =  await findUserByUsername(username)
+        if (!user) {
+
+            user = await findUserByUsername(username)
+
+            //Si obtuve usuario chequeo la password
+            if (user && !checkPassword(decodedPassword, user.password)) {
+                winston.warn('AuthService.auth: BadCredentials => ' + username)
+                createLoginFail(username, req)
+                return reject('BadCredentials')
+            }
+        }
 
         if (!user) {
             winston.warn('AuthService.auth: UserDoesntExist => ' + username)
-            reject('UserDoesntExist')
+            return reject('UserDoesntExist')
 
         } else if (user && user.active === false) {
             winston.warn('AuthService.auth: DisabledUser => ' + username)
-            reject('DisabledUser')
+            return reject('DisabledUser')
         }
 
-        //Chequeo de password si existe el usuario
-        if (checkLocalPassword(decodedPassword, user.password)) {
 
-            try {
-                const session = await createSession(user, req)
+        try {
+            const session = await createSession(user, req)
 
-                let {token, payload, options} = generateToken(user, session.id)
-                const refreshToken = await updateRefreshToken(user, session);
+            let {token, payload, options} = generateToken(user, session.id)
+            const refreshToken = await updateRefreshToken(user, session);
 
-                winston.info('AuthService.auth successful by ' + user.username)
-                resolve({token, payload, options, refreshToken})
+            winston.info('AuthService.auth successful by ' + user.username)
+            return resolve({token, payload, options, refreshToken})
 
-            } catch (error) {
-                winston.error('AuthService.auth.createSession ', error)
-                reject(error)
-            }
-
-
-        } else {
-            winston.warn('AuthService.auth: BadCredentials => ' + username)
-
-            createLoginFail(username, req)
-            reject('BadCredentials')
+        } catch (error) {
+            winston.error('AuthService.auth.createSession ', error)
+            return reject(error)
         }
+
+
     })
 }
 
@@ -103,33 +106,8 @@ async function updateRefreshToken(user, session) {
     return refreshToken;
 }
 
-function checkLocalPassword(decodedPassword, userPassword) {
+function checkPassword(decodedPassword, userPassword) {
     return bcryptjs.compareSync(decodedPassword, userPassword);
-}
-
-async function getLocalUserOrCreateIfItDoesntExists(userLdapInfo){
-    let user = await findUserByUsername(userLdapInfo.username)
-
-    if (!user) {
-        try {
-
-            if(!userLdapInfo.role) {
-                const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "Desarrollo"
-                let role = await findRoleByName(ROLE_NAME)
-                if(!role){
-                    return Promise.reject(`getLocalUserOrCreateIfItDoesntExists ${ROLE_NAME} role doesn't exist`)
-                }
-                userLdapInfo.role = role
-            }
-            userLdapInfo.active = true
-            user =  await createUser(userLdapInfo)
-            return user
-        } catch (error) {
-            winston.error(`Error while trying to create user: '${error}'`)
-        }
-    }
-
-    return user
 }
 
 
