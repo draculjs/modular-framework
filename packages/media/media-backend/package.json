@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.9.5",
+  "version": "1.10.0",
   "author": "Cristian Incarnato",
   "main": "./lib/exports.js",
   "scripts": {
@@ -26,10 +26,10 @@
   },
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
-    "@dracul/common-backend": "^1.9.2",
-    "@dracul/customize-backend": "^1.9.5",
+    "@dracul/common-backend": "^1.10.0",
+    "@dracul/customize-backend": "^1.10.0",
     "@dracul/logger-backend": "^1.7.12",
-    "@dracul/user-backend": "^1.9.5",
+    "@dracul/user-backend": "^1.10.0",
     "apollo-server-express": "^2.25.3",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
@@ -74,8 +74,8 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@shelf/jest-mongodb": "^1.1.5",
-    "babel-jest": "^25.4.0",
-    "jest": "^25.4.0",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "mime-types": "^2.1.33",
     "mock-express-request": "^0.2.2",
     "mockingoose": "^2.13.2",

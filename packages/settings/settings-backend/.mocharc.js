@@ -6,5 +6,5 @@ module.exports = {
     slow: 1000,
     recursive: true,
     timeout: 120000,
-    file: ['./test/global.js']
+  //  file: ['./test/global.js']
 }

@@ -1,6 +1,49 @@
 import Settings from '../models/SettingsModel'
 import {UserInputError} from 'apollo-server-express'
 
+
+export const initializeSettings = async function (settings = []) {
+
+    if(!Array.isArray(settings)){
+        throw new Error('Settings must be an Array')
+    }
+
+    let settingsDoc = []
+
+    for (let setting of settings) {
+
+        let settingDoc = await initializeSetting(setting)
+
+        settingsDoc.push(settingDoc)
+    }
+
+    return settingsDoc
+}
+
+
+export const initializeSetting = async function (setting) {
+
+    if(!(setting instanceof Object)){
+        throw new Error('Setting must be an Object')
+    }
+
+
+    if(!setting.key){
+        throw new Error('Setting must have a key')
+    }
+
+    if(!setting.label){
+        throw new Error('Setting must have a label')
+    }
+
+    let settingDoc = await findSettingsByKey(setting.key)
+    if (!settingDoc) {
+        settingDoc = await createSettings(null, setting)
+    }
+    return settingDoc
+}
+
+
 export const findSettings = async function (id) {
     return new Promise((resolve, reject) => {
         Settings.findOne({_id: id}).exec((err, res) => (
@@ -13,6 +56,14 @@ export const findSettingsByKey = async function (key) {
     return new Promise((resolve, reject) => {
         Settings.findOne({key: key}).exec((err, res) => (
             err ? reject(err) : resolve(res)
+        ));
+    })
+}
+
+export const getSettingsValueByKey = async function (key) {
+    return new Promise((resolve, reject) => {
+        Settings.findOne({key: key}).exec((err, doc) => (
+            err ? reject(err) : resolve(doc ? doc.value : null)
         ));
     })
 }
@@ -106,6 +157,32 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
         Settings.findOneAndUpdate({_id: id},
             {
                 key,
+                value,
+                label,
+                ...(type ? {type} : {}),
+                ...(options ? {options} : {}),
+            },
+            {new: true, runValidators: true, context: 'query'},
+            (error, doc) => {
+
+                if (error) {
+                    if (error.name == "ValidationError") {
+                        return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+
+                    }
+                    return rejects(error)
+
+                }
+
+                resolve(doc)
+            })
+    })
+}
+
+export const updateSettingsByKey = async function (authUser, {key, value, label, type, options}) {
+    return new Promise((resolve, rejects) => {
+        Settings.findOneAndUpdate({key: key},
+            {
                 value,
                 label,
                 ...(type ? {type} : {}),

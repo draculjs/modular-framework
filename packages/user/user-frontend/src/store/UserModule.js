@@ -101,7 +101,7 @@ export default {
             })
         },
 
-        login({commit, dispatch}, {username, password}) {
+        login({commit, dispatch}, {username, password, useLDAP}) {
 
             return new Promise((resolve, reject) => {
 
@@ -115,8 +115,11 @@ export default {
                     return reject(error.i18nMessage)
                 }
 
-                AuthProvider.auth(username, password)
+                
+
+                AuthProvider.auth(username, password, useLDAP)
                     .then((response) => {
+                        console.log(response.data.auth)
                         commit('setAccessToken', response.data.auth.token)
                         commit('setRefreshToken', response.data.auth.refreshToken)
                         dispatch('fetchMe')

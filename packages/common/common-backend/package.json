@@ -1,6 +1,6 @@
 {
   "name": "@dracul/common-backend",
-  "version": "1.9.2",
+  "version": "1.10.0",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -40,7 +40,7 @@
     "@babel/preset-env": "^7.8.7",
     "graphql": "^15.8.0",
     "graphql-tools": "^8.2.0",
-    "jest": "^26.1.0",
+    "jest": "^24.9.0",
     "merge-graphql-schemas": "^1.7.8",
     "mongoose": "5.13.14",
     "mongoose-paginate-v2": "^1.6.3",

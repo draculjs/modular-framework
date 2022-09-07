@@ -32,8 +32,8 @@ async function startApp(){
             DefaultLogger.info(`Graphql Server ready: ${URL}${apolloServer.graphqlPath}`)
         })
         server.setTimeout(420000);
-    }catch (e) {
-        DefaultLogger.error(err.message, err)
+    }catch (error) {
+        DefaultLogger.error(error.message, error)
     }
 
 

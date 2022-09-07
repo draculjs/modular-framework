@@ -24,15 +24,15 @@
                   :rules="[v => !!v || ' ']"
     />
 
-    <v-btn
+      <v-btn
         :disabled="!isFormValid"
         ref="loginBtn"
         :loading="loading"
         min-width="100%"
         color="secondary"
-        class="onSecondary--text"
+        class="onSecondary--text mt-3"
         @click="signIn" v-t="'auth.signIn'">
-    </v-btn>
+      </v-btn>
 
   </v-form>
 
@@ -52,7 +52,7 @@ export default {
         username: "",
         password: ""
       },
-      isFormValid: false
+      isFormValid: false,
     }
   },
 
@@ -80,7 +80,7 @@ export default {
       this.loading = true
       this.login({
         username: this.form.username,
-        password: b64EncodeUnicode(this.form.password)
+        password: b64EncodeUnicode(this.form.password),
       })
           .then(() => {
             this.$router.push({name:'home'})

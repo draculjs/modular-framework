@@ -84,12 +84,13 @@ export default {
               this.$emit('itemCreated')
               //this.$emit('close')
             })
-            .catch((err) => {
-              console.log("UploadFile ERROR", err)
-              this.errorMessage = err.message
+            .catch((error) => {
+              const expirationDateError = error.message.includes('Expiration date must be older than current date') ? true : false;
+              if(expirationDateError) this.errorMessage = this.$t("media.file.wrongExpirationDate")
             })
             .finally(() => this.loading = false)
-
+      }else{
+        this.errorMessage = this.$t("media.file.noFile")
       }
     }
   }

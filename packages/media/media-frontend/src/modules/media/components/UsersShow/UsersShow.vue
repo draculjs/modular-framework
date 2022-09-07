@@ -1,5 +1,5 @@
 <template>
-  <show-field :value="stringUsers" :label="$t('media.file.users')" icon="person" />
+  <show-field :value="sharedWith" :label="$t('media.file.users')" icon="person" />
 </template>
 
 <script>
@@ -15,13 +15,28 @@ export default {
   data() {
     return {
       fileUsers: [],
-      stringUsers: ''
+      sharedWith: ''
     }
   },
   mounted() {
     userProvider.users().then((result) => {
       this.fileUsers = result.data.users.filter((user) => this.fileIdUsers.includes(user.id))
-      this.stringUsers = this.fileUsers.length > 0 ? this.fileUsers.reduce((a, b) => (a.name || a) + ", " + b.name) : "-"
+
+      if(this.fileUsers.length > 1){
+        
+        for (let userCounter = 0; userCounter < this.fileUsers.length; userCounter++) {
+          if (userCounter == 0){
+            this.sharedWith += `${this.fileUsers[userCounter].name}`
+          }else{
+            this.sharedWith += `, ${this.fileUsers[userCounter].name}`
+          }
+        }
+        
+      }else if (this.fileUsers.length == 1){
+        this.sharedWith = this.fileUsers[0].name
+      }else{
+        this.sharedWith = '-'
+      }
     })
   },
 }

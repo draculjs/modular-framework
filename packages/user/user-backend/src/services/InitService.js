@@ -31,6 +31,10 @@ import {
     SECURITY_USER_SHOW,
 } from "../permissions";
 
+import {LDAP_SETTINGS} from "../data/ldap-settings";
+
+import {initializeSettings} from "@dracul/settings-backend";
+
 const initPermissions = async (permissions) => {
     if (!permissions) {
         permissions = [SECURITY_USER_CREATE, SECURITY_USER_EDIT, SECURITY_USER_DELETE, SECURITY_USER_SHOW,
@@ -287,6 +291,14 @@ const rootRecover = async (password = "root.123") => {
 }
 
 
+const initLdapSettings = async () => {
+
+    const settings = await initializeSettings(LDAP_SETTINGS)
+
+    return settings
+}
+
+
 export {
     initPermissions,
     initAdminRole,
@@ -296,5 +308,6 @@ export {
     initRootUser,
     initSupervisorUser,
     initOperatorUser,
-    rootRecover
+    rootRecover,
+    initLdapSettings
 }
