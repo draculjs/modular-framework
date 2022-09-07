@@ -15,7 +15,7 @@ describe("Template", () => {
 
     test('TemplateTEST', async () => {
 
-
+        expect(true).toBe(true)
     });
 
 })

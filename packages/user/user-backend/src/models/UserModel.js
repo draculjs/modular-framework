@@ -57,7 +57,8 @@ const UserSchema = new mongoose.Schema({
         ],
         default: [],
         _id: false
-    }
+    },
+    fromLDAP: {type: Boolean, required: true, default: false},
 }, {timestamps: true});
 
 UserSchema.set('toJSON', {getters: true});

@@ -25,3 +25,9 @@ export const SETTING3 = {
     value: true,
     label: {en: 'Extraordinary', es: 'Extraordinario', pt: 'Extraordinario'}
 }
+
+export const SETTINGS = [
+    SETTING1,
+    SETTING2,
+    SETTING3
+]

@@ -15,7 +15,9 @@ import {
     updateSettings,
     updateSettingsByKey,
     paginateSettings,
-    deleteSettings
+    deleteSettings,
+    initializeSettings,
+    initializeSetting
 } from "./services/SettingsService"
 
 import SettingCache from "./cache/SettingCache";
@@ -39,6 +41,8 @@ export {
     updateSettingsByKey,
     paginateSettings,
     deleteSettings,
+    initializeSettings,
+    initializeSetting,
     //CACHE
     SettingCache
 }

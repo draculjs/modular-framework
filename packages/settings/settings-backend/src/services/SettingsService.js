@@ -1,6 +1,49 @@
 import Settings from '../models/SettingsModel'
 import {UserInputError} from 'apollo-server-express'
 
+
+export const initializeSettings = async function (settings = []) {
+
+    if(!Array.isArray(settings)){
+        throw new Error('Settings must be an Array')
+    }
+
+    let settingsDoc = []
+
+    for (let setting of settings) {
+
+        let settingDoc = await initializeSetting(setting)
+
+        settingsDoc.push(settingDoc)
+    }
+
+    return settingsDoc
+}
+
+
+export const initializeSetting = async function (setting) {
+
+    if(!(setting instanceof Object)){
+        throw new Error('Setting must be an Object')
+    }
+
+
+    if(!setting.key){
+        throw new Error('Setting must have a key')
+    }
+
+    if(!setting.label){
+        throw new Error('Setting must have a label')
+    }
+
+    let settingDoc = await findSettingsByKey(setting.key)
+    if (!settingDoc) {
+        settingDoc = await createSettings(null, setting)
+    }
+    return settingDoc
+}
+
+
 export const findSettings = async function (id) {
     return new Promise((resolve, reject) => {
         Settings.findOne({_id: id}).exec((err, res) => (
