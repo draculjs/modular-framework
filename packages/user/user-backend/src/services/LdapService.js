@@ -124,7 +124,7 @@ function searchUserInLdap(username) {
             return reject('ENV LDAP_OU undefined')
         }
 
-        ldapClient.search(`cn=${username}, ${LDAP_OU}, ${LDAP_DN}`, {}, (error, response) => {
+        ldapClient.search(`cn=${username}, ou=${LDAP_OU}, ${LDAP_DN}`, {}, (error, response) => {
             if (error) return reject(error)
 
             response.on('searchEntry', (entry) => resolve(entry))

@@ -20,7 +20,7 @@ export const LDAP_SETTINGS_TEST = [
     {
         key: 'LDAP_OU',
         type: 'string',
-        value: 'ou=People',
+        value: 'People',
         label: {en: 'LDAP OU', es: 'LDAP OU', pt: 'LDAP OU'}
     },
     {
