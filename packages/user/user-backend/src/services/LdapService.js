@@ -6,9 +6,16 @@ import {findRoleByName} from "./RoleService";
 const ldap = require('ldapjs')
 
 async function isLdapAuthEnable(){
-    const LDAP_AUTH_SETTING = await SettingCache('LDAP_AUTH')
-    const LDAP_AUTH = LDAP_AUTH_SETTING ? LDAP_AUTH_SETTING : (process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true')
-    return LDAP_AUTH
+    try {
+        const LDAP_AUTH_SETTING = await SettingCache('LDAP_AUTH')
+        const LDAP_IP = await SettingCache('LDAP_IP')
+        const LDAP_AUTH = LDAP_AUTH_SETTING ? LDAP_AUTH_SETTING : (process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true')
+        
+        return (LDAP_AUTH && LDAP_IP) ? LDAP_AUTH : false
+    } catch (error) {
+        winston.error(error)
+    }
+    
 }
 
 async function getLdapDefaultRole(){
