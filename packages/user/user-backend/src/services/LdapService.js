@@ -118,24 +118,44 @@ function mapLdapAttributesToUserObject(entry) {
 function searchUserInLdap(username) {
     return new Promise(async (resolve, reject) => {
 
-        let ldapClient = await loginAsAdmin()
+        const ldapClient = await loginAsAdmin()
 
         const LDAP_DN = await getLdapVar('LDAP_DN')
         const LDAP_OU = await getLdapVar('LDAP_OU')
 
-        if(!LDAP_DN){
-            return reject('ENV LDAP_DN undefined')
-        }
-
-        if(!LDAP_OU){
-            return reject('ENV LDAP_OU undefined')
-        }
+        if(!LDAP_DN) return reject('ENV LDAP_DN undefined')
+        if(!LDAP_OU) return reject('ENV LDAP_OU undefined')
 
         ldapClient.search(`cn=${username}, ou=${LDAP_OU}, ${LDAP_DN}`, {}, (error, response) => {
             if (error) return reject(error)
 
             response.on('searchEntry', (entry) => resolve(entry))
             response.on('error', () => reject('LDAP user not found'))
+        })
+    })
+}
+
+function searchGroupsList() {
+    return new Promise(async (resolve, reject) => {
+
+        const ldapClient = await loginAsAdmin()
+
+        const LDAP_DN = await getLdapVar('LDAP_DN')
+        const LDAP_OU = await getLdapVar('LDAP_OU')
+
+        if(!LDAP_DN) return reject('ENV LDAP_DN undefined')
+        if(!LDAP_OU) return reject('ENV LDAP_OU undefined')
+
+        const options = {
+            scope: 'sub'
+        }
+
+        ldapClient.search(`ou=group, ${LDAP_DN}`, options, (error, response) => {
+            if (error) return reject(error)
+            
+
+            response.on('searchEntry', (entry) => resolve(entry))
+            response.on('error', () => reject('LDAP groups OU not found'))
         })
     })
 }
@@ -165,7 +185,7 @@ async function getLocalUserOrCreate(userLdapInfo) {
 
             userLdapInfo.active = true
             user = await createUser(userLdapInfo)
-            console.log("user:",user)
+            console.log("user:", user)
             return Promise.resolve(user)
 
         } catch (error) {
@@ -183,6 +203,9 @@ async function authLdapAndGetUser(username, decodedPassword) {
         const entry = await searchUserInLdap(username)
         const userInfo = mapLdapAttributesToUserObject(entry)
         console.log("authLdapAndGetUser userInfo", userInfo)
+
+        const group = await searchGroupsList()
+        console.log(`LDAP GROUP LIST: '${group}'`)
 
         if (!userInfo) {
             return Promise.reject('LdapUserDoesntExist')
