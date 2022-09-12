@@ -1,10 +1,11 @@
 <template>
-  <crud-update :open="open"
-               :loading="loading"
-               :title="title"
-               :errorMessage="errorMessage"
-               @update="update"
-               @close="$emit('close')"
+  <crud-update 
+    :open="open"
+    :loading="loading"
+    :title="title"
+    :errorMessage="errorMessage"
+    @update="update"
+    @close="$emit('close')"
   >
 
     <v-card flat class="mb-3">
@@ -47,7 +48,7 @@ export default {
         tags: this.item.tags,
         expirationDate: this.item.expirationDate,
         isPublic: this.item.isPublic ? this.item.isPublic : false,
-        groups: this.item.groups ? this.item.group : [],
+        groups: this.item.groups ? this.item.groups : [],
         users: this.item.users ? this.item.users : []
       }
     }
