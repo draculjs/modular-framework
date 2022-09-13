@@ -1,4 +1,4 @@
-const sortQuery = (orderBy, orderDesc) => {
+export const sortQuery = (orderBy, orderDesc) => {
     if (orderBy) {
         return (orderDesc ? '-' : '') + orderBy
     } else {
@@ -6,5 +6,4 @@ const sortQuery = (orderBy, orderDesc) => {
     }
 }
 
-module.exports = sortQuery
-module.exports.sortQuery = sortQuery
+export default sortQuery

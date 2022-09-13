@@ -1,4 +1,4 @@
-const searchQuery = (searchFields, searchString) => {
+export const searchQuery = (searchFields, searchString) => {
 
     let qs = {}
 
@@ -17,6 +17,4 @@ const searchQuery = (searchFields, searchString) => {
     return qs
 }
 
-module.exports = searchQuery
-module.exports.searchQuery = searchQuery
-
+export default searchQuery
