@@ -3,12 +3,14 @@
     <v-card>
 
       <toolbar-dialog
-          info
-          :title="title"
-          @close="$emit('close')"
+        info
+        :title="title"
+        @close="$emit('close')"
       />
 
-      <slot></slot>
+      <v-card-text>
+        <slot></slot>
+      </v-card-text>
 
       <v-divider/>
 
