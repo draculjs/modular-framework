@@ -1,5 +1,5 @@
 <template>
-  <show-field :value="sharedWith" :label="$t('media.file.groups')" icon="group" />
+  <show-field :value="sharedWith" :label="$t('media.file.groups')" icon="group" :overflowX="overflowX"/>
 </template>
 
 <script>
@@ -10,7 +10,8 @@ export default {
   name: "GroupsShow",
   components: { ShowField },
   props: {
-    fileIdGroups: { type: Array }
+    fileIdGroups: { type: Array },
+    overflowX: { type: Boolean, default: false }
   },
   data() {
     return {
