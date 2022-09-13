@@ -18,8 +18,6 @@
       </v-card-text>
     </v-card>
 
-    <file-view :file="item"></file-view>
-
   </crud-update>
 </template>
 
@@ -27,11 +25,10 @@
 import FileProvider from "../../../providers/FileProvider";
 import {CrudUpdate, ClientError} from '@dracul/common-frontend'
 import FileForm from "../FileForm";
-import FileView from "../../../components/FileView/FileView";
 
 export default {
   name: "FileUpdate",
-  components: {FileView, FileForm, CrudUpdate},
+  components: {FileForm, CrudUpdate},
   props: {
     open: {type: Boolean, default: true},
     item: {type: Object, required: true}
