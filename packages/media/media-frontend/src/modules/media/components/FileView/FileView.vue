@@ -1,81 +1,99 @@
 <template>
-  <v-row dense>
 
-    <v-col cols="12" sm="6">
+  <v-card-text>
+    <v-tabs>
+      <v-tab
+        v-model="tab"
+        key="generalTab"
+      >
+        
+      </v-tab>
 
-      <img v-if="isImage" :style="{width: '100%'}" :src="getSrc"/>
+      <v-tab
+        v-model="tab"
+        key="privacyTab"
+      >
+        
+      </v-tab>
 
-      <audio v-if="isAudio" controls>
-        <source :src="getSrc" :type="file.mimetype">
-        Your browser does not support the audio element.
-      </audio>
+    </v-tabs>
 
-      <video v-if="isVideo" width="100%" controls>
-        <source :src="getSrc" :type="file.mimetype"/>
-      </video>
+    <v-row dense>
 
-      <pdf-web-viewer :url="bufferedURL" v-if="isPdf"></pdf-web-viewer>
+      <v-col cols="12" sm="6">
 
-      <a v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" target="_blank" :href="getSrc" class="text-uppercase">
-        {{ $t('media.file.download') }}
-      </a>
-    </v-col>
+        <img v-if="isImage" :style="{width: '100%'}" :src="getSrc"/>
 
-    <v-col cols="12" sm="6">
-      <show-field :value="file.filename" :label="$t('media.file.filename')" icon="description"/>
-      <show-field :value="file.id" :label="$t('media.file.id')" icon="badge"/>
-      <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
-      <show-field :value="isPublic" label="Privacidad del archivo" icon="mdi-cctv"/>
-      <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
-      <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
-      <show-field :value="file.tags ? file.tags.join(', ') : ''" :label="$t('media.file.tags')" icon="tag"/>
-      <groups-show v-if="$store.getters.hasPermission('SECURITY_GROUP_SHOW')" :fileIdGroups="file.groups"></groups-show>
-      <users-show v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users"></users-show>
+        <audio v-if="isAudio" controls>
+          <source :src="getSrc" :type="file.mimetype">
+          Your browser does not support the audio element.
+        </audio>
 
-      <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
-        <v-list-item-icon class="mr-5">
-          <v-btn small icon @click="copyToClipboard">
-            <v-icon color="black">content_copy</v-icon>
+        <video v-if="isVideo" width="100%" controls>
+          <source :src="getSrc" :type="file.mimetype"/>
+        </video>
+
+        <pdf-web-viewer :url="bufferedURL" v-if="isPdf"></pdf-web-viewer>
+
+        <a v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" target="_blank" :href="getSrc" class="text-uppercase">
+          {{ $t('media.file.download') }}
+        </a>
+      </v-col>
+
+      <v-col cols="12" sm="6">
+        <show-field :value="file.filename" :label="$t('media.file.filename')" icon="description"/>
+        <show-field :value="file.id" :label="$t('media.file.id')" icon="badge"/>
+        <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
+        <show-field :value="isPublic" label="Privacidad del archivo" icon="mdi-cctv"/>
+        <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
+        <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
+        <show-field :value="file.tags ? file.tags.join(', ') : ''" :label="$t('media.file.tags')" icon="tag"/>
+        <groups-show v-if="$store.getters.hasPermission('SECURITY_GROUP_SHOW')" :fileIdGroups="file.groups"></groups-show>
+        <users-show v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users"></users-show>
+
+        <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
+          <v-list-item-icon class="mr-5">
+            <v-btn small icon @click="copyToClipboard">
+              <v-icon color="black">content_copy</v-icon>
+            </v-btn>
+            <input type="hidden" id="url" :value="file.url">
+          </v-list-item-icon>
+          <v-list-item-content class="mr-0">
+            <span>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item v-else>
+
+          <span v-if="isPdf">
+            <v-icon color="black">mdi-book-open</v-icon>
+            Abrir en nueva pestaña
+            <v-btn x-small icon color="blue"
+                  target="_blank"
+                  :href="`/pdf-viewer?url=${bufferedURL}`">
+              <v-icon>launch</v-icon>
+            </v-btn>
+          </span>
+        </v-list-item>
+      </v-col>
+
+      <v-snackbar
+          v-model="copyResult" timeout="2000"
+      >
+        {{ copyText }}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+              color="pink"
+              text
+              v-bind="attrs"
+              @click="copyResult = false"
+          >
+            <v-icon>close</v-icon>
           </v-btn>
-          <input type="hidden" id="url" :value="file.url">
-        </v-list-item-icon>
-        <v-list-item-content class="mr-0">
-          <span>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item v-else>
-
-        <span v-if="isPdf">
-          <v-icon color="black">mdi-book-open</v-icon>
-          Abrir en nueva pestaña
-          <v-btn x-small icon color="blue"
-                 target="_blank"
-                 :href="`/pdf-viewer?url=${bufferedURL}`">
-            <v-icon>launch</v-icon>
-          </v-btn>
-        </span>
-      </v-list-item>
-
-
-    </v-col>
-
-    <v-snackbar
-        v-model="copyResult" timeout="2000"
-    >
-      {{ copyText }}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="copyResult = false"
-        >
-          <v-icon>close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
-  </v-row>
+        </template>
+      </v-snackbar>
+    </v-row>
+  </v-card-text>
 </template>
 
 <script>
@@ -93,7 +111,8 @@ export default {
   data() {
     return {
       copyResult: false,
-      copyText: 'Copy to clipboard'
+      copyText: 'Copy to clipboard',
+      tab: null
     }
   },
   computed: {

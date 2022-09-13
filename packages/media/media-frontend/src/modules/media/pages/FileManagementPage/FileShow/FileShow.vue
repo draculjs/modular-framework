@@ -1,11 +1,9 @@
 <template>
     <crud-show :title="title" :open="open"  @close="$emit('close')">
-
         <v-card-text>
             <file-view :file="item" />
         </v-card-text>
-
-  </crud-show>
+    </crud-show>
 </template>
 
 <script>

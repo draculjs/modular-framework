@@ -8,9 +8,7 @@
           @close="$emit('close')"
       />
 
-      <v-card-text>
-        <slot></slot>
-      </v-card-text>
+      <slot></slot>
 
       <v-divider/>
 
