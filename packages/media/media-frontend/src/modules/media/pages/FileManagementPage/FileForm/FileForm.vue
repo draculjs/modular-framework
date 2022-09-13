@@ -46,8 +46,7 @@
             color="secondary"
         ></v-text-field>
       </v-col>
-
-      <v-col cols="12" md="6" sm="12">
+        <v-col cols="12" md="6" sm="12">
         <group-autocomplete
           v-model="form.groups"
           multiple
