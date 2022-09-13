@@ -1,4 +1,4 @@
-export const filterQuery = (filters) => {
+const filterQuery = (filters) => {
 
     let qs = {}
 
@@ -48,4 +48,5 @@ export const filterQuery = (filters) => {
     return qs
 }
 
-export default filterQuery
+module.exports = filterQuery
+module.exports.filterQuery = filterQuery
