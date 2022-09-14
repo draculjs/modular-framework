@@ -8,7 +8,13 @@ import {
 const mongoHandler = require('../utils/mongo-handler');
 
 //Init DB
-import {initPermissions, initAdminRole, initRootUser, initRoles} from "../../src/services/InitService";
+import {
+    initPermissions,
+    initAdminRole,
+    initSupervisorRole,
+    initRootUser,
+    initRoles,
+} from "../../src/services/InitService";
 
 import {initializeSettings} from "@dracul/settings-backend";
 import {LDAP_SETTINGS_TEST} from "../data/settings.data";
@@ -20,6 +26,7 @@ describe("LdapService", () => {
         await mongoHandler.connect()
         await initPermissions()
         await initAdminRole()
+        await initSupervisorRole()
         await initRootUser()
         await initRoles([DESARROLLO_ROLE])
         await initializeSettings(LDAP_SETTINGS_TEST)
@@ -78,34 +85,25 @@ describe("LdapService", () => {
 
     test('Search user in LDAP', async () => {
         let user = {username: 'refact', password: 'refact'}
-
         let entry = await searchUserInLdap(user.username)
-
-        console.log("entry",entry)
-
         let userInfo = mapLdapAttributesToUserObject(entry)
-
+        
+        console.log("entry",entry)
         console.log("userInfo",userInfo)
 
         await expect(userInfo).toBeInstanceOf(Object)
-       // await expect(userInfo).toBeInstanceOf('SearchEntry')
-       // await expect(userInfo.username).toBeInstanceOf(String)
         await expect(userInfo.username).toBe('refact')
         await expect(userInfo.email).toBe('refact@refact.com')
         await expect(userInfo.password).toBe('refact')
         await expect(userInfo.groupId).toBe('10000')
-
-        //await expect(userInfo.groupName).toBe('Desarrollo')
-
     }, 2000);
 
 
     test('Auth Ldap real ok', async () => {
         let credentials = {username: 'refact', password: 'refact'}
-
         let user = await authLdapAndGetUser(credentials.username, credentials.password)
 
-        console.log("user",user)
+        console.log(`testing user ldap auth with the following user: '${user}'`)
 
         await expect(user).toBeInstanceOf(Object)
         await expect(user.username).toBe('refact')
@@ -117,13 +115,28 @@ describe("LdapService", () => {
     test('Auth Ldap real fail', async () => {
         let user = {username: 'refact', password: 'asdasd'}
 
-       await expect(authLdapAndGetUser(user.username, user.password)).rejects.toMatch('LdapInvalidCredentials')
-
-
+        await expect(authLdapAndGetUser(user.username, user.password)).rejects.toThrowError('LdapInvalidCredentials')
     }, 2000);
 
+    test(`Establishing user role by LDAP's user group`, async () => {
+        const credentials1 = {
+            username: 'refact2',
+            password: 'refact2',
+        }
 
+        const credentials2 = {
+            username: 'test',
+            password: 'test',
+        }
 
+        const supervisorUser = await authLdapAndGetUser(credentials1.username, credentials1.password)
+        await expect(supervisorUser.role.name).toBe('supervisor')
 
+        const desarrolladorUser = await authLdapAndGetUser(credentials2.username, credentials2.password)
+        await expect(desarrolladorUser.role.name).toBe('Desarrollo')
+
+    }, 2000)
+
+    
 })
 

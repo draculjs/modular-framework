@@ -7,7 +7,6 @@ import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserServic
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
 import {authLdapAndGetUser, isLdapAuthEnable} from './LdapService';
-import {SettingCache} from "@dracul/settings-backend";
 
 const {v4: uuidv4} = require('uuid');
 
