@@ -26,17 +26,10 @@
   },
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
-<<<<<<< HEAD
-    "@dracul/common-backend": "^1.10.0",
-    "@dracul/customize-backend": "^1.10.0",
-    "@dracul/logger-backend": "^2.0.0",
-    "@dracul/user-backend": "^1.10.0",
-=======
     "@dracul/common-backend": "^1.10.4",
     "@dracul/customize-backend": "^1.10.4",
     "@dracul/logger-backend": "^1.7.12",
     "@dracul/user-backend": "^1.10.4",
->>>>>>> e6a4135d7bd09e9b5bc917ae96d0c6094693c6eb
     "apollo-server-express": "^2.25.3",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
