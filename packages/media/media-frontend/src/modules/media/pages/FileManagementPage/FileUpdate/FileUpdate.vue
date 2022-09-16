@@ -1,10 +1,11 @@
 <template>
-  <crud-update :open="open"
-               :loading="loading"
-               :title="title"
-               :errorMessage="errorMessage"
-               @update="update"
-               @close="$emit('close')"
+  <crud-update 
+    :open="open"
+    :loading="loading"
+    :title="title"
+    :errorMessage="errorMessage"
+    @update="update"
+    @close="$emit('close')"
   >
 
     <v-card flat class="mb-3">
@@ -17,8 +18,6 @@
       </v-card-text>
     </v-card>
 
-    <file-view :file="item"></file-view>
-
   </crud-update>
 </template>
 
@@ -26,11 +25,10 @@
 import FileProvider from "../../../providers/FileProvider";
 import {CrudUpdate, ClientError} from '@dracul/common-frontend'
 import FileForm from "../FileForm";
-import FileView from "../../../components/FileView/FileView";
 
 export default {
   name: "FileUpdate",
-  components: {FileView, FileForm, CrudUpdate},
+  components: {FileForm, CrudUpdate},
   props: {
     open: {type: Boolean, default: true},
     item: {type: Object, required: true}
@@ -47,7 +45,7 @@ export default {
         tags: this.item.tags,
         expirationDate: this.item.expirationDate,
         isPublic: this.item.isPublic ? this.item.isPublic : false,
-        groups: this.item.groups ? this.item.group : [],
+        groups: this.item.groups ? this.item.groups : [],
         users: this.item.users ? this.item.users : []
       }
     }

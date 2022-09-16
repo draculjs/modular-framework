@@ -3,9 +3,9 @@
     <v-card>
 
       <toolbar-dialog
-          info
-          :title="title"
-          @close="$emit('close')"
+        info
+        :title="title"
+        @close="$emit('close')"
       />
 
       <v-card-text>
