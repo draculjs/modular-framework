@@ -5,17 +5,20 @@ import {findRoleByName} from "./RoleService";
 
 const ldap = require('ldapjs')
 
-async function isLdapAuthEnable(){
+async function isLdapAuthEnabled(){
     try {
         const LDAP_AUTH_SETTING = await getLdapVar('LDAP_AUTH')
         const LDAP_IP = await getLdapVar('LDAP_IP')
-        const LDAP_AUTH = LDAP_AUTH_SETTING ? LDAP_AUTH_SETTING : (process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true')
-        
-        return (LDAP_AUTH && LDAP_IP) ? LDAP_AUTH : false
+
+        if((LDAP_AUTH_SETTING === 'enable' && LDAP_IP) || (process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true')){
+            return true
+        }else{
+            return false
+        }
+
     } catch (error) {
         winston.error(error)
     }
-    
 }
 
 async function determineUserRoleByLdapGroup(groupName = null){
@@ -34,16 +37,13 @@ async function getLdapVar(varName){
 
         if(!ldapVariable && process.env[varName]){
             return process.env[varName]
-        }
-        
-        if(!ldapVariable && !process.env[varName]){
-            const error = `LDAP variable ${varName} not found`
-            
-            winston.error(error)
-            throw new Error(error)
-        }
-    
-        return ldapVariable
+
+        } else if(!ldapVariable && !process.env[varName]){
+            return null
+
+        } else return ldapVariable
+
+
     } catch (error) {
         winston.error(error)
         throw new Error(error)
@@ -52,6 +52,7 @@ async function getLdapVar(varName){
 
 
 function connectToLDAP(ip, port = '389') {
+    if (!ip) throw new Error('LDAP IP not found')
         
     return new Promise((resolve, reject) => {
         let ldapClient
@@ -74,12 +75,12 @@ function connectToLDAP(ip, port = '389') {
 function loginAsAdmin(adminUser, adminPass) {
 
     return new Promise(async (resolve, reject) => {
-        const LDAP_IP = await getLdapVar('LDAP_IP')
-        const LDAP_ADMIN = adminUser ? adminUser : await getLdapVar('LDAP_ADMIN_NAME')
-        const LDAP_PASS = adminPass ? adminPass : await getLdapVar('LDAP_ADMIN_PASS')
-        const LDAP_DN = await getLdapVar('LDAP_DN')
-
         try {
+            const LDAP_ADMIN = adminUser ? adminUser : await getLdapVar('LDAP_ADMIN_NAME')
+            const LDAP_PASS = adminPass ? adminPass : await getLdapVar('LDAP_ADMIN_PASS')
+            const LDAP_IP = await getLdapVar('LDAP_IP')
+            const LDAP_DN = await getLdapVar('LDAP_DN')
+            
             const ldapClient = await connectToLDAP(LDAP_IP)
 
             ldapClient.bind(
@@ -229,7 +230,7 @@ async function authLdapAndGetUser(username, decodedPassword) {
 }
 
 module.exports = {
-    isLdapAuthEnable,
+    isLdapAuthEnabled,
     getLdapVar,
     authLdapAndGetUser,
     searchUserInLdap,

@@ -6,7 +6,7 @@ import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
-import {authLdapAndGetUser, isLdapAuthEnable} from './LdapService';
+import {authLdapAndGetUser, isLdapAuthEnabled} from './LdapService';
 
 const {v4: uuidv4} = require('uuid');
 
@@ -16,7 +16,7 @@ export const auth = function ({username, password}, req) {
         let user = null
         let decodedPassword = decodePassword(password)
 
-        if (await isLdapAuthEnable()) {
+        if (await isLdapAuthEnabled()) {
             try {
                 user = await authLdapAndGetUser(username, decodedPassword)
             } catch (error) {
