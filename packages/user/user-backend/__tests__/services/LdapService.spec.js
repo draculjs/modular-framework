@@ -51,11 +51,9 @@ describe("LdapService", () => {
     test('Connection to LDAP', async (done) => {
 
         const LDAP_IP = await getLdapVar('LDAP_IP')
-
-        let ldapClient = await connectToLDAP(LDAP_IP)
+        const ldapClient = await connectToLDAP(LDAP_IP)
 
         expect(ldapClient.connected).toBe(true)
-
         done()
 
     }, 2000);
@@ -84,9 +82,9 @@ describe("LdapService", () => {
 
 
     test('Search user in LDAP', async () => {
-        let user = {username: 'refact', password: 'refact'}
-        let entry = await searchUserInLdap(user.username)
-        let userInfo = mapLdapAttributesToUserObject(entry)
+        const user = {username: 'refact', password: 'refact'}
+        const entry = await searchUserInLdap(user.username)
+        const userInfo = mapLdapAttributesToUserObject(entry)
         
         console.log("entry",entry)
         console.log("userInfo",userInfo)
@@ -100,8 +98,8 @@ describe("LdapService", () => {
 
 
     test('Auth Ldap real ok', async () => {
-        let credentials = {username: 'refact', password: 'refact'}
-        let user = await authLdapAndGetUser(credentials.username, credentials.password)
+        const credentials = {username: 'refact', password: 'refact'}
+        const user = await authLdapAndGetUser(credentials.username, credentials.password)
 
         console.log(`testing user ldap auth with the following user: '${user}'`)
 
