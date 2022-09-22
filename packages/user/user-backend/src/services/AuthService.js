@@ -18,14 +18,9 @@ export const auth = function ({username, password}, req) {
 
         if (await isLdapAuthEnable()) {
             try {
-                const user = await authLdapAndGetUser(username, decodedPassword)
-
-                if (!user) {
-                    winston.error('No se pudo obtener ni crear el usuario local para LDAP')
-                }
-
+                user = await authLdapAndGetUser(username, decodedPassword)
             } catch (error) {
-                winston.error('LDAP AUTH ERROR ' + error)
+                winston.error(`LDAP AUTH ERROR ${error}`)
             }
         }
 
