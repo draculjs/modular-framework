@@ -13,16 +13,16 @@
 
 
     <settings-update v-if="updating"
-                     :open="updating"
-                     :item="itemToEdit"
-                     v-on:itemUpdated="onItemUpdated"
-                     v-on:close="updating=false"
+        :open="updating"
+        :item="itemToEdit"
+        v-on:itemUpdated="onItemUpdated"
+        v-on:close="updating=false"
     />
 
     <settings-show v-if="showing"
-                   :open="showing"
-                   :item="itemToShow"
-                   v-on:close="showing=false"
+      :open="showing"
+      :item="itemToShow"
+      v-on:close="showing=false"
     />
 
 

@@ -37,7 +37,7 @@ export const LDAP_SETTINGS = [
     },
     {
         key: 'LDAP_ADMIN_PASS',
-        type: 'string',
+        type: 'password',
         value: '',
         label: {en: 'LDAP ADMIN PASS', es: 'LDAP ADMIN PASS', pt: 'LDAP ADMIN PASS'}
     },
