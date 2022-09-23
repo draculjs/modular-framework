@@ -56,6 +56,13 @@ class SettingsProvider {
         })
     }
 
+    settingValueUpdateByKey(key,value) {
+        return this.gqlc.mutate({
+            mutation: require('./gql/settingValueUpdateByKey.graphql'),
+            variables: {key,value}
+        })
+    }
+
      deleteSettings(id) {
         return this.gqlc.mutate({
             mutation: require('./gql/settingsDelete.graphql'),
