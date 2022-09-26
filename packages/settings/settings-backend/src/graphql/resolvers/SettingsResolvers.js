@@ -5,7 +5,7 @@ import {
     findSettings,
     fetchSettings,
     paginateSettings,
-    findSettingsByKey
+    findSettingsByKey, updateSettingsByKey
 } from '../../services/SettingsService'
 
 import {AuthenticationError, ForbiddenError} from "apollo-server-express";
@@ -52,6 +52,11 @@ export default {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, SETTINGS_UPDATE)) throw new ForbiddenError("Not Authorized")
             return updateSettings(user, id, input)
+        },
+        settingValueUpdateByKey: (_, {key, value}, {user, rbac}) => {
+            if (!user) throw new AuthenticationError("Unauthenticated")
+            if (!rbac.isAllowed(user.id, SETTINGS_UPDATE)) throw new ForbiddenError("Not Authorized")
+            return updateSettingsByKey(user, {key,value})
         },
         settingsDelete: (_, {id}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")

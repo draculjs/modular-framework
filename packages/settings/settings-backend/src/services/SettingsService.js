@@ -134,7 +134,11 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 export const createSettings = async function (authUser, {key, value, label, type, options}) {
 
     const doc = new Settings({
-        key, value, label, type, options
+        key,
+        value: value.toString(),
+        label,
+        type,
+        options
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -157,7 +161,7 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
         Settings.findOneAndUpdate({_id: id},
             {
                 key,
-                value,
+                value: value.toString(),
                 label,
                 ...(type ? {type} : {}),
                 ...(options ? {options} : {}),
@@ -183,8 +187,8 @@ export const updateSettingsByKey = async function (authUser, {key, value, label,
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({key: key},
             {
-                value,
-                label,
+                value: value.toString(),
+                ...(label ? {label} : {}),
                 ...(type ? {type} : {}),
                 ...(options ? {options} : {}),
             },

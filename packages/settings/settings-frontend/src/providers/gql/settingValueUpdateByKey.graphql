@@ -1,0 +1,15 @@
+mutation settingValueUpdateByKey($key:String!, $value:String){
+    settingValueUpdateByKey(key: $key, value: $value){
+        id
+        key
+        value
+        label{
+            en
+            es
+            pt
+        }
+        type
+        options
+    }
+}
+

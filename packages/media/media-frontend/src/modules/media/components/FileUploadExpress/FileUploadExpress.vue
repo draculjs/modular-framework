@@ -93,7 +93,7 @@ export default {
         },
         uploaded: {
           color: 'green darken-3',
-          icon: 'zoom_in'
+          icon: 'done'
         },
         error: {
           color: 'red darken-3',
