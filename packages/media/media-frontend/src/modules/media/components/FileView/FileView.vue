@@ -107,14 +107,10 @@
         <v-tab-item><!--privacy-->
           <show-field :value="isPublic" label="Privacidad del archivo" icon="mdi-cctv"/>
           <groups-show 
-            v-if="$store.getters.hasPermission('SECURITY_GROUP_SHOW')" :fileIdGroups="file.groups"
-            overflowX  
-          >
+            v-if="$store.getters.hasPermission('SECURITY_GROUP_SHOW')" :fileIdGroups="file.groups">
           </groups-show>
           <users-show
-            v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users"
-            overflowX
-          >
+            v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users">
           </users-show>
         </v-tab-item>
     </v-tabs-items>

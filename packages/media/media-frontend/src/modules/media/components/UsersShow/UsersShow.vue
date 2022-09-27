@@ -1,5 +1,5 @@
 <template>
-  <show-field :value="sharedWith" :label="$t('media.file.users')" icon="person" :overflowX="overflowX" />
+  <show-field :value="sharedWith" :label="$t('media.file.users')" icon="person"/>
 </template>
 
 <script>
@@ -11,7 +11,6 @@ export default {
   components: { ShowField },
   props: {
     fileIdUsers: { type: Array },
-    overflowX: { type: Boolean, default: false }
   },
   data() {
     return {
