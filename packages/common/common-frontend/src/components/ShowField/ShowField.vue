@@ -5,7 +5,7 @@
         </v-list-item-icon>
 
         <v-list-item-content class="mr-0">
-            <v-list-item-title v-html="value" :style="overflowX ? 'overflow-x: scroll !important;' : null"></v-list-item-title>
+            <v-list-item-title v-html="value"></v-list-item-title>
             <v-list-item-subtitle>{{label}}</v-list-item-subtitle>
         </v-list-item-content>
     </v-list-item>
@@ -16,8 +16,7 @@
         props: {
             value: {type:String, default:null},
             label: {type:String, default:null},
-            icon: {type:String, default:'label_important'},
-            overflowX: {type:Boolean, default:false}
+            icon: {type:String, default:'label_important'}
         }
     }
 </script>
