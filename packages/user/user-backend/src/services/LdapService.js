@@ -81,7 +81,6 @@ function loginInLdap(user, pass, asAdmin = false) {
 
             const ldapClient = await connectToLDAP(LDAP_IP)
             const bindLogin = asAdmin ? `cn=${user}, ${LDAP_DN}` : `cn=${user}, ou=${LDAP_OU}, ${LDAP_DN}`
-            console.log(bindLogin)
 
             ldapClient.bind(
                 bindLogin,
