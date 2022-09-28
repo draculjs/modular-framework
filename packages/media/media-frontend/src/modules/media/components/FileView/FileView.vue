@@ -137,7 +137,8 @@ export default {
     return {
       copyResult: false,
       copyText: 'Copy to clipboard',
-      tab: null
+      tab: null,
+      jsonFile: []
     }
   },
   computed: {
@@ -155,6 +156,8 @@ export default {
     },
     getSrc() {
       if (this.file && this.file.url) {
+        console.log("FILEEE",this.jsonFile)
+
         return this.file.url
       }
       return null
@@ -176,6 +179,14 @@ export default {
     }
   },
   methods: {
+    getCsvToJson(url){
+      this.$papa.parse(url,{
+          download: true,
+          delimiter: ";",
+          preview: 5
+          // rest of config ...
+      }) 
+    },
     copyToClipboard() {
       let toCopy = document.querySelector('#url')
       toCopy.setAttribute('type', 'text')
@@ -204,6 +215,10 @@ export default {
       return `${day}/${month}/${year}`
     },
 
+  },
+  async mounted(){
+    this.jsonFile = await this.getCsvToJson(this.file.url)
+    console.log("FILE",this.jsonFile)
   }
 }
 </script>
