@@ -39,5 +39,6 @@ type SettingsDelete{
 type Mutation {
     settingsCreate(input: SettingsInput): Settings
     settingsUpdate(id: ID!, input: SettingsInput): Settings
+    settingValueUpdateByKey(key:String!, value:String): Settings
     settingsDelete(id: ID!): SettingsDelete!
 }

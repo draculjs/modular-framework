@@ -39,12 +39,27 @@ export default {
                     })
                     .catch(e => reject(e))
             })
-
+        },
+        updateSettingValueByKey({commit},{key, value}) {
+            return new Promise((resolve, reject) => {
+                SettingsProvider.settingValueUpdateByKey(key, value)
+                    .then(r => {
+                        commit('setSetting', {key, value})
+                        resolve(r.data.settingValueUpdateByKey)
+                    })
+                    .catch(e => reject(e))
+            })
         }
     },
     mutations: {
         setSettings(state, val) {
             state.settings = val
+        },
+        setSetting(state, {key,value}) {
+            let item = state.settings.find(s => s.key === key)
+            if (item) {
+                item.value = value
+            }
         },
         setSettingsReady(state) {
             state.settingsReady = true
