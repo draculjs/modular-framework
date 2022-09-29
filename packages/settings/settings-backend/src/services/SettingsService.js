@@ -133,9 +133,11 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 
 export const createSettings = async function (authUser, {key, value, label, type, options}) {
 
+    const docValue = value ? value.toString : null
+
     const doc = new Settings({
         key,
-        value: value.toString(),
+        value: docValue,
         label,
         type,
         options
@@ -157,11 +159,14 @@ export const createSettings = async function (authUser, {key, value, label, type
 }
 
 export const updateSettings = async function (authUser, id, {key, value, label, type, options}) {
+
+    const docValue = value ? value.toString() : null
+
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({_id: id},
             {
                 key,
-                value: value.toString(),
+                value: docValue,
                 label,
                 ...(type ? {type} : {}),
                 ...(options ? {options} : {}),
