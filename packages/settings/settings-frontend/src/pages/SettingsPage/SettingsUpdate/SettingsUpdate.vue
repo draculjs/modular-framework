@@ -1,10 +1,11 @@
 <template>
-  <crud-update :open="open"
-               :loading="loading"
-               :title="title"
-               :errorMessage="errorMessage"
-               @update="update"
-               @close="$emit('close')"
+  <crud-update 
+    :open="open"
+    :loading="loading"
+    :title="title"
+    :errorMessage="errorMessage"
+    @update="update"
+    @close="$emit('close')"
   >
     <settings-form ref="form" v-model="form" :item="item" :input-errors="inputErrors"/>
   </crud-update>
@@ -49,8 +50,9 @@ export default {
   },
   computed: {
     getForm(){
-      let form = this.form
-      form.value = form.value.toString()
+      const form = this.form
+      if (form.value) form.value = form.value.toString()
+
       return form
     }
   },

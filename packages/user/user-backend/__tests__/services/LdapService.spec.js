@@ -3,7 +3,7 @@ import {
     authLdapAndGetUser,
     connectToLDAP,
     mapLdapAttributesToUserObject,
-    searchUserInLdap, loginAsAdmin, getLdapVar
+    searchUserInLdap, loginInLdap, getLdapVar
 } from "../../src/services/LdapService";
 const mongoHandler = require('../utils/mongo-handler');
 
@@ -38,70 +38,65 @@ describe("LdapService", () => {
         await mongoHandler.closeDatabase();
     })
 
-    test('LDAP SETTINGS', async (done) => {
+    test('LDAP SETTINGS', async () => {
        let ldapIP = await getLdapVar('LDAP_IP')
         expect(ldapIP).toBe('192.168.10.39')
 
         let ldapDn = await getLdapVar('LDAP_DN')
         expect(ldapDn).toBe('dc=snd,dc=int')
-
-        done()
     })
 
-    test('Connection to LDAP', async (done) => {
+    test('Connection to LDAP', async () => {
 
         const LDAP_IP = await getLdapVar('LDAP_IP')
-
-        let ldapClient = await connectToLDAP(LDAP_IP)
+        const ldapClient = await connectToLDAP(LDAP_IP)
 
         expect(ldapClient.connected).toBe(true)
-
-        done()
 
     }, 2000);
 
     test('LDAP Login as Admin ok', async () => {
-
         const adminUser = await getLdapVar('LDAP_ADMIN_NAME')
         const adminPass = await getLdapVar('LDAP_ADMIN_PASS')
-        await expect(loginAsAdmin(adminUser,adminPass)).resolves.toBeDefined()
+
+        await expect(loginInLdap(adminUser, adminPass, true)).resolves.toBeDefined()
+    }, 2000);
+
+
+    test('LDAP Login fail with wrong credentials', async () => {
+        await expect(loginInLdap('sarasa','sarasa')).rejects.toMatch('Invalid Credentials');
 
     }, 2000);
 
 
-    test('LDAP Login as Admin fail with bad credentials', async () => {
+    test("LDAP Login fail with unexpected credential's type", async () => {
 
-        await expect(loginAsAdmin('sarasa','sarasa')).rejects.toMatch('Invalid Credentials');
-
-    }, 2000);
-
-
-    test('LDAP Login as Admin fail with number credentials', async () => {
-
-        await expect(loginAsAdmin(123123,123123)).rejects.toMatch('credentials (string) is required');
+        await expect(loginInLdap(123123,123123)).rejects.toMatch('credentials (string) is required');
 
     }, 2000);
 
 
-    test('Search user in LDAP', async () => {
-        let user = {username: 'refact', password: 'refact'}
-        let entry = await searchUserInLdap(user.username)
-        let userInfo = mapLdapAttributesToUserObject(entry)
+    test('Search user in LDAP as an UNPRIVILEGED user', async () => {
+        const user = {username: 'refact', password: 'refact'}
+
+        const LDAP_IP = await getLdapVar('LDAP_IP')
+        const ldapClient = await connectToLDAP(LDAP_IP)
+
+        const entry = await searchUserInLdap(user.username, ldapClient)
+        const userInfo = mapLdapAttributesToUserObject(entry)
         
-        console.log("entry",entry)
         console.log("userInfo",userInfo)
 
         await expect(userInfo).toBeInstanceOf(Object)
         await expect(userInfo.username).toBe('refact')
         await expect(userInfo.email).toBe('refact@refact.com')
-        await expect(userInfo.password).toBe('refact')
         await expect(userInfo.groupId).toBe('10000')
     }, 2000);
 
 
-    test('Auth Ldap real ok', async () => {
-        let credentials = {username: 'refact', password: 'refact'}
-        let user = await authLdapAndGetUser(credentials.username, credentials.password)
+    test('Ldap authentication works', async () => {
+        const credentials = {username: 'refact', password: 'refact'}
+        const user = await authLdapAndGetUser(credentials.username, credentials.password)
 
         console.log(`testing user ldap auth with the following user: '${user}'`)
 
@@ -112,10 +107,9 @@ describe("LdapService", () => {
 
     }, 2000);
 
-    test('Auth Ldap real fail', async () => {
+    test('Ldap authentication fails', async () => {
         let user = {username: 'refact', password: 'asdasd'}
-
-        await expect(authLdapAndGetUser(user.username, user.password)).rejects.toThrowError('LdapInvalidCredentials')
+        await expect(authLdapAndGetUser(user.username, user.password)).rejects.toThrowError('Invalid Credentials')
     }, 2000);
 
     test(`Establishing user role by LDAP's user group`, async () => {

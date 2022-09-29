@@ -294,7 +294,6 @@ const rootRecover = async (password = "root.123") => {
 const initLdapSettings = async () => {
 
     const settings = await initializeSettings(LDAP_SETTINGS)
-
     return settings
 }
 

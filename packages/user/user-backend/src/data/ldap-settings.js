@@ -28,18 +28,5 @@ export const LDAP_SETTINGS = [
         type: 'string',
         value: '',
         label: {en: 'LDAP IP', es: 'LDAP IP', pt: 'LDAP IP'}
-    },
-    {
-        key: 'LDAP_ADMIN_NAME',
-        type: 'string',
-        value: '',
-        label: {en: 'LDAP ADMIN USER', es: 'LDAP ADMIN USER', pt: 'LDAP ADMIN USER'}
-    },
-    {
-        key: 'LDAP_ADMIN_PASS',
-        type: 'string',
-        value: '',
-        label: {en: 'LDAP ADMIN PASS', es: 'LDAP ADMIN PASS', pt: 'LDAP ADMIN PASS'}
-    },
-
+    }
 ]
