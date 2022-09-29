@@ -21,8 +21,6 @@ var _initVisualizerRole = _interopRequireDefault(require("./custom/initVisualize
 
 var _InitMediaPermissions = _interopRequireDefault(require("../modules/media/services/InitMediaPermissions"));
 
-var _UserStorageService = require("../modules/media/services/UserStorageService");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _dotenv.default.config();
