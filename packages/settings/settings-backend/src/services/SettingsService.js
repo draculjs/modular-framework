@@ -162,7 +162,6 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
 
     const docValue = value ? value.toString() : null
 
-    console.log(`value: '${value}', docValue: '${docValue}'`)
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({_id: id},
             {
