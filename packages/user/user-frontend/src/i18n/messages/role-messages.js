@@ -81,7 +81,15 @@ const messages = {
                 REDMINE_DELETE:"Redmine Delete",
                 AUDIT_CREATE:"Audit create",
                 AUDIT_DELETE:"Audit delete",
-                AUDIT_SHOW:"Audit display"
+                AUDIT_SHOW:"Audit display",
+                DOCKER_CONSOLE:"Docker console usage",
+                DOCKER_LOGS:"Docker logs visualization",
+                DOCKER_CREATE:"Docker service creation",
+                DOCKER_VIEW:"Docker service visualization",
+                DOCKER_REMOVE:"Docker service deletion",
+                DOCKER_RESTART:"Docker services restart",
+                DOCKER_UPDATE:"Docker services updation",
+                AUDIT_UPDATE:"Audit updation",
             }
         },
     },
@@ -167,7 +175,15 @@ const messages = {
                 REDMINE_DELETE:"Eliminación de Redmine",
                 AUDIT_CREATE:"Creación de Auditoria",
                 AUDIT_DELETE:"Eliminación de Auditoria",
-                AUDIT_SHOW:"Visualización de Auditoria"
+                AUDIT_SHOW:"Visualización de Auditoria",
+                DOCKER_CONSOLE:"Uso de consola Docker",
+                DOCKER_LOGS:"Visualización de logs Docker",
+                DOCKER_CREATE:"Creacion de servicio Docker",
+                DOCKER_VIEW:"Visualización de servicios Docker",
+                DOCKER_REMOVE:"Eliminación de servicios Docker",
+                DOCKER_RESTART:"Reinicio de servicios Docker",
+                DOCKER_UPDATE:"Actualizacion de servicios Docker",
+                AUDIT_UPDATE:"Actualizacion de Auditoria",
             }
         },
 
@@ -254,7 +270,15 @@ const messages = {
                 REDMINE_DELETE:"Exclusão do Redmine",
                 AUDIT_CREATE:"Criação de Auditoria",
                 AUDIT_DELETE:"Exclusão de Auditoria",
-                AUDIT_SHOW:"Visor de Auditoria"
+                AUDIT_SHOW:"Visor de Auditoria",
+                DOCKER_CONSOLE:"Console do Docker",
+                DOCKER_LOGS:"Logs do serviços Docker",
+                DOCKER_CREATE:"Criação do serviços Docker",
+                DOCKER_VIEW:"Visor do serviços Docker",
+                DOCKER_REMOVE:"Exclusão do serviços Docker",
+                DOCKER_RESTART:"Reiniciar o serviços Docker",
+                DOCKER_UPDATE:"Atualização do serviços Docker",
+                AUDIT_UPDATE:"Atualização de Auditoria",
                 }
             }
         },
