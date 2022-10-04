@@ -5,17 +5,20 @@ import {findRoleByName} from "./RoleService";
 
 const ldap = require('ldapjs')
 
-async function isLdapAuthEnable(){
+async function isLdapAuthEnabled(){
     try {
         const LDAP_AUTH_SETTING = await getLdapVar('LDAP_AUTH')
         const LDAP_IP = await getLdapVar('LDAP_IP')
-        const LDAP_AUTH = LDAP_AUTH_SETTING ? LDAP_AUTH_SETTING : (process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true')
-        
-        return (LDAP_AUTH && LDAP_IP) ? LDAP_AUTH : false
+
+        if((LDAP_AUTH_SETTING === 'enable' && LDAP_IP) || (process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true')){
+            return true
+        }else{
+            return false
+        }
+
     } catch (error) {
         winston.error(error)
     }
-    
 }
 
 async function determineUserRoleByLdapGroup(groupName = null){
@@ -34,16 +37,13 @@ async function getLdapVar(varName){
 
         if(!ldapVariable && process.env[varName]){
             return process.env[varName]
-        }
-        
-        if(!ldapVariable && !process.env[varName]){
-            const error = `LDAP variable ${varName} not found`
-            
-            winston.error(error)
-            throw new Error(error)
-        }
-    
-        return ldapVariable
+
+        } else if(!ldapVariable && !process.env[varName]){
+            return null
+
+        } else return ldapVariable
+
+
     } catch (error) {
         winston.error(error)
         throw new Error(error)
@@ -52,53 +52,53 @@ async function getLdapVar(varName){
 
 
 function connectToLDAP(ip, port = '389') {
-
+    if (!ip) throw new Error('LDAP IP not found')
+        
     return new Promise((resolve, reject) => {
         let ldapClient
 
         ldapClient = ldap.createClient({
             url: `ldap://${ip}:${port}`,
-            connectTimeout: 2000
+            connectTimeout: 1500
         })
 
         ldapClient.on('connect', () => {
-            resolve(ldapClient)
+            return resolve(ldapClient)
         })
 
         ldapClient.on('error', (error) => {
-            reject(error)
+            return reject(error)
         })
     })
 }
 
-function loginAsAdmin(adminUser, adminPass) {
-
+function loginInLdap(user, pass, asAdmin = false) {
     return new Promise(async (resolve, reject) => {
-        const LDAP_IP = await getLdapVar('LDAP_IP')
-        const LDAP_ADMIN = adminUser ? adminUser : await getLdapVar('LDAP_ADMIN_NAME')
-        const LDAP_PASS = adminPass ? adminPass : await getLdapVar('LDAP_ADMIN_PASS')
-        const LDAP_DN = await getLdapVar('LDAP_DN')
-
-        const ldapClient = await connectToLDAP(LDAP_IP)
-
         try {
+            const LDAP_IP = await getLdapVar('LDAP_IP')
+            const LDAP_DN = await getLdapVar('LDAP_DN')
+            const LDAP_OU = await getLdapVar('LDAP_OU')
+
+            const ldapClient = await connectToLDAP(LDAP_IP)
+            const bindLogin = asAdmin ? `cn=${user}, ${LDAP_DN}` : `cn=${user}, ou=${LDAP_OU}, ${LDAP_DN}`
+
             ldapClient.bind(
-               // `cn=${LDAP_ADMIN}, dc=snd, dc=int`,
-                `cn=${LDAP_ADMIN}, ${LDAP_DN}`,
-                LDAP_PASS,
+                bindLogin,
+                pass,
                 error => {
                     if (error) {
+                        DefaultLogger.warn(`LDAP login failed for user: '${user}' with pass '${pass}'`)
                         DefaultLogger.error(`Error while trying to authenticate in ldap (bind): '${error}'`);
-                        return reject(error.message)
+                        reject(error.message)
+                    }else{
+                        resolve(ldapClient);
                     }
-                    return resolve(ldapClient);
                 }
             )
-        } catch (e) {
-            return reject(e.message)
+        } catch (error) {
+            reject(error.message + "in LOGINLDAP")
         }
-    })
-
+    })    
 }
 
 function mapLdapAttributesToUserObject(entry) {
@@ -126,26 +126,27 @@ function mapLdapAttributesToUserObject(entry) {
     return object
 }
 
-function searchUserInLdap(username) {
-
+function searchUserInLdap(username, ldapClient) {
     return new Promise(async (resolve, reject) => {
-        const ldapClient = await loginAsAdmin()
-        const LDAP_DN = await getLdapVar('LDAP_DN')
-        const LDAP_OU = await getLdapVar('LDAP_OU')
+        try {
+            const LDAP_DN = await getLdapVar('LDAP_DN')
+            const LDAP_OU = await getLdapVar('LDAP_OU')
 
-        ldapClient.search(`cn=${username}, ou=${LDAP_OU}, ${LDAP_DN}`, {}, (error, response) => {
-            if (error) return reject(error)
+            ldapClient.search(`cn=${username}, ou=${LDAP_OU}, ${LDAP_DN}`, {}, (error, response) => {
+                if (error) reject(`error in searchUserInLdap: "${error}"`)
 
-            response.on('searchEntry', (entry) => resolve(entry))
-            response.on('error', () => reject('LDAP user not found'))
-        })
+                response.on('searchEntry', (entry) => resolve(entry))
+                response.on('error', () => reject('LDAP user not found'))
+            })
+        } catch (error) {
+            DefaultLogger.error(`error at searchUserInLdap(): '${error}'`)
+        }
     })
 }
 
-function searchUserGroup(groupId) {
-    
+function searchUserGroup(user, pass, groupId) {
     return new Promise(async (resolve, reject) => {
-        const ldapClient = await loginAsAdmin()
+        const ldapClient = await loginInLdap(user, pass)
         const LDAP_DN = await getLdapVar('LDAP_DN')
 
         const options = {
@@ -155,7 +156,7 @@ function searchUserGroup(groupId) {
         }
 
         ldapClient.search(`ou=group, ${LDAP_DN}`, options, (error, response) => {
-            if (error) return reject(error)
+            if (error) reject(`error while triying to searchUserGroup: '${error}'`)
 
             response.on('searchEntry', (entry) => resolve(entry.attributes[1].vals[0]))
             response.on('error', () => reject('LDAP groups not found'))
@@ -198,39 +199,32 @@ async function getLocalUserOrCreate(userLdapInfo) {
 }
 
 async function authLdapAndGetUser(username, decodedPassword) {
-
     try{
-        const entry = await searchUserInLdap(username)
+        const ldapClient = await loginInLdap(username, decodedPassword)
+        const entry = await searchUserInLdap(username, ldapClient)
+
         const userInfo = mapLdapAttributesToUserObject(entry)
+        const groupName = await searchUserGroup(username, decodedPassword, userInfo.groupId)
 
-        const groupName = await searchUserGroup(userInfo.groupId)
         userInfo.groupName = groupName
-
         console.log(userInfo)
-        if (!userInfo) throw new Error('LdapUserDoesntExist')
 
-        if (userInfo.password === decodedPassword) {
-            const user = await getLocalUserOrCreate(userInfo)
-            return user
-        } else {
-            winston.error(`passwords don't match '${userInfo.password}' vs '${decodedPassword}'`)
-            throw new Error('LdapInvalidCredentials')
-        }
+        const user = await getLocalUserOrCreate(userInfo)
+        return user
+
     }catch (error) {
         const message = error.message ? error.message : error.toString()
-
-        winston.error(`authLdapAndGetUser error: '${message}' `)
         throw new Error(message)
     }
 
 }
 
 module.exports = {
-    isLdapAuthEnable,
+    isLdapAuthEnabled,
     getLdapVar,
     authLdapAndGetUser,
     searchUserInLdap,
     connectToLDAP,
-    loginAsAdmin,
+    loginInLdap,
     mapLdapAttributesToUserObject
 }

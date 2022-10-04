@@ -4,7 +4,7 @@
       <v-col cols="12">
         <!--string-->
         <v-text-field
-            v-if="!item.type || item.type === 'string' "
+            v-if="!item.type || item.type === 'string' || item.type === 'password'"
             prepend-icon="text_snippet"
             name="value"
             v-model="form.value"

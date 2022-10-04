@@ -6,7 +6,7 @@ import {createLoginFail} from "./LoginFailService";
 import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserService";
 import {decodePassword} from "./PasswordService"
 import dayjs from 'dayjs'
-import {authLdapAndGetUser, isLdapAuthEnable} from './LdapService';
+import {authLdapAndGetUser, isLdapAuthEnabled} from './LdapService';
 
 const {v4: uuidv4} = require('uuid');
 
@@ -16,16 +16,11 @@ export const auth = function ({username, password}, req) {
         let user = null
         let decodedPassword = decodePassword(password)
 
-        if (await isLdapAuthEnable()) {
+        if (await isLdapAuthEnabled()) {
             try {
-                const user = await authLdapAndGetUser(username, decodedPassword)
-
-                if (!user) {
-                    winston.error('No se pudo obtener ni crear el usuario local para LDAP')
-                }
-
+                user = await authLdapAndGetUser(username, decodedPassword)
             } catch (error) {
-                winston.error('LDAP AUTH ERROR ' + error)
+                winston.error(`LDAP AUTH ERROR ${error}`)
             }
         }
 

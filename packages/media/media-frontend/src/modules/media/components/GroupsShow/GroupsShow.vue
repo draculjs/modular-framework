@@ -1,17 +1,33 @@
 <template>
-  <show-field :value="sharedWith" :label="$t('media.file.groups')" icon="group" :overflowX="overflowX"/>
+  <v-list-item>
+    <v-list-item-icon class="mr-5">
+      <v-icon color="primary" class="mt-2">groups</v-icon>
+    </v-list-item-icon>
+
+    <v-list-item-content class="mr-0">
+      <v-chip-group column>
+        <v-chip v-for="group in fileGroups" 
+          :key="group.id" 
+          color="primary lighten-2" 
+          text-color="white"
+          label
+          small
+        >
+          {{ group.name }}
+        </v-chip>
+      </v-chip-group>
+      <v-list-item-subtitle>{{$t('media.file.groups')}}</v-list-item-subtitle>
+    </v-list-item-content>
+  </v-list-item>
 </template>
 
 <script>
 import { groupProvider } from "@dracul/user-frontend"
-import { ShowField } from '@dracul/common-frontend'
 
 export default {
   name: "GroupsShow",
-  components: { ShowField },
   props: {
     fileIdGroups: { type: Array },
-    overflowX: { type: Boolean, default: false }
   },
   data() {
     return {

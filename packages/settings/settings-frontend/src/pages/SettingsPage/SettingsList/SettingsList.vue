@@ -33,6 +33,10 @@
             <v-icon v-else color="red">clear</v-icon>
           </template>
 
+          <template v-else-if="item.type === 'password'">
+            {{getCensoredPassword(item.value)}}
+          </template>
+
           <template v-else>
             {{ item.value }}
           </template>
@@ -125,6 +129,15 @@ export default {
       }).catch(err => {
         console.error(err)
       }).finally(() => this.loading = false)
+    },
+    getCensoredPassword(pass){
+      let censoredPass = ''
+
+      for (let i = 0; i < pass.length; i++) {
+        censoredPass += '*'
+      }
+
+      return censoredPass
     }
   }
 

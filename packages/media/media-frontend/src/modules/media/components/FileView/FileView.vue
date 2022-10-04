@@ -83,6 +83,7 @@
             <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
             <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
             <show-field :value="file.tags ? file.tags.join(', ') : ''" :label="$t('media.file.tags')" icon="tag"/>
+            <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
 
             <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
               <v-list-item-icon class="mr-5">
@@ -130,16 +131,11 @@
 
         <v-tab-item><!--privacy-->
           <show-field :value="isPublic" label="Privacidad del archivo" icon="mdi-cctv"/>
-          <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
           <groups-show 
-            v-if="$store.getters.hasPermission('SECURITY_GROUP_SHOW')" :fileIdGroups="file.groups"
-            overflowX  
-          >
+            v-if="$store.getters.hasPermission('SECURITY_GROUP_SHOW')" :fileIdGroups="file.groups">
           </groups-show>
           <users-show
-            v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users"
-            overflowX
-          >
+            v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users">
           </users-show>
         </v-tab-item>
     </v-tabs-items>
