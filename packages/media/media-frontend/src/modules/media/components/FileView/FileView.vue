@@ -217,7 +217,6 @@ export default {
   },
   methods: {
     parseFileCsv(){
-      console.log("URL ",this.file.url)
       Papa.parse(this.file.url,{
           download: true,
           delimiter: "",
