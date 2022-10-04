@@ -29,9 +29,9 @@
         <v-tab-item> 
           <!--preview-->
           <!--csv table-->
-            <div v-if="parsed">
+            <div v-if="!isImage && !isAudio && !isVideo && !isPdf" >
               <v-btn 
-                v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" 
+                v-if="$store.getters.hasPermission('FILE_DOWNLOAD')" 
                 target="_blank" 
                 :href="getSrc" 
                 class="text-uppercase mb-2"
@@ -42,19 +42,11 @@
                   </v-icon>
                   {{ $t('media.file.download') }}
               </v-btn>
-              <v-data-table
-                v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" 
-                target="_blank" 
-                class="pt-0 mt-0 tableContainer"
-                :headers="headers"
-                :items="content.data"
-                hide-default-footer>
-              </v-data-table>
+              <csv-web-viewer
+                v-if="isCsv"
+                :url="file.url"
+              ></csv-web-viewer>
             </div>
-            
-            <a v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" target="_blank" :href="getSrc" class="text-uppercase">
-              
-            </a>
 
             <img v-if="isImage" :style="{width: '100%'}" :src="getSrc"/>
 
@@ -139,26 +131,19 @@
           </users-show>
         </v-tab-item>
     </v-tabs-items>
-    <Snackbar
-        v-model="snackbarMessage"
-        :color="snackbarColor"
-        :timeout="snackbarTimeOut"
-        v-on:closeSnackbar="snackbarMessage = null"
-    />
   </v-container>
 </template>
 
 <script>
 import {ShowField} from '@dracul/common-frontend'
-import Snackbar from "@dracul/common-frontend/src/components/Snackbar/Snackbar";
 import PdfWebViewer from '../PdfWebViewer'
 import GroupsShow from '../GroupsShow'
 import UsersShow from '../UsersShow'
-import Papa from 'papaparse';
+import CsvWebViewer from '../CsvWebViewer'
 
 export default {
   name: "FileView",
-  components: { ShowField, PdfWebViewer, GroupsShow, UsersShow, Snackbar },
+  components: { ShowField, PdfWebViewer, GroupsShow, UsersShow, CsvWebViewer },
   props: {
     file: {type: Object}
   },
@@ -167,12 +152,7 @@ export default {
       copyResult: false,
       copyText: 'Copy to clipboard',
       tab: null,
-      headers: [],
-      content: [],
-      parsed: false,
-      snackbarColor: "",
-      snackbarMessage:"",
-      snackbarTimeOut: 3000,
+      parsed: false
     }
   },
   computed: {
@@ -188,9 +168,11 @@ export default {
     isPdf() {
       return (this.file && this.file.mimetype === 'application/pdf')
     },
+    isCsv() {
+      return (this.file && this.file.extension == ".csv")
+    },
     getSrc() {
       if (this.file && this.file.url) {
-        this.file.extension == ".csv" ? this.parseFileCsv(this.file.url) : ""
         return this.file.url
       }
       return null
@@ -212,28 +194,6 @@ export default {
     }
   },
   methods: {
-    parseFileCsv(){
-      Papa.parse(this.file.url,{
-          download: true,
-          delimiter: "",
-          preview: 5,
-          header: true,
-          complete: function( results ){
-            if(results.errors.length == 0){
-              this.content = results;
-              this.content.meta.fields.forEach(elem => {
-                let item = { text: elem, value: elem.toLowerCase()}
-                this.headers.push(item)
-              })
-              this.parsed = true;
-            } else {
-              this.snackbarColor = "error";
-              this.snackbarMessage = this.$t("media.file.errorCsvMessage");
-              console.log("Error al parsear el archivo csv, error: ", results.errors[0]);
-            }
-          }.bind(this)
-      })
-    },
     copyToClipboard() {
       let toCopy = document.querySelector('#url')
       toCopy.setAttribute('type', 'text')
@@ -269,8 +229,5 @@ export default {
 <style scoped>
   .mainContainer{
     max-height: 65vh;
-  }
-  .tableContainer{
-    max-height: 50vh;
   }
 </style>
