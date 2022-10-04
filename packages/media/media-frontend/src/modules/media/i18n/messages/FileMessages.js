@@ -47,6 +47,7 @@ const messages = {
                 user: 'Shared with user',
                 groups: 'Shared with groups',
                 users: 'Shared with users',
+                errorCsvMessage: 'Cannot show the csv file right now, please try again later!',
                 dashboard: {
                     fileUserMetrics: {
                         title: "File indicators of the last 5 months",
@@ -113,6 +114,7 @@ const messages = {
                 user: 'Compartido con usuario',
                 groups: 'Compartido con grupos',
                 users: 'Compartido con usuarios',
+                errorCsvMessage: 'El archivo no se puede visualizar en este momento, por favor intente más tarde!',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de archivos de los últimos 5 meses",
@@ -182,6 +184,7 @@ const messages = {
                 user: 'Compartilhado com o usuário',
                 groups: 'Compartilhado com grupos',
                 users: 'Compartilhado com usuários',
+                errorCsvMessage: 'O arquivo csv não pode ser exibido neste momento, tente mais tarde!',
                 dashboard: {
                     fileUserMetrics: {
                         title: "Indicadores de arquivo dos últimos 5 meses",
