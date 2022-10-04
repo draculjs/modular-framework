@@ -26,9 +26,34 @@
     </v-tabs>
 
     <v-tabs-items v-model="tab" fill-height>
-        <v-tab-item> <!--preview-->
+        <v-tab-item> 
+          <!--preview-->
+          <!--csv table-->
+            <div v-if="parsed">
+              <v-btn 
+                v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" 
+                target="_blank" 
+                :href="getSrc" 
+                class="text-uppercase mb-2"
+                title
+                color="success">
+                  <v-icon left>
+                    mdi-arrow-down-bold-circle
+                  </v-icon>
+                  {{ $t('media.file.download') }}
+              </v-btn>
+              <v-data-table
+                v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" 
+                target="_blank" 
+                class="pt-0 mt-0 tableContainer"
+                :headers="headers"
+                :items="content.data"
+                hide-default-footer>
+              </v-data-table>
+            </div>
+            
             <a v-if="!isImage && !isAudio && !isVideo && !isPdf && $store.getters.hasPermission('FILE_DOWNLOAD')" target="_blank" :href="getSrc" class="text-uppercase">
-            {{ $t('media.file.download') }}
+              
             </a>
 
             <img v-if="isImage" :style="{width: '100%'}" :src="getSrc"/>
@@ -118,18 +143,26 @@
           </users-show>
         </v-tab-item>
     </v-tabs-items>
+    <Snackbar
+        v-model="snackbarMessage"
+        :color="snackbarColor"
+        :timeout="snackbarTimeOut"
+        v-on:closeSnackbar="snackbarMessage = null"
+    />
   </v-container>
 </template>
 
 <script>
 import {ShowField} from '@dracul/common-frontend'
+import Snackbar from "@dracul/common-frontend/src/components/Snackbar/Snackbar";
 import PdfWebViewer from '../PdfWebViewer'
 import GroupsShow from '../GroupsShow'
 import UsersShow from '../UsersShow'
+import Papa from 'papaparse';
 
 export default {
   name: "FileView",
-  components: { ShowField, PdfWebViewer, GroupsShow, UsersShow },
+  components: { ShowField, PdfWebViewer, GroupsShow, UsersShow, Snackbar },
   props: {
     file: {type: Object}
   },
@@ -138,7 +171,12 @@ export default {
       copyResult: false,
       copyText: 'Copy to clipboard',
       tab: null,
-      jsonFile: []
+      headers: [],
+      content: [],
+      parsed: false,
+      snackbarColor: "",
+      snackbarMessage:"",
+      snackbarTimeOut: 3000,
     }
   },
   computed: {
@@ -156,8 +194,7 @@ export default {
     },
     getSrc() {
       if (this.file && this.file.url) {
-        console.log("FILEEE",this.jsonFile)
-
+        this.file.extension == ".csv" ? this.parseFileCsv(this.file.url) : ""
         return this.file.url
       }
       return null
@@ -179,13 +216,28 @@ export default {
     }
   },
   methods: {
-    getCsvToJson(url){
-      this.$papa.parse(url,{
+    parseFileCsv(){
+      console.log("URL ",this.file.url)
+      Papa.parse(this.file.url,{
           download: true,
-          delimiter: ";",
-          preview: 5
-          // rest of config ...
-      }) 
+          delimiter: "",
+          preview: 5,
+          header: true,
+          complete: function( results ){
+            if(results.errors.length == 0){
+              this.content = results;
+              this.content.meta.fields.forEach(elem => {
+                let item = { text: elem, value: elem.toLowerCase()}
+                this.headers.push(item)
+              })
+              this.parsed = true;
+            } else {
+              this.snackbarColor = "error";
+              this.snackbarMessage = this.$t("media.file.errorCsvMessage");
+              console.log("Error al parsear el archivo csv, error: ", results.errors[0]);
+            }
+          }.bind(this)
+      })
     },
     copyToClipboard() {
       let toCopy = document.querySelector('#url')
@@ -215,10 +267,6 @@ export default {
       return `${day}/${month}/${year}`
     },
 
-  },
-  async mounted(){
-    this.jsonFile = await this.getCsvToJson(this.file.url)
-    console.log("FILE",this.jsonFile)
   }
 }
 </script>
@@ -226,5 +274,8 @@ export default {
 <style scoped>
   .mainContainer{
     max-height: 65vh;
+  }
+  .tableContainer{
+    max-height: 50vh;
   }
 </style>
