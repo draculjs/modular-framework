@@ -8,7 +8,7 @@ const filterQuery = require('./query/filterQuery')
 const searchQuery = require('./query/searchQuery')
 const sortQuery = require('./query/sortQuery')
 
-const {types} =  require('./graphql')
+const {types, resolvers} =  require('./graphql')
 const mongoose = require('mongoose')
 
 module.exports.tempDir = tempDir
@@ -22,4 +22,5 @@ module.exports.searchQuery = searchQuery
 module.exports.sortQuery = sortQuery
 
 module.exports.commonTypes = types
+module.exports.commonResolvers = resolvers
 module.exports.mongoose = mongoose
