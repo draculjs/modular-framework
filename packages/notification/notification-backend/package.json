@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-backend",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "description": "Modulo de notificaciones de usuario",
   "main": "./lib/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "pubsub"
   ],
   "dependencies": {
-    "@dracul/common-backend": "^1.11.1",
+    "@dracul/common-backend": "^1.11.2",
     "@dracul/logger-backend": "^1.7.12",
     "dayjs": "^1.10.7"
   },
