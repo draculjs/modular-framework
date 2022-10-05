@@ -1,6 +1,6 @@
 input FilterInput{
     field: String
     operator: String
-    value: String
+    value: ArrayString
     values: [String]
 }

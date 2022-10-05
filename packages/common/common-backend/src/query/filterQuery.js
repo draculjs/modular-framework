@@ -20,7 +20,7 @@ const filterQuery = (filters) => {
                     qs[filter.field] = {...qs[filter.field], $regex: filter.value}
                     break;
                 case 'in':
-                    qs[filter.field] = {...qs[filter.field], $in: (Array.isArray(filter.value) ? filter.value : [filter.value])}
+                    qs[filter.field] = {...qs[filter.field], $in: (Array.isArray(filter.values) ? filter.values : [filter.value])}
                     break;
                 case '>':
                 case 'gt':
