@@ -1,6 +1,6 @@
 {
   "name": "@dracul/audit-frontend",
-  "version": "1.11.4",
+  "version": "1.12.0",
   "description": "Audit frontend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
   "homepage": "https://github.com/draculjs/modular-framework#readme",
@@ -27,8 +27,8 @@
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.11.4",
-    "@dracul/user-frontend": "^1.11.4",
-    "@dracul/dayjs-frontend": "^1.9.7"
+    "@dracul/dayjs-frontend": "^1.9.7",
+    "@dracul/user-frontend": "^1.12.0"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
