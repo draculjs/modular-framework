@@ -1,12 +1,12 @@
 <template>
     <div>
         <v-data-table
-            target="_blank" 
             class="pt-0 mt-0 tableContainer"
             :headers="headers"
-            :items="content.data"
-            hide-default-footer>
-        </v-data-table>
+            :items="content"
+            :items-per-page="5"
+            :no-data-text="noDataText"
+        ></v-data-table>
         <Snackbar
             v-model="snackbarMessage"
             :color="snackbarColor"
@@ -32,7 +32,8 @@ export default {
             content: [],
             snackbarColor: "",
             snackbarMessage:"",
-            snackbarTimeOut: 3000
+            snackbarTimeOut: 3000,
+            noDataText: "No se pudo procesar la información del csv. Por favor intente nuevamente más tarde!"
         }
     },
     methods: {
@@ -44,11 +45,11 @@ export default {
                 header: true,
                 complete: function( results ){
                     if(results.errors.length == 0){
-                        this.content = results;
-                        this.content.meta.fields.forEach(elem => {
-                            let item = { text: elem, value: elem.toLowerCase()}
+                        results.meta.fields.forEach(elem => {
+                            let item = { text: elem, value: elem}
                             this.headers.push(item)
                         })
+                        this.content = results.data
                     } else {
                         this.snackbarColor = "error";
                         this.snackbarMessage = this.$t("media.file.errorCsvMessage");
