@@ -1,0 +1,12 @@
+query fetchAudit{
+    fetchAudit{
+        id
+        user{
+                id
+                username
+            }
+        action
+        target
+    }
+}
+

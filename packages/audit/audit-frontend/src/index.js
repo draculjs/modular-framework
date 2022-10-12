@@ -1,6 +1,7 @@
-import AuditFake from "./components/AuditFake";
-
+import Audit from "./pages/crud/index.vue";
+import routes from "../routes/"
 
 export {
-    AuditFake
+    Audit,
+    routes
 }

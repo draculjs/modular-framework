@@ -1,0 +1,16 @@
+query paginateAudit( $pageNumber: Int, $itemsPerPage:Int, $search: String, $filters: [FilterInput], $orderBy: String, $orderDesc: Boolean){
+    paginateAudit( pageNumber: $pageNumber, itemsPerPage: $itemsPerPage, search: $search, filters: $filters, orderBy: $orderBy, orderDesc: $orderDesc){
+        totalItems
+        page
+        items{
+            id
+            createdAt
+            user{
+                id
+                username
+            }
+            action
+            target
+        }
+    }
+}

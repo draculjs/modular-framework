@@ -1,7 +1,15 @@
+import {types, resolvers} from "../graphql/"
+import * as permissions from "../permissions/AuditPermissions"
+import AuditModel from "../models/AuditModel"
 
-const auditBackend = {}
+export{
+    //Services
 
-
-export {
-    auditBackend
+    //Types and resolvers
+    types,
+    resolvers,
+    //Permissions
+    permissions,
+    //Model
+    AuditModel
 }

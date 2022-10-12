@@ -1,0 +1,12 @@
+mutation updateAudit($id: ID!, $input: AuditInput){
+    updateAudit(id: $id, input: $input){
+        id
+        user{
+                id
+                username
+            }
+        action
+        target
+    }
+}
+
