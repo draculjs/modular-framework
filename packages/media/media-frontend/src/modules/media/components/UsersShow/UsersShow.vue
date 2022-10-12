@@ -1,14 +1,14 @@
 <template>
-  <show-field :value="sharedWith" :label="$t('media.file.users')" icon="person"/>
+  <show-chip-field :chips="fileUsers" :label="$t('media.file.users')" icon="person"/>
 </template>
 
 <script>
 import { userProvider } from "@dracul/user-frontend"
-import { ShowField } from '@dracul/common-frontend'
+import { ShowChipField } from '@dracul/common-frontend'
 
 export default {
   name: "UsersShow",
-  components: { ShowField },
+  components: { ShowChipField },
   props: {
     fileIdUsers: { type: Array },
   },

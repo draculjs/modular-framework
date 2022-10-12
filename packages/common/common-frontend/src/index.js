@@ -3,6 +3,7 @@ import CloseButton from "./components/CloseButton";
 import Loading from "./components/Loading";
 import Snackbar from "./components/Snackbar";
 import ShowField from "./components/ShowField";
+import ShowChipField from "./components/ShowChipField";
 import SearchInput from "./components/SearchInput";
 import ToolbarDialog from "./components/ToolbarDialog";
 import SimpleDialog from "./components/SimpleDialog";
@@ -39,6 +40,7 @@ export {
     Loading,
     Snackbar,
     ShowField,
+    ShowChipField,
     SearchInput,
     ToolbarDialog,
     SimpleDialog,
