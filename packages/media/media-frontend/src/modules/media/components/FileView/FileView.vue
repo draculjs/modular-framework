@@ -74,7 +74,7 @@
             <show-field :value="file.id" :label="$t('media.file.id')" icon="badge"/>
             <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
             <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
-            <show-field :value="file.tags ? file.tags.join(', ') : ''" :label="$t('media.file.tags')" icon="tag"/>
+            <show-chip-field :chips="file.tags" :label="$t('media.file.tags')" icon="tag"/>
             <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
 
             <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import {ShowField} from '@dracul/common-frontend'
+import {ShowField, ShowChipField} from '@dracul/common-frontend'
 import PdfWebViewer from '../PdfWebViewer'
 import GroupsShow from '../GroupsShow'
 import UsersShow from '../UsersShow'
@@ -143,7 +143,7 @@ import CsvWebViewer from '../CsvWebViewer'
 
 export default {
   name: "FileView",
-  components: { ShowField, PdfWebViewer, GroupsShow, UsersShow, CsvWebViewer },
+  components: { ShowField, ShowChipField, PdfWebViewer, GroupsShow, UsersShow, CsvWebViewer },
   props: {
     file: {type: Object}
   },

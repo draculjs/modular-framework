@@ -12,7 +12,7 @@
                     label
                     small
                 >
-                    {{ chip.name }}
+                    {{ chip.name ? chip.name : chip}}
                 </v-chip>
             </v-chip-group>
             <v-list-item-subtitle>{{label}}</v-list-item-subtitle>
@@ -26,9 +26,6 @@
             chips: {type:Array, default:null},
             label: {type:String, default:null},
             icon: {type:String, default:'label_important'}
-        },
-        mounted() {
-            console.log("CHIPS")
         }
     }
 </script>
