@@ -21,7 +21,7 @@
         },
         data() {
             return {
-                title: 'docker.audit.showing',
+                title: 'user.audit.showing',
             }
         },
     }

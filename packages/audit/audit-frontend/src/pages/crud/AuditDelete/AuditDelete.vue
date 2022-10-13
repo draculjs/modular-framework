@@ -43,7 +43,7 @@
         data() {
             return {
                 modal: false,
-                title: 'docker.audit.deleting',
+                title: 'user.audit.deleting',
                 areYouSure: this.$t('common.areYouSureDeleteRecord'),
                 errorMessage: '',
                 loading: false,

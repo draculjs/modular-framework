@@ -91,10 +91,10 @@
           headers () {
             return [
                     //Entity Headers
-                    {text: this.$t('docker.audit.labels.createdAt'), value: 'createdAt'},
-                    {text: this.$t('docker.audit.labels.user'), value: 'user'},
-                    {text: this.$t('docker.audit.labels.action'), value: 'action'},
-                    {text: this.$t('docker.audit.labels.target'), value: 'target'},
+                    {text: this.$t('user.audit.labels.createdAt'), value: 'createdAt'},
+                    {text: this.$t('user.audit.labels.user'), value: 'user'},
+                    {text: this.$t('user.audit.labels.action'), value: 'action'},
+                    {text: this.$t('user.audit.labels.target'), value: 'target'},
                     //Actions
                 ]
           },

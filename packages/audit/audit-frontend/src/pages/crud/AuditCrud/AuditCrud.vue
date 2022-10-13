@@ -66,8 +66,8 @@
         },
         data() {
             return {
-                title: 'docker.audit.title',
-                subtitle: 'docker.audit.subtitle',
+                title: 'user.audit.title',
+                subtitle: 'user.audit.subtitle',
                 flash: null,
                 creating: false,
                 updating: false,

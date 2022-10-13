@@ -14,7 +14,7 @@
 
             <v-col cols="12" sm="6">
                 <v-text-field prepend-icon="track_changes" name="target" v-model="form.target"
-                    :label="$t('docker.audit.labels.target')" :placeholder="$t('docker.audit.labels.target')"
+                    :label="$t('user.audit.labels.target')" :placeholder="$t('user.audit.labels.target')"
                     :error="hasInputErrors('target')" :error-messages="getInputErrors('target')" color="secondary"
                     :rules="required"></v-text-field>
             </v-col>

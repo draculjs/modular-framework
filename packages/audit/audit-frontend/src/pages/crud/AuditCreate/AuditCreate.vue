@@ -32,7 +32,7 @@
         
         data() {
             return {
-                title: 'docker.audit.creating',
+                title: 'user.audit.creating',
                 errorMessage: '',
                 inputErrors: {},
                 loading: false,

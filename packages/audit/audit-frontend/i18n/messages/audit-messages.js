@@ -1,4 +1,4 @@
-const messages = {
+const i18nMessages = {
     en: {
         user: {
             audit: {
@@ -130,4 +130,6 @@ const messages = {
     }
 }
 
-export default messages
+module.exports = {
+    i18nMessages
+}

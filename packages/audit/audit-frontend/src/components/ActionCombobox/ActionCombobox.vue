@@ -6,7 +6,7 @@
                 prepend-icon="build"
                 :items="items"
                 v-model="item"
-                :label="$t('docker.audit.labels.action')"
+                :label="$t('user.audit.labels.action')"
                 :loading="loading"
                 :error="hasInputErrors('action')"
                 :error-messages="getInputErrors('action')"
