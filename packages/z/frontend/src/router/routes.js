@@ -8,9 +8,6 @@ import { routes as settingsRoutes } from '@dracul/settings-frontend'
 import { routes as mediaRoutes } from '@dracul/media-frontend'
 import { routes as auditRoutes } from '@dracul/audit-frontend'
 
-console.log(`auditRoutes: '${JSON.stringify(auditRoutes)}'`)
-
 const routes = merge.all([baseRoutes, userRoutes, notificationRoutes, customRoutes, settingsRoutes, mediaRoutes, auditRoutes])
-
 
 export default routes;
