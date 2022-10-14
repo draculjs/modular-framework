@@ -32,7 +32,7 @@
 
         data() {
             return {
-                title: 'user.audit.editing',
+                title: 'audit.editing',
                 errorMessage: '',
                 inputErrors: {},
                 loading: false,

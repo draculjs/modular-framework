@@ -10,7 +10,8 @@ type Audit{
     user: User!
     action: actionEnum!
     target: String!
-    createdAt: String
+    createdAt: String,
+    description: String
 }
 
 type AuditPaginated{
@@ -31,6 +32,7 @@ input AuditInput{
     user: ID!
     action: actionEnum!
     target: String!
+    description: String
 }
 
 type AuditDelete{

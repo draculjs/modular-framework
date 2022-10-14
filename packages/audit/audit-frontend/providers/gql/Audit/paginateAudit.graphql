@@ -11,6 +11,7 @@ query paginateAudit( $pageNumber: Int, $itemsPerPage:Int, $search: String, $filt
             }
             action
             target
+            description
         }
     }
 }

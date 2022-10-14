@@ -43,7 +43,7 @@
         data() {
             return {
                 modal: false,
-                title: 'user.audit.deleting',
+                title: 'audit.deleting',
                 areYouSure: this.$t('common.areYouSureDeleteRecord'),
                 errorMessage: '',
                 loading: false,

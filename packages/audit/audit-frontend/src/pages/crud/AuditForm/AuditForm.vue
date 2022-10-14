@@ -13,10 +13,32 @@
 
 
             <v-col cols="12" sm="6">
-                <v-text-field prepend-icon="track_changes" name="target" v-model="form.target"
-                    :label="$t('user.audit.labels.target')" :placeholder="$t('user.audit.labels.target')"
-                    :error="hasInputErrors('target')" :error-messages="getInputErrors('target')" color="secondary"
-                    :rules="required"></v-text-field>
+                <v-text-field 
+                    color="secondary"
+                    prepend-icon="track_changes" 
+                    name="target" 
+                    v-model="form.target"
+
+                    :placeholder="$t('audit.labels.targetResource')"
+                    :label="$t('audit.labels.targetResource')"
+                    :error-messages="getInputErrors('target')"
+                    :error="hasInputErrors('target')"
+                    :rules="required"
+                />
+            </v-col>
+
+            <v-col cols="12" sm="6">
+                <v-text-field 
+                    color="secondary"
+                    prepend-icon="info" 
+                    name="description" 
+                    v-model="form.description"
+
+                    :placeholder="$t('audit.labels.description')"
+                    :label="$t('audit.labels.description')"
+                    :error-messages="getInputErrors('description')"
+                    :error="hasInputErrors('description')"
+                />
             </v-col>
 
         </v-row>

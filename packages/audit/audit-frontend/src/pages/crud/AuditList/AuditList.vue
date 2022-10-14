@@ -91,10 +91,11 @@
           headers () {
             return [
                     //Entity Headers
-                    {text: this.$t('user.audit.labels.createdAt'), value: 'createdAt'},
-                    {text: this.$t('user.audit.labels.user'), value: 'user'},
-                    {text: this.$t('user.audit.labels.action'), value: 'action'},
-                    {text: this.$t('user.audit.labels.target'), value: 'target'},
+                    {text: this.$t('audit.labels.createdAt'), value: 'createdAt'},
+                    {text: this.$t('audit.labels.user'), value: 'user'},
+                    {text: this.$t('audit.labels.action'), value: 'action'},
+                    {text: this.$t('audit.labels.targetResource'), value: 'target'},
+                    {text: this.$t('audit.labels.description'), value: 'description'},
                     //Actions
                 ]
           },

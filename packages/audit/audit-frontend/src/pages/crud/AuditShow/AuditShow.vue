@@ -21,7 +21,7 @@
         },
         data() {
             return {
-                title: 'user.audit.showing',
+                title: 'audit.showing',
             }
         },
     }

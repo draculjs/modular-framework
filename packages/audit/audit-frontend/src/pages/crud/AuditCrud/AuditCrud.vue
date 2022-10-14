@@ -66,8 +66,8 @@
         },
         data() {
             return {
-                title: 'user.audit.title',
-                subtitle: 'user.audit.subtitle',
+                title: 'audit.title',
+                subtitle: 'audit.subtitle',
                 flash: null,
                 creating: false,
                 updating: false,

@@ -21,8 +21,6 @@ class AuditProvider {
         })
     }
     
-    
-
     createAudit(input) {
         return graphqlClient.mutate({
             mutation: require('./gql/Audit/createAudit.graphql'),
@@ -47,5 +45,3 @@ class AuditProvider {
 }
 
 export default new AuditProvider()
-
-

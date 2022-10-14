@@ -5,7 +5,7 @@
                 :item-text="'username'"
                 :item-value="'id'"
                 v-model="item"
-                :label="$t('user.audit.labels.user')"
+                :label="$t('audit.labels.user')"
                 :loading="loading"
                 :error="hasInputErrors('user')"
                 :error-messages="getInputErrors('user')"
