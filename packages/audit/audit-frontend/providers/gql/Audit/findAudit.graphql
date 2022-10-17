@@ -1,0 +1,11 @@
+query findAudit($id:ID!){
+    findAudit(id:$id){
+        id
+        user{
+                id
+                username
+            }
+        action
+        target
+    }
+}

@@ -1,7 +1,7 @@
 <template>
 
     <v-card height="100%">
-        <v-card-title v-t="'user.audit.failedLogins'">Login Fails <span class="ml-2 subtitle-1"> (72 hs)</span></v-card-title>
+        <v-card-title v-t="'audit.failedLogins'">Login Fails <span class="ml-2 subtitle-1"> (72 hs)</span></v-card-title>
 
 
         <v-card-text v-if="data.length > 0">
@@ -23,7 +23,7 @@
             </v-simple-table>
         </v-card-text>
 
-        <v-card-text v-else v-t="'user.audit.nofailedLogins'">
+        <v-card-text v-else v-t="'audit.nofailedLogins'">
         </v-card-text>
 
     </v-card>

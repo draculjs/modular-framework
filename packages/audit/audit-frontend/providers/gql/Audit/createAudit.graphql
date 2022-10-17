@@ -1,0 +1,13 @@
+mutation createAudit($input: AuditInput){
+    createAudit(input: $input){
+        id
+        user{
+                id
+                username
+            }
+        action
+        target
+        description
+    }
+}
+

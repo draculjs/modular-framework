@@ -21,6 +21,11 @@ import {
     userStorageCheckAndCreate
 } from '@dracul/media-backend'
 
+
+import {
+    permissions as AuditPermissions
+} from "@dracul/audit-backend"
+
 import {initSettings} from './custom/initSettings'
 import {testNotification} from './custom/testNotification'
 
@@ -50,6 +55,13 @@ const initService = async () => {
         settingsPermissions.SETTINGS_UPDATE,
         settingsPermissions.SETTINGS_DELETE,
         settingsPermissions.SETTINGS_SHOW,
+    ])
+
+    await InitService.initPermissions([
+        AuditPermissions.AUDIT_CREATE,
+        AuditPermissions.AUDIT_UPDATE,
+        AuditPermissions.AUDIT_DELETE,
+        AuditPermissions.AUDIT_SHOW,
     ])
 
     //Init settings
