@@ -4,9 +4,9 @@
     <template v-for="(item) in nav">
 
         <v-col cols="12"
-            v-if="item.children && isGranted(item) && !item.galleryHide"
-            :key="item.text"
-            :value="isActive(item)"
+          v-if="item.children && isGranted(item) && !item.galleryHide"
+          :key="item.text"
+          :value="isActive(item)"
         >
 
           <h4 class="text-h4">
@@ -16,13 +16,13 @@
 
           <v-row>
             <v-col cols="12" sm="4" md="4"
-                   v-for="child in childActives(item.children)"
-                   :key="child.text"
+              v-for="child in childActives(item.children)"
+              :key="child.text"
             >
               <menu-card
-                  :title="$t(child.text)"
-                  :icon="child.icon"
-                  :to="child.link"
+                :title="$t(child.text)"
+                :icon="child.icon"
+                :to="child.link"
               ></menu-card>
               <v-btn
                 v-on:click="auditClick($t(child.text))"
@@ -32,15 +32,14 @@
 
         </v-col>
 
-
         <v-col cols="12" sm="4" md="4"
-            v-else-if="isGranted(item) && !item.galleryHide"
-            :key="item.text"
+          v-else-if="isGranted(item) && !item.galleryHide"
+          :key="item.text"
         >
           <menu-card
-              :title="$t(item.text)"
-              :icon="item.icon"
-              :to="item.link"
+            :title="$t(item.text)"
+            :icon="item.icon"
+            :to="item.link"
           ></menu-card>
         </v-col>
 
@@ -61,12 +60,8 @@ export default {
   props: {
     nav: {type: Array, default: null},
   },
-  mounted () {
-    console.log("MOUNTED")
-  },
   methods: {
     async auditClick(description) {
-      console.warn(description);
       await AuditProvider.createAudit({user: this.currentUser.id, target: 'recurso X', action: 'REMOVE', description})
     },
 
