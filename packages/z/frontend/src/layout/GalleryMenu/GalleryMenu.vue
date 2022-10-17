@@ -24,6 +24,9 @@
                   :icon="child.icon"
                   :to="child.link"
               ></menu-card>
+              <v-btn
+                v-on:click="auditClick($t(child.text))"
+              >CLICK ME</v-btn>
             </v-col>
           </v-row>
 
@@ -50,6 +53,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import MenuCard from '../components/MenuCard'
+import {AuditProvider} from "@dracul/audit-frontend"
 
 export default {
   name: "GalleryMenu",
@@ -57,7 +61,15 @@ export default {
   props: {
     nav: {type: Array, default: null},
   },
+  mounted () {
+    console.log("MOUNTED")
+  },
   methods: {
+    async auditClick(description) {
+      console.warn(description);
+      await AuditProvider.createAudit({user: this.currentUser.id, target: 'recurso X', action: 'REMOVE', description})
+    },
+
     isGranted: function (item) {
       if (item.role && item.permission) {
         if (this.isAuth && this.me && item.role == this.me.role.name && this.me.role.permissions.includes(item.permission)) {
@@ -90,6 +102,9 @@ export default {
       'isAuth',
       'me'
     ]),
+    currentUser() {
+      return this.me ? this.me : null
+    },
     childActives() {
       return items => {
         return items.filter(item => this.isGranted(item))

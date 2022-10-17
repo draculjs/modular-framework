@@ -24,7 +24,8 @@ import menuConfig from './menu-config'
 import {DashboardButton, AppBarUserMenu} from '@dracul/user-frontend'
 import {LogoToolbar, TitleToolbar} from '@dracul/customize-frontend'
 import {mapGetters} from "vuex";
-import ErrorSnackbar from "@/modules/base/components/ErrorSnackbar";
+import ErrorSnackbar from "@/modules/base/components/ErrorSnackbar"
+
 
 export default {
   name: 'App',
@@ -50,7 +51,10 @@ export default {
     ...mapGetters(['me']),
     getUserId() {
       return this.me ? this.me.id : null
-    }
-  }
+    },
+
+  },
+
+
 };
 </script>

@@ -4,7 +4,6 @@ import AuditModel from "../models/AuditModel"
 
 export{
     //Services
-
     //Types and resolvers
     types,
     resolvers,
