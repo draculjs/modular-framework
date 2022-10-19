@@ -24,8 +24,6 @@ type Query {
     findAudit(id:ID!): Audit
     fetchAudit: [Audit]
     paginateAudit( pageNumber: Int, itemsPerPage: Int, search: String, filters: [FilterInput],orderBy: String, orderDesc: Boolean): AuditPaginated
-
-
 }
 
 input AuditInput{

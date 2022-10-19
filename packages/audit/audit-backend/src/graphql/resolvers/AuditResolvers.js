@@ -5,7 +5,7 @@ const {
     findAudit,
     fetchAudit,
     paginateAudit
-} =  require('../../services/AuditService.js');
+} =  require("../../services/AuditService.js");
 
 const {
     AUDIT_SHOW,

@@ -1,4 +1,4 @@
-import graphqlClient from "../src/apollo";
+import graphqlClient from "../apollo";
 
 class AuditProvider {
 

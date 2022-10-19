@@ -1,4 +1,4 @@
-import AuditPage from '../src/pages/crud/'
+import AuditPage from '../pages/crud/'
 
 const routes = [
        
