@@ -12,7 +12,7 @@
 
 <script>
 
-    import AuditProvider from "../../../../providers/AuditProvider";
+    import AuditProvider from "../../../providers/AuditProvider";
     
     import {CrudUpdate, ClientError} from '@dracul/common-frontend'
     

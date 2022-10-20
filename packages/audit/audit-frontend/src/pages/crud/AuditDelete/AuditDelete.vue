@@ -22,7 +22,7 @@
 
 <script>
     //Provider  
-    import AuditProvider from "../../../../providers/AuditProvider";
+    import AuditProvider from "../../../providers/AuditProvider";
     
     //Show Data
     import AuditShowData from "../AuditShow/AuditShowData";

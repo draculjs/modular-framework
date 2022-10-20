@@ -1,4 +1,4 @@
-import apolloClient from '../src/apollo/'
+import apolloClient from '../apollo/'
 class BaseProvider {
 
     constructor() {

@@ -14,7 +14,7 @@
 <script>
 
 import { CrudCreate, ClientError } from '@dracul/common-frontend'
-import AuditProvider from "../../../../providers/AuditProvider"
+import AuditProvider from "../../../providers/AuditProvider"
 import AuditForm from "../AuditForm"
 
 

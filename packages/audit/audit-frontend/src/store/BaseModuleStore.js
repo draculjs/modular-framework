@@ -1,4 +1,4 @@
-import baseProvider from "../../providers/BaseProvider";
+import baseProvider from "../providers/BaseProvider";
 
 export default {
     state: {

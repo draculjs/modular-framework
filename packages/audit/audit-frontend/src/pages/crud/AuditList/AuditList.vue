@@ -58,7 +58,7 @@
 </template>
 
 <script>
-   import AuditProvider from "../../../../providers/AuditProvider";
+   import AuditProvider from "../../../providers/AuditProvider";
 
    import { SearchInput} from "@dracul/common-frontend"
    import { DayjsMixin} from "@dracul/dayjs-frontend"
