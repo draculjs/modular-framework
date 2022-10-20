@@ -11,7 +11,7 @@
 <script>
     import AuditCrud from "./AuditCrud";
     export default {
-        name: "Audit",
+        name: "AuditPage",
         components: {AuditCrud}
     }
 </script>

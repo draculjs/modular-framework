@@ -11,10 +11,6 @@
     "storybook": "start-storybook -p 6006 --no-dll",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
   "files": [
     "lib"
   ],
