@@ -5,7 +5,7 @@ class AuditProvider {
     findAudit(id) {
         return graphqlClient.query({
             query: require('./gql/Audit/findAudit.graphql'),
-            variables: {id:id}
+            variables: {id}
         })
     }
 
