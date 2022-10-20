@@ -1,9 +1,9 @@
-import AuditPage from '../pages/crud/'
+import AuditPage from '../pages/crud/index.vue'
 
 const routes = [
        
      {
-        name: 'Audit', 
+        name: 'AuditPage', 
         path: '/audit', 
         component: AuditPage,  
         meta: {

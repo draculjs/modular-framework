@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import routes from '../routes'
+import routes from '../routes/index.js'
+import store from '../store/index.js'
+
 Vue.use(VueRouter)
-import store from '../store'
 
 const router = new VueRouter({
     mode: 'history',
