@@ -3,14 +3,11 @@ import Vuex from 'vuex'
 
 import createPersistedState from "vuex-persistedstate"
 import {UserModuleStore} from '@dracul/user-frontend'
-import {CustomizationStore} from '@dracul/customize-frontend'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules:{
-        user: UserModuleStore,
-        customization: CustomizationStore
+        user: UserModuleStore
     },
     plugins: [
         createPersistedState({
@@ -21,14 +18,8 @@ export default new Vuex.Store({
                     user: {
                         access_token: state.user.access_token,
                         refresh_token: state.user.refresh_token,
-                        me: state.user.me,
-                        avatarurl: state.user.avatarurl
-                    },
-                    customization: {
-                        colors: state.customization.colors,
-                        logo: state.customization.logo,
-                        language: state.customization.language
-                    },
+                        me: state.user.me
+                    }
                 })
         })
     ]
