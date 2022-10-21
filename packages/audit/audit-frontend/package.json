@@ -24,7 +24,7 @@
   "dependencies": {
     "@dracul/common-frontend": "^1.11.4",
     "@dracul/dayjs-frontend": "^1.9.7",
-    "@dracul/user-frontend": "^1.12.0"
+    "@dracul/user-frontend": "^1.12.4"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
