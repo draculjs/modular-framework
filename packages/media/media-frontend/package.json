@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.12.0",
+  "version": "1.12.4",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.11.4",
-    "@dracul/customize-frontend": "^1.12.0",
+    "@dracul/customize-frontend": "^1.12.4",
     "@dracul/dayjs-frontend": "^1.9.7",
-    "@dracul/user-frontend": "^1.12.0",
+    "@dracul/user-frontend": "^1.12.4",
     "@pdftron/pdfjs-express": "^8.4.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",

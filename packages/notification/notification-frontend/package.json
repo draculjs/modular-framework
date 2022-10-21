@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-frontend",
-  "version": "1.11.4",
+  "version": "1.12.2",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
