@@ -14,9 +14,9 @@
     export default {
         name: "DashboardButton",
         computed: {
-            ...mapGetters(['isAuth', 'hasRole']),
+            ...mapGetters(['isAuth', 'hasPermission']),
             mustShow() {
-                return this.hasRole('admin')
+                return this.hasPermission('SECURITY_DASHBOARD_SHOW')
             }
         }
     }
