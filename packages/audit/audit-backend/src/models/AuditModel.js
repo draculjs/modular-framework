@@ -8,8 +8,8 @@ const Schema = mongoose.Schema;
 const AuditSchema = new Schema({
 
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: false, index: false },
-    action: { type: String, enum: ['RESTART', 'UPDATE', 'REMOVE', 'CREATE'], required: true, index: false },
-    target: { type: String, required: true, unique: false, index: false },
+    action: { type: String, required: true, index: false },
+    resource: { type: String, required: true, unique: false, index: false },
     description: { type: String, required: false, unique: false, index: false }
 
 

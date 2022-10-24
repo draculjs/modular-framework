@@ -29,11 +29,10 @@
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "apollo-upload-client": "^13.0.0",
-    "symbol-observable": "^3.0.0",
     "vue": "^2.7.4",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.5.3",
-    "vuetify": "2.6.7",
+    "vuetify": "2.6.10",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -62,12 +61,11 @@
     "react-is": "^17.0.1",
     "sass": "^1.30.0",
     "sass-loader": "^8.0.2",
-    "symbol-observable": "^3.0.0",
     "vue": "^2.7.4",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.5.3",
     "vue-template-compiler": "^2.7.4",
-    "vuetify": "2.6.7",
+    "vuetify": "2.6.10",
     "vuex": "^3.6.2"
   }
 }

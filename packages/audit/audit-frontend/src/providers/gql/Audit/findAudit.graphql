@@ -6,6 +6,6 @@ query findAudit($id:ID!){
                 username
             }
         action
-        target
+        resource
     }
 }

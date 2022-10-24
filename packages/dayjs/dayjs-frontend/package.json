@@ -20,7 +20,7 @@
   "peerDependencies": {
     "dayjs": "^1.10.7",
     "vue": "^2.7.4",
-    "vuetify": "2.6.7"
+    "vuetify": "2.6.10"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -36,7 +36,7 @@
     "mocha": "^8.2.0",
     "vue": "^2.7.4",
     "vue-template-compiler": "^2.7.4",
-    "vuetify": "2.6.7"
+    "vuetify": "2.6.10"
   },
   "bugs": {
     "url": "https://github.com/draculjs/modular-framework/issues"

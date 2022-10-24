@@ -10,7 +10,7 @@ query paginateAudit( $pageNumber: Int, $itemsPerPage:Int, $search: String, $filt
                 username
             }
             action
-            target
+            resource
             description
         }
     }
