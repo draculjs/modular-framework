@@ -3,7 +3,7 @@ import {createAudit} from "@dracul/audit-backend";
 export default {
     Query: {
         ping: async (_,{},{user}) => {
-            await createAudit(user, {user: user.id, action:'Ping to server', target: 'Server', description: 'ping'})
+            await createAudit(user, {user: user.id, action:'Ping to server', resource: 'Server', description: 'ping'})
             return Promise.resolve({status: true})
         },
         pingDelayed: (parent, {}, {req}) => {

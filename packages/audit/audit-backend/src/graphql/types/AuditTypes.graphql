@@ -2,7 +2,7 @@ type Audit{
     id: ID!
     user: User!
     action: String!
-    target: String!
+    resource: String!
     createdAt: String,
     description: String
 }

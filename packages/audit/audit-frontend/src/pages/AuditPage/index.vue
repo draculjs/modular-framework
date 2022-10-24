@@ -94,7 +94,7 @@
                        {text: this.$t('audit.labels.createdAt'), value: 'createdAt'},
                        {text: this.$t('audit.labels.user'), value: 'user'},
                        {text: this.$t('audit.labels.action'), value: 'action'},
-                       {text: this.$t('audit.labels.targetResource'), value: 'target'},
+                       {text: this.$t('audit.labels.targetResource'), value: 'resource'},
                        {text: this.$t('audit.labels.description'), value: 'description'},
                        //Actions
                    ]
