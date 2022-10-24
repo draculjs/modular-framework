@@ -29,6 +29,7 @@ input SettingsInput{
     label: MultiLangInput!
     type: String
     options: [String]
+    reject: String!
 }
 
 type SettingsDelete{
