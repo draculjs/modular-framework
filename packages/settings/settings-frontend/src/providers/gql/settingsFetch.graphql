@@ -10,6 +10,7 @@ query settingsFetch{
         }
         type
         options
+        reject
     }
 }
 

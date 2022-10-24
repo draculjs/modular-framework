@@ -11,6 +11,7 @@
             :label="form.label[getLanguage]"
             :placeholder="form.label[getLanguage]"
             color="secondary"
+            :rules="item.reject === 'no-ip' ? ipRules : [value => true]"
         ></v-text-field>
 
         <!--number-->
@@ -66,6 +67,11 @@ export default {
   props: {
     value: {type: Object, required: true},
     item: {type: Object, required: true}
+  },
+  data(){
+    return{
+      ipRules: [value => (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value)) || 'El campo debe contener una ip valida.']
+    }
   },
   computed: {
     ...mapGetters(['getLanguage']),
