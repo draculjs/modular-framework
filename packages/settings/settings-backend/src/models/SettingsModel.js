@@ -17,7 +17,7 @@ const SettingsSchema = new Schema({
     },
     type: {type: String, default: "string", enum: ['string','number','enum','boolean', 'password'], required: false, unique: false},
     options: [{type: String}],
-    reject: {type: String}
+    regex: {type: String}
 });
 
 

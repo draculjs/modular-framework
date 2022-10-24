@@ -11,7 +11,7 @@
             :label="form.label[getLanguage]"
             :placeholder="form.label[getLanguage]"
             color="secondary"
-            :rules="item.reject === 'no-ip' ? ipRules : [value => true]"
+            :rules="validateRegex"
         ></v-text-field>
 
         <!--number-->
@@ -68,11 +68,6 @@ export default {
     value: {type: Object, required: true},
     item: {type: Object, required: true}
   },
-  data(){
-    return{
-      ipRules: [value => (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value)) || 'El campo debe contener una ip valida.']
-    }
-  },
   computed: {
     ...mapGetters(['getLanguage']),
     form: {
@@ -82,6 +77,13 @@ export default {
       set(val) {
         this.$emit('input', val)
       }
+    },
+    validateRegex(){
+      return [val => {
+        if(!this.item.regex) return true
+        let regex = new RegExp(this.item.regex)
+        return regex.test(val) || 'Formato Invalido.'
+      }]
     }
   },
   watch: {
