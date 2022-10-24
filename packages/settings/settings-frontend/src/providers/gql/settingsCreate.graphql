@@ -10,6 +10,7 @@ mutation settingsCreate($key:String!, $value:String, $label:MultiLangInput!){
             }
         type
         options
+        reject
     }
 }
 

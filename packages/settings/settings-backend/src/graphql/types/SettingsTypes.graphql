@@ -5,6 +5,7 @@ type Settings{
     label: MultiLang!
     type: String
     options: [String]
+    reject: String!
 }
 
 type SettingsPaginated{
