@@ -10,7 +10,7 @@ query settingsFetch{
         }
         type
         options
-        reject
+        regex
     }
 }
 

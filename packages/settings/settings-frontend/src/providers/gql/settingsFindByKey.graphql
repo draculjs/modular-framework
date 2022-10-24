@@ -10,6 +10,6 @@ query settingsFindByKey($key:String!){
         }
         type
         options
-        reject
+        regex
     }
 }

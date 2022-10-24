@@ -10,7 +10,7 @@ mutation settingValueUpdateByKey($key:String!, $value:String){
         }
         type
         options
-        reject
+        regex
     }
 }
 

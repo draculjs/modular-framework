@@ -10,7 +10,7 @@ mutation settingsUpdate($id: ID!, $key:String!, $value:String, $label:MultiLangI
         }
         type
         options
-        reject
+        regex
     }
 }
 

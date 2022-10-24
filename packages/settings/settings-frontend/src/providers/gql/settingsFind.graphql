@@ -10,6 +10,6 @@ query settingsFind($id:ID!){
         }
         type
         options
-        reject
+        regex
     }
 }
