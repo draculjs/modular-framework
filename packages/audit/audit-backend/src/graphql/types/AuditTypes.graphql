@@ -1,14 +1,7 @@
-enum actionEnum{
-    RESTART,
-    UPDATE,
-    REMOVE,
-    CREATE
-}
-
 type Audit{
     id: ID!
     user: User!
-    action: actionEnum!
+    action: String!
     target: String!
     createdAt: String,
     description: String
@@ -24,23 +17,4 @@ type Query {
     findAudit(id:ID!): Audit
     fetchAudit: [Audit]
     paginateAudit( pageNumber: Int, itemsPerPage: Int, search: String, filters: [FilterInput],orderBy: String, orderDesc: Boolean): AuditPaginated
-}
-
-input AuditInput{
-    user: ID!
-    action: actionEnum!
-    target: String!
-    description: String
-}
-
-type AuditDelete{
-    id: ID!
-    success: Boolean!
-}
-
-
-type Mutation {
-    createAudit(input: AuditInput): Audit
-    updateAudit(id: ID!, input: AuditInput): Audit
-    deleteAudit(id: ID!): AuditDelete!
 }

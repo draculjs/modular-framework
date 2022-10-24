@@ -10,6 +10,7 @@ import {setGraphQlClientToProviders} from '@dracul/user-frontend'
 import {customizationProvider} from '@dracul/customize-frontend'
 import {notificationProvider} from '@dracul/notification-frontend'
 import {SettingsProvider} from '@dracul/settings-frontend'
+import { AuditProvider } from '@dracul/audit-frontend';
 
 import {UploadProvider, UserStorageProvider, FileProvider, FileMetricsProvider} from '@dracul/media-frontend'
 
@@ -23,7 +24,7 @@ UploadProvider.setGqlc(apolloClient)
 UserStorageProvider.setGqlc(apolloClient)
 FileProvider.setGqlc(apolloClient)
 FileMetricsProvider.setGqlc(apolloClient)
-
+AuditProvider.setGqlc(apolloClient)
 
 Vue.config.productionTip = false
 

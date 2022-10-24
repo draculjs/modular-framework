@@ -1,7 +1,0 @@
-mutation deleteAudit($id: ID!){
-    deleteAudit(id: $id){
-        id
-        success
-    }
-}
-

@@ -1,4 +1,4 @@
-import AuditPage from '../pages/crud/index.vue'
+import AuditPage from '../pages/AuditPage/index.vue'
 
 const routes = [
        
