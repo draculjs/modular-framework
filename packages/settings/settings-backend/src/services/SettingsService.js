@@ -39,6 +39,8 @@ export const initializeSetting = async function (setting) {
     let settingDoc = await findSettingsByKey(setting.key)
     if (!settingDoc) {
         settingDoc = await createSettings(null, setting)
+    }else{
+        settingDoc = await updateSettings(null, settingDoc.id, setting)
     }
     return settingDoc
 }
