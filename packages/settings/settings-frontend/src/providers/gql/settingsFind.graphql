@@ -10,5 +10,6 @@ query settingsFind($id:ID!){
         }
         type
         options
+        regex
     }
 }

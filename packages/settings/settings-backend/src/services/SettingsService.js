@@ -131,7 +131,7 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 }
 
 
-export const createSettings = async function (authUser, {key, value, label, type, options}) {
+export const createSettings = async function (authUser, {key, value, label, type, options, regex}) {
 
     const docValue = value ? value.toString : null
 
@@ -140,7 +140,8 @@ export const createSettings = async function (authUser, {key, value, label, type
         value: docValue,
         label,
         type,
-        options
+        options,
+        regex
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -158,7 +159,7 @@ export const createSettings = async function (authUser, {key, value, label, type
     })
 }
 
-export const updateSettings = async function (authUser, id, {key, value, label, type, options}) {
+export const updateSettings = async function (authUser, id, {key, value, label, type, options, regex}) {
 
     const docValue = value ? value.toString() : null
 
@@ -170,6 +171,7 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
                 label,
                 ...(type ? {type} : {}),
                 ...(options ? {options} : {}),
+                regex
             },
             {new: true, runValidators: true, context: 'query'},
             (error, doc) => {

@@ -11,6 +11,7 @@
             :label="form.label[getLanguage]"
             :placeholder="form.label[getLanguage]"
             color="secondary"
+            :rules="validateRegex"
         ></v-text-field>
 
         <!--number-->
@@ -76,6 +77,13 @@ export default {
       set(val) {
         this.$emit('input', val)
       }
+    },
+    validateRegex(){
+      return [val => {
+        if(!this.item.regex) return true
+        let regex = new RegExp(this.item.regex)
+        return regex.test(val) || 'Formato Invalido.'
+      }]
     }
   },
   watch: {
