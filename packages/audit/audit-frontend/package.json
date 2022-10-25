@@ -11,9 +11,6 @@
     "storybook": "start-storybook -p 6006 --no-dll",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
