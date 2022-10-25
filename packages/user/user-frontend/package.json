@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.12.4",
+  "version": "1.13.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -19,16 +19,16 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.11.4",
-    "@dracul/dayjs-frontend": "^1.9.7"
+    "@dracul/common-frontend": "^1.13.0",
+    "@dracul/dayjs-frontend": "^1.13.0"
   },
   "peerDependencies": {
-    "graphql": "^15.4.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "apollo-upload-client": "^13.0.0",
+    "graphql": "^15.4.0",
     "vue": "^2.7.4",
     "vue-chartjs": "^3.5.0",
     "vue-cli-plugin-vuetify": "~2.0.5",
