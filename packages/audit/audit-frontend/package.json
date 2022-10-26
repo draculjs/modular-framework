@@ -1,6 +1,6 @@
 {
   "name": "@dracul/audit-frontend",
-  "version": "1.12.5",
+  "version": "1.13.1",
   "description": "Audit frontend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
   "homepage": "https://github.com/draculjs/modular-framework#readme",
@@ -11,9 +11,6 @@
     "storybook": "start-storybook -p 6006 --no-dll",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
@@ -22,8 +19,8 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
-    "@dracul/common-frontend": "^1.11.4",
-    "@dracul/dayjs-frontend": "^1.9.7"
+    "@dracul/common-frontend": "^1.13.0",
+    "@dracul/dayjs-frontend": "^1.13.0"
   },
   "peerDependencies": {
     "apollo-client": "^2.6.10",

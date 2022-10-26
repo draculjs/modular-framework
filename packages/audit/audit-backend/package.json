@@ -1,6 +1,6 @@
 {
   "name": "@dracul/audit-backend",
-  "version": "1.12.5",
+  "version": "1.13.2",
   "description": "Audit Backend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
   "homepage": "https://github.com/draculjs/modular-framework#readme",
@@ -28,8 +28,8 @@
     "@dracul/common-backend": "^1.11.4",
     "@dracul/logger-backend": "^1.7.12",
     "@dracul/notification-backend": "^1.11.3",
-    "@dracul/settings-backend": "^1.11.3",
-    "@dracul/user-backend": "^1.11.4",
+    "@dracul/settings-backend": "^1.13.2",
+    "@dracul/user-backend": "^1.13.2",
     "apollo-server-express": "^2.12.0",
     "dayjs": "^1.10.7",
     "dotenv": "^16.0.3",

@@ -1,12 +1,13 @@
-import {createSettings, findSettingsByKey} from "@dracul/settings-backend";
+import {createSettings, findSettingsByKey, updateSettings} from "@dracul/settings-backend";
 
 
 const settings = [
     // {
-    //     key: 'sample',
+    //     key: 'ip',
     //     type: 'string',
     //     value: '',
-    //     label: {en: 'Sample', es: 'Ejemplo', pt: 'Ejemplo'}
+    //     label: {en: 'ip', es: 'ip', pt: 'ip'},
+    //     regex: ''
     // }
 ]
 
@@ -16,6 +17,8 @@ export const initSettings = async function () {
         const setting = await findSettingsByKey(settings[i].key)
         if (!setting) {
             await createSettings(null, settings[i])
+        }else{
+            await updateSettings(null, setting.id, settings[i])
         }
     }
 

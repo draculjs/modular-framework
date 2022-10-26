@@ -5,6 +5,7 @@ type Settings{
     label: MultiLang!
     type: String
     options: [String]
+    regex: String
 }
 
 type SettingsPaginated{
@@ -28,6 +29,7 @@ input SettingsInput{
     label: MultiLangInput!
     type: String
     options: [String]
+    regex: String
 }
 
 type SettingsDelete{

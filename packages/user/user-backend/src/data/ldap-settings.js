@@ -27,6 +27,7 @@ export const LDAP_SETTINGS = [
         key: 'LDAP_IP',
         type: 'string',
         value: '',
-        label: {en: 'LDAP IP', es: 'LDAP IP', pt: 'LDAP IP'}
+        label: {en: 'LDAP IP', es: 'LDAP IP', pt: 'LDAP IP'},
+        regex: '^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$'
     }
 ]
