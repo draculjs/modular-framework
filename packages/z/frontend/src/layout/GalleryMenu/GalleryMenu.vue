@@ -24,9 +24,6 @@
                 :icon="child.icon"
                 :to="child.link"
               ></menu-card>
-              <v-btn
-                v-on:click="auditClick($t(child.text))"
-              >CLICK ME</v-btn>
             </v-col>
           </v-row>
 
@@ -52,7 +49,6 @@
 <script>
 import {mapGetters} from 'vuex'
 import MenuCard from '../components/MenuCard'
-import {AuditProvider} from "@dracul/audit-frontend"
 
 export default {
   name: "GalleryMenu",
@@ -61,9 +57,6 @@ export default {
     nav: {type: Array, default: null},
   },
   methods: {
-    async auditClick(description) {
-      await AuditProvider.createAudit({user: this.currentUser.id, target: 'recurso X', action: 'REMOVE', description})
-    },
 
     isGranted: function (item) {
       if (item.role && item.permission) {

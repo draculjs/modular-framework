@@ -92,10 +92,10 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
 
 
 
-const createAudit = async function (authUser, { user, action, target, description }) {
+const createAudit = async function (authUser, { user, action, resource, description }) {
 
     const doc = new Audit({
-        user, action, target, description
+        user, action, resource, description
     })
 
     doc.id = doc._id
@@ -115,10 +115,10 @@ const createAudit = async function (authUser, { user, action, target, descriptio
     })
 }
 
-const updateAudit = async function (authUser, id, { user, action, target }) {
+const updateAudit = async function (authUser, id, { user, action, resource }) {
     return new Promise((resolve, rejects) => {
         Audit.findOneAndUpdate({ _id: id },
-            { user, action, target },
+            { user, action, resource },
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
 
