@@ -1,7 +1,4 @@
 const {
-    createAudit,
-    updateAudit,
-    deleteAudit,
     findAudit,
     fetchAudit,
     paginateAudit
