@@ -1,10 +1,18 @@
 query customization{
     customization{
-        colors{
+        lightTheme{
             primary
             onPrimary
             secondary
             onSecondary
+            background
+        }
+        darkTheme{
+            primary
+            onPrimary
+            secondary
+            onSecondary
+            background
         }
         logo{
             mode

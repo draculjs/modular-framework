@@ -7,6 +7,7 @@ const colorsSchema = new mongoose.Schema({
     onPrimary: {type: String, required: true},
     secondary: {type: String, required: true},
     onSecondary: {type: String, required: true},
+    background: {type: String, required: true},
 })
 
 const logoSchema = new mongoose.Schema({
@@ -19,6 +20,8 @@ const logoSchema = new mongoose.Schema({
 
 const CustomizationSchema = new Schema({
     colors: colorsSchema,
+    lightTheme: colorsSchema,
+    darkTheme: colorsSchema,
     logo: logoSchema,
     language: {type: String, required: true}
 });

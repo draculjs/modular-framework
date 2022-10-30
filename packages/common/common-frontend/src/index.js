@@ -14,10 +14,10 @@ import ConfirmSelectDialog from "./components/ConfirmSelectDialog";
 import ColorInput from "./components/ColorInput";
 import FormList from "./components/FormList";
 
-import AddButton from "./components/Crud/AddButton";
-import EditButton from "./components/Crud/EditButton";
-import DeleteButton from "./components/Crud/DeleteButton";
-import ShowButton from "./components/Crud/ShowButton";
+import AddButton from "./components/Crud/Buttons/AddButton";
+import EditButton from "./components/Crud/Buttons/EditButton";
+import DeleteButton from "./components/Crud/Buttons/DeleteButton";
+import ShowButton from "./components/Crud/Buttons/ShowButton";
 
 import CrudLayout from "./components/Crud/CrudLayout";
 import CrudList from "./components/Crud/CrudList";

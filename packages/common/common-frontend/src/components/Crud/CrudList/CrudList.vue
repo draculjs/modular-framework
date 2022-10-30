@@ -44,9 +44,9 @@
 </template>
 <script>
     import SearchInput from "../../SearchInput";
-    import ShowButton from "../ShowButton";
-    import EditButton from "../EditButton";
-    import DeleteButton from "../DeleteButton";
+    import ShowButton from "../Buttons/ShowButton";
+    import EditButton from "../Buttons/EditButton";
+    import DeleteButton from "../Buttons/DeleteButton";
 
     export default {
         name: 'CrudList',

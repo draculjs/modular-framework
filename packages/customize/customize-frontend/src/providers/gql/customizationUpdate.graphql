@@ -1,10 +1,17 @@
-mutation customizationUpdate($id: ID!, $primary:String!, $onPrimary:String!, $secondary:String!, $onSecondary:String!, $logo:String!, $language:String!){
-    customizationUpdate(id: $id, input: {primary: $primary, onPrimary: $onPrimary, secondary: $secondary, onSecondary: $onSecondary, logo: $logo, language: $language }){
-        id
-        primary
-        onPrimary
-        secondary
-        onSecondary
+mutation customizationUpdate($input: CustomizationInput){
+    customizationUpdate(input: CustomizationInput){
+        lightTheme{
+            primary
+            onPrimary
+            secondary
+            onSecondary
+        }
+        darkTheme{
+            primary
+            onPrimary
+            secondary
+            onSecondary
+        }
         logo
         language
     }

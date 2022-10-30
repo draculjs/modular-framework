@@ -4,13 +4,18 @@ const messages = {
             title: 'Customization',
             preview: 'Preview',
             applyButton: 'Apply',
+            darkMode: 'Dark mode',
             colors: {
                 title: 'Colors',
-                subtitle: 'Platform color settings',
+                lightTitle: 'Light Theme Colors',
+                lightSubtitle: 'Platform light theme color settings',
+                darkTitle: 'Dark Theme Colors',
+                darkSubtitle: 'Platform dark theme color settings',
                 primary: 'Primary',
                 onPrimary: 'On Primary',
                 secondary: 'Secondary',
                 onSecondary: 'On Secondary',
+                background: 'background',
 
             },
             lang: {
@@ -53,13 +58,18 @@ const messages = {
             title: 'Personalización',
             preview: 'Vista previa',
             applyButton: 'Aplicar',
+            darkMode: 'Modo oscuro',
             colors: {
                 title: 'Colores',
-                subtitle: 'Configuracion de los colores de la plataforma',
+                lightTitle: 'Tema Claro',
+                lightSubtitle: 'Configuración de colores en tema claro',
+                darkTitle: 'Tema Oscuro',
+                darkSubtitle: 'Configuración de colores en tema oscuro',
                 primary: 'Primario',
                 onPrimary: 'En Primario',
                 secondary: 'Secundario',
                 onSecondary: 'En Secundario',
+                background: 'Fondo'
             },
             lang: {
                 title: 'Idioma',
@@ -100,13 +110,18 @@ const messages = {
             title: 'Costumização',
             preview: 'Vista prévia',
             applyButton: 'Aplique',
+            darkMode: 'Dark mode',
             colors: {
-                title: 'Cores',
-                subtitle: 'Configurações de cores da plataforma',
+                title: 'Colors',
+                lightTitle: 'Luz do tema',
+                lightSubtitle: 'Configurações de cores luz do tema',
+                darkTitle: 'Tema Escuro',
+                darkSubtitle: 'Configuración de cores tema escuro',
                 primary: 'Primário',
                 onPrimary: 'No primário',
                 secondary: 'Secundário',
                 onSecondary: 'No secundário',
+                background: 'Fondo'
             },
             lang: {
                 title: 'Linguagem',

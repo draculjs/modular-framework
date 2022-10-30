@@ -29,7 +29,8 @@ export default new Vuex.Store({
                     customization: {
                         colors: state.customization.colors,
                         logo: state.customization.logo,
-                        language: state.customization.language
+                        language: state.customization.language,
+                        darkMode: state.customization.darkMode
                     },
                 })
         })
