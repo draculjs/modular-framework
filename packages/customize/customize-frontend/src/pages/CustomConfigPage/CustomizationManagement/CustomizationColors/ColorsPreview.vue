@@ -2,10 +2,10 @@
     <v-row no-gutters justify="center" align-content="center">
       <v-col cols="12" md="4" lg="4">
         <v-card class="pa-3" :style="{backgroundColor: background}">
-          <v-card-title class="mb-3 justify-center" :style="{color: primary}">
+          <v-card-title class="mb-3 justify-center" :style="{background: appBar, color: primary}">
             <div v-t="'customization.preview'"></div>
           </v-card-title>
-          <v-card-text class="text-center">
+          <v-card-text class="text-center px-3">
             <v-row>
               <v-col cols="6" :style="{backgroundColor: primary, color: onPrimary}">
                 {{ $t('customization.colors.primary') }}
@@ -25,6 +25,7 @@ export default {
   name: 'colors-preview',
   props: {
     background: {type: String},
+    appBar: {type: String},
     primary: {type: String},
     onPrimary: {type: String},
     secondary: {type: String},

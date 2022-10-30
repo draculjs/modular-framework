@@ -68,6 +68,7 @@
 
         <colors-preview
             :background="formColors.lightTheme.background"
+            :app-bar="formColors.lightTheme.appBar"
             :primary="formColors.lightTheme.primary"
             :on-primary="formColors.lightTheme.onPrimary"
             :secondary="formColors.lightTheme.secondary"
@@ -146,6 +147,7 @@
       <v-card-text class="pt-0 ">
         <colors-preview
             :background="formColors.darkTheme.background"
+            :app-bar="formColors.darkTheme.appBar"
             :primary="formColors.darkTheme.primary"
             :on-primary="formColors.darkTheme.onPrimary"
             :secondary="formColors.darkTheme.secondary"
