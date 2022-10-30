@@ -140,9 +140,10 @@
 
     </v-card>
 
-    <v-card>
+    <v-card outlined class="mt-4">
       <v-card-actions>
-        <v-btn @click="saveColors" text color="blue darken-4" v-t="'customization.applyButton'"></v-btn>
+        <v-spacer></v-spacer>
+        <v-btn @click="saveColors" large color="primary onPrimary--text" v-t="'customization.applyButton'"></v-btn>
       </v-card-actions>
     </v-card>
   </v-container>

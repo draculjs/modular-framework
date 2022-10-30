@@ -1,7 +1,7 @@
 <template>
-    <v-row justify="center" align-content="center">
+    <v-row no-gutters justify="center" align-content="center">
       <v-col cols="12" md="4" lg="4">
-        <v-card class="pa-6" :style="{backgroundColor: background}">
+        <v-card class="pa-3" :style="{backgroundColor: background}">
           <v-card-title class="mb-3 justify-center" :style="{color: primary}">
             <div v-t="'customization.preview'"></div>
           </v-card-title>
