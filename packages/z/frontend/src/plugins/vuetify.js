@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 import i18n from '../i18n'
 Vue.use(Vuetify);
+import store from '../store'
 
 const LIGHT_THEME = {
     primary: '#3F51B5',
@@ -28,6 +29,7 @@ export default new Vuetify({
         iconfont: 'md'
     },
     theme: {
+        dark: store.getters.darkMode,
         themes: {
             light: {
                 background:  LIGHT_THEME.background,
