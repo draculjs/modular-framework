@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-frontend",
-  "version": "1.14.6",
+  "version": "1.14.7",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
   "main": "./src/index.js",
   "scripts": {
