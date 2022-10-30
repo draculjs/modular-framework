@@ -80,6 +80,7 @@
             <colors-preview
                 :background="formColors.lightTheme.background"
                 :app-bar="formColors.lightTheme.appBar"
+                :on-app-bar="formColors.lightTheme.onAppBar"
                 :primary="formColors.lightTheme.primary"
                 :on-primary="formColors.lightTheme.onPrimary"
                 :secondary="formColors.lightTheme.secondary"
@@ -174,6 +175,7 @@
             <colors-preview
                 :background="formColors.darkTheme.background"
                 :app-bar="formColors.darkTheme.appBar"
+                :on-app-bar="formColors.darkTheme.onAppBar"
                 :primary="formColors.darkTheme.primary"
                 :on-primary="formColors.darkTheme.onPrimary"
                 :secondary="formColors.darkTheme.secondary"

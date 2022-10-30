@@ -1,6 +1,6 @@
 <template>
         <v-card class="pa-3" :style="{backgroundColor: background}">
-          <v-card-title class="mb-3 justify-center" :style="{background: appBar, color: primary}">
+          <v-card-title class="mb-3 justify-center" :style="{background: appBar, color: onAppBar}">
             <div v-t="'customization.preview'"></div>
           </v-card-title>
           <v-card-text class="text-center px-3">
@@ -22,6 +22,7 @@ export default {
   props: {
     background: {type: String},
     appBar: {type: String},
+    onAppBar: {type: String},
     primary: {type: String},
     onPrimary: {type: String},
     secondary: {type: String},
