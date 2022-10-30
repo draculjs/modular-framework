@@ -48,7 +48,7 @@
 
   <v-btn v-else
          text
-         color="primary"
+         :color="color"
          :to="{name: 'login'}"
          rounded
          v-t="'auth.signIn'"
@@ -63,6 +63,9 @@ import { RoleVisualizationCard } from '../RoleVisualizationCard';
 
 export default {
   name: "AppBarUserMenu",
+  props: {
+    color: {type: String, default: 'onAppBar'}
+  },
   components:{ RoleVisualizationCard },
   data: () => ({
     src: '@/assets/user.png',

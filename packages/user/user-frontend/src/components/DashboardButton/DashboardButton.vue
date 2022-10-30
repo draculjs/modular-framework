@@ -14,7 +14,7 @@ import {mapGetters} from 'vuex'
 export default {
   name: "DashboardButton",
   props: {
-    color: {type: String, default: 'primary'}
+    color: {type: String, default: 'onAppBar'}
   },
   computed: {
     ...mapGetters(['isAuth', 'hasPermission']),

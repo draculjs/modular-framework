@@ -10,13 +10,13 @@
       <v-badge
           :content="totalNotifications"
           :value="totalNotifications"
-          color="secondary"
+          :color="badgeColor"
           overlap
       >
         <v-btn v-on="on"
                v-bind="attrs"
                icon text
-               color="primary"
+               :color="color"
         >
           <v-icon>notifications</v-icon>
         </v-btn>
@@ -38,6 +38,8 @@ export default {
 
   props: {
     userId: String,
+    color: {type: String, default: 'onAppBar'},
+    badgeColor: {type: String, default: 'red'},
     colorIcon: {type: String, default: 'onPrimary--text'},
   },
   data() {

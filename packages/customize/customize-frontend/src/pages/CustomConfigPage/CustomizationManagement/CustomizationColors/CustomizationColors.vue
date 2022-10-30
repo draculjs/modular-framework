@@ -8,10 +8,15 @@
       <v-card-subtitle v-t="'customization.colors.lightSubtitle'">
       </v-card-subtitle>
       <v-card-text class="pb-0 ">
+
+        <v-row>
+          <v-col cols="12" sm="7">
+
+
         <v-form ref="colorsForm" autocomplete="off" @submit.prevent="$emit('save')">
 
           <v-row>
-            <v-col cols="12" sm="4" md="2" class="pb-0">
+            <v-col cols="12" sm="4" md="4" class="pb-0">
               <color-input v-model="formColors.lightTheme.background"
                            :label="$t('customization.colors.background')"
                            color="secondary"
@@ -19,7 +24,7 @@
               />
             </v-col>
 
-            <v-col cols="12" sm="4" md="2" class="pb-0">
+            <v-col cols="12" sm="4" md="4" class="pb-0">
               <color-input v-model="formColors.lightTheme.appBar"
                            :label="$t('customization.colors.appBar')"
                            color="secondary"
@@ -27,7 +32,15 @@
               />
             </v-col>
 
-            <v-col cols="12" sm="4" md="2" class="pb-0">
+            <v-col cols="12" sm="4" md="4" class="pb-0">
+              <color-input v-model="formColors.lightTheme.onAppBar"
+                           :label="$t('customization.colors.onAppBar')"
+                           color="secondary"
+                           :rules="[rules.required]"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="4" md="3" class="pb-0">
               <color-input v-model="formColors.lightTheme.primary"
                            :label="$t('customization.colors.primary')"
                            color="secondary"
@@ -35,7 +48,7 @@
               />
             </v-col>
 
-            <v-col cols="12" sm="4" md="2">
+            <v-col cols="12" sm="4" md="3">
               <color-input v-model="formColors.lightTheme.onPrimary"
                            :label="$t('customization.colors.onPrimary')"
                            color="secondary"
@@ -43,7 +56,7 @@
               />
             </v-col>
 
-            <v-col cols="12" sm="4" md="2">
+            <v-col cols="12" sm="4" md="3">
               <color-input v-model="formColors.lightTheme.secondary"
                            :label="$t('customization.colors.secondary')"
                            color="secondary"
@@ -51,7 +64,7 @@
               />
             </v-col>
 
-            <v-col cols="12" sm="4" md="2">
+            <v-col cols="12" sm="4" md="3">
               <color-input v-model="formColors.lightTheme.onSecondary"
                            :label="$t('customization.colors.onSecondary')"
                            color="secondary"
@@ -61,21 +74,24 @@
 
           </v-row>
         </v-form>
+          </v-col>
+
+          <v-col cols="12" sm="5">
+            <colors-preview
+                :background="formColors.lightTheme.background"
+                :app-bar="formColors.lightTheme.appBar"
+                :primary="formColors.lightTheme.primary"
+                :on-primary="formColors.lightTheme.onPrimary"
+                :secondary="formColors.lightTheme.secondary"
+                :on-secondary="formColors.lightTheme.onSecondary"
+
+            />
+          </v-col>
+
+        </v-row>
 
       </v-card-text>
 
-      <v-card-text class="pt-0 ">
-
-        <colors-preview
-            :background="formColors.lightTheme.background"
-            :app-bar="formColors.lightTheme.appBar"
-            :primary="formColors.lightTheme.primary"
-            :on-primary="formColors.lightTheme.onPrimary"
-            :secondary="formColors.lightTheme.secondary"
-            :on-secondary="formColors.lightTheme.onSecondary"
-
-        />
-      </v-card-text>
 
     </v-card>
 
@@ -88,73 +104,91 @@
       <v-card-subtitle v-t="'customization.colors.darkSubtitle'">
       </v-card-subtitle>
       <v-card-text class="pb-0 ">
-        <v-form ref="colorsForm" autocomplete="off" @submit.prevent="$emit('save')">
+        <v-row>
+          <v-col cols="12" sm="7">
+            <v-form ref="colorsForm" autocomplete="off" @submit.prevent="$emit('save')">
 
-          <v-row>
-            <v-col cols="12" sm="4" md="2" class="pb-0">
-              <color-input v-model="formColors.darkTheme.background"
-                           :label="$t('customization.colors.background')"
-                           color="secondary"
-                           :rules="[rules.required]"
-              />
-            </v-col>
+              <v-row>
+                <v-col cols="12" sm="4" md="4" class="pb-0">
+                  <color-input v-model="formColors.darkTheme.background"
+                               :label="$t('customization.colors.background')"
+                               color="secondary"
+                               :rules="[rules.required]"
+                  />
+                </v-col>
 
-            <v-col cols="12" sm="4" md="2" class="pb-0">
-              <color-input v-model="formColors.darkTheme.appBar"
-                           :label="$t('customization.colors.appBar')"
-                           color="secondary"
-                           :rules="[rules.required]"
-              />
-            </v-col>
+                <v-col cols="12" sm="4" md="4" class="pb-0">
+                  <color-input v-model="formColors.darkTheme.appBar"
+                               :label="$t('customization.colors.appBar')"
+                               color="secondary"
+                               :rules="[rules.required]"
+                  />
+                </v-col>
 
-            <v-col cols="12" sm="4" md="2" class="pb-0">
-              <color-input v-model="formColors.darkTheme.primary"
-                           :label="$t('customization.colors.primary')"
-                           color="secondary"
-                           :rules="[rules.required]"
-              />
-            </v-col>
+                <v-col cols="12" sm="4" md="4" class="pb-0">
+                  <color-input v-model="formColors.darkTheme.onAppBar"
+                               :label="$t('customization.colors.onAppBar')"
+                               color="secondary"
+                               :rules="[rules.required]"
+                  />
+                </v-col>
 
-            <v-col cols="12" sm="4" md="2">
-              <color-input v-model="formColors.darkTheme.onPrimary"
-                           :label="$t('customization.colors.onPrimary')"
-                           color="secondary"
-                           :rules="[rules.required]"
-              />
-            </v-col>
+                <v-col cols="12" sm="4" md="3" class="pb-0">
+                  <color-input v-model="formColors.darkTheme.primary"
+                               :label="$t('customization.colors.primary')"
+                               color="secondary"
+                               :rules="[rules.required]"
+                  />
+                </v-col>
 
-            <v-col cols="12" sm="4" md="2">
-              <color-input v-model="formColors.darkTheme.secondary"
-                           :label="$t('customization.colors.secondary')"
-                           color="secondary"
-                           :rules="[rules.required]"
-              />
-            </v-col>
+                <v-col cols="12" sm="4" md="3">
+                  <color-input v-model="formColors.darkTheme.onPrimary"
+                               :label="$t('customization.colors.onPrimary')"
+                               color="secondary"
+                               :rules="[rules.required]"
+                  />
+                </v-col>
 
-            <v-col cols="12" sm="4" md="2">
-              <color-input v-model="formColors.darkTheme.onSecondary"
-                           :label="$t('customization.colors.onSecondary')"
-                           color="secondary"
-                           :rules="[rules.required]"
-              />
-            </v-col>
+                <v-col cols="12" sm="4" md="3">
+                  <color-input v-model="formColors.darkTheme.secondary"
+                               :label="$t('customization.colors.secondary')"
+                               color="secondary"
+                               :rules="[rules.required]"
+                  />
+                </v-col>
 
-          </v-row>
-        </v-form>
+                <v-col cols="12" sm="4" md="3">
+                  <color-input v-model="formColors.darkTheme.onSecondary"
+                               :label="$t('customization.colors.onSecondary')"
+                               color="secondary"
+                               :rules="[rules.required]"
+                  />
+                </v-col>
+
+              </v-row>
+            </v-form>
+          </v-col>
+
+
+          <v-col cols="12" sm="5">
+            <colors-preview
+                :background="formColors.darkTheme.background"
+                :app-bar="formColors.darkTheme.appBar"
+                :primary="formColors.darkTheme.primary"
+                :on-primary="formColors.darkTheme.onPrimary"
+                :secondary="formColors.darkTheme.secondary"
+                :on-secondary="formColors.darkTheme.onSecondary"
+
+            />
+          </v-col>
+
+        </v-row>
+
+
 
       </v-card-text>
 
-      <v-card-text class="pt-0 ">
-        <colors-preview
-            :background="formColors.darkTheme.background"
-            :app-bar="formColors.darkTheme.appBar"
-            :primary="formColors.darkTheme.primary"
-            :on-primary="formColors.darkTheme.onPrimary"
-            :secondary="formColors.darkTheme.secondary"
-            :on-secondary="formColors.darkTheme.onSecondary"
 
-        />
-      </v-card-text>
 
     </v-card>
 

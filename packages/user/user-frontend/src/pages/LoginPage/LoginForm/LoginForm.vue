@@ -29,8 +29,8 @@
         ref="loginBtn"
         :loading="loading"
         min-width="100%"
-        color="secondary"
-        class="onSecondary--text mt-3"
+        color="primary onPrimary--text"
+        class="mt-3"
         @click="signIn" v-t="'auth.signIn'">
       </v-btn>
 

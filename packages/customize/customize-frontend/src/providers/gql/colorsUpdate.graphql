@@ -7,6 +7,7 @@ mutation colorsUpdate($input: ColorsUpdateInput ){
             onSecondary
             background
             appBar
+            onAppBar
         }
         darkTheme{
             primary
@@ -15,6 +16,7 @@ mutation colorsUpdate($input: ColorsUpdateInput ){
             onSecondary
             background
             appBar
+            onAppBar
         }
     }
 }

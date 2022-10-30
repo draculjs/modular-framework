@@ -12,6 +12,7 @@ type ColorsTheme{
     onSecondary: String
     background: String
     appBar: String
+    onAppBar: String
 }
 
 type Logo{
@@ -58,6 +59,7 @@ input ColorsThemeInput{
     onSecondary: String!
     background: String!
     appBar: String!
+    onAppBar: String!
 }
 
 input ColorsUpdateInput{

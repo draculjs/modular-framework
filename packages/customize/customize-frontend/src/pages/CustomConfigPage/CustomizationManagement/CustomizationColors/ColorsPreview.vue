@@ -1,6 +1,4 @@
 <template>
-    <v-row no-gutters justify="center" align-content="center">
-      <v-col cols="12" md="4" lg="4">
         <v-card class="pa-3" :style="{backgroundColor: background}">
           <v-card-title class="mb-3 justify-center" :style="{background: appBar, color: primary}">
             <div v-t="'customization.preview'"></div>
@@ -17,8 +15,6 @@
 
           </v-card-text>
         </v-card>
-      </v-col>
-    </v-row>
 </template>
 <script>
 export default {

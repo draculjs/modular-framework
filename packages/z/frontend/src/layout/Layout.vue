@@ -4,8 +4,8 @@
       <sidebar-menu :nav="menu" v-on:closeDrawer="drawer = false"></sidebar-menu>
     </v-navigation-drawer>
 
-    <v-app-bar app :color="$vuetify.theme.themes[theme].appBar" :clipped-left="clipped">
-      <v-app-bar-nav-icon color="primary" @click="drawer=!drawer"/>
+    <v-app-bar app color="appBar" :clipped-left="clipped">
+      <v-app-bar-nav-icon color="onAppBar" @click="drawer=!drawer"/>
       <slot name="toolbar-left"></slot>
       <v-spacer></v-spacer>
       <slot name="toolbar-right"></slot>

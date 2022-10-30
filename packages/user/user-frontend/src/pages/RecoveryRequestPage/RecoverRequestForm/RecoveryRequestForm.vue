@@ -37,15 +37,12 @@
                 </v-form>
             </v-card-text>
 
-            <v-card-actions>
-                <v-row justify="center">
+            <v-card-actions class="justify-end">
                     <submit-button @click="submit"
                                    text="common.send"
                                    :loading="loading"
                                    :disabled="!valid"
                     />
-                </v-row>
-
             </v-card-actions>
 
         </template>

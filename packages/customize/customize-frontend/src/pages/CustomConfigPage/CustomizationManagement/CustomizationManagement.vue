@@ -84,6 +84,7 @@ export default {
           onSecondary: null,
           background: null,
           appBar: null,
+          onAppBar: null,
         },
         darkTheme: {
           primary: null,
@@ -91,7 +92,7 @@ export default {
           secondary: null,
           onSecondary: null,
           background: null,
-          appBar: null,
+          onAppBar: null,
         }
 
       },
