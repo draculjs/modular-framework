@@ -49,7 +49,6 @@
   <v-btn v-else
          text
          color="primary"
-         class="onPrimary--text"
          :to="{name: 'login'}"
          rounded
          v-t="'auth.signIn'"
