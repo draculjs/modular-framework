@@ -1,6 +1,6 @@
 {
   "name": "integration-frontend",
-  "version": "1.14.0",
+  "version": "1.14.1",
   "private": true,
   "scripts": {
     "front": "vue-cli-service serve",
@@ -16,8 +16,8 @@
   "dependencies": {
     "@dracul/audit-frontend": "^1.14.0",
     "@dracul/common-frontend": "^1.14.0",
-    "@dracul/customize-frontend": "^1.14.0",
-    "@dracul/media-frontend": "^1.14.0",
+    "@dracul/customize-frontend": "^1.14.1",
+    "@dracul/media-frontend": "^1.14.1",
     "@dracul/notification-frontend": "^1.14.0",
     "@dracul/settings-frontend": "^1.14.0",
     "@dracul/user-frontend": "^1.14.0",

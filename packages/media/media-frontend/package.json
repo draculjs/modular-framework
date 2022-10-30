@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.14.0",
+  "version": "1.14.1",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.14.0",
-    "@dracul/customize-frontend": "^1.14.0",
+    "@dracul/customize-frontend": "^1.14.1",
     "@dracul/dayjs-frontend": "^1.14.0",
     "@dracul/user-frontend": "^1.14.0",
     "@pdftron/pdfjs-express": "^8.4.0",
