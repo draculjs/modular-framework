@@ -20,6 +20,14 @@
             </v-col>
 
             <v-col cols="12" sm="4" md="2" class="pb-0">
+              <color-input v-model="formColors.lightTheme.appBar"
+                           :label="$t('customization.colors.appBar')"
+                           color="secondary"
+                           :rules="[rules.required]"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="4" md="2" class="pb-0">
               <color-input v-model="formColors.lightTheme.primary"
                            :label="$t('customization.colors.primary')"
                            color="secondary"
@@ -85,6 +93,14 @@
             <v-col cols="12" sm="4" md="2" class="pb-0">
               <color-input v-model="formColors.darkTheme.background"
                            :label="$t('customization.colors.background')"
+                           color="secondary"
+                           :rules="[rules.required]"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="4" md="2" class="pb-0">
+              <color-input v-model="formColors.darkTheme.appBar"
+                           :label="$t('customization.colors.appBar')"
                            color="secondary"
                            :rules="[rules.required]"
               />

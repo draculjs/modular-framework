@@ -6,6 +6,7 @@ query customization{
             secondary
             onSecondary
             background
+            appBar
         }
         darkTheme{
             primary
@@ -13,6 +14,7 @@ query customization{
             secondary
             onSecondary
             background
+            appBar
         }
         logo{
             mode

@@ -89,12 +89,14 @@ const customizationStore = {
             state.lightTheme.secondary = lightTheme.secondary
             state.lightTheme.onSecondary = lightTheme.onSecondary
             state.lightTheme.background = lightTheme.background
+            state.lightTheme.appBar = lightTheme.appBar
 
             state.darkTheme.primary = darkTheme.primary
             state.darkTheme.onPrimary = darkTheme.onPrimary
             state.darkTheme.secondary = darkTheme.secondary
             state.darkTheme.onSecondary = darkTheme.onSecondary
             state.darkTheme.background = darkTheme.background
+            state.darkTheme.appBar = darkTheme.appBar
 
             if (state.vuetifyInstance) {
                 state.vuetifyInstance.framework.theme.themes.light.primary = lightTheme.primary
@@ -102,12 +104,14 @@ const customizationStore = {
                 state.vuetifyInstance.framework.theme.themes.light.secondary = lightTheme.secondary
                 state.vuetifyInstance.framework.theme.themes.light.onSecondary = lightTheme.onSecondary
                 state.vuetifyInstance.framework.theme.themes.light.background = lightTheme.background
+                state.vuetifyInstance.framework.theme.themes.light.appBar = lightTheme.appBar
 
                 state.vuetifyInstance.framework.theme.themes.dark.primary = darkTheme.primary
                 state.vuetifyInstance.framework.theme.themes.dark.onPrimary = darkTheme.onPrimary
                 state.vuetifyInstance.framework.theme.themes.dark.secondary = darkTheme.secondary
                 state.vuetifyInstance.framework.theme.themes.dark.onSecondary = darkTheme.onSecondary
                 state.vuetifyInstance.framework.theme.themes.dark.background = darkTheme.background
+                state.vuetifyInstance.framework.theme.themes.dark.appBar = darkTheme.appBar
             }
 
         },

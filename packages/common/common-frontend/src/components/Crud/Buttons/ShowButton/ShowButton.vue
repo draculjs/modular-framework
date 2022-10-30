@@ -1,7 +1,7 @@
 <template>
   <v-icon
       small
-      color="primary"
+      :color="color"
       class="mx-1"
       v-on="$listeners"
   >

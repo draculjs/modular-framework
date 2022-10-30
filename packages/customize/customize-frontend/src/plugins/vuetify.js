@@ -91,12 +91,22 @@ Vue.use(Vuetify, {
     }
 });
 
-let colors = {
+const LIGHT_THEME = {
     primary: '#3F51B5',
     onPrimary: '#FFFFFF',
     secondary: '#1565C0',
-    onSecondary: '#FFFFFF'
+    onSecondary: '#FFFFFF',
+    background: '#F5F5F5'
 }
+
+const DARK_THEME = {
+    primary : "#71DDC7",
+    onPrimary : "#000000",
+    secondary : "#E57FFB",
+    onSecondary : "#010101",
+    background : "#121212"
+}
+
 
 
 const vuetify =  new Vuetify({
@@ -109,10 +119,18 @@ const vuetify =  new Vuetify({
     theme: {
         themes: {
             light: {
-                primary: colors.primary,
-                secondary: colors.secondary,
-                onPrimary: colors.onPrimary,
-                onSecondary: colors.onSecondary
+                background:  LIGHT_THEME.background,
+                primary: LIGHT_THEME.primary,
+                secondary: LIGHT_THEME.secondary,
+                onPrimary: LIGHT_THEME.onPrimary,
+                onSecondary: LIGHT_THEME.onSecondary
+            },
+            dark: {
+                background:  DARK_THEME.background,
+                primary: DARK_THEME.primary,
+                secondary: DARK_THEME.secondary,
+                onPrimary: DARK_THEME.onPrimary,
+                onSecondary: DARK_THEME.onSecondary
             }
         }
     },

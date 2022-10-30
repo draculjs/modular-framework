@@ -82,14 +82,16 @@ export default {
           onPrimary: null,
           secondary: null,
           onSecondary: null,
-          background: null
+          background: null,
+          appBar: null,
         },
         darkTheme: {
           primary: null,
           onPrimary: null,
           secondary: null,
           onSecondary: null,
-          background: null
+          background: null,
+          appBar: null,
         }
 
       },

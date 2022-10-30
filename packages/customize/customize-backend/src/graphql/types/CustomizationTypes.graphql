@@ -6,11 +6,12 @@ type Customization{
 }
 
 type ColorsTheme{
-    primary: String!
-    onPrimary: String!
-    secondary: String!
-    onSecondary: String!
-    background: String!
+    primary: String
+    onPrimary: String
+    secondary: String
+    onSecondary: String
+    background: String
+    appBar: String
 }
 
 type Logo{
@@ -56,6 +57,7 @@ input ColorsThemeInput{
     secondary: String!
     onSecondary: String!
     background: String!
+    appBar: String!
 }
 
 input ColorsUpdateInput{

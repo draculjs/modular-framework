@@ -4,6 +4,7 @@ export const LIGHT_DEFAULT_THEME = {
     secondary: '#1565C0',
     onSecondary: '#FFFFFF',
     background: "#F5F5F5",
+    appBar: "#3F51B5",
 }
 
 export const DARK_DEFAULT_THEME = {
@@ -12,4 +13,5 @@ export const DARK_DEFAULT_THEME = {
     secondary: '#E57FFB',
     onSecondary: '#010101',
     background: "#121212",
+    appBar: "#3F51B5",
 }

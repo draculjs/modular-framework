@@ -5,12 +5,16 @@ mutation customizationUpdate($input: CustomizationInput){
             onPrimary
             secondary
             onSecondary
+            appBar
+            background
         }
         darkTheme{
             primary
             onPrimary
             secondary
             onSecondary
+            appBar
+            background
         }
         logo
         language

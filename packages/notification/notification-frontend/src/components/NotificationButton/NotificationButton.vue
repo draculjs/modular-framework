@@ -16,7 +16,7 @@
         <v-btn v-on="on"
                v-bind="attrs"
                icon text
-               class="onPrimary--text"
+               color="primary"
         >
           <v-icon>notifications</v-icon>
         </v-btn>

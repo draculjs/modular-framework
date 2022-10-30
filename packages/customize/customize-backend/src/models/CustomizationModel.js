@@ -8,6 +8,7 @@ const colorsSchema = new mongoose.Schema({
     secondary: {type: String, required: true},
     onSecondary: {type: String, required: true},
     background: {type: String, required: true},
+    appBar: {type: String, required: true},
 })
 
 const logoSchema = new mongoose.Schema({

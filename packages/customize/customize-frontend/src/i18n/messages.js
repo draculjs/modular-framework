@@ -15,7 +15,9 @@ const messages = {
                 onPrimary: 'On Primary',
                 secondary: 'Secondary',
                 onSecondary: 'On Secondary',
-                background: 'background',
+                background: 'Background',
+                appBar: 'AppBar'
+
 
             },
             lang: {
@@ -69,7 +71,8 @@ const messages = {
                 onPrimary: 'En Primario',
                 secondary: 'Secundario',
                 onSecondary: 'En Secundario',
-                background: 'Fondo'
+                background: 'Fondo',
+                appBar: 'AppBar'
             },
             lang: {
                 title: 'Idioma',
@@ -121,7 +124,8 @@ const messages = {
                 onPrimary: 'No primário',
                 secondary: 'Secundário',
                 onSecondary: 'No secundário',
-                background: 'Fondo'
+                background: 'Fondo',
+                appBar: 'AppBar'
             },
             lang: {
                 title: 'Linguagem',
