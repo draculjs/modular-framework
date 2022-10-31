@@ -182,7 +182,7 @@ async function getLocalUserOrCreate(userLdapInfo) {
 
             userLdapInfo.role = role
             userLdapInfo.active = true
-            userLdapInfo.fromLdap = true
+            userLdapInfo.fromLDAP = true
 
             console.log(`Info from ldap user: '${JSON.stringify(userLdapInfo)}'`)
 
