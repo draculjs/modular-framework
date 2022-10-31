@@ -10,7 +10,7 @@ async function isLdapAuthEnabled(){
         const LDAP_AUTH_SETTING = await getLdapVar('LDAP_AUTH')
         const LDAP_IP = await getLdapVar('LDAP_IP')
 
-        if((LDAP_AUTH_SETTING === 'enable' && LDAP_IP) || (process.env.LDAP_AUTH && process.env.LDAP_AUTH.toLowerCase() === 'true')){
+        if((LDAP_AUTH_SETTING === 'enable' && LDAP_IP)){
             return true
         }else{
             return false
