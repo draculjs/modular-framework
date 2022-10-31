@@ -1,11 +1,23 @@
 <template>
-  <v-switch
-      :label="getLabel"
-      :dense="dense"
-      v-model="dark"
-      :color="color"
-      hide-details
-  ></v-switch>
+  <v-tooltip bottom>
+    <template v-slot:activator="{on, attrs}">
+      <div v-on="on"
+           v-bind="attrs"
+      >
+        <v-switch
+            :dense="dense"
+            v-model="dark"
+            :color="color"
+            hide-details
+            :prepend-icon="showIcon ? icon : null"
+            :label="showLabel ? getLabel : null"
+        ></v-switch>
+
+      </div>
+    </template>
+    <span>{{ getLabel }}</span>
+  </v-tooltip>
+
 </template>
 
 <script>
@@ -15,7 +27,9 @@ export default {
     label: {type: String, default: 'customization.darkMode'},
     color: {type: String, default: 'green'},
     dense: {type: Boolean, default: true},
-
+    icon: {type: String, default: 'dark_mode'},
+    showIcon:  {type: Boolean, default: true},
+    showLabel:  {type: Boolean, default: false},
   },
   computed: {
     dark: {
