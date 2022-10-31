@@ -34,6 +34,7 @@ export const initCustomization = async function ({lightTheme, darkTheme, logo, l
 
         let lightTheme = customDoc.colors ? customDoc.colors : LIGHT_DEFAULT_THEME
         lightTheme.appBar = LIGHT_DEFAULT_THEME.appBar
+        lightTheme.onAppBar = LIGHT_DEFAULT_THEME.onAppBar
         lightTheme.background = LIGHT_DEFAULT_THEME.background
 
         let darkTheme = DARK_DEFAULT_THEME
