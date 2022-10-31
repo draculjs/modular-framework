@@ -29,10 +29,10 @@ export default {
             if(!rbac.isAllowed(user.id, CUSTOMIZATION_CREATE)) throw new ForbiddenError("Not Authorized")
             return createCustomization(input)
         },
-          customizationUpdate: (_, {id, input}, {user,rbac}) => {
+          customizationUpdate: (_, {input}, {user,rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if(!rbac.isAllowed(user.id, CUSTOMIZATION_UPDATE)) throw new ForbiddenError("Not Authorized")
-            return updateCustomization(id, input)
+            return updateCustomization(input)
         },
 
         colorsUpdate: (_, {input}, {user,rbac}) => {

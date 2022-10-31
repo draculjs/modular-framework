@@ -2,8 +2,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import {InitService} from '@dracul/user-backend'
-import {initPermissionsCustomization} from '@dracul/customize-backend'
-import {initCustomization} from './custom/initCustomization'
+import {initPermissionsCustomization, initCustomization} from '@dracul/customize-backend'
 import operatorRole from './custom/initOperatorRole'
 import managerRole from './custom/initManagerRole'
 import desarrolloRole from './custom/initDesarrolloRole'
@@ -82,7 +81,7 @@ const initService = async () => {
 
     await testNotification()
 
-    await initCustomization()
+    await initCustomization({})
 }
 
 export {initService}

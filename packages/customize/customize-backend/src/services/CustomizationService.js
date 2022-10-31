@@ -4,6 +4,7 @@ const path = require('path');
 import fs from "fs";
 import createDirIfNotExist from "./helpers/createDirIfNotExist";
 import { DefaultLogger as winston} from "@dracul/logger-backend";
+import { randomString} from "@dracul/common-backend";
 import {Transform} from "stream";
 
 export const findCustomization = async function () {
@@ -16,10 +17,10 @@ export const findCustomization = async function () {
 }
 
 
-export const createCustomization = async function ({colors, logo, language}) {
+export const createCustomization = async function ({ lightTheme, darkTheme, logo, language}) {
 
     const doc = new Customization({
-        colors, logo, language
+        lightTheme, darkTheme, logo, language
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -35,10 +36,10 @@ export const createCustomization = async function ({colors, logo, language}) {
     })
 }
 
-export const updateCustomization = async function (id, {colors, logo, language}) {
+export const updateCustomization = async function ({lightTheme, darkTheme, logo, language}) {
     return new Promise((resolve, rejects) => {
-        Customization.findOneAndUpdate({_id: id},
-            {colors, logo, language},
+        Customization.findOneAndUpdate({},
+            {lightTheme, darkTheme, logo, language},
             {new: true, runValidators: true, context: 'query'},
             (error, doc) => {
                 if (error) {
@@ -53,11 +54,10 @@ export const updateCustomization = async function (id, {colors, logo, language})
     })
 }
 
-export const updateColors = async function ({primary, onPrimary, secondary, onSecondary}) {
+export const updateColors = async function ({lightTheme, darkTheme}) {
     return new Promise((resolve, rejects) => {
-        let colors = {primary, onPrimary, secondary, onSecondary}
-        Customization.findOneAndUpdate({},
-            {colors},
+               Customization.findOneAndUpdate({},
+            { lightTheme, darkTheme},
             {new: true, runValidators: true, context: 'query', useFindAndModify: false},
             (error, doc) => {
 
@@ -67,7 +67,7 @@ export const updateColors = async function ({primary, onPrimary, secondary, onSe
                     }
                     rejects(error)
                 }
-                resolve(doc.colors)
+                resolve(doc)
             })
     })
 }
@@ -179,21 +179,13 @@ const storeFS = (sourceStream, dst) => {
     )
 }
 
-function randomstring(length) {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
+
 
 export const uploadLogo = function (file) {
 
     return new Promise(async (resolve, reject) => {
 
-        const mimetypesAllowed = ['image/jpeg','image/jpg','image/png','image/gif']
+        const mimetypesAllowed = ['image/jpeg','image/jpg','image/png','image/gif','image/svg']
 
         try {
 
@@ -211,7 +203,7 @@ export const uploadLogo = function (file) {
 
             storeFS(createReadStream(), dst).then(() => {
 
-                const rand = randomstring(3)
+                const rand = randomString(3)
                 const url = process.env.APP_API_URL + "/media/logo/" + filename + "?" + rand
 
                 let logo = {filename, url}
@@ -229,7 +221,6 @@ export const uploadLogo = function (file) {
                         }
                     }
                 );
-                ////////////////
 
             }).catch(err => {
                 winston.error("CustomizationService.logoUpload: store fail", err)

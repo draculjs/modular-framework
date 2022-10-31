@@ -44,9 +44,9 @@
 </template>
 <script>
     import SearchInput from "../SearchInput/SearchInput";
-    import ShowButton from "../Crud/ShowButton/ShowButton";
-    import EditButton from "../Crud/EditButton/EditButton";
-    import DeleteButton from "../Crud/DeleteButton/DeleteButton";
+    import ShowButton from "../Crud/Buttons/ShowButton/ShowButton";
+    import EditButton from "../Crud/Buttons/EditButton/EditButton";
+    import DeleteButton from "../Crud/Buttons/DeleteButton/DeleteButton";
     export default {
         name: 'CrudExampleCustomList',
         components: {DeleteButton, EditButton, ShowButton, SearchInput},

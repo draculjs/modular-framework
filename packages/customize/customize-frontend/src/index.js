@@ -1,5 +1,6 @@
 import CustomConfigPage from "./pages/CustomConfigPage/CustomConfigPage";
 import LogoToolbar from "./components/LogoToolbar";
+import DarkMode from "./components/DarkMode";
 import TitleToolbar from "./components/TitleToolbar";
 import LogoPreview from "./components/LogoPreview";
 import LanguageCombobox from "./components/LanguageCombobox";
@@ -13,6 +14,7 @@ export {
     CustomConfigPage,
     //Components
     LogoToolbar,
+    DarkMode,
     TitleToolbar,
     LogoPreview,
     LanguageCombobox,

@@ -4,11 +4,12 @@
       <sidebar-menu :nav="menu" v-on:closeDrawer="drawer = false"></sidebar-menu>
     </v-navigation-drawer>
 
-    <v-app-bar app color="primary" :clipped-left="clipped">
-      <v-app-bar-nav-icon class="onPrimary--text" @click="drawer=!drawer"/>
+    <v-app-bar app color="appBar" :clipped-left="clipped">
+      <v-app-bar-nav-icon color="onAppBar" @click="drawer=!drawer"/>
       <slot name="toolbar-left"></slot>
       <v-spacer></v-spacer>
       <slot name="toolbar-right"></slot>
+
     </v-app-bar>
 
     <v-main>

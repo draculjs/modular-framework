@@ -108,7 +108,7 @@
                 />
             </v-col>
 
-            <v-col cols="12">
+            <v-col cols="12" class="text-right">
                 <submit-button :loading="loading" @click="register" v-t="'auth.signUp'"></submit-button>
             </v-col>
         </v-row>

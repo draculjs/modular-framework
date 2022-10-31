@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import DarkMode from "@/layout/components/DarkMode";
+import {DarkMode} from "@dracul/customize-frontend";
 
 export default {
   name: "Footer",
