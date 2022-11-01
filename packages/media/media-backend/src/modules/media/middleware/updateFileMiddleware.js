@@ -6,7 +6,7 @@ export default function (req, res, next) {
 
         // Elimino la primera barra para poder comparar contra el campo 'relativePath' del modelo
         let uri_dec = decodeURIComponent(req.originalUrl).replace('/', '');
-        if(!req.headers.toString().includes("Content-Range")){
+        if(!req.headers.range){
             updateByRelativePath(uri_dec)
         }
 
