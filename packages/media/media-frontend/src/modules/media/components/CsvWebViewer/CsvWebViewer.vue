@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-data-table
-            class="mx-auto"
+            class="mx-auto tableContainer"
             :headers="headers"
             :items="content"
             :items-per-page="5"
