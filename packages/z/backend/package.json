@@ -70,6 +70,8 @@
     "@babel/preset-env": "^7.8.7",
     "@shelf/jest-mongodb": "^1.1.5",
     "babel-jest": "^25.4.0",
+    "eslint": "^8.25.0",
+    "eslint-plugin-vue": "^9.6.0",
     "jest": "^25.4.0",
     "mockingoose": "^2.13.2",
     "mongodb-memory-server": "^6.5.2",

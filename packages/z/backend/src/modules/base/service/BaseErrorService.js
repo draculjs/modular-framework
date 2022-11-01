@@ -17,7 +17,7 @@ export const fetchBaseError = async function () {
 }
 
 
-export const createBaseError = async function ( {name, lastname, age}) {
+export const createBaseError = async function ( {name, lastname, age, color}) {
 
     const doc = new BaseErrorModel({
         name, lastname, age, color
