@@ -1,8 +1,7 @@
 <template>
     <v-btn
-            :color="danger?'red':'secondary'"
+            :color="color"
             class="elevation-8"
-            :class="danger?'white--text':'onSecondary--text--text'"
             v-on="$listeners"
             :loading="loading"
             :disabled="disabled"
@@ -19,6 +18,7 @@
             loading: {type: Boolean, default: false},
             disabled: {type: Boolean, default: false},
             danger:{type: Boolean, default: false},
+            color:{type: String, default: 'primary onPrimary--text'},
         }
     }
 </script>

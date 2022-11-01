@@ -13,27 +13,8 @@ export default [
         panel: false,
         permission: 'SECURITY_ADMIN_MENU',
         children: [
-            {
-                icon: 'assignment_ind',
-                text: 'menu.userdashboard',
-                link: { name: "userDashboard" },
-                panel: false,
-                permission: 'SECURITY_DASHBOARD_SHOW'
-            },
-            {
-                icon: 'settings_applications',
-                text: 'menu.customization',
-                link: { name: "customization" },
-                panel: false,
-                permission: 'CUSTOMIZATION_SHOW'
-            },
-            {
-                icon: 'settings',
-                text: 'menu.settings',
-                link: { name: "SettingsPage" },
-                panel: false,
-                permission: 'SETTINGS_CREATE'
-            },
+
+
             {
                 icon: 'assignment_ind',
                 text: 'user.title',
@@ -54,6 +35,20 @@ export default [
                 link: { name: "groupManagement" },
                 panel: false,
                 permission: 'SECURITY_GROUP_SHOW'
+            },
+            {
+                icon: 'settings_applications',
+                text: 'menu.customization',
+                link: { name: "customization" },
+                panel: false,
+                permission: 'CUSTOMIZATION_SHOW'
+            },
+            {
+                icon: 'settings',
+                text: 'menu.settings',
+                link: { name: "SettingsPage" },
+                panel: false,
+                permission: 'SETTINGS_CREATE'
             },
 
         ]

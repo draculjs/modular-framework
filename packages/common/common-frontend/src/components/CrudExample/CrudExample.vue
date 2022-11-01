@@ -48,7 +48,7 @@
     import CrudExampleUpdateForm from "./CrudExampleUpdateForm";
     import CrudExampleCreateForm from "./CrudExampleCreateForm";
     import CrudExampleDeleteForm from "./CrudExampleDeleteForm";
-    import AddButton from "../Crud/AddButton/AddButton";
+    import AddButton from "../Crud/Buttons/AddButton/AddButton";
     import CrudExampleList from "./CrudExampleCustomList";
     import CrudExampleShow from "./CrudExampleShow";
     import CrudList from "../Crud/CrudList";

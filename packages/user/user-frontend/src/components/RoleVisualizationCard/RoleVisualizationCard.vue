@@ -1,5 +1,5 @@
 <template>
-    <v-card outlined class="role-class">
+    <v-card flat class="role-class">
           <v-card-text class="" v-if="sameLine">
             <strong>{{$t('role.role')}}</strong>: {{getRole}}
           </v-card-text>

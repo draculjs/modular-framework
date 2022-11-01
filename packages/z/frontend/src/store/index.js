@@ -27,9 +27,11 @@ export default new Vuex.Store({
                         avatarurl: state.user.avatarurl
                     },
                     customization: {
-                        colors: state.customization.colors,
+                        lightTheme: state.customization.lightTheme,
+                        darkTheme: state.customization.darkTheme,
                         logo: state.customization.logo,
-                        language: state.customization.language
+                        language: state.customization.language,
+                        darkMode: state.customization.darkMode
                     },
                 })
         })

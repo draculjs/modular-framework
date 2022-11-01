@@ -14,8 +14,8 @@ class CustomizationProvider {
             query: require('./gql/customization.graphql')
         })
     }
-    
-    
+
+
 
     updateCustomization(form) {
         return this.gqlc.mutate({
@@ -24,10 +24,10 @@ class CustomizationProvider {
         })
     }
 
-    updateColors(form) {
+    updateColors(input) {
         return this.gqlc.mutate({
             mutation: require('./gql/colorsUpdate.graphql'),
-            variables: form
+            variables: {input}
         })
     }
 

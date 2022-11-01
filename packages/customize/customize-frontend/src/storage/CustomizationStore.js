@@ -2,12 +2,21 @@ import CustomizationProvider from "../providers/CustomizationProvider";
 
 const customizationStore = {
     state: {
+        darkMode: false,
         vuetifyInstance: null,
-        colors: {
+        lightTheme: {
             primary: '#3F51B5',
             onPrimary: '#FFFFFF',
             secondary: '#1565C0',
-            onSecondary: '#FFFFFF'
+            onSecondary: '#FFFFFF',
+            background: '#F5F5F5'
+        },
+        darkTheme: {
+            primary: '#3F51B5',
+            onPrimary: '#FFFFFF',
+            secondary: '#1565C0',
+            onSecondary: '#FFFFFF',
+            background: '#F5F5F5'
         },
         logo: {
             mode: 'OnlyTitle',
@@ -17,11 +26,20 @@ const customizationStore = {
         language: 'en'
     },
     getters: {
+        darkMode: (state) => {
+            return state.darkMode
+        },
         getLogo: state => {
             return state.logo
         },
         getColors: state => {
-            return state.colors
+            return state.lightTheme
+        },
+        getLigthTheme: state => {
+            return state.lightTheme
+        },
+        getDarkTheme: state => {
+            return state.darkTheme
         },
         getLanguage: state => {
             return state.language
@@ -33,7 +51,7 @@ const customizationStore = {
 
                 CustomizationProvider.customization()
                     .then(r => {
-                        commit('setColors', r.data.customization.colors)
+                        commit('setColors', r.data.customization)
                         commit('setLogo', r.data.customization.logo)
                         commit('setLanguage', r.data.customization.language)
                         resolve(r.data.customization)
@@ -46,6 +64,7 @@ const customizationStore = {
             commit('setLogo', logo)
         },
         setColors({commit}, colors) {
+            console.log(colors)
             commit('setColors', colors)
         },
         setLanguage({commit}, language) {
@@ -53,6 +72,9 @@ const customizationStore = {
         }
     },
     mutations: {
+        darkMode(state, val){
+            state.darkMode = val
+        },
         setVuetifyInstance(state, vuetifyInstance) {
             state.vuetifyInstance = vuetifyInstance
         },
@@ -61,22 +83,39 @@ const customizationStore = {
             state.logo.title = title
             state.logo.url = url
         },
-        setColors(state, {primary, onPrimary, secondary, onSecondary}) {
-            state.colors.primary = primary
-            state.colors.onPrimary = onPrimary
-            state.colors.secondary = secondary
-            state.colors.onSecondary = onSecondary
+        setColors(state, {lightTheme, darkTheme}) {
+            state.lightTheme.primary = lightTheme.primary
+            state.lightTheme.onPrimary = lightTheme.onPrimary
+            state.lightTheme.secondary = lightTheme.secondary
+            state.lightTheme.onSecondary = lightTheme.onSecondary
+            state.lightTheme.background = lightTheme.background
+            state.lightTheme.appBar = lightTheme.appBar
+            state.lightTheme.onAppBar = lightTheme.onAppBar
+
+            state.darkTheme.primary = darkTheme.primary
+            state.darkTheme.onPrimary = darkTheme.onPrimary
+            state.darkTheme.secondary = darkTheme.secondary
+            state.darkTheme.onSecondary = darkTheme.onSecondary
+            state.darkTheme.background = darkTheme.background
+            state.darkTheme.appBar = darkTheme.appBar
+            state.darkTheme.onAppBar = darkTheme.onAppBar
 
             if (state.vuetifyInstance) {
-                state.vuetifyInstance.framework.theme.themes.light.primary = primary
-                state.vuetifyInstance.framework.theme.themes.light.onPrimary = onPrimary
-                state.vuetifyInstance.framework.theme.themes.light.secondary = secondary
-                state.vuetifyInstance.framework.theme.themes.light.onSecondary = onSecondary
+                state.vuetifyInstance.framework.theme.themes.light.primary = lightTheme.primary
+                state.vuetifyInstance.framework.theme.themes.light.onPrimary = lightTheme.onPrimary
+                state.vuetifyInstance.framework.theme.themes.light.secondary = lightTheme.secondary
+                state.vuetifyInstance.framework.theme.themes.light.onSecondary = lightTheme.onSecondary
+                state.vuetifyInstance.framework.theme.themes.light.background = lightTheme.background
+                state.vuetifyInstance.framework.theme.themes.light.appBar = lightTheme.appBar
+                state.vuetifyInstance.framework.theme.themes.light.onAppBar = lightTheme.onAppBar
 
-                state.vuetifyInstance.framework.theme.themes.dark.primary = primary
-                state.vuetifyInstance.framework.theme.themes.dark.onPrimary = onPrimary
-                state.vuetifyInstance.framework.theme.themes.dark.secondary = secondary
-                state.vuetifyInstance.framework.theme.themes.dark.onSecondary = onSecondary
+                state.vuetifyInstance.framework.theme.themes.dark.primary = darkTheme.primary
+                state.vuetifyInstance.framework.theme.themes.dark.onPrimary = darkTheme.onPrimary
+                state.vuetifyInstance.framework.theme.themes.dark.secondary = darkTheme.secondary
+                state.vuetifyInstance.framework.theme.themes.dark.onSecondary = darkTheme.onSecondary
+                state.vuetifyInstance.framework.theme.themes.dark.background = darkTheme.background
+                state.vuetifyInstance.framework.theme.themes.dark.appBar = darkTheme.appBar
+                state.vuetifyInstance.framework.theme.themes.dark.onAppBar = darkTheme.onAppBar
             }
 
         },

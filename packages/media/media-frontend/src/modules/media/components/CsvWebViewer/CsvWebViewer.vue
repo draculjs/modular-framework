@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-data-table
-            class="pt-0 mt-0 tableContainer"
+            class="mx-auto"
             :headers="headers"
             :items="content"
             :items-per-page="5"
@@ -43,6 +43,7 @@ export default {
                 delimiter: "",
                 preview: 5,
                 header: true,
+                skipEmptyLines: true,
                 complete: function( results ){
                     if(results.errors.length == 0){
                         results.meta.fields.forEach(elem => {

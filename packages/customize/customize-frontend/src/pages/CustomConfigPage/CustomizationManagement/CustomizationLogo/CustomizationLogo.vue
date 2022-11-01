@@ -84,7 +84,8 @@
     <v-divider></v-divider>
 
     <v-card-actions>
-      <v-btn :loading="loading" @click="saveLogo" text color="blue darken-4" v-t="'customization.applyButton'"></v-btn>
+      <v-spacer></v-spacer>
+      <v-btn :loading="loading" @click="saveLogo" large  color="primary onPrimary--text" v-t="'customization.applyButton'"></v-btn>
     </v-card-actions>
 
   </v-card>
