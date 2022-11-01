@@ -24,7 +24,7 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
         if (search) {
             qs = {
                 $or: [
-
+                    {action: {$regex: search, $options: 'i'}},
                 ]
             }
         }
@@ -88,10 +88,6 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
     })
 }
 
-
-
-
-
 const createAudit = async function (authUser, { user, action, resource, description }) {
 
     const doc = new Audit({
@@ -115,37 +111,6 @@ const createAudit = async function (authUser, { user, action, resource, descript
     })
 }
 
-const updateAudit = async function (authUser, id, { user, action, resource }) {
-    return new Promise((resolve, rejects) => {
-        Audit.findOneAndUpdate({ _id: id },
-            { user, action, resource },
-            { new: true, runValidators: true, context: 'query' },
-            (error, doc) => {
-
-                if (error) {
-                    if (error.name == "ValidationError") {
-                        return rejects(new UserInputError(error.message, { inputErrors: error.errors }));
-
-                    }
-                    return rejects(error)
-
-                }
-
-                doc.populate('user').execPopulate(() => resolve(doc))
-            })
-    })
-}
-
-const deleteAudit = function (id) {
-    return new Promise((resolve, rejects) => {
-        findAudit(id).then((doc) => {
-            doc.delete(function (err) {
-                err ? rejects(err) : resolve({ id: id, success: true })
-            });
-        })
-    })
-}
-
 module.exports = {
-    createAudit, fetchAudit, updateAudit, deleteAudit, paginateAudit, findAudit
+    createAudit, fetchAudit, paginateAudit, findAudit
 }

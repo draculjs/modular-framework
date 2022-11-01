@@ -1,34 +1,18 @@
 {
   "name": "@dracul/audit-frontend",
-  "version": "1.14.2",
+  "version": "1.14.10",
   "description": "Audit frontend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
-  "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "license": "ISC",
-  "main": "./src/index.js",
   "scripts": {
+    "test:unit": "vue-cli-service test:unit",
     "build-storybook": "build-storybook --no-dll",
     "storybook": "start-storybook -p 6006 --no-dll",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/draculjs/modular-framework.git"
-  },
-  "bugs": {
-    "url": "https://github.com/draculjs/modular-framework/issues"
-  },
+  "main": "./src/index.js",
   "dependencies": {
     "@dracul/common-frontend": "^1.14.2",
     "@dracul/dayjs-frontend": "^1.14.0"
-  },
-  "peerDependencies": {
-    "apollo-client": "^2.6.10",
-    "graphql": "^15.4.0",
-    "vue": "^2.7.4",
-    "vue-i18n": "^8.18.1",
-    "vue-router": "^3.5.3",
-    "vuetify": "^2.6.10"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -38,27 +22,48 @@
     "@storybook/vue": "^6.0.28",
     "@vue/cli-plugin-babel": "^4.4.6",
     "@vue/cli-plugin-eslint": "^4.4.6",
+    "@vue/cli-plugin-unit-jest": "^5.0.8",
     "@vue/cli-service": "^4.4.6",
+    "@vue/test-utils": "^2.2.0",
+    "@vue/vue2-jest": "^27.0.0-alpha.2",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "apollo-upload-client": "^13.0.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^25.4.0",
+    "babel-jest": "^27.0.6",
     "babel-loader": "^8.2.1",
     "babel-preset-vue": "^2.0.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
-    "jest": "^25.4.0",
+    "jest": "^27.0.5",
     "material-design-icons-iconfont": "^6.1.0",
     "mock-apollo-client": "^0.4.0",
     "vue": "^2.7.4",
     "vue-i18n": "^8.18.1",
+    "vue-jest": "^3.0.7",
     "vue-router": "^3.5.3",
     "vue-template-compiler": "^2.7.4",
     "vuetify": "2.6.7"
+  },
+  "peerDependencies": {
+    "apollo-client": "^2.6.10",
+    "graphql": "^15.4.0",
+    "vue": "^2.7.4",
+    "vue-i18n": "^8.18.1",
+    "vue-router": "^3.5.3",
+    "vuetify": "^2.6.10"
+  },
+  "bugs": {
+    "url": "https://github.com/draculjs/modular-framework/issues"
+  },
+  "homepage": "https://github.com/draculjs/modular-framework#readme",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draculjs/modular-framework.git"
   }
 }
