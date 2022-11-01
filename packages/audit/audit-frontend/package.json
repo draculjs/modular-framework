@@ -1,6 +1,6 @@
 {
   "name": "@dracul/audit-frontend",
-  "version": "1.14.2",
+  "version": "1.14.10",
   "description": "Audit frontend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
   "scripts": {
