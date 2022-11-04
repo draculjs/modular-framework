@@ -12,13 +12,14 @@ import { initCustomization } from './custom/initCustomization'
 import uploaderRole from './custom/initUploaderRole'
 import visualizerRole from './custom/initVisualizerRole';
 import initMediaPermissions from '../modules/media/services/InitMediaPermissions'
+import { userStorageCheckAndCreate } from '../modules/media/services/UserStorageService';
 
 const initService = async () => {
     await InitService.initPermissions()
 
     await initPermissionsCustomization()
     await initMediaPermissions()
-    // await userStorageCheckAndCreate()
+    await userStorageCheckAndCreate()
 
     await InitService.initAdminRole()
     await InitService.initRoles([uploaderRole, visualizerRole])

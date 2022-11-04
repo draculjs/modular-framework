@@ -1,6 +1,6 @@
 <template>
 
-  <v-container class="pt-0 mt-0 mainContainer">
+  <v-container class="pt-0 mt-0"> <!-- mainContainer class delete to fix images and table height-->
     <v-tabs
       v-model="tab"
       fixed-tabs
@@ -47,7 +47,7 @@
                 :url="file.url"
               ></csv-web-viewer>
             </div>
-
+            
             <img v-if="isImage" :style="{width: '100%'}" :src="getSrc"/>
 
             <audio v-if="isAudio" controls>

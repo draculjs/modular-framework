@@ -2,9 +2,11 @@
     <div>
         <v-data-table
             class="mx-auto tableContainer"
+            disable-pagination
+            hide-default-footer
+            fixed-header
             :headers="headers"
             :items="content"
-            :items-per-page="5"
             :no-data-text="noDataText"
         ></v-data-table>
         <Snackbar
