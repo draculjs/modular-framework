@@ -135,7 +135,7 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 
 export const createSettings = async function (authUser, {key, value, label, type, options, regex}) {
 
-    const docValue = value ? value.toString : null
+    const docValue = value ? value.toString() : null
 
     const doc = new Settings({
         key,
