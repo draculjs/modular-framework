@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-backend",
-  "version": "1.14.12",
+  "version": "1.15.0",
   "description": "Settings",
   "main": "./lib/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "dracul"
   ],
   "dependencies": {
-    "@dracul/common-backend": "^1.11.4"
+    "@dracul/common-backend": "^1.15.0"
   },
   "peerDependencies": {
     "apollo-server-express": "^2.25.3",
