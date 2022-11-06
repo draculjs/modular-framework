@@ -14,7 +14,7 @@
     "i18n",
     "common"
   ],
-  "author": "Cristian Incarnato",
+  "author": "Cristian Incarnato & Dracul Team",
   "license": "MIT",
   "peerDependencies": {
     "deepmerge": "^4.2.2",

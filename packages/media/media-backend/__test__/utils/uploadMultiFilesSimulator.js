@@ -1,6 +1,6 @@
 import path from "path";
 import uploadFileSimulator from "./uploadFileSimulator";
-import fileUpload from "../../src/modules/media/services/UploadService";
+import fileUpload from "../../src/services/UploadService";
 
 const PATH_FILES = ['../assets/imageone.png','../assets/imagetwo.png',
     '../assets/imagethree.jpeg',

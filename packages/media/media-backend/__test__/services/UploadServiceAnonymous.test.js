@@ -1,7 +1,7 @@
 const mongoHandler = require('../utils/mongo-handler')
 
 import {InitService} from "@dracul/user-backend"
-import {fileUploadAnonymous} from '../../src/modules/media/services/UploadAnonymousService'
+import {fileUploadAnonymous} from '../../src/services/UploadAnonymousService'
 import {UserService} from "@dracul/user-backend"
 import {RoleService} from "@dracul/user-backend"
 import uploadFileSimulator from "../utils/uploadFileSimulator"

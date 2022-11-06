@@ -1,28 +1,20 @@
-import Vue from "vue";
-import VueI18n from 'vue-i18n'
 import merge from 'deepmerge'
 
-import menuMessages from '../menu-config/menu-i18n-messages'
-import baseMessages from '../modules/base/i18n/messages'
-import mediaMessages from '../modules/media/i18n'
-import { i18nMessages as i18nMessagesCommon } from '@dracul/common-frontend'
-import { i18nMessages as i18nMessagesUser } from '@dracul/user-frontend'
-import { i18nMessages as i18nMessagesCustom } from '@dracul/customize-frontend'
+import FileMessages from './messages/FileMessages'
+import UserStorageMessages from './messages/UserStorageMessages'
+import ExtraMessages from './messages/ExtraMessages'
+
+import FilePermissionMessages from './permissions/FilePermissionMessages'
+import UserStoragePermissionMessages from './permissions/UserStoragePermissionMessages'
+
 
 const messages = merge.all([
-    menuMessages,
-    baseMessages,
-    mediaMessages,
-    i18nMessagesCommon,
-    i18nMessagesUser,
-    i18nMessagesCustom,
+    FileMessages,
+    UserStorageMessages,
+    ExtraMessages,
+
+    FilePermissionMessages,
+    UserStoragePermissionMessages
 ])
 
-Vue.use(VueI18n)
-
-const i18n = new VueI18n({
-    locale: 'en',
-    messages,
-})
-
-export default i18n
+export default messages;

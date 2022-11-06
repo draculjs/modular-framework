@@ -8,6 +8,28 @@ export default [
     },
 
     {
+        icon: 'perm_media',
+        text:'Media Explorer',
+        link: { name: "home" },
+        children: [
+            {
+                icon: 'file_present',
+                text: 'media.file.title',
+                link: { name: "FileManagementPage" },
+                requiresAuth: true,
+            },
+
+            {
+                icon: 'dashboard',
+                text: 'media.userStorage.title',
+                link: { name: "UserStoragePage" },
+                permission: "USER_STORAGE_SHOW_ALL"
+            },
+
+        ]
+    },
+
+    {
         icon: 'person',
         text: 'menu.administration',
         panel: false,

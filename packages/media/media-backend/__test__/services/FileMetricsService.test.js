@@ -1,8 +1,8 @@
 const mongoHandler = require('../utils/mongo-handler')
 
 import {InitService} from "@dracul/user-backend"
-import {fileGlobalMetrics, fileUserMetrics} from '../../src/modules/media/services/FileMetricsService'
-import {fileUpload} from '../../src/modules/media/services/UploadService'
+import {fileGlobalMetrics, fileUserMetrics} from '../../src/services/FileMetricsService'
+import {fileUpload} from '../../src/services/UploadService'
 import {UserService} from "@dracul/user-backend"
 import {RoleService} from "@dracul/user-backend"
 import uploadFileSimulator from "../utils/uploadFileSimulator"
@@ -19,11 +19,11 @@ describe("storeFile", () => {
     await InitService.initPermissions()
     await InitService.initAdminRole()
     await InitService.initRootUser()
-    
+
     let role = await RoleService.findRoleByName('admin')
     let userDoc = { username: 'jrambo', email: 'jrambo@gmail.com', name: 'Jhon Rambo', password: '123', role:  role.id }
     const user = await UserService.createUser(userDoc, null)
-    
+
     let filePath = path.join(__dirname,'../assets/','prueba.jpeg')
     let file = uploadFileSimulator(filePath)
 
@@ -31,12 +31,12 @@ describe("storeFile", () => {
     createFileTwo = await fileUpload(user, file)
     createFileThree = await fileUpload(user, file)
   });
-  
+
   afterAll(async  () => {
     await mongoHandler.clearDatabase();
     await mongoHandler.closeDatabase();
   })
-  
+
   test('File global metrics', async () => {
     await expect(fileGlobalMetrics()).resolves.not.toBeNull()
     await expect(fileGlobalMetrics()).resolves.toEqual({_id: "global", count: 3, weight: 27315})

@@ -3,7 +3,7 @@ import app from '../../../../src/index'
 import mongoHandler from "../../../utils/mongo-handler"
 import { AuthService, UserService, InitService } from "@dracul/user-backend";
 import uploadMultiFiles from "../../../utils/uploadMultiFilesSimulator";
-import { fetchFiles } from "../../../../src/modules/media/services/FileService";
+import { fetchFiles } from "../../../../src/services/FileService";
 import path from "path";
 
 

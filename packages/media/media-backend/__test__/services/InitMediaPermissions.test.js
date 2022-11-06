@@ -1,7 +1,7 @@
 const mongoHandler = require('../../__test__/utils/mongo-handler')
 
 import {InitService} from "@dracul/user-backend"
-import {initMediaPermissions} from '../../src/modules/media/services/InitMediaPermissions'
+import {initMediaPermissions} from '../../src/services/InitMediaPermissions'
 import {RoleService} from "@dracul/user-backend"
 
 describe("storeFile", () => {
@@ -12,12 +12,12 @@ describe("storeFile", () => {
     await initMediaPermissions()
     await InitService.initAdminRole()
   });
-  
+
   afterAll(async  () => {
     await mongoHandler.clearDatabase();
     await mongoHandler.closeDatabase();
   })
-  
+
   test('Load custom permissions', async () => {
     let role = await RoleService.findRoleByName('admin')
 

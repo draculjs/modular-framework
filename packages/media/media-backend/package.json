@@ -1,14 +1,11 @@
 {
   "name": "@dracul/media-backend",
   "version": "1.14.12",
-  "author": "Cristian Incarnato",
-  "main": "./lib/exports.js",
+  "author": "Cristian Incarnato & Dracul Team",
+  "main": "./lib/index.js",
   "scripts": {
-    "back": "BABEL_DISABLE_CACHE=1 nodemon src/index.js --exec babel-node -e js",
-    "init": "BABEL_DISABLE_CACHE=1 babel-node  src/scripts/init.js",
-    "build": "./node_modules/.bin/babel src -d dist --copy-files && ./node_modules/.bin/babel emails -d dist/emails --copy-files && cp .env.example dist/.env  && cp package.json dist/package.json",
-    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files"
   },
   "repository": {
     "type": "git",
@@ -27,46 +24,20 @@
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
     "@dracul/common-backend": "^1.11.4",
-    "@dracul/customize-backend": "^1.14.12",
     "@dracul/logger-backend": "^1.7.12",
-    "@dracul/user-backend": "^1.14.12",
-    "apollo-server-express": "^2.26.0",
-    "axios": "^0.19.2",
-    "bcryptjs": "^2.4.3",
-    "csv-parser": "^2.3.2",
-    "dayjs": "^1.10.7",
-    "dotenv": "^8.1.0",
-    "email-templates": "^6.0.3",
-    "express": "^4.18.1",
-    "express-graphql": "^0.9.0",
-    "express-jwt": "^5.3.1",
-    "fetch": "^1.1.0",
-    "form-data": "^3.0.0",
-    "geoip-lite": "^1.4.1",
+    "@dracul/user-backend": "^1.14.12"
+  },
+  "peerDependencies": {
+    "apollo-server-express": "^2.25.3",
+    "express": "^4.17.1",
     "graphql": "^15.8.0",
     "graphql-tools": "^8.2.0",
-    "jsonwebtoken": "^8.5.1",
     "merge-graphql-schemas": "^1.7.8",
     "mongoose": "5.13.14",
     "mongoose-paginate-v2": "^1.3.6",
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3",
-    "multer": "^1.4.2",
-    "node-cron": "^3.0.0",
-    "node-device-detector": "^1.2.1",
-    "nodemailer": "^6.3.1",
-    "nodemailer-pug-engine": "^1.0.1",
-    "saslprep": "^1.0.3",
-    "streamifier": "^0.1.1",
-    "swagger-ui-express": "^4.1.6",
-    "winston": "^3.2.1",
-    "yamljs": "^0.3.0"
-  },
-  "peerDependencies": {
-    "mongoose": "5.13.14",
-    "mongoose-paginate-v2": "^1.3.6",
-    "mongoose-softdelete": "1.1.0",
-    "mongoose-unique-validator": "^2.0.3"
+    "dayjs": "^1.10.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

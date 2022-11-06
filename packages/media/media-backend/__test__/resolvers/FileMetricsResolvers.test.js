@@ -4,10 +4,10 @@ import initService from '../../src/init/init-service';
 import {UserService} from "@dracul/user-backend";
 import { RoleService } from '@dracul/user-backend';
 import { rbac } from '@dracul/user-backend';
-import FileMetricsResolvers from '../../src/modules/media/graphql/resolvers/FileMetricsResolvers';
+import FileMetricsResolvers from '../../src/graphql/resolvers/FileMetricsResolvers';
 import path from 'path';
 import uploadFileSimulator from '../utils/uploadFileSimulator';
-import fileUpload from '../../src/modules/media/services/UploadService';
+import fileUpload from '../../src/services/UploadService';
 
 
 describe("FileMetricsResolvers", () => {
@@ -40,24 +40,24 @@ describe("FileMetricsResolvers", () => {
         expect(metrics.length).toBe(1)
     });
     test('fileUserMetricsWithoutPermission', async () => {
-      
+
         const user = await UserService.findUserByUsername("supervisor")
         const roles = await RoleService.findRoles()
         let Rbac = new rbac(roles)
         Rbac.addUserRoles(user.id, [user.role.name])
-     
+
         await expect(() => FileMetricsResolvers.Query.fileUserMetrics(null, {}, {user, rbac:Rbac}) ).toThrow('Not Authorized');
-        
+
     });
     test('fileUserMetricsWithoutUser', async () => {
-      
+
         let user = await UserService.findUserByUsername("supervisor")
         const roles = await RoleService.findRoles()
         let Rbac = new rbac(roles)
         Rbac.addUserRoles(user.id, [user.role.name])
         user = ""
         await expect(() => FileMetricsResolvers.Query.fileUserMetrics(null, {}, {user, rbac:Rbac}) ).toThrow('Unauthenticated');
-        
+
     });
 
     test('fileGlobalMetricsByAdmin', async () => {
@@ -73,24 +73,24 @@ describe("FileMetricsResolvers", () => {
         expect(metrics.count).toBe(1)
     });
     test('fileGlobalMetricsWithoutPermission', async () => {
-      
+
         const user = await UserService.findUserByUsername("supervisor")
         const roles = await RoleService.findRoles()
         let Rbac = new rbac(roles)
         Rbac.addUserRoles(user.id, [user.role.name])
-     
+
         await expect(() => FileMetricsResolvers.Query.fileGlobalMetrics(null, {}, {user, rbac:Rbac}) ).toThrow('Not Authorized');
-        
+
     });
     test('fileGlobalMetricsWithoutUser', async () => {
-      
+
         let user = await UserService.findUserByUsername("supervisor")
         const roles = await RoleService.findRoles()
         let Rbac = new rbac(roles)
         Rbac.addUserRoles(user.id, [user.role.name])
         user = ""
         await expect(() => FileMetricsResolvers.Query.fileGlobalMetrics(null, {}, {user, rbac:Rbac}) ).toThrow('Unauthenticated');
-        
+
     });
 
 })

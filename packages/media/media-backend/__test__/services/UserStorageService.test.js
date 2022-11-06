@@ -1,9 +1,9 @@
 const mongoHandler = require('../utils/mongo-handler')
 
 import { initService } from "../../src/init/init-service";
-import { fileUpload } from '../../src/modules/media/services/UploadService'
-import { findFile, deleteFile, findAndDeleteExpiredFiles } from '../../src/modules/media/services/FileService'
-import { createUserStorage, findUserStorageByUser, updateUserUsedStorage } from '../../src/modules/media/services/UserStorageService'
+import { fileUpload } from '../../src/services/UploadService'
+import { findFile, deleteFile, findAndDeleteExpiredFiles } from '../../src/services/FileService'
+import { createUserStorage, findUserStorageByUser, updateUserUsedStorage } from '../../src/services/UserStorageService'
 import { UserService, RoleService } from "@dracul/user-backend"
 import uploadFileSimulator from "../utils/uploadFileSimulator"
 import path from 'path'
@@ -11,7 +11,7 @@ import { rbac } from '@dracul/user-backend'
 import {
   FILE_DELETE_ALL,
   FILE_DELETE_OWN
-} from "../../src/modules/media/permissions/File";
+} from "../../src/permissions/File";
 
 
 describe("UserStorageService", () => {

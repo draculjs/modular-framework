@@ -6,7 +6,7 @@ import { RoleService } from '@dracul/user-backend';
 import { rbac } from '@dracul/user-backend';
 import path from 'path';
 import uploadFileSimulator from '../utils/uploadFileSimulator';
-import UploadResolvers from '../../src/modules/media/graphql/resolvers/UploadResolvers';
+import UploadResolvers from '../../src/graphql/resolvers/UploadResolvers';
 
 
 describe("FileMetricsResolvers", () => {
@@ -38,7 +38,7 @@ describe("FileMetricsResolvers", () => {
         expect(uploadedFile.type).toBe("image")
     });
     test('fileUploadWithoutPermission', async () => {
-      
+
         const user = await UserService.findUserByUsername("supervisor")
         const roles = await RoleService.findRoles()
         let Rbac = new rbac(roles)
@@ -48,10 +48,10 @@ describe("FileMetricsResolvers", () => {
         let simulatedFile = uploadFileSimulator(filePath)
 
         await expect(() => UploadResolvers.Mutation.fileUpload(null, {simulatedFile}, {user, rbac:Rbac}) ).toThrow('Not Authorized');
-        
+
     });
     test('fileUploadWithoutUser', async () => {
-      
+
         let user = await UserService.findUserByUsername("supervisor")
         const roles = await RoleService.findRoles()
         let Rbac = new rbac(roles)
@@ -62,7 +62,7 @@ describe("FileMetricsResolvers", () => {
         let simulatedFile = uploadFileSimulator(filePath)
 
         await expect(() => UploadResolvers.Mutation.fileUpload(null, {simulatedFile}, {user, rbac:Rbac}) ).toThrow('Unauthenticated');
-        
+
     });
 
 })
