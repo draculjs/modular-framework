@@ -11,6 +11,8 @@
       :multiple="multiple"
       :hide-details="hideDetails"
       :dense="dense"
+      :clearable="clearable"
+      :disabled="disabled"
   ></v-select>
 </template>
 
@@ -27,6 +29,8 @@ export default {
     chips: {type: Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
     dense: {type: Boolean, default: false},
+    disabled: {type: Boolean, default: false},
+    clearable: {type: Boolean, default: false},
     roleName: {type: String}
   },
   data() {
