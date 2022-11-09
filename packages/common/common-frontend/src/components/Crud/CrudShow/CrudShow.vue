@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :fullscreen="fullscreen" :value="open" max-width="850" persistent>
+  <v-dialog :fullscreen="fullscreen" :value="open" max-width="75vw" persistent>
     <v-card>
 
       <toolbar-dialog
