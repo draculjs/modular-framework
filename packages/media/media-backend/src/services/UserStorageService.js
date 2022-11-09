@@ -31,7 +31,7 @@ export const findUserStorageByUser = async function (user) {
 export const userStorageCheckAndCreate = async function () {
     winston.info("Media UserStorage running userStorageCheckAndCreate...")
     let userStorages = await userStorage.find({}).populate('user').exec()
-    let userStoragesIds = userStorages.map(us => us.user.id)
+    let userStoragesIds = userStorages.filter(us => us.user ).map(us => us.user.id)
 
     let users = await UserService.findUsers()
     let usersWithoutStorage = users.filter(u => !userStoragesIds.includes(u.id))

@@ -1,6 +1,5 @@
 const mongoHandler = require('../utils/mongo-handler')
 
-import { initService } from "../../src/init/init-service";
 import { fileUpload } from '../../src/services/UploadService'
 import { findFile, deleteFile, findAndDeleteExpiredFiles } from '../../src/services/FileService'
 import { createUserStorage, findUserStorageByUser, updateUserUsedStorage } from '../../src/services/UserStorageService'
@@ -21,7 +20,6 @@ describe("UserStorageService", () => {
 
   beforeAll(async () => {
     await mongoHandler.connect()
-    await initService()
 
     // Busco usuario root existente y sus permisos
     user = await UserService.findUserByUsername('root');
