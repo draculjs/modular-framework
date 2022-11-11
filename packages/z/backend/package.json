@@ -5,6 +5,7 @@
   "private": true,
   "main": "src/index.js",
   "scripts": {
+    "root-recovery": "BABEL_DISABLE_CACHE=1 babel-node src/rootRecovery.js",
     "back": "BABEL_DISABLE_CACHE=1 nodemon src/index.js --exec babel-node -e js",
     "init": "BABEL_DISABLE_CACHE=1 babel-node  src/init-script.js",
     "build": "./node_modules/.bin/babel src -d dist --copy-files && ./node_modules/.bin/babel emails -d dist/emails --copy-files && cp media dist/ -r && cp .env.example dist/.env && cp package.json dist/package.json",

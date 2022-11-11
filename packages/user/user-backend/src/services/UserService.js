@@ -7,6 +7,7 @@ import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-express'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
 import {findRoleByName} from "./RoleService";
+import {rootUser} from '../data/root-user'
 
 const EventEmitter = require('events');
 
@@ -532,4 +533,24 @@ export const findUserByRefreshToken = function (id) {
             }
         })
     })
+}
+
+export const recoveryRootUser = async() => {
+    const {username, password} = rootUser
+    try {
+        await User.updateOne({username}, {
+            password: hashPassword(password)
+        })
+        const {name, username: usernameRoot, email, phone} = await User.findOne({username})
+        winston.debug('UserService.recoveryRootUser successful')
+        return({
+            name,
+            username: usernameRoot,
+            email,
+            password: 'root.123',
+            phone
+        })
+    } catch (error) {
+        winston.error("UserService.recoveryRootUser ", error)
+    }
 }
