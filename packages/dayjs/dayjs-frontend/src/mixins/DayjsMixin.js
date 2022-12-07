@@ -41,24 +41,17 @@ export default {
             }
         },
         getDateTimeFormat() {
-            return (date, showSeconds = false) => {
+            return (date, showSeconds = false, showMilliseconds = false) => {
 
-                if (!date)
-                    return null
-
+                if (!date) return null
 
                 let format = "YYYY-MM-DD HH:mm"
 
-                if (showSeconds)
-                    format += ":ss"
+                if (showSeconds) format += ":ss"
+                if (showMilliseconds) format += ":SSS" 
 
-                if (dayjs.isDayjs(date)) {
-                    return date.format(format)
-                }
-
-                if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) {
-                    return date
-                }
+                if (dayjs.isDayjs(date)) return date.format(format)
+                if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) return date
 
                 return dayjs(parseInt(date)).tz().format(format)
             }
