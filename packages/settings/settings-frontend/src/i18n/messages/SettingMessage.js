@@ -3,7 +3,8 @@ const messages = {
         settings: {
             settings: {
                 title: 'Settings',
-                subtitle: 'Edit Settings',
+                editSubtitle: 'Edit Settings',
+                subtitle: 'Settings visualization',
                 creating: 'Creating Settings',
                 editing: 'Editing Settings',
                 deleting: 'Deleting Settings',
@@ -21,7 +22,8 @@ const messages = {
         settings: {
             settings: {
                 title: 'Ajustes',
-                subtitle: 'Editar ajustes',
+                editSubtitle: 'Editar ajustes',
+                subtitle: 'Visualizacion de Ajustes',
                 creating: 'Creando Ajustes',
                 editing: 'Modificando Ajustes',
                 deleting: 'Eliminando Ajustes',
@@ -39,7 +41,8 @@ const messages = {
         settings: {
             settings: {
                 title: 'Definições',
-                subtitle: 'Editar Definições',
+                editSubtitle: 'Editar Definições',
+                subtitle: 'Visualizacion de Ajustes',
                 creating: 'Criando Definições',
                 editing: 'Edição Definições',
                 deleting: 'Apagando Definições',

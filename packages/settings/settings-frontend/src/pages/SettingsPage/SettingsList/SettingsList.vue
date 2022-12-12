@@ -59,7 +59,7 @@
 
         <template v-slot:item.action="{ item }">
           <show-button @click="$emit('show', item)"/>
-          <edit-button @click="$emit('update', item)"/>
+          <edit-button v-if="userCanEditSettings" @click="$emit('update', item)"/>
         </template>
 
       </v-data-table>
@@ -71,6 +71,7 @@
 import SettingsProvider from "../../../providers/SettingsProvider";
 import {EditButton, ShowButton, SearchInput} from '@dracul/common-frontend'
 import {mapGetters} from "vuex";
+import { SETTINGS_UPDATE } from '../../../../../settings-backend/src/permissions/Settings'
 
 export default {
   name: "SettingsList",
@@ -105,6 +106,9 @@ export default {
     },
     getOrderDesc() {
       return (Array.isArray(this.orderDesc)) ? this.orderDesc[0] : this.orderDesc
+    },
+    userCanEditSettings() {
+      return this.$store.getters.hasPermission(SETTINGS_UPDATE)
     }
   },
   created() {
