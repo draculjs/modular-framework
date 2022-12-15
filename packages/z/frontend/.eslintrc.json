@@ -1,0 +1,26 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "parser": "babel-eslint",
+    "sourceType": "module",
+    "ecmaVersion": 2015
+  },
+  "rules": {},
+  "overrides": [
+    {
+      "files": [
+        "**/__tests__/*.{j,t}s?(x)",
+        "**/tests/unit/**/*.spec.{j,t}s?(x)"
+      ],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}
