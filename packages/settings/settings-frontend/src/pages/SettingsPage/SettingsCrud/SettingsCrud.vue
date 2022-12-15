@@ -2,31 +2,17 @@
   <crud-layout :title="title" :subtitle="subtitle">
 
     <template v-slot:list>
-      <settings-list
-          ref="list"
-          @update="update"
-          @delete="remove"
-          @show="show"
-
-      />
+      <settings-list ref="list" @update="update" @delete="remove" @show="show" />
     </template>
 
 
-    <settings-update v-if="updating"
-        :open="updating"
-        :item="itemToEdit"
-        v-on:itemUpdated="onItemUpdated"
-        v-on:close="updating=false"
-    />
+    <settings-update v-if="updating" :open="updating" :item="itemToEdit" v-on:itemUpdated="onItemUpdated"
+      v-on:close="updating = false" />
 
-    <settings-show v-if="showing"
-      :open="showing"
-      :item="itemToShow"
-      v-on:close="showing=false"
-    />
+    <settings-show v-if="showing" :open="showing" :item="itemToShow" v-on:close="showing = false" />
 
 
-    <snackbar v-model="flash"/>
+    <snackbar v-model="flash" />
 
   </crud-layout>
 </template>
@@ -36,8 +22,9 @@
 import SettingsUpdate from "../SettingsUpdate";
 import SettingsShow from "../SettingsShow";
 import SettingsList from "../SettingsList";
+import { SETTINGS_UPDATE } from '../../../../../settings-backend/src/permissions/Settings'
 
-import {CrudLayout, Snackbar} from '@dracul/common-frontend'
+import { CrudLayout, Snackbar } from '@dracul/common-frontend'
 
 export default {
   name: "SettingsCrud",
@@ -51,7 +38,7 @@ export default {
   data() {
     return {
       title: 'settings.settings.title',
-      subtitle: 'settings.settings.subtitle',
+      subtitle: this.userCanEditSettings() ? 'settings.settings.editSubtitle' : 'settings.settings.subtitle',
       flash: null,
       creating: false,
       updating: false,
@@ -91,9 +78,11 @@ export default {
     remove(item) {
       this.deleting = true
       this.itemToDelete = item
+    },
+    userCanEditSettings() {
+      return this.$store.getters.hasPermission(SETTINGS_UPDATE)
     }
   }
-
 }
 </script>
 
