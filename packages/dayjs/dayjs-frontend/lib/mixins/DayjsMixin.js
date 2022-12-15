@@ -52,19 +52,13 @@ var _default = {
     },
 
     getDateTimeFormat() {
-      return (date, showSeconds = false) => {
+      return (date, showSeconds = false, showMilliseconds = false) => {
         if (!date) return null;
         let format = "YYYY-MM-DD HH:mm";
         if (showSeconds) format += ":ss";
-
-        if (_Dayjs.default.isDayjs(date)) {
-          return date.format(format);
-        }
-
-        if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) {
-          return date;
-        }
-
+        if (showMilliseconds) format += ":SSS";
+        if (_Dayjs.default.isDayjs(date)) return date.format(format);
+        if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) return date;
         return (0, _Dayjs.default)(parseInt(date)).tz().format(format);
       };
     },

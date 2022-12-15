@@ -22,7 +22,7 @@
 import SettingsUpdate from "../SettingsUpdate";
 import SettingsShow from "../SettingsShow";
 import SettingsList from "../SettingsList";
-import { SETTINGS_UPDATE } from '../../../../../settings-backend/src/permissions/Settings'
+
 
 import { CrudLayout, Snackbar } from '@dracul/common-frontend'
 
@@ -80,7 +80,7 @@ export default {
       this.itemToDelete = item
     },
     userCanEditSettings() {
-      return this.$store.getters.hasPermission(SETTINGS_UPDATE)
+      return this.$store.getters.hasPermission('SETTINGS_UPDATE')
     }
   }
 }
