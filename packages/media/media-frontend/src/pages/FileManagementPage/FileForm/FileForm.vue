@@ -62,7 +62,7 @@
         ></user-autocomplete>
       </v-col>
 
-      <v-col v-if="creating" cols="12">
+      <v-col v-if="creating || updating" cols="12" alig-self="center">
        <file-upload-button
            @fileSelected="onFileSelected"
            :maxFileSize="maxFileSize"
@@ -90,6 +90,7 @@ export default {
   props: {
     value: {type: Object, required: true},
     creating: {type: Boolean, default: false},
+    updating: {type: Boolean, default: false},
     loading: {type: Boolean, default: false}
   },
   data() {

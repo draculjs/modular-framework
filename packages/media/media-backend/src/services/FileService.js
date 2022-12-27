@@ -6,13 +6,14 @@ import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageServi
 import fs from 'fs';
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import { GroupService } from '@dracul/user-backend';
+import { storeFile } from '@dracul/common-backend';
 
 export const findFile = async function (id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
 
     if (id) {
         let userGroups = await GroupService.fetchMyGroups(userId)
         return new Promise((resolve, reject) => {
-            File.findOne({ _id: id, ...filterByPermissions(userId,allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) }).populate('createdBy.user').exec((err, res) => (
+            File.findOne({ _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) }).populate('createdBy.user').exec((err, res) => (
                 err ? reject(err) : resolve(res)
             ));
         })
@@ -60,21 +61,21 @@ export const fetchFiles = async function (expirationDate = null) {
 }
 
 function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
-  let q = {};
+    let q = {};
 
-  if (allFilesAllowed) return q
+    if (allFilesAllowed) return q
 
-  if (ownFilesAllowed && publicAllowed) {
-      q = {$or: [{'createdBy.user': userId}, {'isPublic': true}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
-  } else if (ownFilesAllowed) {
-      q = {$or: [{'createdBy.user': userId}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
-  } else if (publicAllowed){
-      q = {$or: [{'isPublic': true}, {'groups': { $in: userGroups }}, {'users': { $in: [userId] }}]}
-  } else{
-      throw new Error("User doesn't have permissions for reading files")
-  }
+    if (ownFilesAllowed && publicAllowed) {
+        q = { $or: [{ 'createdBy.user': userId }, { 'isPublic': true }, { 'groups': { $in: userGroups } }, { 'users': { $in: [userId] } }] }
+    } else if (ownFilesAllowed) {
+        q = { $or: [{ 'createdBy.user': userId }, { 'groups': { $in: userGroups } }, { 'users': { $in: [userId] } }] }
+    } else if (publicAllowed) {
+        q = { $or: [{ 'isPublic': true }, { 'groups': { $in: userGroups } }, { 'users': { $in: [userId] } }] }
+    } else {
+        throw new Error("User doesn't have permissions for reading files")
+    }
 
-  return q;
+    return q;
 }
 
 export const paginateFiles = async function (
@@ -82,7 +83,7 @@ export const paginateFiles = async function (
     userId = null,
     allFilesAllowed = false,
     ownFilesAllowed = false,
-    publicAllowed= false) {
+    publicAllowed = false) {
 
     function qs(search) {
         let qs = {}
@@ -185,13 +186,13 @@ export const paginateFiles = async function (
 }
 
 
-export const updateFile = async function (authUser, {id, description, tags, expirationDate, isPublic, groups, users}, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+export const updateFile = async function (authUser, file, { id, description, tags, expirationDate, isPublic, groups, users }, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
     return new Promise(async (resolve, rejects) => {
 
         let userGroups = await GroupService.fetchMyGroups(userId)
 
-        File.findOneAndUpdate({ _id: id, ...filterByPermissions( userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
-            { description, tags, expirationDate, isPublic, groups, users},
+        const fileToUpdate = await File.findOneAndUpdate({ _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
+            { description, tags, expirationDate, isPublic, groups, users },
             { new: true, runValidators: true, context: 'query' },
             (error, doc) => {
                 if (error) {
@@ -206,6 +207,13 @@ export const updateFile = async function (authUser, {id, description, tags, expi
                     rejects('File not found')
                 }
             })
+
+            if(file){
+                const relativePath = fileToUpdate.relativePath
+                const { createReadStream } = await file
+                
+                await storeFile(createReadStream(), relativePath)
+            }
     })
 }
 

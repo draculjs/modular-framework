@@ -1,5 +1,5 @@
-mutation fileUpdate($input: FileUpdateInput!){
-    fileUpdate(input: $input){
+mutation fileUpdate($input: FileUpdateInput!, $file: Upload){
+    fileUpdate(input: $input, file: $file){
         id
         filename
         description

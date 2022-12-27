@@ -11,9 +11,11 @@
     <v-card flat class="mb-3">
       <v-card-text>
         <file-form
+            updating
             ref="form"
             v-model="form"
             :input-errors="inputErrors"
+            @fileSelected="handleFileSelected"
         />
       </v-card-text>
     </v-card>
@@ -47,14 +49,15 @@ export default {
         isPublic: this.item.isPublic ? this.item.isPublic : false,
         groups: this.item.groups ? this.item.groups : [],
         users: this.item.users ? this.item.users : []
-      }
+      },
+      file: null
     }
   },
   methods: {
     update() {
       if (this.$refs.form.validate()) {
         this.loading = true
-        FileProvider.updateFile(this.form).then(r => {
+        FileProvider.updateFile(this.form, this.file).then(r => {
               if (r) {
                 this.$emit('itemUpdated', r.data.fileUpdate)
                 this.$emit('close')
@@ -66,6 +69,9 @@ export default {
           this.errorMessage = clientError.i18nMessage
         }).finally(() => this.loading = false)
       }
+    },
+    handleFileSelected(file){
+      this.file = file
     }
   },
 }

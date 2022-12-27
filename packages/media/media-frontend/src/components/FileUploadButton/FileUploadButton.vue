@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-flex flex-column align-center">
     <input type="file"
            style="display: none"
            ref="file"
