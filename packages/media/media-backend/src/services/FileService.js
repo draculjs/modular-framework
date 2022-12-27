@@ -208,10 +208,12 @@ export const updateFile = async function (authUser, file, { id, description, tag
                 }
             })
 
-        const relativePath = fileToUpdate.relativePath
-        const { createReadStream } = await file
-
-        await storeFile(createReadStream(), relativePath)
+            if(file){
+                const relativePath = fileToUpdate.relativePath
+                const { createReadStream } = await file
+                
+                await storeFile(createReadStream(), relativePath)
+            }
     })
 }
 
