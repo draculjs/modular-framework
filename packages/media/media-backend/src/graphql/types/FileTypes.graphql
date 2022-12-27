@@ -57,7 +57,7 @@ input FileInput{
 
 input FileUpdateInput{
     id: ID!
-    description: String
+    description: String,
     tags: [String]
     expirationDate: String
     isPublic: Boolean
@@ -71,6 +71,6 @@ type FileDelete{
 }
 
 type Mutation {
-    fileUpdate(input: FileUpdateInput): File
+    fileUpdate(input: FileUpdateInput, file: Upload): File
     fileDelete(id: ID!): FileDelete!
 }

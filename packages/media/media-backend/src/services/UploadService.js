@@ -10,9 +10,7 @@ const fileUpload = function (user, inputFile, expirationDate, isPublic = false, 
   return new Promise(async (resolve, rejects) => {
     try {
 
-      if (!user) {
-        return rejects(new Error("user is required"))
-      }
+      if (!user) return rejects(new Error("user is required"))
 
       const { filename, mimetype, encoding, createReadStream } = await inputFile;
 
