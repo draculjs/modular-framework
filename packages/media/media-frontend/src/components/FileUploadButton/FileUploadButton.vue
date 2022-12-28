@@ -29,6 +29,11 @@
       <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
     </v-alert>
 
+    <v-alert v-if="invalidExtension" class="mb-0" border="left" type="error" text outlined tile>
+      El nuevo fichero debe tener la misma extension que el original
+      <v-btn text color="primary" v-on:click="resetUpload" class="ml-2">OK</v-btn>
+    </v-alert>
+
   </div>
 </template>
 
@@ -43,12 +48,15 @@ export default {
     xLarge: {type: Boolean, default: false},
     maxFileSize: {type: Number, default: 0},
     errorMessage: {type: String},
-    uploadedFile: {type: Object}
+    uploadedFile: {type: Object},
+    updating: {type: Boolean, default: false},
+    oldFileExtension: {type: String},
   },
   data() {
     return {
       file: null,
       invalidSize: false,
+      invalidExtension: false,
     }
   },
   computed: {
@@ -109,14 +117,27 @@ export default {
         this.invalidSize = true
       }
     },
+    async validateExtension() {
+      const newFileExtension = '.' + this.file.name.split('.').pop()
+      if (this.oldFileExtension != newFileExtension) {
+        this.invalidExtension = true
+        this.file = null
+      }else{
+        this.invalidExtension = false
+      }
+    },
     onFilePicked: function (e) {
       this.file = e.target.files[0]
+
       this.validateSize()
+      if (this.updating) this.validateExtension()
+
       this.$emit('fileSelected', this.file)
     },
     resetUpload() {
       this.file = null
       this.invalidSize = false
+      this.invalidExtension = false
     },
 
   }
