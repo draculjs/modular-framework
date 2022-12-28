@@ -23,6 +23,12 @@
       >
        Privacidad
       </v-tab>
+
+      <v-tab
+        key="fileHistoryTab"
+      >
+       Historial
+      </v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab" fill-height>
@@ -127,12 +133,23 @@
             v-if="$store.getters.hasPermission('SECURITY_USER_SHOW')" :fileIdUsers="file.users">
           </users-show>
         </v-tab-item>
+
+        <v-tab-item><!--file History-->
+          <v-data-table
+            :headers="[{text: 'Fecha de modificacion del fichero', value: 'date', sortable: true, align: 'center'}, {text: 'ID de usuario', value: 'user', sortable: true, align: 'center'}]"
+            :items="file.fileReplaces"
+            :items-per-page="5"
+            :footer-props="{ itemsPerPageOptions: [5, 10, 25, 50] }"
+            class="elevation-1"
+          ></v-data-table>
+        </v-tab-item>
     </v-tabs-items>
   </v-container>
 </template>
 
 <script>
 import {ShowField, ShowChipField} from '@dracul/common-frontend'
+import {DayjsMixin} from '@dracul/dayjs-frontend'
 import GroupsShow from '../GroupsShow'
 import UsersShow from '../UsersShow'
 
@@ -142,6 +159,7 @@ export default {
   props: {
     file: {type: Object}
   },
+  mixins: [DayjsMixin],
   data() {
     return {
       copyResult: false,
@@ -149,6 +167,9 @@ export default {
       tab: null,
       parsed: false
     }
+  },
+  mounted () {
+    this.file.fileReplaces.forEach(element => element.date = this.getDateTimeFormat(element.date, true))
   },
   computed: {
     isImage() {
