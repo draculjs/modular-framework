@@ -210,6 +210,9 @@ export const updateFile = async function (authUser, file, { id, description, tag
             })
 
         if (file) {
+            const newFileExtension = '.' + (await file).filename.split('.').pop()
+            if (fileToUpdate.extension !== newFileExtension) throw new Error('The file update could not be made: the file extensions differ')
+
             const relativePath = fileToUpdate.relativePath
             const { createReadStream } = await file
 
