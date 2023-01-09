@@ -29,6 +29,10 @@ query filePaginate($input: FilterPaginateInput){
             hits
             groups
             users
+            fileReplaces {
+                user
+                date
+            }
         }
     }
 }

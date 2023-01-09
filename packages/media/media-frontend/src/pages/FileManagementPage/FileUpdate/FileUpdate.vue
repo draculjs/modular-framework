@@ -12,6 +12,7 @@
       <v-card-text>
         <file-form
             updating
+            :oldFileExtension="this.oldFileExtension"
             ref="form"
             v-model="form"
             :input-errors="inputErrors"
@@ -50,7 +51,8 @@ export default {
         groups: this.item.groups ? this.item.groups : [],
         users: this.item.users ? this.item.users : []
       },
-      file: null
+      file: null,
+      oldFileExtension: this.item.extension,
     }
   },
   methods: {
@@ -70,8 +72,13 @@ export default {
         }).finally(() => this.loading = false)
       }
     },
-    handleFileSelected(file){
-      this.file = file
+    async handleFileSelected(file){
+      if(file){
+        await file
+        const newFileExtension = '.' + file.name.split('.').pop()
+
+        if (newFileExtension == this.oldFileExtension) this.file = file
+      }
     }
   },
 }

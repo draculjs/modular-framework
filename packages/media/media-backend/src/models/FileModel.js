@@ -3,6 +3,12 @@ const softDelete = require('mongoose-softdelete')
 const mongoosePaginate = require('mongoose-paginate-v2')
 
 const Schema = mongoose.Schema
+const fileReplacesInfoSchema = new Schema({
+    user: { type: mongoose.Schema.Types.ObjectId },
+    date: { type: Date },
+})
+
+
 
 const FileSchema = new Schema({
 
@@ -28,7 +34,9 @@ const FileSchema = new Schema({
     hits: { type: Number, require: false, default: 0 },
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group", required: false }],
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }],
-
+    fileReplaces: [
+        fileReplacesInfoSchema
+    ]
 });
 
 FileSchema.plugin(mongoosePaginate)

@@ -18,6 +18,12 @@ type File{
     hits: Int
     groups: [ID]
     users: [ID]
+    fileReplaces: [fileReplaceInfo]
+}
+
+type fileReplaceInfo{
+    user: ID
+    date: String
 }
 
 type CreatedBy{

@@ -64,9 +64,11 @@
 
       <v-col v-if="creating || updating" cols="12" alig-self="center">
        <file-upload-button
+            updating
            @fileSelected="onFileSelected"
            :maxFileSize="maxFileSize"
            :loading="loading"
+           :oldFileExtension="this.oldFileExtension"
        ></file-upload-button>
       </v-col>
     </v-row>
@@ -91,7 +93,8 @@ export default {
     value: {type: Object, required: true},
     creating: {type: Boolean, default: false},
     updating: {type: Boolean, default: false},
-    loading: {type: Boolean, default: false}
+    loading: {type: Boolean, default: false},
+    oldFileExtension: {type: String},
   },
   data() {
     return {
