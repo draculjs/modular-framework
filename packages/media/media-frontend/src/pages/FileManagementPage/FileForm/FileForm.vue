@@ -64,7 +64,7 @@
 
       <v-col v-if="creating || updating" cols="12" alig-self="center">
        <file-upload-button
-            updating
+            :updating="updating"
            @fileSelected="onFileSelected"
            :maxFileSize="maxFileSize"
            :loading="loading"
