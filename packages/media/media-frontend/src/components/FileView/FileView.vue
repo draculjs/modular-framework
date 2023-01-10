@@ -136,7 +136,7 @@
 
         <v-tab-item><!--file History-->
           <v-data-table
-            :headers="[{text: 'Fecha de modificacion del fichero', value: 'date', sortable: true, align: 'center'}, {text: 'ID de usuario', value: 'user', sortable: true, align: 'center'}]"
+            :headers="[{text: 'Fecha de modificacion del fichero', value: 'date', sortable: true, align: 'center'}, {text: 'Usuario', value: 'username', sortable: true, align: 'center'}]"
             :items="file.fileReplaces"
             :items-per-page="5"
             :footer-props="{ itemsPerPageOptions: [5, 10, 25, 50] }"
