@@ -216,7 +216,7 @@ export const updateFile = async function (authUser, file, { id, description, tag
             const relativePath = fileToUpdate.relativePath
             const { createReadStream } = await file
 
-            fileToUpdate.fileReplaces.push({ user: userId, date: dayjs() })
+            fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username })
             fileToUpdate.save()
             console.log(`updated ${relativePath}: '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`)
 

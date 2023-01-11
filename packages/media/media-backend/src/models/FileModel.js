@@ -5,6 +5,7 @@ const mongoosePaginate = require('mongoose-paginate-v2')
 const Schema = mongoose.Schema
 const fileReplacesInfoSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId },
+    username: {type: String},
     date: { type: Date },
 })
 
