@@ -44,7 +44,7 @@ export default {
             let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
-            return updateFile(user, file, input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
+            return (await (updateFile(user, file, input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)))
         },
         fileDelete: (_, { id }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
