@@ -36,7 +36,7 @@ export default {
         },
     },
     Mutation: {
-        fileUpdate: (_, { input, file }, { user, rbac }) => {
+        fileUpdate: async (_, { input, file }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, FILE_UPDATE_ALL) && !rbac.isAllowed(user.id, FILE_UPDATE_OWN)) throw new ForbiddenError("Not Authorized")
 
@@ -44,7 +44,7 @@ export default {
             let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
-            return (await (updateFile(user, file, input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)))
+            return await (updateFile(user, file, input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed))
         },
         fileDelete: (_, { id }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
