@@ -186,43 +186,54 @@ export const paginateFiles = async function (
 }
 
 
-export const updateFile = async function (authUser, file, { id, description, tags, expirationDate, isPublic, groups, users }, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
-    return new Promise(async (resolve, rejects) => {
+export const updateFile = async function (authUser, newFile, { id, description, tags, expirationDate, isPublic, groups, users }, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
 
-        let userGroups = await GroupService.fetchMyGroups(userId)
-
-        const fileToUpdate = await File.findOneAndUpdate({ _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
+        async function updateDocFile(){
+            const userGroups = await GroupService.fetchMyGroups(userId)
+            let document = null
+            
+            await File.findOneAndUpdate(
+            { _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
             { description, tags, expirationDate, isPublic, groups, users },
             { new: true, runValidators: true, context: 'query' },
-            (error, doc) => {
+
+            async (error, doc) => {
                 if (error) {
-                    if (error.name == "ValidationError") {
-                        rejects(new UserInputError(error.message, { inputErrors: error.errors }));
-                    }
-                    rejects(error)
+                    if (error.name == "ValidationError") throw (new UserInputError(error.message, { inputErrors: error.errors }))
+                    throw error
                 }
 
                 if (doc) {
-                    doc.populate('createdBy.user').execPopulate(() => resolve(doc))
+                    doc.populate('createdBy.user').execPopulate()
                 } else {
-                    rejects('File not found')
+                    throw new Error('Original file not found')
                 }
+
+                document = doc
             })
 
-        if (file) {
-            const newFileExtension = '.' + (await file).filename.split('.').pop()
-            if (fileToUpdate.extension !== newFileExtension) throw new Error('The file update could not be made: the file extensions differ')
-
-            const relativePath = fileToUpdate.relativePath
-            const { createReadStream } = await file
-
-            fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username })
-            fileToUpdate.save()
-            console.log(`updated ${relativePath}: '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`)
-
-            await storeFile(createReadStream(), relativePath)
+            return document
         }
-    })
+
+        async function updateFileWithNewOne(fileToUpdate, newFile){
+                const newFileExtension = '.' + (await newFile).filename.split('.').pop()
+                    if (fileToUpdate.extension !== newFileExtension) throw new Error('The file update could not be made: the file extensions differ')
+
+                    const relativePath = fileToUpdate.relativePath
+                    const { createReadStream } = await newFile
+                    
+                    await storeFile(createReadStream(), relativePath)
+                    
+                    fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username })
+                    fileToUpdate.save()
+
+                    console.log(`updateFileWithNewOne done at path '${relativePath}': '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`)
+        }
+        
+        const fileToUpdate = await updateDocFile()
+        if (newFile) await updateFileWithNewOne(fileToUpdate, newFile)
+
+        return fileToUpdate
 }
 
 // Rest service
