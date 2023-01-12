@@ -190,44 +190,36 @@ export const updateFile = async function (authUser, newFile, { id, description, 
 
         async function updateDocFile(){
             const userGroups = await GroupService.fetchMyGroups(userId)
-            let document = null
-            
-            await File.findOneAndUpdate(
-            { _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
-            { description, tags, expirationDate, isPublic, groups, users },
-            { new: true, runValidators: true, context: 'query' },
 
-            async (error, doc) => {
-                if (error) {
-                    if (error.name == "ValidationError") throw (new UserInputError(error.message, { inputErrors: error.errors }))
-                    throw error
-                }
+            try {
+                const fileUpdateResult = await File.findOneAndUpdate(
+                    { _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
+                    { description, tags, expirationDate, isPublic, groups, users },
+                    { new: true, runValidators: true, context: 'query' }
+                )
+    
+                fileUpdateResult.populate('createdBy.user').execPopulate()
+                return fileUpdateResult
 
-                if (doc) {
-                    doc.populate('createdBy.user').execPopulate()
-                } else {
-                    throw new Error('Original file not found')
-                }
-
-                document = doc
-            })
-
-            return document
+            } catch (error) {
+                if (error.name == "ValidationError") throw (new UserInputError(error.message, { inputErrors: error.errors }))
+                throw error
+            }
         }
 
         async function updateFileWithNewOne(fileToUpdate, newFile){
                 const newFileExtension = '.' + (await newFile).filename.split('.').pop()
                     if (fileToUpdate.extension !== newFileExtension) throw new Error('The file update could not be made: the file extensions differ')
 
-                    const relativePath = fileToUpdate.relativePath
-                    const { createReadStream } = await newFile
+                const relativePath = fileToUpdate.relativePath
+                const { createReadStream } = await newFile
                     
-                    await storeFile(createReadStream(), relativePath)
+                await storeFile(createReadStream(), relativePath)
                     
-                    fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username })
-                    fileToUpdate.save()
+                fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username })
+                fileToUpdate.save()
 
-                    console.log(`updateFileWithNewOne done at path '${relativePath}': '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`)
+                console.log(`updateFileWithNewOne done at path '${relativePath}': '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`)
         }
         
         const fileToUpdate = await updateDocFile()
