@@ -198,7 +198,7 @@ export const updateFile = async function (authUser, newFile, { id, description, 
                     { new: true, runValidators: true, context: 'query' }
                 )
     
-                fileUpdateResult.populate('createdBy.user').execPopulate()
+                await fileUpdateResult.populate('createdBy.user').execPopulate()
                 return fileUpdateResult
 
             } catch (error) {
