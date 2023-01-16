@@ -87,7 +87,7 @@ function loginInLdap(user, pass, asAdmin = false) {
                 pass,
                 error => {
                     if (error) {
-                        DefaultLogger.warn(`LDAP login failed for user: '${user}' with pass '${pass}'`)
+                        DefaultLogger.warn(`LDAP login failed for user: '${user}'`)
                         DefaultLogger.error(`Error while trying to authenticate in ldap (bind): '${error}'`);
                         reject(error.message)
                     }else{
