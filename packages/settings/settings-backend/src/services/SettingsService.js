@@ -23,25 +23,13 @@ export const initializeSettings = async function (settings = []) {
 
 export const initializeSetting = async function (setting) {
 
-    if(!(setting instanceof Object)){
-        throw new Error('Setting must be an Object')
-    }
-
-
-    if(!setting.key){
-        throw new Error('Setting must have a key')
-    }
-
-    if(!setting.label){
-        throw new Error('Setting must have a label')
-    }
+    if(!(setting instanceof Object)) throw new Error('Setting must be an Object')
+    if(!setting.key) throw new Error('Setting must have a key')
+    if(!setting.label) throw new Error('Setting must have a label')
 
     let settingDoc = await findSettingsByKey(setting.key)
-    if (!settingDoc) {
-        settingDoc = await createSettings(null, setting)
-    }else{
-        settingDoc = await updateSettings(null, settingDoc.id, setting)
-    }
+    if (!settingDoc) settingDoc = await createSettings(null, setting)
+    
     return settingDoc
 }
 
