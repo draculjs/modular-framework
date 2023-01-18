@@ -167,7 +167,7 @@ function searchUserGroup(user, pass, groupId) {
 
 async function getLocalUserOrCreate(userLdapInfo) {
     if (!userLdapInfo.username && !userLdapInfo.password) throw new Error(`UserLdapInfoRequired`)
-    userLdapInfo.email = userLdapInfo.username + '@dracul.int'
+    if (!userLdapInfo.email) userLdapInfo.email = userLdapInfo.username + '@dracul.int'
 
     let user = await findUserByUsername(userLdapInfo.username)
     if (!user) {
