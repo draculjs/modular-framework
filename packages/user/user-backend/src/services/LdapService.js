@@ -87,7 +87,7 @@ function loginInLdap(user, pass, asAdmin = false) {
                 pass,
                 error => {
                     if (error) {
-                        DefaultLogger.warn(`LDAP login failed for user: '${user}' with pass '${pass}'`)
+                        DefaultLogger.warn(`LDAP login failed for user: '${user}'`)
                         DefaultLogger.error(`Error while trying to authenticate in ldap (bind): '${error}'`);
                         reject(error.message)
                     }else{
@@ -166,8 +166,8 @@ function searchUserGroup(user, pass, groupId) {
 
 
 async function getLocalUserOrCreate(userLdapInfo) {
-    const ldapInfoIsComplete = userLdapInfo.username && userLdapInfo.email && userLdapInfo.password
-    if (!ldapInfoIsComplete) throw new Error(`UserLdapInfoRequired`)
+    if (!userLdapInfo.username && !userLdapInfo.password) throw new Error(`UserLdapInfoRequired`)
+    if (!userLdapInfo.email) userLdapInfo.email = userLdapInfo.username + '@dracul.int'
 
     let user = await findUserByUsername(userLdapInfo.username)
     if (!user) {
@@ -183,8 +183,6 @@ async function getLocalUserOrCreate(userLdapInfo) {
             userLdapInfo.role = role
             userLdapInfo.active = true
             userLdapInfo.fromLDAP = true
-
-            console.log(`Info from ldap user: '${JSON.stringify(userLdapInfo)}'`)
 
             user = await createUser(userLdapInfo)
             return (user)
@@ -207,7 +205,6 @@ async function authLdapAndGetUser(username, decodedPassword) {
         const groupName = await searchUserGroup(username, decodedPassword, userInfo.groupId)
 
         userInfo.groupName = groupName
-        console.log(userInfo)
 
         const user = await getLocalUserOrCreate(userInfo)
         return user
