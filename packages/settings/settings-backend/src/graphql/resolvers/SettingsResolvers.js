@@ -36,8 +36,8 @@ export default {
             if (!rbac.isAllowed(user.id, SETTINGS_SHOW)) throw new ForbiddenError("Not Authorized")
             return paginateSettings(pageNumber, itemsPerPage, search, orderBy, orderDesc)
         },
-        fetchEntityFieldValues(_, {entity, field}, __) {
-            return fetchEntityFieldValues(entity, field)
+        fetchEntityFieldValues(_, {entity, field, text}, __) {
+            return fetchEntityFieldValues(entity, field, text)
         }
 
     },

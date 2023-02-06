@@ -7,6 +7,7 @@ const Schema = mongoose.Schema
 const SettingsSchema = new Schema({
 
     key: {type: String, required: true, unique: true},
+    text: {type: String, required: false, unique: false},
     value: {type: String, required: false, unique: false},
     label: {
         en: {type: String, required: false},

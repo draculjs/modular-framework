@@ -2,6 +2,7 @@ query settingsFindByKey($key:String!){
     settingsFindByKey(key:$key){
         id
         key
+        text
         value
         label{
             en

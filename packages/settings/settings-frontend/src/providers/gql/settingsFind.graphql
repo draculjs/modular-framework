@@ -2,6 +2,7 @@ query settingsFind($id:ID!){
     settingsFind(id:$id){
         id
         key
+        text
         value
         label{
             en

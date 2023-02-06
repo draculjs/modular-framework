@@ -5,6 +5,7 @@ query settingsPaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $o
         items{
             id
             key
+            text
             value
             label{
                 en

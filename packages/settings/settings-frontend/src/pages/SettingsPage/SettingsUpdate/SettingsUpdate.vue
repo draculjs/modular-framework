@@ -39,6 +39,7 @@ export default {
       form: {
         id: this.item.id,
         key: this.item.key,
+        text: this.item.text,
         value: this.item.value,
         label: {
           en: this.item.label.en,
@@ -50,6 +51,7 @@ export default {
   },
   computed: {
     getForm(){
+      console.log(this.form)
       const form = this.form
       if (form.value) form.value = form.value.toString()
 

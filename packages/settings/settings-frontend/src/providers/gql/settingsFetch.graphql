@@ -2,6 +2,7 @@ query settingsFetch{
     settingsFetch{
         id
         key
+        text
         value
         label{
             en

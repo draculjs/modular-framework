@@ -5,6 +5,16 @@ const settings = [
     {
         key: 'dynamic',
         type: 'dynamic',
+        text: 'name',
+        value: '',
+        label: {en: 'Dynamic setting value', es: 'Dynamic setting value', pt: 'Dynamic setting value'},
+        entity: 'roles',
+        field: '_id',
+    },
+    {
+        key: 'dynamic2',
+        type: 'dynamic',
+        text: '_id',
         value: '',
         label: {en: 'Dynamic setting value', es: 'Dynamic setting value', pt: 'Dynamic setting value'},
         entity: 'roles',

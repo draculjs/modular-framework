@@ -1,6 +1,7 @@
 type Settings{
     id: ID!
     key: String!
+    text: String
     value: String
     label: MultiLang!
     type: String
@@ -17,7 +18,8 @@ type SettingsPaginated{
 }
 
 type entityFieldValues{
-    value: String!
+    text: String!
+    entityValue: String!
 }
 
 type Query {
@@ -25,11 +27,12 @@ type Query {
     settingsFindByKey(key:String!): Settings
     settingsFetch: [Settings]
     settingsPaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): SettingsPaginated
-    fetchEntityFieldValues(entity: String!, field: String!): [entityFieldValues!]
+    fetchEntityFieldValues(entity: String!, field: String!, text: String!): [entityFieldValues!]
 }
 
 input SettingsInput{
     key: String!
+    text: String
     value: String
     label: MultiLangInput!
     type: String

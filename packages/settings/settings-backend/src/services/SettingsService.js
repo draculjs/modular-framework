@@ -121,12 +121,13 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 }
 
 
-export const createSettings = async function (authUser, {key, value, label, type, options, regex, entity, field}) {
+export const createSettings = async function (authUser, {key, text, value, label, type, options, regex, entity, field}) {
 
     const docValue = value ? value.toString() : null
 
     const doc = new Settings({
         key,
+        text,
         value: docValue,
         label,
         type,
@@ -151,7 +152,7 @@ export const createSettings = async function (authUser, {key, value, label, type
     })
 }
 
-export const updateSettings = async function (authUser, id, {key, value, label, type, options, regex}) {
+export const updateSettings = async function (authUser, id, {key, text, value, label, type, options, regex}) {
 
     const docValue = value ? value.toString() : null
 
@@ -159,6 +160,7 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
         Settings.findOneAndUpdate({_id: id},
             {
                 key,
+                text,
                 value: docValue,
                 label,
                 ...(type ? {type} : {}),
@@ -182,10 +184,11 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
     })
 }
 
-export const updateSettingsByKey = async function (authUser, {key, value, label, type, options}) {
+export const updateSettingsByKey = async function (authUser, {key, text, value, label, type, options}) {
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({key: key},
             {
+                text,
                 value: value.toString(),
                 ...(label ? {label} : {}),
                 ...(type ? {type} : {}),
@@ -218,9 +221,9 @@ export const deleteSettings = function (id) {
     })
 }
 
-export async function fetchEntityFieldValues(entity, field){
+export async function fetchEntityFieldValues(entity, field, text){
     const documentsFromCollection = await mongoose.connection.db.collection(entity).find({}).toArray()
-    const values = documentsFromCollection.map(document => ({value: document[field]}))
-
+    const values = documentsFromCollection.map(document => ({entityValue: document[field], text: document[text]}))
+    
     return values
 }
