@@ -51,7 +51,6 @@ export default {
   },
   computed: {
     getForm(){
-      console.log(this.form)
       const form = this.form
       if (form.value) form.value = form.value.toString()
 
