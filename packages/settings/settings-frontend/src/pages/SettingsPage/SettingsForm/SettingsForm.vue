@@ -83,11 +83,9 @@ export default {
     async setEntityOptions(item) {
       const { entity, field, text } = item
 
-      console.log('ITEM', item)
       SettingsProvider.fetchEntityOptions(entity, field, text).then(response => {
         response.data['fetchEntityFieldValues'].forEach(item => {
           this.entityOptions.push(item)
-          console.log('this.entityOptions', this.entityOptions)
         })
       })
     }
