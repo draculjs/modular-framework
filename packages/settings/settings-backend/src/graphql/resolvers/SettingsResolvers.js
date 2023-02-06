@@ -5,7 +5,9 @@ import {
     findSettings,
     fetchSettings,
     paginateSettings,
-    findSettingsByKey, updateSettingsByKey
+    findSettingsByKey,
+    updateSettingsByKey,
+    fetchEntityFieldValues
 } from '../../services/SettingsService'
 
 import {AuthenticationError, ForbiddenError} from "apollo-server-express";
@@ -20,19 +22,13 @@ import {
 
 export default {
     Query: {
-        settingsFind: (_, {id}, {user, rbac}) => {
-            //  if (!user) throw new AuthenticationError("Unauthenticated")
-            //  if(!rbac.isAllowed(user.id, SETTINGS_SHOW)) throw new ForbiddenError("Not Authorized")
+        settingsFind: (_, {id}, __) => {
             return findSettings(id)
         },
-        settingsFindByKey: (_, {Key}, {user, rbac}) => {
-            //  if (!user) throw new AuthenticationError("Unauthenticated")
-            //  if(!rbac.isAllowed(user.id, SETTINGS_SHOW)) throw new ForbiddenError("Not Authorized")
+        settingsFindByKey: (_, {Key}, __) => {
             return findSettingsByKey(key)
         },
-        settingsFetch: (_, {}, {user, rbac}) => {
-            //   if (!user) throw new AuthenticationError("Unauthenticated")
-            //  if(!rbac.isAllowed(user.id, SETTINGS_SHOW)) throw new ForbiddenError("Not Authorized")
+        settingsFetch: (_, {}, __) => {
             return fetchSettings()
         },
         settingsPaginate: (_, {pageNumber, itemsPerPage, search, orderBy, orderDesc}, {user, rbac}) => {
@@ -40,6 +36,9 @@ export default {
             if (!rbac.isAllowed(user.id, SETTINGS_SHOW)) throw new ForbiddenError("Not Authorized")
             return paginateSettings(pageNumber, itemsPerPage, search, orderBy, orderDesc)
         },
+        fetchEntityFieldValues(_, {entity, field}, __) {
+            return fetchEntityFieldValues(entity, field)
+        }
 
     },
     Mutation: {

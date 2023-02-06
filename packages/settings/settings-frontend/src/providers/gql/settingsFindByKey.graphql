@@ -11,5 +11,7 @@ query settingsFindByKey($key:String!){
         type
         options
         regex
+        entity
+        field
     }
 }

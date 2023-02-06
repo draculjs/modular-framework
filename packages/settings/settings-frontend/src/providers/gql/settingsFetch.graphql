@@ -11,6 +11,8 @@ query settingsFetch{
         type
         options
         regex
+        entity
+        field
     }
 }
 

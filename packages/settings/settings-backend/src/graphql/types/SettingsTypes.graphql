@@ -6,6 +6,8 @@ type Settings{
     type: String
     options: [String]
     regex: String
+    entity: String
+    field: String
 }
 
 type SettingsPaginated{
@@ -14,13 +16,16 @@ type SettingsPaginated{
     items: [Settings!]
 }
 
+type entityFieldValues{
+    value: String!
+}
+
 type Query {
     settingsFind(id:ID!): Settings
     settingsFindByKey(key:String!): Settings
     settingsFetch: [Settings]
     settingsPaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): SettingsPaginated
-
-
+    fetchEntityFieldValues(entity: String!, field: String!): [entityFieldValues!]
 }
 
 input SettingsInput{

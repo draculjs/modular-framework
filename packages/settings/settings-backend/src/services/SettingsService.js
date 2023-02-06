@@ -1,6 +1,6 @@
 import Settings from '../models/SettingsModel'
+import {mongoose} from '@dracul/common-backend'
 import {UserInputError} from 'apollo-server-express'
-
 
 export const initializeSettings = async function (settings = []) {
 
@@ -121,7 +121,7 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 }
 
 
-export const createSettings = async function (authUser, {key, value, label, type, options, regex}) {
+export const createSettings = async function (authUser, {key, value, label, type, options, regex, entity, field}) {
 
     const docValue = value ? value.toString() : null
 
@@ -131,7 +131,9 @@ export const createSettings = async function (authUser, {key, value, label, type
         label,
         type,
         options,
-        regex
+        regex,
+        entity,
+        field
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -216,3 +218,9 @@ export const deleteSettings = function (id) {
     })
 }
 
+export async function fetchEntityFieldValues(entity, field){
+    const documentsFromCollection = await mongoose.connection.db.collection(entity).find({}).toArray()
+    const values = documentsFromCollection.map(document => ({value: document[field]}))
+
+    return values
+}

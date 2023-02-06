@@ -14,6 +14,8 @@ query settingsPaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $o
             type
             options
             regex
+            entity
+            field
         }
     }
 }

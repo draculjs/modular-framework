@@ -51,6 +51,17 @@
             color="secondary"
         ></v-select>
 
+        <!--dynamic-->
+        <v-select
+            v-if="item.type === 'dynamic' "
+            prepend-icon="list"
+            name="value"
+            :items="this.entityOptions"
+            v-model="form.value"
+            placeholder="Options"
+            color="secondary"
+        ></v-select>
+
       </v-col>
     </v-row>
   </v-form>
@@ -59,6 +70,7 @@
 <script>
 
 import {InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
+import SettingsProvider from '../../../providers/SettingsProvider'
 import {mapGetters} from "vuex";
 
 export default {
@@ -67,6 +79,11 @@ export default {
   props: {
     value: {type: Object, required: true},
     item: {type: Object, required: true}
+  },
+  data() {
+    return {
+      entityOptions: []
+    }
   },
   computed: {
     ...mapGetters(['getLanguage']),
@@ -97,8 +114,20 @@ export default {
   methods: {
     validate() {
       return this.$refs.form.validate()
+    },
+    async setEntityOptions(item){
+      const {entity, field} = item
+
+      SettingsProvider.fetchEntityOptions(entity, field).then(response => {
+        response.data['fetchEntityFieldValues'].forEach(item => {
+          this.entityOptions.push(item.value)
+        })
+      })
     }
-  }
+  },
+  mounted () {
+    this.setEntityOptions(this.item);
+  },
 }
 </script>
 

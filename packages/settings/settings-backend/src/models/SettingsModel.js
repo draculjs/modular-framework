@@ -1,11 +1,9 @@
 import {mongoose} from '@dracul/common-backend';
 
-
 const mongoosePaginate = require('mongoose-paginate-v2');
 const uniqueValidator = require('mongoose-unique-validator');
 
-const Schema = mongoose.Schema;
-
+const Schema = mongoose.Schema
 const SettingsSchema = new Schema({
 
     key: {type: String, required: true, unique: true},
@@ -15,15 +13,16 @@ const SettingsSchema = new Schema({
         es: {type: String, required: false},
         pt: {type: String, required: false},
     },
-    type: {type: String, default: "string", enum: ['string','number','enum','boolean', 'password'], required: false, unique: false},
+    type: {type: String, default: "string", enum: ['string','number','enum','boolean', 'password', 'dynamic'], required: false, unique: false},
     options: [{type: String}],
-    regex: {type: String}
-});
-
+    regex: {type: String},
+    entity: {type: String, required: false},
+    field: {type: String, required: false},
+})
 
 SettingsSchema.plugin(mongoosePaginate);
-SettingsSchema.plugin(uniqueValidator, {message: 'validation.unique'});
+SettingsSchema.plugin(uniqueValidator, {message: 'validation.unique'})
 
-const Settings = mongoose.model('Settings', SettingsSchema);
+const Settings = mongoose.model('Settings', SettingsSchema)
 
-module.exports = Settings;
+module.exports = Settings

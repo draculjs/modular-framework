@@ -1,0 +1,5 @@
+query fetchEntityFieldValues($entity: String!, $field: String!){
+  fetchEntityFieldValues(entity: $entity, field: $field){
+    value
+  }
+}

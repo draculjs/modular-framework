@@ -11,6 +11,8 @@ mutation settingsCreate($key:String!, $value:String, $label:MultiLangInput!){
         type
         options
         regex
+        entity
+        field
     }
 }
 

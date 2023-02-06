@@ -40,7 +40,13 @@ class SettingsProvider {
         })
     }
 
-
+    fetchEntityOptions(entity, field) {
+        return this.gqlc.query({
+            query: require('./gql/fetchEntityOptions.graphql'),
+            variables: {entity, field},
+            fetchPolicy: "network-only"
+        })
+    }
 
     createSettings(form) {
         return this.gqlc.mutate({

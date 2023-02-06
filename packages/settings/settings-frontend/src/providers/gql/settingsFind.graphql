@@ -11,5 +11,7 @@ query settingsFind($id:ID!){
         type
         options
         regex
+        entity
+        field
     }
 }
