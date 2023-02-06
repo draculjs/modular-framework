@@ -60,6 +60,20 @@ export const fetchFiles = async function (expirationDate = null) {
     })
 }
 
+export const incrementFileHits = async function (fileID) {
+    try {
+        const incrementFileHitsResult = await File.findOneAndUpdate({ _id: fileID },
+            { lastAccess: Date.now(), '$inc': { hits: 1 } },
+            { runValidators: true, context: 'query' }
+        )
+
+        return incrementFileHitsResult
+    } catch (error) {
+        console.error(error)
+        throw new Error(error)
+    }
+}
+
 function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
     let q = {};
 
@@ -269,7 +283,6 @@ export const updateFileRest = function (id, user, permissionType, input) {
 }
 
 export const updateByRelativePath = function (relativePath) {
-
     return new Promise((resolve, rejects) => {
         File.findOneAndUpdate({ relativePath: relativePath },
             { lastAccess: Date.now(), '$inc': { hits: 1 } },

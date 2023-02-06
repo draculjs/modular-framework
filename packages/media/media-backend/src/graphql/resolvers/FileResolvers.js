@@ -1,5 +1,5 @@
 
-import { createFile, updateFile, deleteFile, findFile, fetchFiles, paginateFiles } from '../../services/FileService'
+import { createFile, updateFile, deleteFile, findFile, fetchFiles, paginateFiles, incrementFileHits } from '../../services/FileService'
 
 import { AuthenticationError, ForbiddenError } from "apollo-server-express";
 
@@ -47,6 +47,11 @@ export default {
 
             return await updateFile(user, file, input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
 
+        },
+        incrementFileHits: async(_, { fileID}, { user, rbac }) => {
+            if (!user) throw new AuthenticationError("Unauthenticated")
+
+            return await incrementFileHits(fileID)
         },
         fileDelete: (_, { id }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
