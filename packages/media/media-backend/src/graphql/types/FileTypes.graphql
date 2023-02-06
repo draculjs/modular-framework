@@ -79,6 +79,5 @@ type FileDelete{
 
 type Mutation {
     fileUpdate(input: FileUpdateInput, file: Upload): File
-    incrementFileHits(fileID:ID!): File!
     fileDelete(id: ID!): FileDelete!
 }

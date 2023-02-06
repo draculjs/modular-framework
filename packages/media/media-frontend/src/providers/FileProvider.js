@@ -38,13 +38,6 @@ class FileProvider {
             variables: {input, file}
         })
     }
-
-    incrementFileHits(fileID) {
-        return this.gqlc.mutate({
-            mutation: require('./gql/incrementFileHits.graphql'),
-            variables: {fileID}
-        })
-    }
     
      deleteFile(id) {
         return this.gqlc.mutate({

@@ -152,7 +152,6 @@ import {ShowField, ShowChipField} from '@dracul/common-frontend'
 import {DayjsMixin} from '@dracul/dayjs-frontend'
 import GroupsShow from '../GroupsShow'
 import UsersShow from '../UsersShow'
-import fileProvider from '../../providers/FileProvider'
 
 export default {
   name: "FileView",
@@ -171,7 +170,6 @@ export default {
   },
   mounted () {
     this.file.fileReplaces.forEach(element => element.date = this.getDateTimeFormat(element.date, true))
-    fileProvider.incrementFileHits(this.file.id)
   },
   computed: {
     isImage() {

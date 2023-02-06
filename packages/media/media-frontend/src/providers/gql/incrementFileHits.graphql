@@ -1,5 +1,0 @@
-mutation incrementFileHits($fileID: ID!){
-    incrementFileHits(fileID: $fileID){
-        hits
-    }
-}
