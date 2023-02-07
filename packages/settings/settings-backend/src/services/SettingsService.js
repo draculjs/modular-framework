@@ -121,13 +121,14 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 }
 
 
-export const createSettings = async function (authUser, {key, entityText, value, label, type, options, regex, entity, field}) {
+export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, options, regex, entity, field}) {
 
     const docValue = value ? value.toString() : null
 
     const doc = new Settings({
         key,
         entityText,
+        entityValue,
         value: docValue,
         label,
         type,

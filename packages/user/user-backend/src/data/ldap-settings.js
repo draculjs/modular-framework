@@ -7,9 +7,12 @@ export const LDAP_SETTINGS = [
     },
     {
         key: 'LDAP_DEFAULT_ROLE',
-        type: 'string',
+        type: 'dynamic',
         value: '',
-        label: {en: 'LDAP DEFAULT ROLE', es: 'LDAP DEFAULT ROLE', pt: 'LDAP DEFAULT ROLE'}
+        label: {en: 'LDAP DEFAULT ROLE', es: 'LDAP DEFAULT ROLE', pt: 'LDAP DEFAULT ROLE'},
+        entity: 'roles',
+        entityText: 'name',
+        entityValue: 'name'
     },
     {
         key: 'LDAP_DN',
