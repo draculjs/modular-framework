@@ -1,0 +1,6 @@
+query fetchEntityOptions($key: String!){
+  fetchEntityOptions(key: $key){
+        entityValue
+        entityText
+  }
+}

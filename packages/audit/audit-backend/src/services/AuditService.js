@@ -24,7 +24,7 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
         if (search) {
             qs = {
                 $or: [
-                    {action: {$regex: search, $options: 'i'}},
+                    {user: {$regex: search, $options: 'i'}},
                 ]
             }
         }

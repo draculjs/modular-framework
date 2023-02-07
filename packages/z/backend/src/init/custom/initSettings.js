@@ -2,13 +2,33 @@ import {createSettings, findSettingsByKey, updateSettings} from "@dracul/setting
 
 
 const settings = [
-    // {
-    //     key: 'ip',
-    //     type: 'string',
-    //     value: '',
-    //     label: {en: 'ip', es: 'ip', pt: 'ip'},
-    //     regex: ''
-    // }
+    {
+        key: 'dynamic',
+        type: 'dynamic',
+        value: '',
+        label: {en: 'Dynamic setting value', es: 'Dynamic setting value', pt: 'Dynamic setting value'},
+        entity: 'roles',
+        entityValue: '_id',
+        entityText: 'name',
+    },
+    {
+        key: 'dynamic2',
+        type: 'dynamic',
+        value: '',
+        label: {en: 'Dynamic setting value', es: 'Dynamic setting value', pt: 'Dynamic setting value'},
+        entity: 'roles',
+        entityValue: 'name',
+        entityText: '_id',
+    },
+    {
+        key: 'dynamic3',
+        type: 'dynamic',
+        value: '',
+        label: {en: 'Dynamic setting', es: 'Dynamic setting', pt: 'Dynamic setting'},
+        entity: 'roles',
+        entityValue: 'name',
+        entityText: 'name',
+    }
 ]
 
 export const initSettings = async function () {

@@ -37,32 +37,23 @@ export default {
       inputErrors: {},
       loading: false,
       form: {
-        id: this.item.id,
-        key: this.item.key,
         value: this.item.value,
-        label: {
-          en: this.item.label.en,
-          es: this.item.label.es,
-          pt: this.item.label.pt
-        }
       }
+      
     }
   },
   computed: {
-    getForm(){
-      const form = this.form
-      if (form.value) form.value = form.value.toString()
-
-      return form
+    getValue(){
+      return this.form.value ? this.form.value.toString() : this.form.value
     }
   },
   methods: {
     update() {
       if (this.$refs.form.validate()) {
         this.loading = true
-        SettingsProvider.updateSettings(this.getForm).then(r => {
+        SettingsProvider.settingValueUpdateByKey(this.item.key, this.getValue).then(r => {
               this.$store.dispatch('loadSettings')
-              this.$emit('itemUpdated', r.data.settingsUpdate)
+              this.$emit('itemUpdated', r.data.settingValueUpdateByKey)
               this.$emit('close')
             }
         ).catch(error => {

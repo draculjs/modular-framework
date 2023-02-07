@@ -11,6 +11,9 @@ query settingsFetch{
         type
         options
         regex
+        entity
+        entityValue
+        entityText
     }
 }
 

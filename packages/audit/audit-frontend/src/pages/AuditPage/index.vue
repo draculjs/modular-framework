@@ -7,7 +7,7 @@
                 <!-- FILTERS HERE -->
                </v-col>
                <v-col cols="12" sm="6" md="4">
-               <search-input  @search="performSearch" v-model="search" />
+               <search-input  @search="performSearch" v-model="search" label="audit.auditFilterByUser"/>
                </v-col>
            </v-row>
        </v-col>

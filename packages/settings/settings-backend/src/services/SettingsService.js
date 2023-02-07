@@ -1,6 +1,6 @@
 import Settings from '../models/SettingsModel'
+import {mongoose} from '@dracul/common-backend'
 import {UserInputError} from 'apollo-server-express'
-
 
 export const initializeSettings = async function (settings = []) {
 
@@ -121,17 +121,21 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 }
 
 
-export const createSettings = async function (authUser, {key, value, label, type, options, regex}) {
+export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, options, regex, entity, field}) {
 
     const docValue = value ? value.toString() : null
 
     const doc = new Settings({
         key,
+        entityText,
+        entityValue,
         value: docValue,
         label,
         type,
         options,
-        regex
+        regex,
+        entity,
+        field
     })
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -149,7 +153,7 @@ export const createSettings = async function (authUser, {key, value, label, type
     })
 }
 
-export const updateSettings = async function (authUser, id, {key, value, label, type, options, regex}) {
+export const updateSettings = async function (authUser, id, {key, entityText, entityValue, value, label, type, options, regex}) {
 
     const docValue = value ? value.toString() : null
 
@@ -157,6 +161,8 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
         Settings.findOneAndUpdate({_id: id},
             {
                 key,
+                entityText,
+                entityValue,
                 value: docValue,
                 label,
                 ...(type ? {type} : {}),
@@ -180,14 +186,11 @@ export const updateSettings = async function (authUser, id, {key, value, label, 
     })
 }
 
-export const updateSettingsByKey = async function (authUser, {key, value, label, type, options}) {
+export const updateSettingsByKey = async function (authUser, {key,  value}) {
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({key: key},
             {
-                value: value.toString(),
-                ...(label ? {label} : {}),
-                ...(type ? {type} : {}),
-                ...(options ? {options} : {}),
+                value: value.toString()
             },
             {new: true, runValidators: true, context: 'query'},
             (error, doc) => {
@@ -216,3 +219,10 @@ export const deleteSettings = function (id) {
     })
 }
 
+export async function fetchEntityOptions(key){
+    const setting = await findSettingsByKey(key)
+    const {entity, entityValue, entityText} = setting
+    const documentsFromCollection = await mongoose.connection.db.collection(entity).find({},{[entityValue]:1,[entityText]:1}).toArray()
+    const values = documentsFromCollection.map(document => ({entityValue: document[entityValue], entityText: document[entityText]}))
+    return values
+}

@@ -39,7 +39,8 @@ const i18nMessages = {
             avatarChange: 'user {username} has modified his avatar',
 
             failedLogins: 'Failed logins',
-            nofailedLogins: 'No failed logins '
+            nofailedLogins: 'No failed logins ',
+            auditFilterByUser: 'Filter by user'
         }    
     },
     es: {
@@ -81,7 +82,8 @@ const i18nMessages = {
             avatarChange: 'usuario {username} ha modificado su avatar',
 
             failedLogins: 'Inicios de sesión fallidos',
-            nofailedLogins: 'Sin inicios de sesión fallidos'
+            nofailedLogins: 'Sin inicios de sesión fallidos',
+            auditFilterByUser: 'Filtrar por usuario'
         }
     },
     pt: {
@@ -122,7 +124,8 @@ const i18nMessages = {
             userActivated: 'Usuário {username} ativou sua conta',
             avatarChange: 'Usuário {username} mudou sua avatar',
             failedLogins: 'Logins com falha',
-            nofailedLogins: 'Sem logins com falha'
+            nofailedLogins: 'Sem logins com falha',
+            auditFilterByUser: 'Filtrar por usuario'
         }
     }
     
