@@ -1,7 +1,0 @@
-mutation settingsDelete($id: ID!){
-    settingsDelete(id: $id){
-        id
-        success
-    }
-}
-
