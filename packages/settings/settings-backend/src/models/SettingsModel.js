@@ -7,7 +7,6 @@ const Schema = mongoose.Schema
 const SettingsSchema = new Schema({
 
     key: {type: String, required: true, unique: true},
-    text: {type: String, required: false, unique: false},
     value: {type: String, required: false, unique: false},
     label: {
         en: {type: String, required: false},
@@ -18,7 +17,8 @@ const SettingsSchema = new Schema({
     options: [{type: String}],
     regex: {type: String},
     entity: {type: String, required: false},
-    field: {type: String, required: false},
+    entityValue: {type: String, required: false},
+    entityText: {type: String, required: false, unique: false},
 })
 
 SettingsSchema.plugin(mongoosePaginate);

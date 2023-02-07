@@ -2,7 +2,6 @@ query settingsFindByKey($key:String!){
     settingsFindByKey(key:$key){
         id
         key
-        text
         value
         label{
             en
@@ -13,6 +12,7 @@ query settingsFindByKey($key:String!){
         options
         regex
         entity
-        field
+        entityValue
+        entityText
     }
 }

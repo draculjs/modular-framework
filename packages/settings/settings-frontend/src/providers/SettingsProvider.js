@@ -40,25 +40,11 @@ class SettingsProvider {
         })
     }
 
-    fetchEntityOptions(entity, field, text) {
+     fetchEntityOptions(key) {
         return this.gqlc.query({
             query: require('./gql/fetchEntityOptions.graphql'),
-            variables: {entity, field, text},
+            variables: {key},
             fetchPolicy: "network-only"
-        })
-    }
-
-    createSettings(form) {
-        return this.gqlc.mutate({
-            mutation: require('./gql/settingsCreate.graphql'),
-            variables: form
-        })
-    }
-
-    updateSettings(form) {
-        return this.gqlc.mutate({
-            mutation: require('./gql/settingsUpdate.graphql'),
-            variables: form
         })
     }
 
@@ -69,12 +55,7 @@ class SettingsProvider {
         })
     }
 
-     deleteSettings(id) {
-        return this.gqlc.mutate({
-            mutation: require('./gql/settingsDelete.graphql'),
-            variables: {id}
-        })
-    }
+
 
 }
 

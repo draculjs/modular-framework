@@ -4,28 +4,31 @@
       <v-col cols="12">
         <!--string-->
         <v-text-field v-if="!item.type || item.type === 'string' || item.type === 'password'"
-          prepend-icon="text_snippet" name="value" v-model="form.value" :label="form.label[getLanguage]"
-          :placeholder="form.label[getLanguage]" color="secondary" :rules="validateRegex"></v-text-field>
+          prepend-icon="text_snippet" :name="item.key" v-model="form.value" :label="item.label[getLanguage]"
+          :placeholder="item.label[getLanguage]" color="secondary" :rules="validateRegex"></v-text-field>
 
         <!--number-->
-        <v-text-field v-if="item.type === 'number'" prepend-icon="text_snippet" name="value" type="number"
-          v-model.number="form.value" :label="form.label[getLanguage]" :placeholder="form.label[getLanguage]"
+        <v-text-field v-if="item.type === 'number'" prepend-icon="text_snippet" :name="item.key" type="number"
+          v-model.number="form.value" :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
           color="secondary"></v-text-field>
 
         <!--boolean-->
-        <v-checkbox v-if="item.type === 'boolean'" prepend-icon="text_snippet" name="value" value="enable"
-          v-model="form.value" :label="form.label[getLanguage]" :placeholder="form.label[getLanguage]"
+        <v-checkbox v-if="item.type === 'boolean'" prepend-icon="text_snippet" :name="item.key" value="enable"
+          v-model="form.value" :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
           color="secondary"></v-checkbox>
 
 
         <!--enum-->
-        <v-select v-if="item.type === 'enum'" prepend-icon="text_snippet" name="value" :items="item.options"
-          v-model="form.value" :label="form.label[getLanguage]" :placeholder="form.label[getLanguage]"
+        <v-select v-if="item.type === 'enum'" prepend-icon="text_snippet" :name="item.key" :items="item.options"
+          v-model="form.value" :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
           color="secondary"></v-select>
 
         <!--dynamic-->
-        <v-select v-if="item.type === 'dynamic'" prepend-icon="list" name="text" item-value="entityValue"
-          :items="this.entityOptions" v-model="form.value" placeholder="Options" color="secondary"></v-select>
+        <v-select v-if="item.type === 'dynamic'" prepend-icon="list" 
+          :name="item.key" item-text="entityText" item-value="entityValue"
+          :items="this.entityOptions" v-model="form.value"
+          :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
+           color="secondary"></v-select>
 
       </v-col>
     </v-row>
@@ -76,23 +79,23 @@ export default {
       deep: true
     }
   },
+  mounted() {
+    if(this.item.type === 'dynamic'){
+      this.fetchEntityOptions()
+    }
+  },
   methods: {
     validate() {
       return this.$refs.form.validate()
     },
-    async setEntityOptions(item) {
-      const { entity, field, text } = item
+    async fetchEntityOptions() {
 
-      SettingsProvider.fetchEntityOptions(entity, field, text).then(response => {
-        response.data['fetchEntityFieldValues'].forEach(item => {
-          this.entityOptions.push(item)
-        })
+      SettingsProvider.fetchEntityOptions(this.item.key).then(response => {
+        this.entityOptions = response.data.fetchEntityOptions
       })
     }
   },
-  mounted() {
-    this.setEntityOptions(this.item);
-  },
+
 }
 </script>
 

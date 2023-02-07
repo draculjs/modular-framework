@@ -2,7 +2,6 @@ query settingsFetch{
     settingsFetch{
         id
         key
-        text
         value
         label{
             en
@@ -13,7 +12,8 @@ query settingsFetch{
         options
         regex
         entity
-        field
+        entityValue
+        entityText
     }
 }
 

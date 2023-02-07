@@ -1,6 +1,6 @@
-query fetchEntityFieldValues($entity: String!, $field: String!, $text: String!){
-  fetchEntityFieldValues(entity: $entity, field: $field, text: $text){
-    text
-    entityValue
+query fetchEntityOptions($key: String!){
+  fetchEntityOptions(key: $key){
+        entityValue
+        entityText
   }
 }

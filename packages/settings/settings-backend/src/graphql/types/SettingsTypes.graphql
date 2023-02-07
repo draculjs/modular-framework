@@ -1,14 +1,14 @@
 type Settings{
     id: ID!
     key: String!
-    text: String
     value: String
     label: MultiLang!
     type: String
     options: [String]
     regex: String
     entity: String
-    field: String
+    entityText: String
+    entityValue: String
 }
 
 type SettingsPaginated{
@@ -18,7 +18,7 @@ type SettingsPaginated{
 }
 
 type entityFieldValues{
-    text: String!
+    entityText: String!
     entityValue: String!
 }
 
@@ -27,18 +27,10 @@ type Query {
     settingsFindByKey(key:String!): Settings
     settingsFetch: [Settings]
     settingsPaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): SettingsPaginated
-    fetchEntityFieldValues(entity: String!, field: String!, text: String!): [entityFieldValues!]
+    fetchEntityOptions(key: String!): [entityFieldValues!]
 }
 
-input SettingsInput{
-    key: String!
-    text: String
-    value: String
-    label: MultiLangInput!
-    type: String
-    options: [String]
-    regex: String
-}
+
 
 type SettingsDelete{
     id: ID!
@@ -47,8 +39,5 @@ type SettingsDelete{
 
 
 type Mutation {
-    settingsCreate(input: SettingsInput): Settings
-    settingsUpdate(id: ID!, input: SettingsInput): Settings
     settingValueUpdateByKey(key:String!, value:String): Settings
-    settingsDelete(id: ID!): SettingsDelete!
 }

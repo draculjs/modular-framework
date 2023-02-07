@@ -1,8 +1,7 @@
-mutation settingsUpdate($id: ID!, $key:String!, $text:String, $value:String, $label:MultiLangInput!){
-    settingsUpdate(id: $id, input: {key: $key, text:$text, value: $value, label: $label }){
+mutation settingsUpdate($id: ID!, $value:String){
+    settingsUpdate(id: $id, value: $value){
         id
         key
-        text
         value
         label{
             en
@@ -13,7 +12,8 @@ mutation settingsUpdate($id: ID!, $key:String!, $text:String, $value:String, $la
         options
         regex
         entity
-        field
+        entityValue
+        entityText
     }
 }
 

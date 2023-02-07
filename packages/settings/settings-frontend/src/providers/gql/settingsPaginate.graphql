@@ -5,7 +5,6 @@ query settingsPaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $o
         items{
             id
             key
-            text
             value
             label{
                 en
@@ -16,7 +15,8 @@ query settingsPaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $o
             options
             regex
             entity
-            field
+            entityValue
+            entityText
         }
     }
 }

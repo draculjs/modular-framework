@@ -121,13 +121,13 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 }
 
 
-export const createSettings = async function (authUser, {key, text, value, label, type, options, regex, entity, field}) {
+export const createSettings = async function (authUser, {key, entityText, value, label, type, options, regex, entity, field}) {
 
     const docValue = value ? value.toString() : null
 
     const doc = new Settings({
         key,
-        text,
+        entityText,
         value: docValue,
         label,
         type,
@@ -152,7 +152,7 @@ export const createSettings = async function (authUser, {key, text, value, label
     })
 }
 
-export const updateSettings = async function (authUser, id, {key, text, value, label, type, options, regex}) {
+export const updateSettings = async function (authUser, id, {key, entityText, entityValue, value, label, type, options, regex}) {
 
     const docValue = value ? value.toString() : null
 
@@ -160,7 +160,8 @@ export const updateSettings = async function (authUser, id, {key, text, value, l
         Settings.findOneAndUpdate({_id: id},
             {
                 key,
-                text,
+                entityText,
+                entityValue,
                 value: docValue,
                 label,
                 ...(type ? {type} : {}),
@@ -184,15 +185,11 @@ export const updateSettings = async function (authUser, id, {key, text, value, l
     })
 }
 
-export const updateSettingsByKey = async function (authUser, {key, text, value, label, type, options}) {
+export const updateSettingsByKey = async function (authUser, {key,  value}) {
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({key: key},
             {
-                text,
-                value: value.toString(),
-                ...(label ? {label} : {}),
-                ...(type ? {type} : {}),
-                ...(options ? {options} : {}),
+                value: value.toString()
             },
             {new: true, runValidators: true, context: 'query'},
             (error, doc) => {
@@ -221,9 +218,10 @@ export const deleteSettings = function (id) {
     })
 }
 
-export async function fetchEntityFieldValues(entity, field, text){
-    const documentsFromCollection = await mongoose.connection.db.collection(entity).find({}).toArray()
-    const values = documentsFromCollection.map(document => ({entityValue: document[field], text: document[text]}))
-    
+export async function fetchEntityOptions(key){
+    const setting = await findSettingsByKey(key)
+    const {entity, entityValue, entityText} = setting
+    const documentsFromCollection = await mongoose.connection.db.collection(entity).find({},{[entityValue]:1,[entityText]:1}).toArray()
+    const values = documentsFromCollection.map(document => ({entityValue: document[entityValue], entityText: document[entityText]}))
     return values
 }

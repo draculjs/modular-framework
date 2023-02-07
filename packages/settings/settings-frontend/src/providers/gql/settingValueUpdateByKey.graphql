@@ -2,7 +2,6 @@ mutation settingValueUpdateByKey($key:String!, $value:String){
     settingValueUpdateByKey(key: $key, value: $value){
         id
         key
-        text
         value
         label{
             en
@@ -13,7 +12,8 @@ mutation settingValueUpdateByKey($key:String!, $value:String){
         options
         regex
         entity
-        field
+        entityValue
+        entityText
     }
 }
 
