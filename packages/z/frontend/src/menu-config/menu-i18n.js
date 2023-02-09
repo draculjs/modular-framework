@@ -6,6 +6,7 @@ const messages = {
             customization: 'Customization',
             administration: 'Administration',
             settings: 'Ajustes',
+            audit: 'Audit',
         }
     },
     es: {
@@ -14,6 +15,7 @@ const messages = {
             customization: 'Personalización',
             administration: 'Administración',
             settings: 'Ajustes',
+            audit: 'Auditoria',
 
         }
     },
@@ -22,7 +24,8 @@ const messages = {
             userdashboard: 'Painel de controle',
             customization: 'Costumização',
             administration: 'administração',
-            settings: 'Ajustes'
+            settings: 'Ajustes',
+            audit: 'Audit'
         }
     }
 }
