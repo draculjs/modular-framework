@@ -21,70 +21,57 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
 
     function qs(search, filters) {
         let qs = {}
+
         if (search) {
             qs = {
                 $or: [
-                    {user: {$regex: search, $options: 'i'}},
+                    {action: {$regex: search, $options: 'i'}},
                 ]
             }
-        }
-
-        if (filters) {
-
-            filters.forEach(filter => {
-                switch (filter.operator) {
-                    case '=':
-                    case 'eq':
-                        qs[filter.field] = { ...qs[filter.field], $eq: filter.value }
-                        break;
-                    case 'contain':
-                    case 'regex':
-                        qs[filter.field] = { ...qs[filter.field], $regex: filter.value }
-                        break;
-                    case '>':
-                    case 'gt':
-                        qs[filter.field] = { ...qs[filter.field], $gt: filter.value }
-                        break;
-                    case '<':
-                    case 'lt':
-                        qs[filter.field] = { ...qs[filter.field], $lt: filter.value }
-                        break;
-                    case '>=':
-                    case 'gte':
-                        qs[filter.field] = { ...qs[filter.field], $gte: filter.value }
-                        break;
-                    case '<=':
-                    case 'lte':
-                        qs[filter.field] = { ...qs[filter.field], $lte: filter.value }
-                        break;
-                    default:
-                        qs[filter.field] = { ...qs[filter.field], $eq: filter.value }
-                }
-            })
-
         }
 
         return qs
     }
 
-    function getSort(orderBy, orderDesc) {
-        if (orderBy) {
-            return (orderDesc ? '-' : '') + orderBy
-        } else {
-            return null
+    function qsFilter(filters) {
+        if (filters) {
+            const qsFilter = {}
+            
+            filters.forEach(({ field, operator, value }) => {
+                switch (field) {
+                    case 'user':
+                        (value) && (qsFilter.user = { [operator]: value })
+                        break
+                    case 'action':
+                        (value) && (qsFilter.action = { [operator]: value, $options: "i" })
+                        break
+                    case 'resource':
+                        value && (qsFilter.resource = { [operator]: value, $options: "i" })
+                        break
+                }
+            })
+
+            return qsFilter
         }
     }
 
-    let query = qs(search, filters)
-    let populate = ['user']
-    let sort = getSort(orderBy, orderDesc)
-    let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
+    function getSort(orderBy, orderDesc) {
+        return (orderBy) ? (orderDesc ? '-' : '') + orderBy : null
+    }
+
+    const populate = ['user']
+    const sort = getSort(orderBy, orderDesc)
+
+    const query = {
+        ...qs(search),
+        ...qsFilter(filters)
+    }
+    const params = { page: pageNumber, limit: itemsPerPage, populate, sort }
 
     return new Promise((resolve, reject) => {
         Audit.paginate(query, params).then(result => {
             resolve({ items: result.docs, totalItems: result.totalDocs, page: result.page })
-        }
-        ).catch(err => reject(err))
+        }).catch(err => reject(err))
     })
 }
 
