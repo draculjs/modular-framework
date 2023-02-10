@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "author": "Cristian Incarnato & Dracul Team",
   "main": "./lib/index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "dependencies": {
     "@dracul/common-backend": "^1.15.0",
     "@dracul/logger-backend": "^1.7.12",
-    "@dracul/user-backend": "^1.16.0"
+    "@dracul/user-backend": "^1.16.1"
   },
   "peerDependencies": {
     "apollo-server-express": "^2.25.3",
