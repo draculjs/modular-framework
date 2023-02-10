@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card class="fill-height">
         <v-card-title>
             {{ this.$t('audit.title') }}
         </v-card-title>
@@ -8,7 +8,7 @@
             {{ this.$t('audit.subtitle') }}
         </v-card-subtitle>
 
-            <v-row row wrap>
+            <v-row align-content="space-between" justify="space-between" style="height: 90%;">
     
                 <v-col cols="12" >
                             <audit-filters

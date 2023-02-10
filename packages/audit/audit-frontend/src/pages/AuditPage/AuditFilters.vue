@@ -7,7 +7,7 @@
           <v-col cols="12" class="py-0">
             <v-row>
 
-                <v-col cols="12" md="6" sm="6">
+                <v-col cols="12" md="4" sm="4">
                     <v-text-field
                     v-model="filters[0].value"
                     :label="$t('audit.action')"
@@ -18,7 +18,7 @@
                     />
                 </v-col>
 
-                <v-col cols="12" md="6" sm="6">
+                <v-col cols="12" md="4" sm="4">
                   <v-text-field
                     v-model="filters[2].value"
                     :label="$t('audit.labels.targetResource')"
@@ -29,12 +29,13 @@
                   />
                 </v-col>
 
-                <v-col cols="12" md="12" sm="6">
+                <v-col cols="12" md="4" sm="4">
                   <user-autocomplete
                       v-model="filters[1].value"
                       :label="$t('audit.filterByUser')"
                       solo
                       clearable
+                      chips
                       class="elevation-0"
                   />
                 </v-col>
