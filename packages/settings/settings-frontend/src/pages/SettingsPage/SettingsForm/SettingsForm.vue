@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" autocomplete="off">
+  <v-form ref="form" autocomplete="off" @submit.prevent>
     <v-row>
       <v-col cols="12">
         <!--string-->
@@ -24,7 +24,7 @@
           color="secondary"></v-select>
 
         <!--dynamic-->
-        <v-select v-if="item.type === 'dynamic'" prepend-icon="list" 
+        <v-select v-if="item.type === 'dynamic'" prepend-icon="list"
           :name="item.key" item-text="entityText" item-value="entityValue"
           :items="this.entityOptions" v-model="form.value"
           :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"

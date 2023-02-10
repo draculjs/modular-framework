@@ -29,7 +29,7 @@ export const initializeSetting = async function (setting) {
 
     let settingDoc = await findSettingsByKey(setting.key)
     if (!settingDoc) settingDoc = await createSettings(null, setting)
-    
+
     return settingDoc
 }
 
@@ -188,9 +188,12 @@ export const updateSettings = async function (authUser, id, {key, entityText, en
 
 export const updateSettingsByKey = async function (authUser, {key,  value}) {
     return new Promise((resolve, rejects) => {
+
+        const docValue = value ? value.toString() : null
+
         Settings.findOneAndUpdate({key: key},
             {
-                value: value.toString()
+                value: docValue
             },
             {new: true, runValidators: true, context: 'query'},
             (error, doc) => {
