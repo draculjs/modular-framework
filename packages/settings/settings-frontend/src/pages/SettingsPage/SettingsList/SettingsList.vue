@@ -5,12 +5,13 @@
       <search-input @search="performSearch" v-model="search"/>
     </v-col>
 
-    <v-col cols="12">
-
-      <v-data-table
-          class="mt-3"
-          :headers="headers"
-          :items="items"
+    <v-col cols="12" v-for="group in groups" :key="group.id">
+      <v-card v-if="group.items.length > 0">
+        <v-card-title>{{ group.name }}</v-card-title>
+        <v-data-table v-data-table
+            class="mt-3"
+            :headers="headers"
+            :items="group.items"
           :search="search"
           :single-expand="false"
           :server-items-length="totalItems"
@@ -63,6 +64,7 @@
         </template>
 
       </v-data-table>
+      </v-card>
     </v-col>
   </v-row>
 </template>
@@ -78,6 +80,7 @@ export default {
 
   data() {
     return {
+      groups: [],
       items: [],
       totalItems: null,
       loading: false,
@@ -110,40 +113,47 @@ export default {
       return this.$store.getters.hasPermission('SETTINGS_UPDATE')
     }
   },
-  created() {
-    this.fetch()
+  async created() {
+    await this.fetch()
   },
   methods: {
     performSearch() {
       this.pageNumber = 1
       this.fetch()
     },
-    fetch() {
-      this.loading = true
-      SettingsProvider.paginateSettings(
+    async fetch() {
+      try {
+        this.loading = true
+        const { data: { settingsPaginate: { items, totalItems } } } = await SettingsProvider.paginateSettings(
           this.pageNumber,
           this.itemsPerPage,
           this.search,
           this.getOrderBy,
-          this.getOrderDesc
-      ).then(r => {
-        this.items = r.data.settingsPaginate.items
-        this.totalItems = r.data.settingsPaginate.totalItems
-      }).catch(err => {
-        console.error(err)
-      }).finally(() => this.loading = false)
-    },
-    getCensoredPassword(pass){
-      let censoredPass = ''
+          this.getOrderDesc)
 
-      for (let i = 0; i < pass.length; i++) {
-        censoredPass += '*'
+        this.items = items
+        this.totalItems = totalItems
+        const { data : { fetchSettingsGroup } } = await SettingsProvider.fetchSettingsGroup()
+        this.groups = fetchSettingsGroup.map(({_id, name, settings}) => {
+          const newGroup = {}
+          newGroup.id = _id
+          newGroup.name = name
+          newGroup.totalItems = settings.length
+          newGroup.items = []
+          settings.forEach(setting => {
+            this.items.forEach(item => {
+              if(item.key == setting) newGroup.items.push(item)
+            })
+          })
+          return newGroup
+        })
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
       }
-
-      return censoredPass
     }
   }
-
 }
 </script>
 

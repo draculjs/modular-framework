@@ -1,0 +1,6 @@
+query fetchSettingsGroup{
+    fetchSettingsGroup{
+        name
+        settings
+    }
+}
