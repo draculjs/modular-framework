@@ -4,7 +4,8 @@ import {
     paginateSettings,
     findSettingsByKey,
     updateSettingsByKey,
-    fetchEntityOptions
+    fetchEntityOptions,
+    fetchSettingsGroup
 } from '../../services/SettingsService'
 
 import {AuthenticationError, ForbiddenError} from "apollo-server-express";
@@ -33,6 +34,9 @@ export default {
         },
         fetchEntityOptions(_, {key}, __) {
             return fetchEntityOptions(key)
+        },
+        async fetchSettingsGroup(){
+            return await fetchSettingsGroup()
         }
 
     },
