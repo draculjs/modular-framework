@@ -1,4 +1,5 @@
 import Settings from '../models/SettingsModel'
+import SettingsGroup from '../models/SettingsGroupModel'
 import {mongoose} from '@dracul/common-backend'
 import {UserInputError} from 'apollo-server-express'
 
@@ -22,11 +23,9 @@ export const initializeSettings = async function (settings = []) {
 
 
 export const initializeSetting = async function (setting) {
-
     if(!(setting instanceof Object)) throw new Error('Setting must be an Object')
     if(!setting.key) throw new Error('Setting must have a key')
     if(!setting.label) throw new Error('Setting must have a label')
-
     let settingDoc = await findSettingsByKey(setting.key)
     if (!settingDoc) settingDoc = await createSettings(null, setting)
 
@@ -121,7 +120,7 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 }
 
 
-export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, options, regex, entity, field}) {
+export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, group: groupName, options, regex, entity, field}) {
 
     const docValue = value ? value.toString() : null
 
@@ -137,6 +136,35 @@ export const createSettings = async function (authUser, {key, entityText, entity
         entity,
         field
     })
+    
+    let group = await SettingsGroup.findOne({name: groupName})
+
+    if(group) doc.group = group._id
+    else {
+        if(groupName){
+            const newGroup = new SettingsGroup({
+                name: groupName,
+                settings: [key]
+            })
+            await newGroup.save()
+        }
+        else{
+            const groupGeneral = await SettingsGroup.findOne({name: 'General'})
+            if(groupGeneral){
+                groupGeneral.settings.push(key)
+                await groupGeneral.save()
+                doc.group = groupGeneral._id
+            }else{
+                const newGroupGeneral = new SettingsGroup({
+                    settings: [key]
+                })
+                await newGroupGeneral.save()
+                doc.group = newGroupGeneral._id
+            }
+        }
+    }
+
+    
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
         doc.save((error => {
@@ -228,4 +256,10 @@ export async function fetchEntityOptions(key){
     const documentsFromCollection = await mongoose.connection.db.collection(entity).find({},{[entityValue]:1,[entityText]:1}).toArray()
     const values = documentsFromCollection.map(document => ({entityValue: document[entityValue], entityText: document[entityText]}))
     return values
+}
+
+//Settings Group Services
+
+export const fetchSettingsGroup = async() => {
+    return await SettingsGroup.find({})
 }

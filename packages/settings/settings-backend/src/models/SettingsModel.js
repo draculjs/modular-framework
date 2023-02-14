@@ -2,10 +2,9 @@ import {mongoose} from '@dracul/common-backend';
 
 const mongoosePaginate = require('mongoose-paginate-v2');
 const uniqueValidator = require('mongoose-unique-validator');
-
 const Schema = mongoose.Schema
-const SettingsSchema = new Schema({
 
+const SettingsSchema = new Schema({
     key: {type: String, required: true, unique: true},
     value: {type: String, required: false, unique: false},
     label: {
@@ -15,6 +14,7 @@ const SettingsSchema = new Schema({
     },
     type: {type: String, default: "string", enum: ['string','number','enum','boolean', 'password', 'dynamic'], required: false, unique: false},
     options: [{type: String}],
+    group: {type: String},
     regex: {type: String},
     entity: {type: String, required: false},
     entityValue: {type: String, required: false},
@@ -27,3 +27,7 @@ SettingsSchema.plugin(uniqueValidator, {message: 'validation.unique'})
 const Settings = mongoose.model('Settings', SettingsSchema)
 
 module.exports = Settings
+
+export {
+    SettingsSchema
+}
