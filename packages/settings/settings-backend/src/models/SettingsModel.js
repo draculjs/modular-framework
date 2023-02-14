@@ -13,6 +13,7 @@ const SettingsSchema = new Schema({
         es: {type: String, required: false},
         pt: {type: String, required: false},
     },
+    group: {type: String, required: true},
     type: {type: String, default: "string", enum: ['string','number','enum','boolean', 'password', 'dynamic'], required: false, unique: false},
     options: [{type: String}],
     regex: {type: String},

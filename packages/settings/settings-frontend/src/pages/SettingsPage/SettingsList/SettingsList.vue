@@ -5,64 +5,66 @@
       <search-input @search="performSearch" v-model="search"/>
     </v-col>
 
-    <v-col cols="12">
+    <v-col cols="12" v-for="group in groups" :key="group.id">
+      <v-card v-if="group.items.length > 0">
+        <v-card-title>{{ group.name }}</v-card-title>
+          <v-data-table v-data-table
+            class="mt-3"
+            :headers="headers"
+            :items="group.items"
+            :search="search"
+            :single-expand="false"
+            :server-items-length="totalItems"
+            :loading="loading"
+            :page.sync="pageNumber"
+            :items-per-page.sync="itemsPerPage"
+            :sort-by.sync="orderBy"
+            :sort-desc.sync="orderDesc"
+            :footer-props="{ itemsPerPageOptions: [5, 10, 25, 50] }"
+            @update:page="fetch"
+            @update:sort-by="fetch"
+            @update:sort-desc="fetch"
+            @update:items-per-page="fetch"
+        >
 
-      <v-data-table
-          class="mt-3"
-          :headers="headers"
-          :items="items"
-          :search="search"
-          :single-expand="false"
-          :server-items-length="totalItems"
-          :loading="loading"
-          :page.sync="pageNumber"
-          :items-per-page.sync="itemsPerPage"
-          :sort-by.sync="orderBy"
-          :sort-desc.sync="orderDesc"
-          :footer-props="{ itemsPerPageOptions: [5, 10, 25, 50] }"
-          @update:page="fetch"
-          @update:sort-by="fetch"
-          @update:sort-desc="fetch"
-          @update:items-per-page="fetch"
-      >
+          <template v-slot:item.value="{item}">
 
-        <template v-slot:item.value="{item}">
+            <template v-if="item.type === 'boolean'">
+              <v-icon v-if="item.value === 'enable' " color="green">done</v-icon>
+              <v-icon v-else color="red">clear</v-icon>
+            </template>
 
-          <template v-if="item.type === 'boolean'">
-            <v-icon v-if="item.value === 'enable' " color="green">done</v-icon>
-            <v-icon v-else color="red">clear</v-icon>
+            <template v-else-if="item.type === 'password'">
+              {{getCensoredPassword(item.value)}}
+            </template>
+
+            <template v-else>
+              {{ item.value }}
+            </template>
+
           </template>
 
-          <template v-else-if="item.type === 'password'">
-            {{getCensoredPassword(item.value)}}
+
+          <template v-slot:item.label="{item}">
+            {{ item.label[getLanguage] }}
           </template>
 
-          <template v-else>
-            {{ item.value }}
+
+          <template slot="no-data">
+            <div class="text-xs-center" v-t="'common.noData'"></div>
           </template>
 
-        </template>
+          <template slot="loading">
+            <div class="text-xs-center" v-t="'common.loading'"></div>
+          </template>
 
+          <template v-slot:item.action="{ item }">
+            <show-button @click="$emit('show', item)"/>
+            <edit-button v-if="userCanEditSettings" @click="$emit('update', item)"/>
+          </template>
 
-        <template v-slot:item.label="{item}">
-          {{ item.label[getLanguage] }}
-        </template>
-
-
-        <template slot="no-data">
-          <div class="text-xs-center" v-t="'common.noData'"></div>
-        </template>
-
-        <template slot="loading">
-          <div class="text-xs-center" v-t="'common.loading'"></div>
-        </template>
-
-        <template v-slot:item.action="{ item }">
-          <show-button @click="$emit('show', item)"/>
-          <edit-button v-if="userCanEditSettings" @click="$emit('update', item)"/>
-        </template>
-
-      </v-data-table>
+        </v-data-table>
+      </v-card>
     </v-col>
   </v-row>
 </template>
@@ -78,6 +80,7 @@ export default {
 
   data() {
     return {
+      groups: [],
       items: [],
       totalItems: null,
       loading: false,
@@ -110,40 +113,46 @@ export default {
       return this.$store.getters.hasPermission('SETTINGS_UPDATE')
     }
   },
-  created() {
-    this.fetch()
+  async created() {
+    await this.fetch()
   },
   methods: {
     performSearch() {
       this.pageNumber = 1
       this.fetch()
     },
-    fetch() {
-      this.loading = true
-      SettingsProvider.paginateSettings(
+    async fetch() {
+      try {
+        this.loading = true
+        const { data: { settingsPaginate: { items, totalItems } } } = await SettingsProvider.paginateSettings(
           this.pageNumber,
           this.itemsPerPage,
           this.search,
           this.getOrderBy,
-          this.getOrderDesc
-      ).then(r => {
-        this.items = r.data.settingsPaginate.items
-        this.totalItems = r.data.settingsPaginate.totalItems
-      }).catch(err => {
-        console.error(err)
-      }).finally(() => this.loading = false)
-    },
-    getCensoredPassword(pass){
-      let censoredPass = ''
-
-      for (let i = 0; i < pass.length; i++) {
-        censoredPass += '*'
+          this.getOrderDesc)
+        this.items = items
+        this.totalItems = totalItems
+        const { data : { fetchSettingsGroup } } = await SettingsProvider.fetchSettingsGroup()
+        this.groups = fetchSettingsGroup.map(({_id, name, settings}) => {
+          const newGroup = {}
+          newGroup.id = _id
+          newGroup.name = name
+          newGroup.totalItems = settings.length
+          newGroup.items = []
+          settings.forEach(setting => {
+            this.items.forEach(item => {
+              if(item.key == setting) newGroup.items.push(item)
+            })
+          })
+          return newGroup
+        })
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
       }
-
-      return censoredPass
     }
   }
-
 }
 </script>
 

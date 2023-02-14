@@ -4,6 +4,7 @@ type Settings{
     value: String
     label: MultiLang!
     type: String
+    group: String
     options: [String]
     regex: String
     entity: String
@@ -22,12 +23,18 @@ type entityFieldValues{
     entityValue: String!
 }
 
+type fetchSettingsGroup{
+    name: String!
+    settings: [String]!
+}
+
 type Query {
     settingsFind(id:ID!): Settings
     settingsFindByKey(key:String!): Settings
     settingsFetch: [Settings]
     settingsPaginate( pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): SettingsPaginated
     fetchEntityOptions(key: String!): [entityFieldValues!]
+    fetchSettingsGroup: [fetchSettingsGroup]
 }
 
 
