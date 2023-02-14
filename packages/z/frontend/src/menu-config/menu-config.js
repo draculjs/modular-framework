@@ -77,7 +77,7 @@ export default [
                 text: 'menu.audit',
                 link: { name: "AuditPage" },
                 panel: false,
-                permission: 'AUDIT_SHOW'
+                permission: 'AUDIT_MENU'
             },
 
         ]

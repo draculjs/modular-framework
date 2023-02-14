@@ -5,7 +5,7 @@ const {
 } =  require("../../services/AuditService.js");
 
 const {
-    AUDIT_SHOW
+    AUDIT_SHOW,
 } =  require("../../permissions/AuditPermissions.js");
 
 const {AuthenticationError, ForbiddenError} = require("apollo-server-express");

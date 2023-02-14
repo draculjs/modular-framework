@@ -58,6 +58,7 @@ const initService = async () => {
 
     await InitService.initPermissions([
         AuditPermissions.AUDIT_SHOW,
+        AuditPermissions.AUDIT_MENU,
     ])
 
     //Init settings
