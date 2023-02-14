@@ -6,7 +6,6 @@ query settingsPaginate( $pageNumber: Int, $itemsPerPage:Int, $search: String, $o
             id
             key
             value
-            group
             label{
                 en
                 es

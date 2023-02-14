@@ -24,9 +24,12 @@
 </template>
 <script>
     import {ShowField} from '@dracul/common-frontend'
+
+
     export default {
         name: 'SettingsShowData',
         components: {ShowField},
+
         props: {
             item: {type: Object, required: true}
         }

@@ -3,7 +3,6 @@ mutation settingValueUpdateByKey($key:String!, $value:String){
         id
         key
         value
-        group
         label{
             en
             es

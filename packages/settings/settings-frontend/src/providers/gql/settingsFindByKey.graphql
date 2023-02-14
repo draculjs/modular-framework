@@ -3,7 +3,6 @@ query settingsFindByKey($key:String!){
         id
         key
         value
-        group
         label{
             en
             es
