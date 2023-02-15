@@ -1,6 +1,5 @@
 import Settings from '../models/SettingsModel'
 import {mongoose} from '@dracul/common-backend'
-import SettingsGroup from '../models/SettingsGroupModel'
 import {UserInputError} from 'apollo-server-express'
 
 export const initializeSettings = async function (settings = []) {
@@ -121,8 +120,69 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
     })
 }
 
+export const createOrUpdateSettings = async (authUser, {key, entityText, entityValue, value, label, type, group, options, regex, entity, field}) => {
+    const setting = await Settings.findOne({key})
+    if(setting){
+        setting.entityText = entityText
+        setting.entityValue = entityValue
+        setting.label = label
+        setting.group = group
+        setting.type = type
+        setting.options = options
+        setting.regex = regex
+        setting.entity = entity
+        setting.field = field
 
-export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, group: groupName, options, regex, entity, field}) {
+        return new Promise((resolve, rejects) => {
+            setting.save((error => {
+    
+                if (error) {
+                    if (error.name == "ValidationError") {
+                        return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                    }
+                    return rejects(error)
+                }
+    
+                resolve(setting)
+            }))
+        })
+    }
+
+    const docValue = value ? value.toString() : null
+
+    const newSetting = new Settings({
+        key,
+        entityText,
+        entityValue,
+        value: docValue,
+        label,
+        group: group ? group : 'General',
+        type,
+        options,
+        regex,
+        entity,
+        field
+    })
+
+    newSetting.id = newSetting._id
+
+    return new Promise((resolve, rejects) => {
+        newSetting.save((error => {
+
+            if (error) {
+                if (error.name == "ValidationError") {
+                    return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+                }
+                return rejects(error)
+            }
+
+            resolve(newSetting)
+        }))
+    })
+}
+
+
+export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, group, options, regex, entity, field}) {
 
     const docValue = value ? value.toString() : null
 
@@ -132,40 +192,13 @@ export const createSettings = async function (authUser, {key, entityText, entity
         entityValue,
         value: docValue,
         label,
+        group: group ? group : 'General',
         type,
         options,
         regex,
         entity,
         field
     })
-
-    let group = await SettingsGroup.findOne({name: groupName})
-
-    if(group) doc.group = group._id
-    else {
-        if(groupName){
-            const newGroup = new SettingsGroup({
-                name: groupName,
-                settings: [key]
-            })
-            await newGroup.save()
-            doc.group = newGroup._id
-        }
-        else{
-            const groupGeneral = await SettingsGroup.findOne({name: 'General'})
-            if(groupGeneral){
-                groupGeneral.settings.push(key)
-                await groupGeneral.save()
-                doc.group = groupGeneral._id
-            }else{
-                const newGroupGeneral = new SettingsGroup({
-                    settings: [key]
-                })
-                await newGroupGeneral.save()
-                doc.group = newGroupGeneral._id
-            }
-        }
-    }
 
     doc.id = doc._id;
     return new Promise((resolve, rejects) => {
@@ -263,5 +296,19 @@ export async function fetchEntityOptions(key){
 //Settings Group Services
 
 export const fetchSettingsGroup = async() => {
-    return await SettingsGroup.find({})
+    return await Settings.aggregate([
+        {
+            $group: {
+                _id: {group: "$group"},
+                settings: {$push: "$$ROOT"}
+                }
+        },
+        {
+            $project:{
+                _id: 1,
+                group: "$_id.group",
+                settings: 1
+            }
+        }
+    ])
 }

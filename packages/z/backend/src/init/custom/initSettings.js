@@ -1,4 +1,4 @@
-import {createSettings, findSettingsByKey, updateSettings} from "@dracul/settings-backend";
+import {createOrUpdateSettings} from "@dracul/settings-backend";
 
 
 const settings = [
@@ -16,7 +16,7 @@ const settings = [
         key: 'dynamic2',
         type: 'dynamic',
         value: '',
-        group: 'dynamic2',
+        group: 'General',
         label: {en: 'Dynamic setting value', es: 'Dynamic setting value', pt: 'Dynamic setting value'},
         entity: 'roles',
         entityValue: 'name',
@@ -37,12 +37,7 @@ const settings = [
 export const initSettings = async function () {
 
     for (let i in settings) {
-        const setting = await findSettingsByKey(settings[i].key)
-        if (!setting) {
-            await createSettings(null, settings[i])
-        }else{
-            await updateSettings(null, setting.id, settings[i])
-        }
+        await createOrUpdateSettings(null, settings[i])
     }
 
 }

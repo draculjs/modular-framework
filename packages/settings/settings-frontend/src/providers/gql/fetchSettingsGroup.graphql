@@ -1,6 +1,8 @@
 query fetchSettingsGroup{
     fetchSettingsGroup{
-        name
-        settings
+        group
+        settings{
+            key
+        }
     }
 }

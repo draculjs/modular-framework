@@ -12,6 +12,7 @@ import {
     findSettings,
     fetchSettings,
     createSettings,
+    createOrUpdateSettings,
     updateSettings,
     updateSettingsByKey,
     paginateSettings,
@@ -31,6 +32,7 @@ export {
     //permissions
     permissions,
     //Services
+    createOrUpdateSettings,
     findSettingsByKey,
     findSettingsByKeys,
     getSettingsValueByKey,
