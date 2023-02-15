@@ -24,8 +24,8 @@ type entityFieldValues{
 }
 
 type fetchSettingsGroup{
-    name: String!
-    settings: [String]!
+    group: String!
+    settings: [Settings!]
 }
 
 type Query {

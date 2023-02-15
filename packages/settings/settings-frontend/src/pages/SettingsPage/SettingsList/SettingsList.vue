@@ -133,13 +133,13 @@ export default {
         this.items = items
         this.totalItems = totalItems
         const { data : { fetchSettingsGroup } } = await SettingsProvider.fetchSettingsGroup()
-        this.groups = fetchSettingsGroup.map(({_id, name, settings}) => {
+        this.groups = fetchSettingsGroup.map(({_id, group: name, settings}) => {
           const newGroup = {}
           newGroup.id = _id
           newGroup.name = name
           newGroup.totalItems = settings.length
           newGroup.items = []
-          settings.forEach(setting => {
+          settings.forEach(({key: setting}) => {
             this.items.forEach(item => {
               if(item.key == setting) newGroup.items.push(item)
             })
