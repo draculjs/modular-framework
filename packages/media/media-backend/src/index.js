@@ -11,6 +11,7 @@ import * as filePermissions from './permissions/File'
 import * as userStoragePermissions from './permissions/UserStorage'
 import { userCreateListener } from './listeners/UserCreateListener'
 import { updateFileMiddleware } from "./middleware"
+import FileRouter from "./rest/routers/FileRouter"
 
 import {
     findFile,
@@ -33,6 +34,9 @@ export {
 
     //Middleware
     updateFileMiddleware,
+
+    //API ROUTE
+    FileRouter,
 
     //Permissions
     filePermissions,

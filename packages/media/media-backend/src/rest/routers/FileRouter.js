@@ -1,5 +1,3 @@
-import { AuthenticationError, ForbiddenError } from "apollo-server-express";
-import File from '../../models/FileModel'
 
 import express from 'express';
 
@@ -20,9 +18,9 @@ router.get('/file/:id', function (req, res) {
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
 
-    let allFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_ALL)
-    let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
-    let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
+    let allFilesAllowed = req.rbac.isAllowed(user.id, FILE_SHOW_ALL)
+    let ownFilesAllowed = req.rbac.isAllowed(user.id, FILE_SHOW_OWN)
+    let publicAllowed = req.rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
     const { id } = req.params
 
@@ -42,9 +40,9 @@ router.get('/file', function (req, res) {
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
 
-    let allFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_ALL)
-    let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
-    let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
+    let allFilesAllowed = req.rbac.isAllowed(user.id, FILE_SHOW_ALL)
+    let ownFilesAllowed = req.rbac.isAllowed(user.id, FILE_SHOW_OWN)
+    let publicAllowed = req.rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
     const { pageNumber, itemsPerPage, search, orderBy, orderDesc } = req.query
 
