@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.16.4",
+  "version": "1.16.8",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "dependencies": {
     "@dracul/common-backend": "^1.16.3",
     "@dracul/logger-backend": "^1.16.3",
-    "@dracul/settings-backend": "^1.16.4",
+    "@dracul/settings-backend": "^1.16.8",
     "bcryptjs": "^2.4.3",
     "email-templates": "^6.0.3",
     "express": "^4.17.1",
