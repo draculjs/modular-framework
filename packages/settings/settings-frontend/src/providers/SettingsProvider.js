@@ -58,7 +58,7 @@ class SettingsProvider {
     fetchSettingsGroup(){
         return this.gqlc.query({
             query: require('./gql/fetchSettingsGroup.graphql'),
-            fetchPolicy: "network-only"
+            fetchPolicy: "no-cache"
         })
     }
 

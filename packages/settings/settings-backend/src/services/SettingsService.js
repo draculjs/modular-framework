@@ -135,14 +135,14 @@ export const createOrUpdateSettings = async (authUser, {key, entityText, entityV
 
         return new Promise((resolve, rejects) => {
             setting.save((error => {
-    
+
                 if (error) {
                     if (error.name == "ValidationError") {
                         return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
                     }
                     return rejects(error)
                 }
-    
+
                 resolve(setting)
             }))
         })
@@ -296,7 +296,7 @@ export async function fetchEntityOptions(key){
 //Settings Group Services
 
 export const fetchSettingsGroup = async() => {
-    return await Settings.aggregate([
+    let settingGroup =  await Settings.aggregate([
         {
             $group: {
                 _id: {group: "$group"},
@@ -309,6 +309,12 @@ export const fetchSettingsGroup = async() => {
                 group: "$_id.group",
                 settings: 1
             }
+        },
+        {
+            $sort: {group: 1}
         }
     ])
+   // console.log("settingGroup", JSON.stringify(settingGroup, null, 4))
+
+    return settingGroup
 }

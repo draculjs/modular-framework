@@ -1,5 +1,6 @@
 type Settings{
-    id: ID!
+    _id: ID
+    id: ID
     key: String!
     value: String
     label: MultiLang!
@@ -24,8 +25,8 @@ type entityFieldValues{
 }
 
 type fetchSettingsGroup{
-    group: String!
-    settings: [Settings!]
+    group: String
+    settings: [Settings]
 }
 
 type Query {

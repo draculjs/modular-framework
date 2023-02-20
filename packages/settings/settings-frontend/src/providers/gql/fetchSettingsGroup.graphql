@@ -2,7 +2,21 @@ query fetchSettingsGroup{
     fetchSettingsGroup{
         group
         settings{
+            id
             key
+            value
+            group
+            label{
+                en
+                es
+                pt
+            }
+            type
+            options
+            regex
+            entity
+            entityValue
+            entityText
         }
     }
 }

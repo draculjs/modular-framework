@@ -6,25 +6,16 @@
     </v-col>
 
     <v-col cols="12" v-for="group in groups" :key="group.id">
-      <v-card v-if="group.items.length > 0">
-        <v-card-title>{{ group.name }}</v-card-title>
+      <v-card v-if="group.settings.length > 0">
+        <v-card-title>{{ group.group }}</v-card-title>
           <v-data-table
             class="mt-3"
             :headers="headers"
-            :items="group.items"
+            :items="group.settings"
             :search="search"
             :single-expand="false"
-            :server-items-length="totalItems"
             :loading="loading"
-            :page.sync="pageNumber"
-            :items-per-page.sync="itemsPerPage"
-            :sort-by.sync="orderBy"
-            :sort-desc.sync="orderDesc"
             disable-pagination hide-default-footer
-            @update:page="fetch"
-            @update:sort-by="fetch"
-            @update:sort-desc="fetch"
-            @update:items-per-page="fetch"
         >
 
           <template v-slot:item.value="{item}">
@@ -81,13 +72,7 @@ export default {
   data() {
     return {
       groups: [],
-      items: [],
-      totalItems: null,
       loading: false,
-      orderBy: null,
-      orderDesc: false,
-      itemsPerPage: -1,
-      pageNumber: 1,
       search: ''
     }
   },
@@ -96,19 +81,14 @@ export default {
     headers() {
       return [
         //Entity Headers
-        //{text: this.$t('settings.settings.labels.key'), value: 'key'},
+       // {text: this.$t('settings.settings.labels.key'), value: 'key'},
         {text: this.$t('settings.settings.labels.label'), value: 'label'},
         {text: this.$t('settings.settings.labels.value'), value: 'value'},
         //Actions
         {text: this.$t('common.actions'), value: 'action', sortable: false},
       ]
     },
-    getOrderBy() {
-      return (Array.isArray(this.orderBy)) ? this.orderBy[0] : this.orderBy
-    },
-    getOrderDesc() {
-      return (Array.isArray(this.orderDesc)) ? this.orderDesc[0] : this.orderDesc
-    },
+
     userCanEditSettings() {
       return this.$store.getters.hasPermission('SETTINGS_UPDATE')
     }
@@ -124,28 +104,9 @@ export default {
     async fetch() {
       try {
         this.loading = true
-        const { data: { settingsPaginate: { items, totalItems } } } = await SettingsProvider.paginateSettings(
-          this.pageNumber,
-          this.itemsPerPage,
-          this.search,
-          this.getOrderBy,
-          this.getOrderDesc)
-        this.items = items
-        this.totalItems = totalItems
-        const { data : { fetchSettingsGroup } } = await SettingsProvider.fetchSettingsGroup()
-        this.groups = fetchSettingsGroup.map(({_id, group: name, settings}) => {
-          const newGroup = {}
-          newGroup.id = _id
-          newGroup.name = name
-          newGroup.totalItems = settings.length
-          newGroup.items = []
-          settings.forEach(({key: setting}) => {
-            this.items.forEach(item => {
-              if(item.key == setting) newGroup.items.push(item)
-            })
-          })
-          return newGroup
-        })
+        const response = await SettingsProvider.fetchSettingsGroup()
+        console.log("response",response)
+        this.groups = response.data.fetchSettingsGroup
       } catch (error) {
         console.error(error)
       } finally {
