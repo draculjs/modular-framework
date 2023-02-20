@@ -8,7 +8,7 @@
     <v-col cols="12" v-for="group in groups" :key="group.id">
       <v-card v-if="group.items.length > 0">
         <v-card-title>{{ group.name }}</v-card-title>
-          <v-data-table v-data-table
+          <v-data-table
             class="mt-3"
             :headers="headers"
             :items="group.items"
@@ -20,7 +20,7 @@
             :items-per-page.sync="itemsPerPage"
             :sort-by.sync="orderBy"
             :sort-desc.sync="orderDesc"
-            :footer-props="{ itemsPerPageOptions: [5, 10, 25, 50] }"
+            disable-pagination hide-default-footer
             @update:page="fetch"
             @update:sort-by="fetch"
             @update:sort-desc="fetch"
@@ -86,7 +86,7 @@ export default {
       loading: false,
       orderBy: null,
       orderDesc: false,
-      itemsPerPage: 25,
+      itemsPerPage: -1,
       pageNumber: 1,
       search: ''
     }
