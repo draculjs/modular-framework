@@ -67,9 +67,6 @@
     props: {
       value: Array
     },
-    mounted () {
-      console.log("filters: ", this.filters)
-    },
     computed: {
       ...mapGetters([
         'me'
