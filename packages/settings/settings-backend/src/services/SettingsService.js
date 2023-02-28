@@ -27,8 +27,7 @@ export const initializeSetting = async function (setting) {
     if(!setting.key) throw new Error('Setting must have a key')
     if(!setting.label) throw new Error('Setting must have a label')
 
-    let settingDoc = await findSettingsByKey(setting.key)
-    if (!settingDoc) settingDoc = await createSettings(null, setting)
+    let settingDoc = await createOrUpdateSettings(null, setting)
 
     return settingDoc
 }
