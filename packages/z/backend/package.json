@@ -1,6 +1,6 @@
 {
   "name": "integration-backend",
-  "version": "1.16.8",
+  "version": "1.16.9",
   "description": "",
   "private": true,
   "main": "src/index.js",
@@ -28,11 +28,11 @@
   },
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
-    "@dracul/audit-backend": "^1.16.8",
+    "@dracul/audit-backend": "^1.16.9",
     "@dracul/common-backend": "^1.16.3",
     "@dracul/customize-backend": "^1.16.8",
     "@dracul/logger-backend": "^1.16.3",
-    "@dracul/media-backend": "^1.16.8",
+    "@dracul/media-backend": "^1.16.9",
     "@dracul/notification-backend": "^1.16.3",
     "@dracul/settings-backend": "^1.16.8",
     "@dracul/user-backend": "^1.16.8",
