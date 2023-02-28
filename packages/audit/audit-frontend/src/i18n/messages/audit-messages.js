@@ -4,9 +4,8 @@ const i18nMessages = {
             name: 'Audit',
             title: 'Audit management',
             subtitle: 'View, search, create, edit and delete Audit',
-            creating: 'Creating Audit',
-            editing: 'Editing Audit',
-            deleting: 'Deleting Audit',
+            filters: "Audit filters",
+            filterByUser: 'Realized by user',
             showing: 'Showing Audit',
             menu: 'Audit',
             labels: {
@@ -20,6 +19,8 @@ const i18nMessages = {
             userAudit: 'User audit',
 
             when: 'When',
+            from: 'from',
+            until: 'until',
             actionBy: 'Action By',
             actionFor: 'Action For',
             action: 'Action',
@@ -46,11 +47,10 @@ const i18nMessages = {
     es: {
         audit: {
             name: 'Auditorias',
-            title: 'Administración de Auditorias',
-            subtitle: 'Ver, buscar, crear, editar, y borrar Auditorias',
-            creating: 'Creando Auditoria',
-            editing: 'Modificando Auditoria',
-            deleting: 'Eliminando Auditoria',
+            title: 'Visualizacion de Auditorias',
+            subtitle: 'Ver y buscar Auditorias',
+            filters: "Filtros de auditoria",
+            filterByUser: 'Realizada por usuario',
             showing: 'Detalles de Auditoria',
             menu: 'Auditoria',
             labels: {
@@ -63,6 +63,8 @@ const i18nMessages = {
 
             userAudit: 'Auditoria de usuario',
             when: 'Cuando',
+            from: 'Desde',
+            until: 'Hasta',
             actionBy: 'Acción Por',
             actionFor: 'Acción Para',
             action: 'Acción',
@@ -91,9 +93,8 @@ const i18nMessages = {
             name: 'Audit',
             title: 'Administração de Audit',
             subtitle: 'Ver, buscar, criar, editar e usar Audit',
-            creating: 'Criando Audit',
-            editing: 'Edição Audit',
-            deleting: 'Apagando Audit',
+            filters: "filtros de audit",
+            filterByUser: 'Realizada por usuario',
             showing: 'Detalhes do Audit',
             menu: 'Audit',
             labels: {
@@ -106,6 +107,8 @@ const i18nMessages = {
 
             userAudit: 'Auditoria de Usuário',
             when: 'Quando',
+            from: 'Desde',
+            until: 'Hasta',
             actionBy: 'Ação por',
             actionFor: 'Ação Para',
             action: 'Ação',

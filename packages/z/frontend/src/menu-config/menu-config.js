@@ -72,6 +72,13 @@ export default [
                 panel: false,
                 permission: 'SETTINGS_CREATE'
             },
+            {
+                icon: 'privacy_tip',
+                text: 'menu.audit',
+                link: { name: "AuditPage" },
+                panel: false,
+                permission: 'AUDIT_MENU'
+            },
 
         ]
     },

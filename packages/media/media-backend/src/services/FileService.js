@@ -1,6 +1,5 @@
 import File from '../models/FileModel'
 import { UserInputError } from 'apollo-server-express'
-import { FILE_SHOW_OWN, FILE_UPDATE_OWN, FILE_DELETE_OWN } from "../permissions/File";
 import dayjs from 'dayjs'
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 import fs from 'fs';

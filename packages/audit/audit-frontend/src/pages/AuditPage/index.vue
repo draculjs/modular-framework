@@ -1,90 +1,111 @@
 <template>
-    <v-row row wrap>
+    <v-card class="fill-height">
+        <v-card-title>
+            {{ this.$t('audit.title') }}
+        </v-card-title>
+
+        <v-card-subtitle>
+            {{ this.$t('audit.subtitle') }}
+        </v-card-subtitle>
+
+            <v-row align-content="space-between" justify="space-between" style="height: 90%;">
+    
+                <v-col cols="12" >
+                            <audit-filters
+                                @updateFilters="setFilters"
+                                @clearFilter="cleanFilters"
+                                v-model="filters"
+                            >
+                            </audit-filters>
+
+                </v-col>
+
+            
+                    <v-col cols="12" fill-height>
+            
+                        <v-data-table
+                                :headers="headers"
+                                :items="items"
+                                :search="search"
+                                :single-expand="false"
+                                :server-items-length="totalItems"
+                                :loading="loading"
+                                :page.sync="pageNumber"
+                                :items-per-page.sync="itemsPerPage"
+                                :sort-by.sync="orderBy"
+                                :sort-desc.sync="orderDesc"
+                                :footer-props="{ itemsPerPageOptions: [5, 10, 25, 50] }"
+                                @update:page="fetch"
+                                @update:sort-by="fetch"
+                                @update:sort-desc="fetch"
+                                @update:items-per-page="fetch"
+                        >
+                
+                
+                            <template v-slot:item.user="{ item }">
+                            {{ item.user ? item.user.username : '' }}
+                            </template>
+                
+                            <template v-slot:item.createdAt="{ item }">
+                            {{ getDateTimeFormat(item.createdAt) }}
+                            </template>
+                
+                
+                            <template slot="no-data" fill-height>
+                                <div class="text-xs-center" v-t="'common.noData'"></div>
+                            </template>
+                
+                            <template slot="loading" fill-height>
+                                <div   class="text-xs-center" v-t="'common.loading'"></div>
+                            </template>
+                
+                
+                        </v-data-table>
+                    </v-col>
+            </v-row>
+        </v-card>
+</template>
    
-       <v-col cols="12" >
-           <v-row justify="space-between">
-               <v-col cols="12" sm="6" md="8">
-                <!-- FILTERS HERE -->
-               </v-col>
-               <v-col cols="12" sm="6" md="4">
-               <search-input  @search="performSearch" v-model="search" label="audit.auditFilterByUser"/>
-               </v-col>
-           </v-row>
-       </v-col>
-   
-       <v-col cols="12">
-   
-          <v-data-table
-                   class="mt-3"
-                   :headers="headers"
-                   :items="items"
-                   :search="search"
-                   :single-expand="false"
-                   :server-items-length="totalItems"
-                   :loading="loading"
-                   :page.sync="pageNumber"
-                   :items-per-page.sync="itemsPerPage"
-                   :sort-by.sync="orderBy"
-                   :sort-desc.sync="orderDesc"
-                   :footer-props="{ itemsPerPageOptions: [5, 10, 25, 50] }"
-                   @update:page="fetch"
-                   @update:sort-by="fetch"
-                   @update:sort-desc="fetch"
-                   @update:items-per-page="fetch"
-           >
-   
-   
-            <template v-slot:item.user="{ item }">
-               {{ item.user ? item.user.username : '' }}
-            </template>
-   
-            <template v-slot:item.createdAt="{ item }">
-              {{ getDateTimeFormat(item.createdAt) }}
-            </template>
-   
-   
-               <template slot="no-data">
-                  <div class="text-xs-center" v-t="'common.noData'"></div>
-               </template>
-   
-               <template slot="loading">
-                  <div   class="text-xs-center" v-t="'common.loading'"></div>
-               </template>
-   
-   
-           </v-data-table>
-       </v-col>
-   </v-row>
-   </template>
-   
-   <script>
-      import AuditProvider from "../../providers/AuditProvider";
-   
-      import { SearchInput} from "@dracul/common-frontend"
-      import { DayjsMixin} from "@dracul/dayjs-frontend"
+<script>
+    import AuditProvider from "../../providers/AuditProvider";
+    import AuditFilters from "./AuditFilters.vue";
+
+    // import { SearchInput} from "@dracul/common-frontend"
+    import { DayjsMixin} from "@dracul/dayjs-frontend"
    
    
        export default {
            name: "AuditList",
-           components: {SearchInput},
+        //    SearchInput, 
+           components: {AuditFilters}, 
            mixins: [DayjsMixin],
            data() {
                return {
-                   items: [],
-                   totalItems: null,
-                   loading: false,
-                   orderBy: null,
-                   orderDesc: false,
-                   itemsPerPage: 5,
-                   pageNumber: 1,
-                   search: '',
-                   filters: [
-                       /*{
-                           field: '',
-                           operator: 'eq', //(eq|contain|regex|gt|lt|lte|gte)
-                           value: ''
-                       }*/
-                   ]
+                    items: [],
+                    totalItems: null,
+                    loading: false,
+                    orderBy: null,
+                    orderDesc: false,
+                    itemsPerPage: 5,
+                    pageNumber: 1,
+                    search: '',
+                    filters: [
+                                {
+                                field: 'action',
+                                operator: '$regex',
+                                value: null
+                                },
+                                {
+                                field: 'user',
+                                operator: '$eq',
+                                value: null
+                                },
+                                {
+                                field: 'resource',
+                                operator: '$regex',
+                                value: null
+                                }
+                            ]
                }
            },
            computed: {
@@ -124,12 +145,24 @@
                        this.getOrderBy,
                        this.getOrderDesc
                    ).then(r => {
+                    console.log('paginate audit', r)
                        this.items = r.data.paginateAudit.items
                        this.totalItems = r.data.paginateAudit.totalItems
                    }).catch(err => {
                        console.error(err)
                    }).finally(() => this.loading = false)
-               }
+               },
+               setFilters(auditFilters) {
+                console.log('auditFilters', auditFilters)
+                    this.filters = auditFilters
+                    this.fetch()
+                },
+                cleanFilters() {
+                    this.filters.forEach(filter => {
+                        filter.value = null
+                    })
+                    this.fetch()
+                }
            }
    
        }

@@ -80,7 +80,7 @@ const messages = {
                 REDMINE_UPDATE:"Redmine Update",
                 REDMINE_DELETE:"Redmine Delete",
                 AUDIT_CREATE:"Audit create",
-                AUDIT_DELETE:"Audit delete",
+                AUDIT_MENU: "Audits menu display",
                 AUDIT_SHOW:"Audit display"
             }
         },
@@ -166,7 +166,7 @@ const messages = {
                 REDMINE_UPDATE:"Edición de Redmine",
                 REDMINE_DELETE:"Eliminación de Redmine",
                 AUDIT_CREATE:"Creación de Auditoria",
-                AUDIT_DELETE:"Eliminación de Auditoria",
+                AUDIT_MENU: "Visualizacion de menu de auditorias",
                 AUDIT_SHOW:"Visualización de Auditoria"
             }
         },
@@ -253,7 +253,7 @@ const messages = {
                 REDMINE_UPDATE:"Edição do Redmine",
                 REDMINE_DELETE:"Exclusão do Redmine",
                 AUDIT_CREATE:"Criação de Auditoria",
-                AUDIT_DELETE:"Exclusão de Auditoria",
+                AUDIT_MENU: "Exibição do menu de auditoria",
                 AUDIT_SHOW:"Visor de Auditoria"
                 }
             }
