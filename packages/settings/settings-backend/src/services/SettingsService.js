@@ -119,7 +119,7 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
     })
 }
 
-export const createOrUpdateSettings = async (authUser, {key, entityText, entityValue, value, label, type, group, options, regex, entity, field}) => {
+export const createOrUpdateSettings = async (authUser, {key, entityText, entityValue, value, valueList, label, type, group, options, regex, entity, field}) => {
     const setting = await Settings.findOne({key})
     if(setting){
         setting.entityText = entityText
@@ -148,12 +148,14 @@ export const createOrUpdateSettings = async (authUser, {key, entityText, entityV
     }
 
     const docValue = value ? value.toString() : null
+    const docValueList = valueList ? valueList.map(i => i.toString()) : []
 
     const newSetting = new Settings({
         key,
         entityText,
         entityValue,
         value: docValue,
+        valueList: docValueList,
         label,
         group: group ? group : 'General',
         type,
@@ -248,14 +250,16 @@ export const updateSettings = async function (authUser, id, {key, entityText, en
     })
 }
 
-export const updateSettingsByKey = async function (authUser, {key,  value}) {
+export const updateSettingsByKey = async function (authUser, {key,  value, valueList = []}) {
     return new Promise((resolve, rejects) => {
 
         const docValue = value ? value.toString() : null
+        const docValueList = valueList ? valueList.map(i => i.toString()) : []
 
         Settings.findOneAndUpdate({key: key},
             {
-                value: docValue
+                value: docValue,
+                valueList: docValueList
             },
             {new: true, runValidators: true, context: 'query'},
             (error, doc) => {

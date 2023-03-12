@@ -3,6 +3,7 @@ query settingsFindByKey($key:String!){
         id
         key
         value
+        valueList
         group
         label{
             en

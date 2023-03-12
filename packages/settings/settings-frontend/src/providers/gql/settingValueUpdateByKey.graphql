@@ -1,8 +1,9 @@
-mutation settingValueUpdateByKey($key:String!, $value:String){
-    settingValueUpdateByKey(key: $key, value: $value){
+mutation settingValueUpdateByKey($key:String!, $value:String, $valueList: [String]){
+    settingValueUpdateByKey(key: $key, value: $value, valueList: $valueList){
         id
         key
         value
+        valueList
         group
         label{
             en

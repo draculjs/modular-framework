@@ -5,6 +5,7 @@ query fetchSettingsGroup{
             id
             key
             value
+            valueList
             group
             label{
                 en

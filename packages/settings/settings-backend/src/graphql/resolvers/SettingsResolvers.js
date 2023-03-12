@@ -41,10 +41,10 @@ export default {
 
     },
     Mutation: {
-        settingValueUpdateByKey: (_, {key, value}, {user, rbac}) => {
+        settingValueUpdateByKey: (_, {key, value, valueList}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
             if (!rbac.isAllowed(user.id, SETTINGS_UPDATE)) throw new ForbiddenError("Not Authorized")
-            return updateSettingsByKey(user, {key,value})
+            return updateSettingsByKey(user, {key,value, valueList})
         }
     }
 

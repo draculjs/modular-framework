@@ -48,10 +48,10 @@ class SettingsProvider {
         })
     }
 
-    settingValueUpdateByKey(key,value) {
+    settingValueUpdateByKey(key,value, valueList) {
         return this.gqlc.mutate({
             mutation: require('./gql/settingValueUpdateByKey.graphql'),
-            variables: {key,value}
+            variables: {key,value, valueList}
         })
     }
 

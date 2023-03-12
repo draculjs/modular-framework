@@ -2,6 +2,25 @@ import {createOrUpdateSettings} from "@dracul/settings-backend";
 
 
 const settings = [
+
+    {
+        key: 'StringKey',
+        type: 'string',
+        value: "StringValue",
+        group: 'Basic',
+        label: {en: 'String Key', es: 'String Key', pt: 'String Key'},
+    },
+
+    {
+        key: 'NumberKey',
+        type: 'number',
+        value: "123",
+        group: 'Basic',
+        label: {en: 'Number Key', es: 'Number Key', pt: 'Number Key'},
+    },
+
+
+
     {
         key: 'dynamic',
         type: 'dynamic',
@@ -31,6 +50,24 @@ const settings = [
         entity: 'roles',
         entityValue: 'name',
         entityText: 'name',
+    },
+
+
+
+    {
+        key: 'numberListKey',
+        type: 'numberList',
+        valueList: [],
+        group: 'List',
+        label: {en: 'Number List', es: 'Number List', pt: 'Number List'},
+    },
+
+    {
+        key: 'stringListKey',
+        type: 'stringList',
+        valueList: [],
+        group: 'List',
+        label: {en: 'String List', es: 'String List', pt: 'String List'},
     }
 ]
 

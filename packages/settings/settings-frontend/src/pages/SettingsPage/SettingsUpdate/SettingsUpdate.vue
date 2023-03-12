@@ -1,5 +1,5 @@
 <template>
-  <crud-update 
+  <crud-update
     :open="open"
     :loading="loading"
     :title="title"
@@ -38,20 +38,24 @@ export default {
       loading: false,
       form: {
         value: this.item.value,
+        valueList: this.item.valueList ? this.item.valueList : [],
       }
-      
+
     }
   },
   computed: {
     getValue(){
       return this.form.value ? this.form.value.toString() : this.form.value
+    },
+    getValueList(){
+      return this.form.value ? this.form.valueList.map(i => i.toString()) : this.form.valueList
     }
   },
   methods: {
     update() {
       if (this.$refs.form.validate()) {
         this.loading = true
-        SettingsProvider.settingValueUpdateByKey(this.item.key, this.getValue).then(r => {
+        SettingsProvider.settingValueUpdateByKey(this.item.key, this.getValue, this.getValueList).then(r => {
               this.$store.dispatch('loadSettings')
               this.$emit('itemUpdated', r.data.settingValueUpdateByKey)
               this.$emit('close')

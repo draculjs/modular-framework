@@ -3,6 +3,7 @@ query settingsFetch{
         id
         key
         value
+        valueList
         group
         label{
             en

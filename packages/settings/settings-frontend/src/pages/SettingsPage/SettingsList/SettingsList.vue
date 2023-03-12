@@ -20,6 +20,15 @@
 
           <template v-slot:item.value="{item}">
 
+            <template v-if="item.type === 'stringList'">
+              <v-chip v-for="(v,i) in item.valueList" :key="i">{{v}}</v-chip>
+            </template>
+
+            <template v-if="item.type === 'numberList'">
+              <v-chip v-for="(v,i) in item.valueList" :key="i">{{v}}</v-chip>
+            </template>
+
+
             <template v-if="item.type === 'boolean'">
               <v-icon v-if="item.value === 'enable' " color="green">done</v-icon>
               <v-icon v-else color="red">clear</v-icon>
@@ -82,10 +91,10 @@ export default {
       return [
         //Entity Headers
        // {text: this.$t('settings.settings.labels.key'), value: 'key'},
-        {text: this.$t('settings.settings.labels.label'), value: 'label'},
-        {text: this.$t('settings.settings.labels.value'), value: 'value'},
+        {text: this.$t('settings.settings.labels.label'), value: 'label', width: "40%"},
+        {text: this.$t('settings.settings.labels.value'), value: 'value', width: "40%"},
         //Actions
-        {text: this.$t('common.actions'), value: 'action', sortable: false},
+        {text: this.$t('common.actions'), value: 'action', sortable: false, width: "20%"},
       ]
     },
 

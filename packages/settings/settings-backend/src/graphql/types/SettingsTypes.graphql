@@ -3,6 +3,7 @@ type Settings{
     id: ID
     key: String!
     value: String
+    valueList: [String]
     label: MultiLang!
     type: String
     group: String
@@ -47,5 +48,5 @@ type SettingsDelete{
 
 
 type Mutation {
-    settingValueUpdateByKey(key:String!, value:String): Settings
+    settingValueUpdateByKey(key:String!, value:String, valueList: [String]): Settings
 }
