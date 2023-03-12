@@ -5,21 +5,19 @@
       {{error}}
     </v-alert>
     <v-text-field
-        type="text"
+        type="text" outlined persistent-placeholder
         v-model="form.username"
         autocomplete="username"
         :label="$t('user.label.username')"
-        :placeholder="$t('user.label.username')"
         color="secondary"
         :rules="[v => !!v || ' ']"
     ></v-text-field>
 
     <v-text-field id="password"
-                  type="password"
+                  type="password" outlined persistent-placeholder
                   autocomplete="current-password"
                   v-model="form.password"
                   :label="$t('user.label.password')"
-                  :placeholder="$t('user.label.password')"
                   color="secondary"
                   :rules="[v => !!v || ' ']"
     />
