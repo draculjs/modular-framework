@@ -55,8 +55,17 @@ export const getSettingsValueByKey = async function (key) {
             .exec(
                 (err, doc) => {
                     if(err) return reject(err)
-                    if(['numberList', 'stringList','enumList'].includes(doc.type)) return resolve(doc.valueList)
-                    return resolve(doc.value)
+                    switch (doc.type){
+                        case 'stringList':
+                        case 'enumList':
+                            return resolve(doc.valueList)
+                        case 'numberList':
+                            return resolve(doc.valueList.map(v => parseFloat(v)))
+                        case 'number':
+                            return resolve(parseFloat(doc.value))
+                        default:
+                            return resolve(doc.value)
+                    }
         }
 
         );

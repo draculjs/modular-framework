@@ -19,10 +19,17 @@ export default {
             if (key) {
                 let item = state.settings.find(s => s.key === key)
                 if (item) {
-                    if(['stringList','numberList'].includes(item.type)){
-                        return item.valueList
+                    switch (item.type){
+                        case 'stringList':
+                        case 'enumList':
+                            return item.valueList
+                        case 'numberList':
+                            return item.valueList.map(v => parseFloat(v))
+                        case 'number':
+                            return parseFloat(item.value)
+                        default:
+                            return item.value
                     }
-                    return item.value
                 }
             }
             return null

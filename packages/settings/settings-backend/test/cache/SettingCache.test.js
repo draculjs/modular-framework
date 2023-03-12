@@ -33,11 +33,11 @@ describe("SettingCache", () => {
         let numberList = await SettingCache('numberList',3)
 
         expect(name).equal('John')
-        expect(age).equal('37')
+        expect(age).equal(37)
         expect(extraordinary).equal("true")
-        expect(numberList[0]).equal("1")
-        expect(numberList[1]).equal("2")
-        expect(numberList[2]).equal("3")
+        expect(numberList[0]).equal(1)
+        expect(numberList[1]).equal(2)
+        expect(numberList[2]).equal(3)
 
         await updateSettingsByKey(null, {key: 'name', value:'Cristian'})
         await updateSettingsByKey(null, {key: 'age', value: 38})
@@ -50,11 +50,11 @@ describe("SettingCache", () => {
         let numberListCache = await SettingCache('numberList',3)
 
         expect(nameCache).equal('John')
-        expect(ageCache).equal('37')
+        expect(ageCache).equal(37)
         expect(extraordinaryCache).equal("true")
-        expect(numberListCache[0]).equal("1")
-        expect(numberListCache[1]).equal("2")
-        expect(numberListCache[2]).equal("3")
+        expect(numberListCache[0]).equal(1)
+        expect(numberListCache[1]).equal(2)
+        expect(numberListCache[2]).equal(3)
 
         let nameDb = await getSettingsValueByKey('name')
         let ageDb = await getSettingsValueByKey('age')
@@ -62,11 +62,11 @@ describe("SettingCache", () => {
         let numberListDB = await getSettingsValueByKey('numberList')
 
         expect(nameDb).equal('Cristian')
-        expect(ageDb).equal('38')
+        expect(ageDb).equal(38)
         expect(extraordinaryDB).equal("false")
-        expect(numberListDB[0]).equal("4")
-        expect(numberListDB[1]).equal("5")
-        expect(numberListDB[2]).equal("6")
+        expect(numberListDB[0]).equal(4)
+        expect(numberListDB[1]).equal(5)
+        expect(numberListDB[2]).equal(6)
 
 
         await sleep(5)
@@ -77,11 +77,11 @@ describe("SettingCache", () => {
         let numberListCache2 = await SettingCache('numberList',3)
 
         expect(nameCache2).equal('Cristian')
-        expect(ageCache2).equal('38')
+        expect(ageCache2).equal(38)
         expect(extraordinaryCache2).equal("false")
-        expect(numberListCache2[0]).equal("4")
-        expect(numberListCache2[1]).equal("5")
-        expect(numberListCache2[2]).equal("6")
+        expect(numberListCache2[0]).equal(4)
+        expect(numberListCache2[1]).equal(5)
+        expect(numberListCache2[2]).equal(6)
 
     });
 

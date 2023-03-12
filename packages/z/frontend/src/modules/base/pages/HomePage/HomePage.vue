@@ -1,5 +1,8 @@
 <template>
   <v-container fill-height>
+    {{$store.getters.getSettingValue('StringKey')}}
+    {{$store.getters.getSettingValue('numberListKey')}}
+    {{$store.getters.getSettingValue('stringListKey')}}
     <gallery-menu :nav="menu"> </gallery-menu>
   </v-container>
 </template>
