@@ -19,6 +19,9 @@ export default {
             if (key) {
                 let item = state.settings.find(s => s.key === key)
                 if (item) {
+                    if(['stringList','numberList'].includes(item.type)){
+                        return item.valueList
+                    }
                     return item.value
                 }
             }
@@ -40,11 +43,11 @@ export default {
                     .catch(e => reject(e))
             })
         },
-        updateSettingValueByKey({commit},{key, value}) {
+        updateSettingValueByKey({commit},{key, value, valueList=[]}) {
             return new Promise((resolve, reject) => {
                 SettingsProvider.settingValueUpdateByKey(key, value)
                     .then(r => {
-                        commit('setSetting', {key, value})
+                        commit('setSetting', {key, value, valueList})
                         resolve(r.data.settingValueUpdateByKey)
                     })
                     .catch(e => reject(e))
@@ -55,10 +58,11 @@ export default {
         setSettings(state, val) {
             state.settings = val
         },
-        setSetting(state, {key,value}) {
+        setSetting(state, {key, value, valueList}) {
             let item = state.settings.find(s => s.key === key)
             if (item) {
                 item.value = value
+                item.valueList = valueList
             }
         },
         setSettingsReady(state) {

@@ -1,5 +1,6 @@
 <template>
     <v-container fluid>
+
         <v-row>
             <v-col cols="12" class="pa-3">
                <settings-crud />

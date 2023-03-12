@@ -51,9 +51,15 @@ export const findSettingsByKey = async function (key) {
 
 export const getSettingsValueByKey = async function (key) {
     return new Promise((resolve, reject) => {
-        Settings.findOne({key: key}).exec((err, doc) => (
-            err ? reject(err) : resolve(doc ? doc.value : null)
-        ));
+        Settings.findOne({key: key})
+            .exec(
+                (err, doc) => {
+                    if(err) return reject(err)
+                    if(['numberList', 'stringList','enumList'].includes(doc.type)) return resolve(doc.valueList)
+                    return resolve(doc.value)
+        }
+
+        );
     })
 }
 
@@ -253,7 +259,7 @@ export const updateSettings = async function (authUser, id, {key, entityText, en
 export const updateSettingsByKey = async function (authUser, {key,  value, valueList = []}) {
     return new Promise((resolve, rejects) => {
 
-        const docValue = value ? value.toString() : null
+        const docValue = (value || typeof value === 'boolean') ? value.toString() : null
         const docValueList = valueList ? valueList.map(i => i.toString()) : []
 
         Settings.findOneAndUpdate({key: key},
