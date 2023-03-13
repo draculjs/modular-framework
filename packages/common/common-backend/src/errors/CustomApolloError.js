@@ -1,4 +1,4 @@
-import {ApolloError} from "apollo-server-errors";
+const {ApolloError} = require("apollo-server-errors")
 
 class CustomApolloError extends ApolloError{
 
@@ -7,4 +7,4 @@ class CustomApolloError extends ApolloError{
     }
 }
 
-export default CustomApolloError
+module.exports = CustomApolloError
