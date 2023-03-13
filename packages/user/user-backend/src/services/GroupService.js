@@ -51,7 +51,7 @@ export const fetchMyGroups = async function (userId) {
     })
 }
 
-export const paginateGroup = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false, includesUser = null, showDeleted = true) {
+export const paginateGroup = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false, includesUser = null, showDeletedUsers = true) {
 
     function qs(search, includesUser) {
         let qs = {}
@@ -91,7 +91,7 @@ export const paginateGroup = function (limit, pageNumber = 1, search = null, ord
     return new Promise((resolve, reject) => {
         Group.paginate(query, params).then(result => {
                 let docs = result.docs.map(async group => {
-                    group.users = await findUsersGroup(group, showDeleted)
+                    group.users = await findUsersGroup(group, showDeletedUsers)
                     return group
                 })
 

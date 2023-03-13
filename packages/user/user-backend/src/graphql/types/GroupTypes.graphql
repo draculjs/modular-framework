@@ -14,7 +14,7 @@ type GroupPaginated{
 type Query {
     groups: [Group]
     myGroups: [Group]
-    groupsPaginate(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean, myGroups: Boolean, showDeleted: Boolean): GroupPaginated
+    groupsPaginate(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean, myGroups: Boolean, showDeletedUsers: Boolean): GroupPaginated
     group(id:ID!): Group
     groupByName(name: String!): Group
 }

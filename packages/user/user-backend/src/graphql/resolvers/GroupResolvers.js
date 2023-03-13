@@ -38,9 +38,9 @@ export default {
             if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
             return findGroupByName(name)
         },
-        groupsPaginate: (_, {limit, pageNumber, search, orderBy, orderDesc, myGroups, showDeleted}, {user, rbac}) => {
+        groupsPaginate: (_, {limit, pageNumber, search, orderBy, orderDesc, myGroups, showDeletedUsers}, {user, rbac}) => {
             if (!rbac.isAllowed(user.id, SECURITY_GROUP_SHOW)) throw new ForbiddenError("Not Authorized")
-            return paginateGroup(limit, pageNumber, search, orderBy, orderDesc, myGroups ? user.id : null, showDeleted)
+            return paginateGroup(limit, pageNumber, search, orderBy, orderDesc, myGroups ? user.id : null, showDeletedUsers)
         },
 
     },
