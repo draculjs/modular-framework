@@ -7,6 +7,7 @@ const tempDir = require('./helpers/tempDir')
 const filterQuery = require('./query/filterQuery')
 const searchQuery = require('./query/searchQuery')
 const sortQuery = require('./query/sortQuery')
+const CustomApolloError = require('./errors/CustomApolloError')
 
 const {types, resolvers} =  require('./graphql')
 const mongoose = require('mongoose')
@@ -24,3 +25,4 @@ module.exports.sortQuery = sortQuery
 module.exports.commonTypes = types
 module.exports.commonResolvers = resolvers
 module.exports.mongoose = mongoose
+module.exports.CustomApolloError = CustomApolloError
