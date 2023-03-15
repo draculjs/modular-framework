@@ -444,12 +444,10 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
 
 
 export const findUsersGroup = async function (group, showDeletedUsers) {
-
     try {
-        const users = await User.find({groups: group.id})
-        return (!showDeletedUsers) ? users.filter(user => !user.deleted) : users
+        return (await User.find({groups: group.id, deleted: showDeletedUsers}))
     } catch (error) {
-        winston.error("UserService.findUsersGroup ", err)
+        winston.error("UserService.findUsersGroup ", error)
     }
 }
 
