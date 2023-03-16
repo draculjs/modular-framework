@@ -63,6 +63,9 @@ export default {
       me: state => state.user.me
     }),
     ...mapGetters(['isAuth']),
+    getRedirectParam(){
+      return this.$route.query.redirect
+    }
   },
   methods: {
     ...mapActions(['login']),
@@ -81,7 +84,12 @@ export default {
         password: b64EncodeUnicode(this.form.password),
       })
           .then(() => {
-            this.$router.push({name:'home'})
+            if(this.getRedirectParam){
+              this.$router.push(this.getRedirectParam)
+            }else{
+              this.$router.push({name:'home'})
+            }
+
           })
           .catch((err) => {
             this.error = this.$t(err)
