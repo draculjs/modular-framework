@@ -443,16 +443,12 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
 }
 
 
-export const findUsersGroup = function (group) {
-    return new Promise((resolve, reject) => {
-        User.find({groups: group.id}).then(users => {
-            winston.debug('UserService.findUsersGroup successful')
-            resolve(users)
-        }).catch(err => {
-            winston.error("UserService.findUsersGroup ", err)
-            reject(err)
-        })
-    })
+export const findUsersGroup = async function (group, showDeletedUsers) {
+    try {
+        return (await User.find({groups: group.id, deleted: showDeletedUsers}))
+    } catch (error) {
+        winston.error("UserService.findUsersGroup ", error)
+    }
 }
 
 

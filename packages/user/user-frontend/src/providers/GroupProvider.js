@@ -22,10 +22,10 @@ class GroupProvider {
         })
     }
 
-    paginateGroups(limit, pageNumber, search = null, orderBy = null, orderDesc = false, myGroups= false) {
+    paginateGroups(limit, pageNumber, search = null, orderBy = null, orderDesc = false, myGroups = false, showDeletedUsers = false) {
         return this.gqlc.query({
             query: require('./gql/groupsPaginate.graphql'),
-            variables: {limit, pageNumber, search, orderBy, orderDesc, myGroups},
+            variables: {limit, pageNumber, search, orderBy, orderDesc, myGroups, showDeletedUsers},
             fetchPolicy: "network-only"
         })
     }

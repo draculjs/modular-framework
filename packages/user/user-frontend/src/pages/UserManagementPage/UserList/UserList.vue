@@ -145,7 +145,7 @@ export default {
         {text: this.$t('user.label.fullname'), value: 'name'},
         {text: this.$t('user.label.username'), value: 'username'},
         {text: this.$t('user.label.email'), value: 'email'},
-        {text: this.$t('user.label.role'), value: 'role.name'},
+        {text: this.$t('user.label.role'), value: 'role.name', sortable: false},
         {text: this.$t('user.label.active'), value: 'active'},
         {text: this.$t('user.label.actions'), value: 'action', sortable: false},
         {text: '', value: 'data-table-expand'},
