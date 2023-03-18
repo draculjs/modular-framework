@@ -64,6 +64,8 @@ export const getSettingsValueByKey = async function (key) {
                                 return resolve(doc.valueList.map(v => parseFloat(v)))
                             case 'number':
                                 return resolve(parseFloat(doc.value))
+                            case 'boolean':
+                                return doc.value === 'enable'
                             default:
                                 return resolve(doc.value)
                         }

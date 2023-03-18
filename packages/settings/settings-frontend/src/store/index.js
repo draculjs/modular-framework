@@ -27,6 +27,8 @@ export default {
                             return item.valueList.map(v => parseFloat(v))
                         case 'number':
                             return parseFloat(item.value)
+                        case 'boolean':
+                            return item.value === 'enable'
                         default:
                             return item.value
                     }
