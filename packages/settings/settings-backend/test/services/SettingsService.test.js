@@ -1,7 +1,7 @@
-import {initSettings} from "../InitSettings";
-import {createSettings, findSettingsByKey, findSettingsByKeys, fetchSettings} from "../../src";
+import { findSettingsByKey, findSettingsByKeys, fetchSettings, getSettingsValueByKey} from "../../src";
 import {expect} from 'chai'
 import mongoInMemoryConnect from "../mongoInMemory";
+import {initializeSettings} from "../init/settings.init";
 
 describe("SettingsService", () => {
 
@@ -10,14 +10,31 @@ describe("SettingsService", () => {
         await mongoInMemoryConnect()
         let settings = await fetchSettings()
         console.log("fetchSettings", settings)
-        for(let setting of initSettings){
-            await createSettings(null, setting)
-        }
+        await initializeSettings()
 
         return true
     });
 
+    it('getSettingsValueByKey stringSetting', async () => {
+        let stringSetting = await getSettingsValueByKey('name')
 
+        console.log("name",stringSetting)
+        expect(stringSetting).equal("John")
+    });
+
+    it('getSettingsValueByKey numberSetting', async () => {
+        let numberSetting = await getSettingsValueByKey('age')
+
+        console.log("age",numberSetting)
+        expect(numberSetting).equal(37)
+    });
+
+    it('getSettingsValueByKey booleanSetting', async () => {
+        let booleanSetting = await getSettingsValueByKey('extraordinary')
+
+        console.log("booleanSetting",booleanSetting)
+        expect(booleanSetting).equal(true)
+    });
 
     it('findSettingsByKey', async () => {
         let setting = await findSettingsByKey('pricePerKm')

@@ -55,6 +55,7 @@ export const getSettingsValueByKey = async function (key) {
             .exec(
                 (err, doc) => {
                     if(err) return reject(err)
+                    console.log("doc",doc)
                     if(doc){
                         switch (doc.type){
                             case 'stringList':
@@ -65,7 +66,7 @@ export const getSettingsValueByKey = async function (key) {
                             case 'number':
                                 return resolve(parseFloat(doc.value))
                             case 'boolean':
-                                return doc.value === 'enable'
+                                return resolve(doc.value === "enable" )
                             default:
                                 return resolve(doc.value)
                         }

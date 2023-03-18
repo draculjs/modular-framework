@@ -1,20 +1,20 @@
 export const initSettings = [
     {
-        key: 'pricePerKm',
+        key: 'numberSetting',
         type: 'number',
         value: 1,
-        label: {en: 'Price per Kilometer', es: 'Precio por Kilometro', pt: 'Price per Kilometer'}
+        label: {en: 'numberSetting', es: 'numberSetting', pt: 'numberSetting'}
     },
     {
-        key: 'minCost',
-        type: 'number',
-        value: 2,
-        label: {en: 'Minimun cost', es: 'Costo mínimo', pt: 'Minimun cost'}
+        key: 'stringSetting',
+        type: 'string',
+        value: "hola",
+        label: {en: 'stringSetting', es: 'stringSetting', pt: 'stringSetting'}
     },
     {
-        key: 'maxKmForMinCost',
-        type: 'number',
-        value: 3,
-        label: {en: 'Maximun Km for minimun cost', es: 'Kilómetros máximos para coste mínimo', pt: 'Maximun Km for minimun cost'}
+        key: 'booleanSetting',
+        type: 'boolean',
+        value: 'enable',
+        label: {en: 'booleanSetting', es: 'booleanSetting', pt: 'booleanSetting'}
     }
 ]

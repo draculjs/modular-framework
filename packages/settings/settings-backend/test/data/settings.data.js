@@ -24,7 +24,7 @@ export const SETTING3 = {
     _id: ObjectId(),
     key: 'extraordinary',
     type: 'boolean',
-    value: true,
+    value: 'enable',
     group: 'Default',
     label: {en: 'Extraordinary', es: 'Extraordinario', pt: 'Extraordinario'}
 }
