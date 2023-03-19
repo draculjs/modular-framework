@@ -24,17 +24,28 @@
       <v-icon>add</v-icon>
     </v-btn>
 
+    <snackbar v-model="snackbarMessage"  color="error"></snackbar>
   </v-row>
 </template>
 
 <script>
+import Snackbar from "../Snackbar";
 export default {
   name: "FormList",
+  components: {Snackbar},
   props: {
     value: {type: Array, required: true},
     label: {type: String},
     icon: {type: String},
-    newItem: {type: [String, Object], required: true}
+    newItem: {type: [String, Object], required: true},
+    minLength: {type: Number},
+    maxLength: {type: Number},
+
+  },
+  data(){
+    return {
+      snackbarMessage: null
+    }
   },
   computed: {
     items: {
@@ -46,14 +57,29 @@ export default {
       }
     }
   },
+  created(){
+    if(this.minLength >= 1 && this.items.length < this.minLength ){
+      for(let i=0 ; i < this.minLength; i++){
+        this.addItem()
+      }
+    }
+  },
   methods: {
     updateItem(val, index) {
       this.$set(this.items, index, val)
     },
     addItem() {
+      if(this.maxLength > 1 && this.items.length >= this.maxLength ){
+        this.snackbarMessage = this.$t('error.LIST_MAX_REACHED')
+        return
+      }
       this.items.push(this.newItem)
     },
     removeItem(index) {
+      if(this.minLength >= 1 && this.items.length == this.minLength  ){
+        this.snackbarMessage = this.$t('error.LIST_MIN_REACHED')
+        return
+      }
       this.items.splice(index, 1)
     }
   }
