@@ -21,7 +21,7 @@ export default {
         settingsFind: (_, {id}, __) => {
             return findSettings(id)
         },
-        settingsFindByKey: (_, {Key}, __) => {
+        settingsFindByKey: (_, {key}, __) => {
             return findSettingsByKey(key)
         },
         settingsFetch: (_, {}, __) => {
