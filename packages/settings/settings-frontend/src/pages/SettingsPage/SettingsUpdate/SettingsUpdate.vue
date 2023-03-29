@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     getValue(){
-      return this.form.value.toString()
+      return this.form.value === null ? null : this.form.value.toString()
     },
     getValueList(){
       return (this.form.valueList && this.form.valueList.length > 0) ? this.form.valueList.map(i => i.toString()) : []
