@@ -241,7 +241,7 @@ export const createSettings = async function (authUser, {key, entityText, entity
 
 export const updateSettings = async function (authUser, id, {key, entityText, entityValue, value, label, type, options, regex}) {
 
-    const docValue = value ? value.toString() : null
+    const docValue = (value || typeof value === 'boolean' || value === 0) ? value.toString() : null
 
     return new Promise((resolve, rejects) => {
         Settings.findOneAndUpdate({_id: id},
@@ -275,7 +275,7 @@ export const updateSettings = async function (authUser, id, {key, entityText, en
 export const updateSettingsByKey = async function (authUser, {key,  value, valueList = []}) {
     return new Promise((resolve, rejects) => {
 
-        const docValue = (value || typeof value === 'boolean') ? value.toString() : null
+        const docValue = (value || typeof value === 'boolean' || value === 0) ? value.toString() : null
         const docValueList = valueList ? valueList.map(i => i.toString()) : []
 
         Settings.findOneAndUpdate({key: key},

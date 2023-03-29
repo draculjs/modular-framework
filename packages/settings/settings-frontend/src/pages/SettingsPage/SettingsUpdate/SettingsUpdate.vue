@@ -45,10 +45,10 @@ export default {
   },
   computed: {
     getValue(){
-      return this.form.value ? this.form.value.toString() : this.form.value
+      return this.form.value.toString()
     },
     getValueList(){
-      return this.form.value ? this.form.valueList.map(i => i.toString()) : this.form.valueList
+      return (this.form.valueList && this.form.valueList.length > 0) ? this.form.valueList.map(i => i.toString()) : []
     }
   },
   methods: {
