@@ -55,7 +55,7 @@ export const getSettingsValueByKey = async function (key) {
             .exec(
                 (err, doc) => {
                     if(err) return reject(err)
-                    console.log("doc",doc)
+                    //console.log("doc",doc)
                     if(doc){
                         switch (doc.type){
                             case 'stringList':
