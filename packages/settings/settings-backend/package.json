@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-backend",
-  "version": "1.20.2",
+  "version": "1.20.4",
   "description": "Settings",
   "main": "./lib/index.js",
   "scripts": {
