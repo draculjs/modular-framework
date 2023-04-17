@@ -53,7 +53,6 @@
                     chips multiple
                     :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
                     color="secondary"
-                    :rules="validateNumberList"
         >
         </v-combobox>
 
@@ -118,13 +117,13 @@ export default {
       return [val => {
         if (!this.item.regex) return true
         let regex = new RegExp(/\d+/)
-        return regex.test(val) || 'Formato Invalido.'
+        return regex.test(val) || 'Formato Invalido. Solo se esperan números.'
       }]
     },
     validateNumberList() {
       return [val => {
         let regex = new RegExp(/\d+/)
-        return val.every(v => regex.test(v)) || 'Formato Invalido.'
+        return val.every(v => regex.test(v)) || 'Formato Invalido. Solo se esperan números.'
       }]
     }
   },
