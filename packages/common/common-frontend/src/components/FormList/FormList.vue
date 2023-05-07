@@ -58,13 +58,19 @@ export default {
     }
   },
   created(){
-    if(this.minLength >= 1 && this.items.length < this.minLength ){
-      for(let i=0 ; i < this.minLength; i++){
-        this.addItem()
-      }
-    }
+    this.addMinItems()
+  },
+  watch: {
+    minLength() {this.addMinItems()},
   },
   methods: {
+    addMinItems(){
+      if(this.minLength >= 1 && this.items.length < this.minLength ){
+        for(let i=0 ; i < (this.minLength - this.items.length); i++){
+          this.addItem()
+        }
+      }
+    },
     updateItem(val, index) {
       this.$set(this.items, index, val)
     },
