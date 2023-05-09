@@ -52,7 +52,7 @@ export default {
                     .catch(e => reject(e))
             })
         },
-        updateSettingValueByKey({commit},{key, value, valueList=[]}) {
+        updateSettingValueByKey({commit},{key, value, valueList= []}) {
             return new Promise((resolve, reject) => {
                 SettingsProvider.settingValueUpdateByKey(key, value, valueList)
                     .then(r => {
