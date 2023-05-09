@@ -54,7 +54,7 @@ export default {
         },
         updateSettingValueByKey({commit},{key, value, valueList=[]}) {
             return new Promise((resolve, reject) => {
-                SettingsProvider.settingValueUpdateByKey(key, value)
+                SettingsProvider.settingValueUpdateByKey(key, value,valueList)
                     .then(r => {
                         commit('setSetting', {key, value, valueList})
                         resolve(r.data.settingValueUpdateByKey)
