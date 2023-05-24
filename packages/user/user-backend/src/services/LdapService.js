@@ -10,7 +10,7 @@ async function isLdapAuthEnabled(){
         const LDAP_AUTH_SETTING = await getLdapVar('LDAP_AUTH')
         const LDAP_IP = await getLdapVar('LDAP_IP')
 
-        if((LDAP_AUTH_SETTING === 'enable' && LDAP_IP)){
+        if( ( LDAP_AUTH_SETTING === true || LDAP_AUTH_SETTING === 'enable') && LDAP_IP){
             return true
         }else{
             return false
@@ -35,7 +35,9 @@ async function getLdapVar(varName){
     try {
         const ldapVariable = await SettingCache(varName)
 
-        if(!ldapVariable && process.env[varName]){
+        console.log('ldapVariable', ldapVariable, "varName",varName)
+
+        if((ldapVariable === null || ldapVariable === undefined) && process.env[varName]){
             return process.env[varName]
 
         } else if(!ldapVariable && !process.env[varName]){
@@ -53,7 +55,7 @@ async function getLdapVar(varName){
 
 function connectToLDAP(ip, port = '389') {
     if (!ip) throw new Error('LDAP IP not found')
-        
+
     return new Promise((resolve, reject) => {
         let ldapClient
 
@@ -98,7 +100,7 @@ function loginInLdap(user, pass, asAdmin = false) {
         } catch (error) {
             reject(error.message + "in LOGINLDAP")
         }
-    })    
+    })
 }
 
 function mapLdapAttributesToUserObject(entry) {

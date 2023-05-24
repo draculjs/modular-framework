@@ -18,7 +18,7 @@ import {
 
 import {initializeSettings} from "@dracul/settings-backend";
 import {LDAP_SETTINGS_TEST} from "../data/settings.data";
-import {DESARROLLO_ROLE} from "../data/roles.data";
+import {DESARROLLO_ROLE, IMPLEMENTADOR_ROLE} from "../data/roles.data";
 
 describe("LdapService", () => {
 
@@ -28,7 +28,7 @@ describe("LdapService", () => {
         await initAdminRole()
         await initSupervisorRole()
         await initRootUser()
-        await initRoles([DESARROLLO_ROLE])
+        await initRoles([DESARROLLO_ROLE, IMPLEMENTADOR_ROLE])
         await initializeSettings(LDAP_SETTINGS_TEST)
         console.log("SETUP DONE")
     });
@@ -44,6 +44,9 @@ describe("LdapService", () => {
 
         let ldapDn = await getLdapVar('LDAP_DN')
         expect(ldapDn).toBe('dc=snd,dc=int')
+
+        let ldapAuth = await getLdapVar('LDAP_AUTH')
+        expect(ldapAuth).toBe(true)
     })
 
     test('Connection to LDAP', async () => {
@@ -84,7 +87,7 @@ describe("LdapService", () => {
 
         const entry = await searchUserInLdap(user.username, ldapClient)
         const userInfo = mapLdapAttributesToUserObject(entry)
-        
+
         console.log("userInfo",userInfo)
 
         await expect(userInfo).toBeInstanceOf(Object)
@@ -124,13 +127,13 @@ describe("LdapService", () => {
         }
 
         const supervisorUser = await authLdapAndGetUser(credentials1.username, credentials1.password)
-        await expect(supervisorUser.role.name).toBe('supervisor')
+        await expect(supervisorUser.role.name).toBe('implementador')
 
         const desarrolladorUser = await authLdapAndGetUser(credentials2.username, credentials2.password)
         await expect(desarrolladorUser.role.name).toBe('Desarrollo')
 
     }, 2000)
 
-    
+
 })
 

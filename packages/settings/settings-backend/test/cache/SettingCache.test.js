@@ -1,9 +1,8 @@
-import mongoInMemoryConnect from "../mongoInMemory";
+import mongoInMemoryConnect from "../mongo-in-memory";
 import {initializeSettings} from "../init/settings.init";
 import {expect} from 'chai'
 import SettingCache from "../../src/cache/SettingCache";
-import { getSettingsValueByKey} from "../../src";
-import {updateSettingsByKey} from "../../src/services/SettingsService";
+import {updateSettingsByKey, getSettingsValueByKey} from "../../src/services/SettingsService";
 
 
 const sleep = (seconds) => {
@@ -16,12 +15,12 @@ describe("SettingCache", () => {
 
 
     beforeEach(async () => {
-        await mongoInMemoryConnect()
+        await mongoInMemoryConnect.connect()
         await initializeSettings()
     });
 
     afterEach(async () => {
-
+        await mongoInMemoryConnect.disconnect()
     })
 
 
@@ -29,41 +28,41 @@ describe("SettingCache", () => {
 
         let name = await SettingCache('name',3)
         let age = await SettingCache('age',3)
-        let extraordinary = await SettingCache('extraordinary',3)
-        let numberList = await SettingCache('numberList',3)
+        let theBoolean = await SettingCache('TheBoolean',3)
+        let numberList = await SettingCache('TheNumberList',3)
 
         expect(name).equal('John')
         expect(age).equal(37)
-        expect(extraordinary).equal(true)
+        expect(theBoolean).equal(true)
         expect(numberList[0]).equal(1)
         expect(numberList[1]).equal(2)
         expect(numberList[2]).equal(3)
 
         await updateSettingsByKey(null, {key: 'name', value:'Cristian'})
         await updateSettingsByKey(null, {key: 'age', value: 38})
-        await updateSettingsByKey(null, {key: 'extraordinary', value: null})
-        await updateSettingsByKey(null, {key: 'numberList', valueList: [4,5,6]})
+        await updateSettingsByKey(null, {key: 'TheBoolean', value: null})
+        await updateSettingsByKey(null, {key: 'TheNumberList', valueList: [4,5,6]})
 
         let nameCache = await SettingCache('name',3)
         let ageCache = await SettingCache('age',3)
-        let extraordinaryCache = await SettingCache('extraordinary',3)
-        let numberListCache = await SettingCache('numberList',3)
+        let theBooleanCache = await SettingCache('TheBoolean',3)
+        let numberListCache = await SettingCache('TheNumberList',3)
 
         expect(nameCache).equal('John')
         expect(ageCache).equal(37)
-        expect(extraordinaryCache).equal(true)
+        expect(theBooleanCache).equal(true)
         expect(numberListCache[0]).equal(1)
         expect(numberListCache[1]).equal(2)
         expect(numberListCache[2]).equal(3)
 
         let nameDb = await getSettingsValueByKey('name')
         let ageDb = await getSettingsValueByKey('age')
-        let extraordinaryDB = await getSettingsValueByKey('extraordinary')
-        let numberListDB = await getSettingsValueByKey('numberList')
+        let theBooleanDB = await getSettingsValueByKey('TheBoolean')
+        let numberListDB = await getSettingsValueByKey('TheNumberList')
 
         expect(nameDb).equal('Cristian')
         expect(ageDb).equal(38)
-        expect(extraordinaryDB).equal(false)
+        expect(theBooleanDB).equal(false)
         expect(numberListDB[0]).equal(4)
         expect(numberListDB[1]).equal(5)
         expect(numberListDB[2]).equal(6)
@@ -73,8 +72,8 @@ describe("SettingCache", () => {
 
         let nameCache2 = await SettingCache('name',3)
         let ageCache2 = await SettingCache('age',3)
-        let extraordinaryCache2 = await SettingCache('extraordinary',3)
-        let numberListCache2 = await SettingCache('numberList',3)
+        let extraordinaryCache2 = await SettingCache('TheBoolean',3)
+        let numberListCache2 = await SettingCache('TheNumberList',3)
 
         expect(nameCache2).equal('Cristian')
         expect(ageCache2).equal(38)

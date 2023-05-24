@@ -11,3 +11,13 @@ export const DESARROLLO_ROLE = {
     "deletedAt" : null,
     "readonly" : true
 }
+
+export const IMPLEMENTADOR_ROLE = {
+    "_id" : ObjectId("62a9ee85dac4cf0993de71ac"),
+    "permissions" : [],
+    "childRoles" : null,
+    "name" : "implementador",
+    "deleted" : false,
+    "deletedAt" : null,
+    "readonly" : true
+}

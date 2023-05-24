@@ -2,7 +2,7 @@ export const LDAP_SETTINGS_TEST = [
     {
         key: 'LDAP_AUTH',
         type: 'boolean',
-        value: false,
+        value: true,
         label: {en: 'LDAP AUTH', es: 'LDAP AUTH', pt: 'LDAP AUTH'}
     },
     {

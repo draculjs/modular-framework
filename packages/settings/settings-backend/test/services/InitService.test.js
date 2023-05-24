@@ -1,6 +1,6 @@
 import mongoInMemoryConnect from "../mongoInMemory";
 import {initializeSetting, initializeSettings} from "../../src/services/SettingsService";
-import {SETTING1, SETTINGS} from "../data/settings.data";
+import {SETTING_STRING, SETTINGS} from "../data/settings.data";
 import {fetchSettings, findSettingsByKey} from "../../src/services/SettingsService";
 import {expect} from 'chai'
 
@@ -14,7 +14,7 @@ describe("SettingsService", () => {
     });
 
     it('initialize one Setting happy path', async () => {
-        let settingDoc = await initializeSetting(SETTING1)
+        let settingDoc = await initializeSetting(SETTING_STRING)
 
         expect(settingDoc.key).equal('name')
         let settingFromDB = await findSettingsByKey('name')

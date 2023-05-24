@@ -143,6 +143,7 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
 
 export const createOrUpdateSettings = async (authUser, {key, entityText, entityValue, value, valueList, label, type, group, options, regex, entity, field}) => {
     const setting = await Settings.findOne({key})
+
     if(setting){
         setting.entityText = entityText
         setting.entityValue = entityValue
@@ -169,7 +170,13 @@ export const createOrUpdateSettings = async (authUser, {key, entityText, entityV
         })
     }
 
-    const docValue = value ? value.toString() : null
+    let docValue = null
+    if( typeof value === 'boolean'){
+        docValue = value ? "enable" : "disable"
+    }else if(value || value === 0){
+        docValue = value.toString()
+    }
+
     const docValueList = valueList ? valueList.map(i => i.toString()) : []
 
     const newSetting = new Settings({
@@ -275,7 +282,14 @@ export const updateSettings = async function (authUser, id, {key, entityText, en
 export const updateSettingsByKey = async function (authUser, {key,  value, valueList = []}) {
     return new Promise((resolve, rejects) => {
 
-        const docValue = (value || typeof value === 'boolean' || value === 0) ? value.toString() : null
+       let docValue = null
+
+       if( typeof value === 'boolean'){
+            docValue = value ? "enable" : "disable"
+       }else if(value || value === 0){
+           docValue = value.toString()
+       }
+
         const docValueList = valueList ? valueList.map(i => i.toString()) : []
 
         Settings.findOneAndUpdate({key: key},
