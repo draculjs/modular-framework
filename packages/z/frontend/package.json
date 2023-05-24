@@ -1,6 +1,6 @@
 {
   "name": "integration-frontend",
-  "version": "1.20.10",
+  "version": "1.20.11",
   "private": true,
   "scripts": {
     "front": "vue-cli-service serve",
@@ -14,13 +14,13 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@dracul/audit-frontend": "^1.20.10",
-    "@dracul/common-frontend": "^1.20.10",
-    "@dracul/customize-frontend": "^1.20.10",
-    "@dracul/media-frontend": "^1.20.10",
-    "@dracul/notification-frontend": "^1.20.10",
-    "@dracul/settings-frontend": "^1.20.10",
-    "@dracul/user-frontend": "^1.20.10",
+    "@dracul/audit-frontend": "^1.20.11",
+    "@dracul/common-frontend": "^1.20.11",
+    "@dracul/customize-frontend": "^1.20.11",
+    "@dracul/media-frontend": "^1.20.11",
+    "@dracul/notification-frontend": "^1.20.11",
+    "@dracul/settings-frontend": "^1.20.11",
+    "@dracul/user-frontend": "^1.20.11",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
