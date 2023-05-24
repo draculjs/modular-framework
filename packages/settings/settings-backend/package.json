@@ -17,7 +17,7 @@
     "dracul"
   ],
   "dependencies": {
-    "@dracul/common-backend": "^1.18.1"
+    "@dracul/common-backend": "^1.20.10"
   },
   "peerDependencies": {
     "apollo-server-express": "^2.25.3",

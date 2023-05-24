@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
-    "@dracul/common-backend": "^1.18.1",
-    "@dracul/logger-backend": "^1.16.3",
+    "@dracul/common-backend": "^1.20.10",
+    "@dracul/logger-backend": "^1.20.10",
     "@dracul/user-backend": "^1.20.10",
     "multer": "^1.4.5-lts.1",
     "streamifier": "^0.1.1"
