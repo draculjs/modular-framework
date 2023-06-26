@@ -1,0 +1,7 @@
+mutation deleteIp($id: ID!){
+    deleteIp(id: $id){
+        id
+        value
+        enable
+    }
+}

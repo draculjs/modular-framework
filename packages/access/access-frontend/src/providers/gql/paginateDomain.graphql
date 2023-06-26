@@ -1,0 +1,11 @@
+query paginateDomain($pageNumber: Int, $itemsPerPage: Int, $search: String, $orderBy: String, $orderDesc: Boolean){
+    paginateDomain(pageNumber: $pageNumber, itemsPerPage: $itemsPerPage, search: $search, orderBy: $orderBy, orderDesc: $orderDesc){
+        totalItems
+        page
+        items{
+            id
+            value
+            enable
+        }
+    }
+}

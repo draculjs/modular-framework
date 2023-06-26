@@ -1,0 +1,7 @@
+mutation createIp($input: IpInput){
+    createIp(input: $input){
+        id,
+        value,
+        enable
+    }
+}

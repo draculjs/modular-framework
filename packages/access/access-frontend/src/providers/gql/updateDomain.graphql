@@ -1,0 +1,7 @@
+mutation updateDomain($id: ID!, $input: DomainInput!){
+    updateDomain(id: $id, input: $input){
+        id
+        value
+        enable
+    }
+}

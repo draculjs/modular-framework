@@ -1,0 +1,29 @@
+type Domain {
+    id: ID!
+    value: String!
+    enable: Boolean!
+}
+
+type DomainPaginated{
+    totalItems: Int!
+    page: Int!
+    items: [Domain!]
+}
+
+type Query {
+    findDomain(id:ID!): Domain
+    fetchDomain: [Domain]
+    paginateDomain(pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): DomainPaginated
+    fetchEnabledDomains: [Domain]
+}
+
+type Mutation {
+    createDomain(input: DomainInput): Domain
+    updateDomain(id: ID!, input: DomainInput!): Domain
+    deleteDomain(id: ID!): Domain
+}
+
+input DomainInput {
+    value: String!
+    enable: Boolean!
+}

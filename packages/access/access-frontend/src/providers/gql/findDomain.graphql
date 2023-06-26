@@ -1,0 +1,7 @@
+query findDomain($id: ID!){
+    findDomain(id: $id){
+        id,
+        value,
+        enable
+    }
+}
