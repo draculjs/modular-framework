@@ -1,0 +1,7 @@
+mutation updateIp($id: ID!, $input: IpInput!){
+    updateIp(id: $id, input: $input){
+        id
+        value
+        enable
+    }
+}

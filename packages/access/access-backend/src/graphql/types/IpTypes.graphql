@@ -1,0 +1,29 @@
+type Ip {
+    id: ID!
+    value: String!
+    enable: Boolean!
+}
+
+type IpPaginated{
+    totalItems: Int!
+    page: Int!
+    items: [Ip!]
+}
+
+type Query {
+    findIp(id:ID!): Ip
+    fetchIp: [Ip]
+    paginateIp(pageNumber: Int, itemsPerPage: Int, search: String, orderBy: String, orderDesc: Boolean): IpPaginated
+    fetchEnabledIp: [Ip]
+}
+
+type Mutation {
+    createIp(input: IpInput): Ip
+    updateIp(id: ID!, input: IpInput!): Ip
+    deleteIp(id: ID!): Ip
+}
+
+input IpInput {
+    value: String!
+    enable: Boolean!
+}

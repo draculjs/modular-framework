@@ -1,0 +1,7 @@
+mutation deleteDomain($id: ID!){
+    deleteDomain(id: $id){
+        id
+        value
+        enable
+    }
+}

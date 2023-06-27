@@ -1,0 +1,7 @@
+query findIp($id: ID!){
+    findIp(id: $id){
+        id,
+        value,
+        enable
+    }
+}
