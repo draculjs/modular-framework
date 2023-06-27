@@ -55,5 +55,6 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3",
     "zod": "^3.21.4"
-  }
+  },
+  "gitHead": "8e9cd2b14a606d4bef642c9501e70de4b2e06ac7"
 }
