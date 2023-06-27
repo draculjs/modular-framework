@@ -10,6 +10,9 @@
     "lib": "lib",
     "test": "__tests__"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "lib"
   ],
@@ -56,5 +59,5 @@
     "mongoose-unique-validator": "^2.0.3",
     "zod": "^3.21.4"
   },
-  "gitHead": "8e9cd2b14a606d4bef642c9501e70de4b2e06ac7"
+  "gitHead": "a6ca58a5b9e59155e49518af10c0012682bb66dd"
 }

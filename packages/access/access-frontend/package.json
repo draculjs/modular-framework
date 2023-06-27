@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "access",
     "control",
@@ -47,5 +50,5 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "gitHead": "8e9cd2b14a606d4bef642c9501e70de4b2e06ac7"
+  "gitHead": "a6ca58a5b9e59155e49518af10c0012682bb66dd"
 }
