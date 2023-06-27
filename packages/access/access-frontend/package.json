@@ -1,10 +1,9 @@
 {
   "name": "@dracul/access-frontend",
-  "version": "1.0.0",
+  "version": "1.21.0",
   "description": "vue access-control",
   "main": "./src/index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
