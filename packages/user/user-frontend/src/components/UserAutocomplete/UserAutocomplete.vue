@@ -114,7 +114,6 @@ export default {
     }
   },
   mounted() {
-    console.log('rules: ', this.rules)
     this.loadUsers()
   },
   methods: {
