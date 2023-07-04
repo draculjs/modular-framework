@@ -14,6 +14,7 @@
       :multiple="multiple"
       :loading="loading"
       :clearable="clearable"
+      :rules="rules"
   >
     <template v-slot:selection="data">
       <v-chip
@@ -72,6 +73,10 @@ export default {
     value: {
       type: [String, Array]
     },
+    required: {
+      type: Boolean,
+      required: false
+    },
     filled: {type: Boolean, default: false},
     solo: {type: Boolean, default: false},
     multiple: {type: Boolean, default: false},
@@ -81,7 +86,8 @@ export default {
     backgroundColor: {type: String},
     label: {type: String, default: 'user.users'},
     placeholder: {type: String, default: 'user.users'},
-    defaultAvatar: {type: String}
+    defaultAvatar: {type: String},
+    roleName: {type: String}
   },
   data() {
     return {
@@ -90,6 +96,10 @@ export default {
     }
   },
   computed: {
+    rules(){
+      if(this.required) return [v => (!!v || v === 0) || this.$t('common.required')];
+      return false
+    },
     getDefaultAvatar() {
       return this.defaultAvatar ? this.defaultAvatar : require("../../assets/user.png")
     },
@@ -104,6 +114,7 @@ export default {
     }
   },
   mounted() {
+    console.log('rules: ', this.rules)
     this.loadUsers()
   },
   methods: {
@@ -122,12 +133,17 @@ export default {
     },
     loadUsers() {
       this.loading = true
-      UserProvider.users().then(r => {
-            this.users = r.data.users
-          }
-      ).catch(err => {
-        console.error(err)
-      }).finally(() => this.loading = false)
+      if(this.roleName){
+        UserProvider.usersByRole(this.roleName)
+            .then(r => {this.users = r.data.usersByRole})
+            .catch(err => {console.error(err)})
+            .finally(() => this.loading = false)
+      }else{
+        UserProvider.users()
+            .then(r => {this.users = r.data.users})
+            .catch(err => {console.error(err)})
+            .finally(() => this.loading = false)
+      }
     }
   }
 }
