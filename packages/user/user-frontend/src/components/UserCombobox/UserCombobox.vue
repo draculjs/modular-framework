@@ -13,6 +13,7 @@
       :dense="dense"
       :clearable="clearable"
       :disabled="disabled"
+      :rules="rules"
   ></v-select>
 </template>
 
@@ -24,6 +25,10 @@ export default {
   props: {
     value: {
       type: [String, Array]
+    },
+    required: {
+      type: Boolean,
+      required: false
     },
     multiple: {type: Boolean, default: false},
     chips: {type: Boolean, default: false},
@@ -40,6 +45,10 @@ export default {
     }
   },
   computed: {
+    rules(){
+      if(this.required) return [v => (!!v || v === 0) || this.$t('common.required')]
+      return false
+    },
     userValue: {
       get() {
         return this.value
