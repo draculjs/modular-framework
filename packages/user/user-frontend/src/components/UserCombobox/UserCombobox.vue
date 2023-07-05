@@ -47,7 +47,7 @@ export default {
   computed: {
     rules(){
       if(this.required) return [v => (!!v || v === 0) || this.$t('common.required')]
-      return false
+      return null
     },
     userValue: {
       get() {
