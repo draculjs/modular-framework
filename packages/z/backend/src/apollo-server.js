@@ -4,6 +4,7 @@ import {GqlErrorLog, GqlResponseLog} from "@dracul/logger-backend";
 
 //Apollo Server
 export const apolloServer = new ApolloServer({
+    uploads: false,
     typeDefs,
     resolvers,
     context: ({req}) => {
