@@ -1,10 +1,10 @@
 
 import express from 'express';
+import fs from 'fs';
 
 const router = express.Router();
 const multer = require('multer')
 const upload = multer()
-const streamifier = require('streamifier');
 import { findFile, paginateFiles, updateFileRest } from "../../services/FileService";
 import { fileUpload } from "../../services/UploadService";
 import {
@@ -61,12 +61,13 @@ router.post('/file', upload.single('file'), async function (req, res) {
     if (!req.user) res.status(401).json({ message: "Not Authorized" })
     if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
 
-    const { expirationTime, isPublic } = req.body;
+    const { expirationTime, isPublic } = req.body
+    const createReadStream = fs.createReadStream(req.file.buffer)
 
-    let file = {
+    const file = {
         filename: req.file.originalname,
         mimetype: req.file.mimetype,
-        createReadStream: () => streamifier.createReadStream(req.file.buffer),
+        createReadStream,
         encoding: req.file.encoding
     }
 
