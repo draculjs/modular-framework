@@ -169,7 +169,7 @@ export default {
     }
   },
   mounted () {
-    this.file.fileReplaces.forEach(element => element.date = this.getDateTimeFormat(element.date, true))
+    this.file?.fileReplaces?.forEach(element => element.date = this.getDateTimeFormat(element.date, true))
   },
   computed: {
     isImage() {
