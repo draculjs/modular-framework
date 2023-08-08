@@ -12,7 +12,7 @@ const mongoConnect = require('./mongo-db')
 DefaultLogger.info("Starting APP")
 
 //Connect to MongoDb
-await mongoConnect()
+mongoConnect()
 
 userCreateListener()
 
