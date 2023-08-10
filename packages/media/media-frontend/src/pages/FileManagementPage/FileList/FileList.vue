@@ -54,11 +54,11 @@
         </template>
 
         <template v-slot:item.createdAt="{item}">
-          {{ getDateFormat(item.createdAt) }}
+          {{ getDateTimeFormat(item.createdAt, true) }}
         </template>
 
         <template v-slot:item.lastAccess="{item}">
-          {{ getDateFormat(item.lastAccess) }}
+          {{ getDateTimeFormat(item.lastAccess, true) }}
         </template>
 
         <template v-slot:item.action="{ item }">
