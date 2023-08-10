@@ -12,6 +12,7 @@ import * as userStoragePermissions from './permissions/UserStorage'
 import { userCreateListener } from './listeners/UserCreateListener'
 import { updateFileMiddleware } from "./middleware"
 import FileRouter from "./rest/routers/FileRouter"
+import usersStorageRouter from "./rest/routers/UsersStorageRouter.js"
 
 import {
     findFile,
@@ -35,8 +36,9 @@ export {
     //Middleware
     updateFileMiddleware,
 
-    //API ROUTE
+    //API ROUTES
     FileRouter,
+    usersStorageRouter,
 
     //Permissions
     filePermissions,
