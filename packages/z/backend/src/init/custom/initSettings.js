@@ -9,6 +9,8 @@ const settings = [
         value: "StringValue",
         group: 'Basic',
         label: {en: 'String Key', es: 'String Key', pt: 'String Key'},
+        prefix: 'PREFIX',
+        suffix: 'SUFFIX'
     },
 
     {
@@ -17,6 +19,8 @@ const settings = [
         value: "123",
         group: 'Basic',
         label: {en: 'Number Key', es: 'Number Key', pt: 'Number Key'},
+        prefix: '$',
+        suffix: 'KM'
     },
 
 

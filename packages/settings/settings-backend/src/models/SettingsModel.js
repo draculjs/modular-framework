@@ -21,6 +21,8 @@ const SettingsSchema = new Schema({
     entity: {type: String, required: false},
     entityValue: {type: String, required: false},
     entityText: {type: String, required: false, unique: false},
+    prefix: {type: String, required: false},
+    suffix: {type: String, required: false},
 })
 
 SettingsSchema.plugin(mongoosePaginate);

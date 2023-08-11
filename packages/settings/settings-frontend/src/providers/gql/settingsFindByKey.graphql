@@ -16,5 +16,7 @@ query settingsFindByKey($key:String!){
         entity
         entityValue
         entityText
+        prefix
+        suffix
     }
 }

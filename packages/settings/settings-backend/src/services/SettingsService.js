@@ -141,7 +141,7 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
     })
 }
 
-export const createOrUpdateSettings = async (authUser, {key, entityText, entityValue, value, valueList, label, type, group, options, regex, entity, field}) => {
+export const createOrUpdateSettings = async (authUser, {key, entityText, entityValue, value, valueList, label, type, group, options, regex, entity, field, prefix, suffix}) => {
     const setting = await Settings.findOne({key})
 
     if(setting){
@@ -154,6 +154,8 @@ export const createOrUpdateSettings = async (authUser, {key, entityText, entityV
         setting.regex = regex
         setting.entity = entity
         setting.field = field
+        setting.prefix = prefix
+        setting.suffix = suffix
 
         return new Promise((resolve, rejects) => {
             setting.save((error => {
@@ -191,7 +193,9 @@ export const createOrUpdateSettings = async (authUser, {key, entityText, entityV
         options,
         regex,
         entity,
-        field
+        field,
+        prefix,
+        suffix
     })
 
     newSetting.id = newSetting._id
@@ -212,7 +216,7 @@ export const createOrUpdateSettings = async (authUser, {key, entityText, entityV
 }
 
 
-export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, group, options, regex, entity, field}) {
+export const createSettings = async function (authUser, {key, entityText, entityValue, value, label, type, group, options, regex, entity, field, prefix, suffix}) {
 
     const docValue = value ? value.toString() : null
 
@@ -227,7 +231,7 @@ export const createSettings = async function (authUser, {key, entityText, entity
         options,
         regex,
         entity,
-        field
+        field, prefix, suffix
     })
 
     doc.id = doc._id;
@@ -246,7 +250,7 @@ export const createSettings = async function (authUser, {key, entityText, entity
     })
 }
 
-export const updateSettings = async function (authUser, id, {key, entityText, entityValue, value, label, type, options, regex}) {
+export const updateSettings = async function (authUser, id, {key, entityText, entityValue, value, label, type, options, regex, prefix, suffix}) {
 
     const docValue = (value || typeof value === 'boolean' || value === 0) ? value.toString() : null
 
@@ -260,7 +264,7 @@ export const updateSettings = async function (authUser, id, {key, entityText, en
                 label,
                 ...(type ? {type} : {}),
                 ...(options ? {options} : {}),
-                regex
+                regex, prefix, suffix
             },
             {new: true, runValidators: true, context: 'query'},
             (error, doc) => {

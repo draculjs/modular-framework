@@ -7,7 +7,10 @@
                       prepend-icon="text_snippet"
                       :name="item.key" v-model="form.value"
                       :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]" color="secondary"
-                      :rules="validateRegex">
+                      :rules="validateRegex"
+                      :prefix="item.prefix"
+                      :suffix="item.suffix"
+        >
         </v-text-field>
 
         <!--number-->
@@ -16,7 +19,10 @@
                       v-model.number="form.value" :name="item.key"
                       :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
                       :rules="validateNumber"
-                      color="secondary">
+                      color="secondary"
+                      :prefix="item.prefix"
+                      :suffix="item.suffix"
+        >
         </v-text-field>
 
         <!--boolean-->

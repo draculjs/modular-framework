@@ -16,5 +16,7 @@ query settingsFind($id:ID!){
         entity
         entityValue
         entityText
+        prefix
+        suffix
     }
 }

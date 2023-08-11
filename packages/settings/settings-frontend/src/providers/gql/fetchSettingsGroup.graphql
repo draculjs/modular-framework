@@ -18,6 +18,8 @@ query fetchSettingsGroup{
             entity
             entityValue
             entityText
+            prefix
+            suffix
         }
     }
 }

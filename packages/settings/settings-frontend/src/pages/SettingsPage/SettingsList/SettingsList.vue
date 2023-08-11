@@ -39,7 +39,7 @@
             </template>
 
             <template v-else>
-              {{ item.value }}
+             {{item.prefix}} {{ item.value }} {{item.suffix}}
             </template>
 
           </template>

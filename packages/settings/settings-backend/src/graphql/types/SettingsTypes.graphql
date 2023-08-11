@@ -12,6 +12,8 @@ type Settings{
     entity: String
     entityText: String
     entityValue: String
+    prefix: String
+    suffix: String
 }
 
 type SettingsPaginated{
