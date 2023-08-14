@@ -6,10 +6,31 @@ import { DefaultLogger as winston } from '@dracul/logger-backend';
 
 export const fetchUserStorage = async function () {
     try {
-        return (await userStorage.find({}).populate('user', ["username"]).exec())
+        return (await userStorage.find({}).populate('user').exec())
     } catch (error) {
         winston.error(`An error happened at the fetchUserStorage function: ${error}`)
-        throw error
+    }
+}
+
+export const getLimitedInfoAboutUserStorages = async function () {
+    try {
+        return (await userStorage.find({}).populate('user', ["username"]).exec())
+    } catch (error) {
+        winston.error(`An error happened at the getLimitedInfoAboutUserStorages function: ${error}`)
+    }
+}
+
+export const getUserStoragesByUsedPercentage = async (usedPercentage) => {
+    try {
+        const usedUserStorages = await getLimitedInfoAboutUserStorages()
+        const filteredUserStorages = usedUserStorages.filter(userStorage => {
+            const percentage = parseFloat(userStorage.usedSpace * 100 / userStorage.capacity).toFixed(2)
+            return percentage >= usedPercentage
+        })
+
+        return filteredUserStorages
+    } catch (error) {
+        winston.error(`An error happened at the getUserStoragesByUsedPercentage function: ${error}`)
     }
 }
 
@@ -18,7 +39,6 @@ export const findUserStorageByUser = async function (user) {
         return (await userStorage.findOne({ user: user.id }).populate('user').exec())
     } catch (error) {
         winston.error(`An error happened at the findUserStorageByUser function: ${error}`)
-        throw error
     }
 }
 
