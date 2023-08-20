@@ -17,7 +17,7 @@ class Worker {
      * Creates an instance of Worker.
      * @param {Consumer} consumer
      * @param {string} workerId
-     * @param {Function} handler - The handler must be a function that return a promise
+     * @param {Function} handler - The handler must be a function that return a promise or an async function
      * @param {Object} [options={}]
      */
     constructor(consumer, workerId, handler) {

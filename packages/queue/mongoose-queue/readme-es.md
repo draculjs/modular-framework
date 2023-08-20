@@ -131,7 +131,7 @@ Inicializa una instancia de Worker
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (payload)=>{console.log(payload)}
+const handler = (job)=>{console.log(job.payload)}
 let worker = new Worker(consumer,'worker1',handler)
 ```
 
@@ -145,7 +145,7 @@ Sin argumentos
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (payload)=>{console.log(payload)}
+const handler = (job)=>{console.log(job.payload)}
 let worker = new Worker(consumer,'worker1',handler)
 worker.work()
 ```
@@ -161,7 +161,7 @@ Ejecuta el worker como daemon. El worker ejecutara el metodo "work" continuament
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (payload)=>{console.log(payload)}
+const handler = (job)=>{console.log(job.payload)}
 let worker = new Worker(consumer,'worker1',handler)
 worker.run(10000)
 ```
@@ -177,7 +177,7 @@ sin argumentos
 ```js
 const {Consumer,Worker} = require('@dracul/mongoose-queue')
 let consumer = new Consumer('test')
-const handler = (payload)=>{console.log(payload)}
+const handler = (job)=>{console.log(job.payload)}
 let worker = new Worker(consumer,'worker1',handler)
 worker.run(10000)
 //...
