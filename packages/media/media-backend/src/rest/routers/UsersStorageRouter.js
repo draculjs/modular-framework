@@ -33,7 +33,7 @@ usersStorageRouter.get('/usedStorage/:percentage', async function (req, res) {
     if (usersStorage && usersStorage.length > 0) {
         res.status(200).json(usersStorage)
     } else {
-        res.status(400).json({ message: `No user storages were found that have occupied more than ${percentageValidation.parsedPercentage}% of their total space`  })
+        res.status(204).json({ message: `No user storages were found that have occupied more than ${percentageValidation.parsedPercentage}% of their total space`  })
     }
 })
 
