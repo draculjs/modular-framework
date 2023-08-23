@@ -12,6 +12,10 @@ export const fetchUserStorage = async function () {
     }
 }
 
+/**
+ * This function retrieves limited information about user storages; only the username.
+ * @returns {Promise<Array>} A promise that resolves to an array of user storages with limited information (the username).
+ */
 export const getLimitedInfoAboutUserStorages = async function () {
     try {
         return (await userStorage.find({}).populate('user', ["username"]).exec())
@@ -20,6 +24,11 @@ export const getLimitedInfoAboutUserStorages = async function () {
     }
 }
 
+/**
+ * This function retrieves user storages filtered by a given used percentage.
+ * @param {number} usedPercentage - The used percentage to filter user storages by.
+ * @returns {Promise<Array>} A promise that resolves to an array of user storages filtered by the used percentage. If an error occurs, it returns undefined.
+ */
 export const getUserStoragesByUsedPercentage = async (usedPercentage) => {
     try {
         const usedUserStorages = await getLimitedInfoAboutUserStorages()
