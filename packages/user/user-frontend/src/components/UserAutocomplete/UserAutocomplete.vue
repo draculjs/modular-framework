@@ -98,7 +98,7 @@ export default {
   computed: {
     rules(){
       if(this.required) return [v => (!!v || v === 0) || this.$t('common.required')];
-      return null
+      return []
     },
     getDefaultAvatar() {
       return this.defaultAvatar ? this.defaultAvatar : require("../../assets/user.png")
