@@ -12,7 +12,7 @@
           </slot>
         </v-col>
         <v-col cols="1">
-          <v-btn icon @click="removeItem(index)" small class="red--text text--darken-3">
+          <v-btn v-if="!readonly" icon @click="removeItem(index)" small class="red--text text--darken-3">
             <v-icon>close</v-icon>
           </v-btn>
         </v-col>
@@ -20,7 +20,7 @@
       <v-divider></v-divider>
 
     </v-col>
-    <v-btn icon @click="addItem">
+    <v-btn v-if="!readonly" icon @click="addItem">
       <v-icon>add</v-icon>
     </v-btn>
 
@@ -40,7 +40,7 @@ export default {
     newItem: {type: [String, Object], required: true},
     minLength: {type: Number},
     maxLength: {type: Number},
-
+    readonly: {type: Boolean, default:false}
   },
   data(){
     return {
