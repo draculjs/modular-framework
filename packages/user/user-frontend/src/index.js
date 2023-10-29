@@ -5,6 +5,7 @@ import UserCombobox from "./components/UserCombobox";
 import RoleCombobox from "./components/RoleCombobox";
 import UserAutocomplete from "./components/UserAutocomplete";
 import GroupAutocomplete from "./components/GroupAutocomplete";
+import GroupCombobox from "./components/GroupCombobox";
 import UserView from "./components/UserView";
 
 //Pages
@@ -57,6 +58,7 @@ export {
     RoleCombobox,
     UserAutocomplete,
     GroupAutocomplete,
+    GroupCombobox,
     UserView,
 
     //Pages
