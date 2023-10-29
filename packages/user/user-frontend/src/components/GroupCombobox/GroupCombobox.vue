@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import GroupProvider from "@/providers/GroupProvider";
+import GroupProvider from "../../providers/GroupProvider";
 
 export default {
   name: "GroupCombobox",
