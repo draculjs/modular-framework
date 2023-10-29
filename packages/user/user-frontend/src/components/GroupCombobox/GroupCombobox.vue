@@ -1,13 +1,13 @@
 <template>
   <v-select
-      v-model="userValue"
+      v-model="groupValue"
       :loading="loading"
-      :items="users"
-      :item-text="'username'"
+      :items="groups"
+      :item-text="'name'"
       :item-value="'id'"
       :chips="chips"
-      :label="multiple ? $t('user.users') : $t('user.user')"
-      :placeholder="multiple ? $t('user.users') : $t('user.user')"
+      :label="multiple ? $t('group.groups') : $t('group.group')"
+      :placeholder="multiple ? $t('group.groups') : $t('group.group')"
       :multiple="multiple"
       :hide-details="hideDetails"
       :dense="dense"
@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import UserProvider from "../../providers/UserProvider";
+import GroupProvider from "@/providers/GroupProvider";
 
 export default {
-  name: "UserCombobox",
+  name: "GroupCombobox",
   props: {
     value: {
       type: [String, Array]
@@ -42,12 +42,11 @@ export default {
     filled: {type: Boolean, default: false},
     solo: {type: Boolean, default: false},
     flat: {type: Boolean, default: false},
-    roleName: {type: String}
-
+    roleName: {type: String},
   },
   data() {
     return {
-      users: [],
+      groups: [],
       loading: false
     }
   },
@@ -56,7 +55,7 @@ export default {
       if(this.required) return [v => (!!v || v === 0) || this.$t('common.required')]
       return []
     },
-    userValue: {
+    groupValue: {
       get() {
         return this.value
       },
@@ -66,22 +65,15 @@ export default {
     }
   },
   mounted() {
-    this.loadUsers()
+    this.loadGroups()
   },
   methods: {
-    loadUsers() {
+    loadGroups() {
       this.loading = true
-      if(this.roleName){
-        UserProvider.usersByRole(this.roleName)
-            .then(r => {this.users = r.data.usersByRole})
+        GroupProvider.groups()
+            .then(r => {this.groups = r.data.groups})
             .catch(err => {console.error(err)})
             .finally(() => this.loading = false)
-      }else{
-        UserProvider.users()
-            .then(r => {this.users = r.data.users})
-            .catch(err => {console.error(err)})
-            .finally(() => this.loading = false)
-      }
     }
   }
 }
