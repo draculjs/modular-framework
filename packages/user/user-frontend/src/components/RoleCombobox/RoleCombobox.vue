@@ -9,6 +9,7 @@
       :label="$t('role.role')"
       :placeholder="$t('role.role')"
       :multiple="multiple"
+      :hide-details="hideDetails"
   ></v-select>
 </template>
 
@@ -18,11 +19,12 @@ import RoleProvider from "../../providers/RoleProvider";
 export default {
   name: "RoleCombobox",
   props: {
-      value: {
-        type: [String, Array]
-      },
-      multiple: {type:Boolean, default:false},
-      chips: {type:Boolean, default:false}
+    value: {
+      type: [String, Array]
+    },
+    multiple: {type: Boolean, default: false},
+    chips: {type: Boolean, default: false},
+    hideDetails: {type: Boolean, default: false},
   },
   data() {
     return {
@@ -32,15 +34,19 @@ export default {
   },
   computed: {
     roleValue: {
-      get() { return this.value },
-      set(val) {this.$emit('input', val)}
+      get() {
+        return this.value
+      },
+      set(val) {
+        this.$emit('input', val)
+      }
     }
   },
   mounted() {
     this.load()
   },
-  methods:{
-    load(){
+  methods: {
+    load() {
       this.loading = true
       RoleProvider.roles().then(r => {
             this.roles = r.data.roles

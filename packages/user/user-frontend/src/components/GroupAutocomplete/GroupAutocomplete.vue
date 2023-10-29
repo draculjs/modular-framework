@@ -14,6 +14,7 @@
       :multiple="multiple"
       :loading="loading"
       :clearable="clearable"
+      :hide-details="hideDetails"
   >
     <template v-slot:selection="data">
       <v-chip
@@ -73,6 +74,7 @@ export default {
     filled: {type: Boolean, default: false},
     solo: {type: Boolean, default: false},
     multiple: {type: Boolean, default: false},
+    hideDetails: {type: Boolean, default: false},
     chips: {type: Boolean, default: false},
     color: {type:String,default:"blue-grey lighten-2"},
     clearable: {type: Boolean, default: false},
