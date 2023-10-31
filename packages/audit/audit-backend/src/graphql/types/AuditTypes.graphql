@@ -18,3 +18,7 @@ type Query {
     fetchAudit: [Audit]
     paginateAudit( pageNumber: Int, itemsPerPage: Int, search: String, filters: [FilterInput],orderBy: String, orderDesc: Boolean): AuditPaginated
 }
+
+type Mutation {
+  createAudit(action: String!, resource: String!, description: String): Audit
+}
