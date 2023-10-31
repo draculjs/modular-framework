@@ -41,6 +41,14 @@ class AuditProvider {
         })
     }
 
+    createAudit(action, resource, description){
+        return this.getGraphqlClient().mutate({
+            mutation: require('./gql/Audit/createAudit.graphql'),
+            variables: {action, resource, description},
+            fetchPolicy: "no-cache"
+        }) 
+    }
+
 }
 
 export default new AuditProvider()

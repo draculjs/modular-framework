@@ -1,0 +1,12 @@
+mutation createAudit($action: String!, $resource: String!, $description: String){
+    createAudit(action: $action, resource: $resource, description: $description){
+        id
+        user{
+                id
+                username
+            }
+        action
+        resource
+    }
+}
+

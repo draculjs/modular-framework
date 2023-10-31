@@ -1,6 +1,7 @@
 const {
     findAudit,
     fetchAudit,
+    createAudit,
     paginateAudit
 } =  require("../../services/AuditService.js");
 
@@ -27,8 +28,14 @@ const resolvers = {
             if(!rbac.isAllowed(user.id, AUDIT_SHOW)) throw new ForbiddenError("Not Authorized")
             return paginateAudit(pageNumber, itemsPerPage, search, filters, orderBy, orderDesc)
         },
-        
-    }
+    },
+
+    Mutation: {
+        createAudit: (_, { action, resource, description }, { user }) => {
+          if (!user) throw new AuthenticationError("Unauthenticated")
+          return createAudit(user, { user: user.id, action, resource, description })
+        }
+      }
 }
 
 module.exports = resolvers;
