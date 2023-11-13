@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-frontend",
-  "version": "1.23.2",
+  "version": "1.24.0",
   "description": "Dracul Vue Queue",
   "main": "./src/index.js",
   "scripts": {
@@ -17,8 +17,8 @@
   "author": "Cristian Incarnato & Dracul Team",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.23.2",
-    "@dracul/dayjs-frontend": "^1.23.1"
+    "@dracul/common-frontend": "^1.24.0",
+    "@dracul/dayjs-frontend": "^1.24.0"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.6",
@@ -52,8 +52,8 @@
     "react-is": "^17.0.1",
     "sass": "^1.69.5",
     "sass-loader": "^8.0.2",
-    "vue-cli-plugin-vuetify": "^2.0.6",
     "vue": "^2.7.15",
+    "vue-cli-plugin-vuetify": "^2.0.6",
     "vue-template-compiler": "^2.7.15"
   },
   "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"

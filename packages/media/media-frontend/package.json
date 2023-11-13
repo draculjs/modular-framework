@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.23.9",
+  "version": "1.24.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -16,9 +16,9 @@
     "build": "vue-cli-service build --dest dist --mode production"
   },
   "dependencies": {
-    "@dracul/common-frontend": "^1.23.2",
-    "@dracul/dayjs-frontend": "^1.23.1",
-    "@dracul/user-frontend": "^1.23.9"
+    "@dracul/common-frontend": "^1.24.0",
+    "@dracul/dayjs-frontend": "^1.24.0",
+    "@dracul/user-frontend": "^1.24.0"
   },
   "peerDependencies": {
     "graphql": "^15.8.0",
@@ -43,8 +43,8 @@
     "jest": "^29.7.0",
     "sass": "^1.69.5",
     "sass-loader": "^8.0.2",
-    "vue-cli-plugin-vuetify": "~2.0.5",
     "vue": "^2.7.15",
+    "vue-cli-plugin-vuetify": "~2.0.5",
     "vue-template-compiler": "^2.7.15",
     "vuetify-loader": "^1.9.2"
   },

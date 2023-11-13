@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-backend",
-  "version": "1.23.1",
+  "version": "1.24.0",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "scripts": {
@@ -25,16 +25,16 @@
   },
   "homepage": "https://github.com/cincarnato/ci-custom-module#readme",
   "dependencies": {
-    "@dracul/common-backend": "^1.23.1",
-    "@dracul/logger-backend": "^1.23.1",
-    "@dracul/user-backend": "^1.23.1"
+    "@dracul/common-backend": "^1.24.0",
+    "@dracul/logger-backend": "^1.24.0",
+    "@dracul/user-backend": "^1.24.0"
   },
   "peerDependencies": {
+    "@graphql-tools/load-files": "^7.0.0",
+    "@graphql-tools/merge": "^9.0.0",
     "apollo-server-express": "^2.25.3",
     "graphql": "^15.8.0",
     "graphql-tools": "^8.2.0",
-    "@graphql-tools/load-files": "^7.0.0",
-    "@graphql-tools/merge": "^9.0.0",
     "mongoose": "5.13.21",
     "mongoose-paginate-v2": "^1.7.4",
     "mongoose-softdelete": "1.1.0",
@@ -47,11 +47,11 @@
     "@babel/plugin-transform-runtime": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/register": "^7.22.15",
+    "@graphql-tools/load-files": "^7.0.0",
+    "@graphql-tools/merge": "^9.0.0",
     "apollo-server-express": "^2.25.3",
     "graphql": "^15.8.0",
     "graphql-tools": "^8.2.0",
-    "@graphql-tools/load-files": "^7.0.0",
-    "@graphql-tools/merge": "^9.0.0",
     "mocha": "^8.2.0",
     "mongodb-memory-server": "^6.5.2",
     "mongoose": "5.13.21",
