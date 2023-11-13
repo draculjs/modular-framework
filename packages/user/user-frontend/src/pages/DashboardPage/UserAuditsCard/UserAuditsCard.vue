@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title v-t="'audit.userAudit'"></v-card-title>
+    <v-card-title v-t="'user.audit.userAudit'"></v-card-title>
 
 
     <v-card-text>
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     getMessage() {
-      return item => this.capitalize(this.$t('audit.' + item.action, {username: item.actionFor ? item.actionFor.username : '?'}))
+      return item => this.capitalize(this.$t('user.audit.' + item.action, {username: item.actionFor ? item.actionFor.username : '?'}))
     },
     capitalize() {
       return (s) => {
