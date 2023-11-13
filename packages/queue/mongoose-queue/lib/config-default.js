@@ -1,7 +1,6 @@
 "use strict";
 
 const dotenv = require('dotenv');
-
 dotenv.config();
 const config = {
   blockDuration: process.env.BLOCK_DURATION ? process.env.BLOCK_DURATION : 30000,

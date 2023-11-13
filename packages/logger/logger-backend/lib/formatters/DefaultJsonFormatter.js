@@ -4,13 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _winston = _interopRequireDefault(require("winston"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 require('dotenv').config();
-
 function DefaultJsonFormatter() {
   const {
     combine,
@@ -25,6 +21,4 @@ function DefaultJsonFormatter() {
     format: 'YYYY-MM-DD HH:mm:ss'
   }), json(), prettyPrint());
 }
-
-var _default = DefaultJsonFormatter;
-exports.default = _default;
+var _default = exports.default = DefaultJsonFormatter;

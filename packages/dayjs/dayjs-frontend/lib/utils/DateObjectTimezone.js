@@ -1,7 +1,6 @@
 "use strict";
 
 const Datetime = require('../utils/Dayjs');
-
 const dateObjectTimezone = function (date) {
   let obj = {};
   obj.hour = new Datetime(date).tz("America/Argentina/Buenos_Aires").format('HH');
@@ -10,5 +9,4 @@ const dateObjectTimezone = function (date) {
   obj.year = new Datetime(date).tz("America/Argentina/Buenos_Aires").format('YYYY');
   return obj;
 };
-
 module.exports = dateObjectTimezone;

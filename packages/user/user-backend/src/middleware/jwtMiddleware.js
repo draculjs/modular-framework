@@ -3,7 +3,8 @@ require('dotenv').config()
 
 const jwtMiddleware = jwt({
     secret: process.env.JWT_SECRET,
-    credentialsRequired: false
+    credentialsRequired: false,
+    algorithms: ['HS256']
 })
 
 

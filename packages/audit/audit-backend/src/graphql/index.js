@@ -1,19 +1,13 @@
-
-const path = require('path');
-const { fileLoader, mergeTypes, mergeResolvers } = require('merge-graphql-schemas');
-
+import path from 'path';
+const { loadFilesSync } = require('@graphql-tools/load-files')
+const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge')
 
 //TYPES
-const typesArray = fileLoader(path.join(__dirname, './types'));
-const types =  mergeTypes(typesArray, { all: true });
-
+const typesArray = loadFilesSync(path.join(__dirname, './types'), { extensions: ['graphql'] })
+export const types =  mergeTypeDefs(typesArray);
 
 //RESOLVERS
-const resolversArray = fileLoader(path.join(__dirname, './resolvers'));
-const resolvers =  mergeResolvers(resolversArray);
+const resolversArray = loadFilesSync(path.join(__dirname, './resolvers'))
+export const resolvers =  mergeResolvers(resolversArray);
 
 
-module.exports = {
-    types,
-    resolvers
-}

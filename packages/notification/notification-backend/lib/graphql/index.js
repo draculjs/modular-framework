@@ -1,23 +1,23 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.types = exports.resolvers = void 0;
-
 var _path = _interopRequireDefault(require("path"));
-
-var _mergeGraphqlSchemas = require("merge-graphql-schemas");
+var _require = require('@graphql-tools/load-files'),
+  loadFilesSync = _require.loadFilesSync;
+var _require2 = require('@graphql-tools/merge'),
+  mergeTypeDefs = _require2.mergeTypeDefs,
+  mergeResolvers = _require2.mergeResolvers;
 
 //TYPES
-var typesArray = (0, _mergeGraphqlSchemas.fileLoader)(_path["default"].join(__dirname, './types'));
-var types = (0, _mergeGraphqlSchemas.mergeTypes)(typesArray, {
-  all: true
-}); //RESOLVERS
+var typesArray = loadFilesSync(_path["default"].join(__dirname, './types'), {
+  extensions: ['graphql']
+});
+var types = exports.types = mergeTypeDefs(typesArray);
 
-exports.types = types;
-var resolversArray = (0, _mergeGraphqlSchemas.fileLoader)(_path["default"].join(__dirname, './resolvers'));
-var resolvers = (0, _mergeGraphqlSchemas.mergeResolvers)(resolversArray);
-exports.resolvers = resolvers;
+//RESOLVERS
+var resolversArray = loadFilesSync(_path["default"].join(__dirname, './resolvers'));
+var resolvers = exports.resolvers = mergeResolvers(resolversArray);

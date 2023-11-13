@@ -19,24 +19,24 @@
   "license": "MIT",
   "peerDependencies": {
     "dayjs": "^1.10.7",
-    "vue": "^2.7.4",
-    "vuetify": "2.6.10"
+    "vue": "^2.7.15",
+    "vuetify": "2.7.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.7",
-    "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
-    "@babel/register": "^7.12.13",
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.3",
+    "@babel/node": "^7.22.19",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/register": "^7.22.15",
     "babel-eslint": "^10.1.0",
     "cpx": "^1.5.0",
     "dayjs": "^1.10.7",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "mocha": "^8.2.0",
-    "vue": "^2.7.4",
-    "vue-template-compiler": "^2.7.4",
-    "vuetify": "2.6.10"
+    "vue": "^2.7.15",
+    "vue-template-compiler": "^2.7.15",
+    "vuetify": "2.7.1"
   },
   "bugs": {
     "url": "https://github.com/draculjs/modular-framework/issues"

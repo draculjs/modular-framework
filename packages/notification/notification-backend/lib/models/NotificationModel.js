@@ -1,9 +1,7 @@
 "use strict";
 
 var _commonBackend = require("@dracul/common-backend");
-
 var mongoosePaginate = require("mongoose-paginate-v2");
-
 var Schema = _commonBackend.mongoose.Schema;
 var NotificationSchema = new Schema({
   user: {
@@ -41,7 +39,5 @@ var NotificationSchema = new Schema({
   }
 });
 NotificationSchema.plugin(mongoosePaginate);
-
 var Notification = _commonBackend.mongoose.model("Notification", NotificationSchema);
-
 module.exports = Notification;

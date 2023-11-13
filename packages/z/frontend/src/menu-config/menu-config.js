@@ -11,18 +11,22 @@ export default [
         icon: 'perm_media',
         text:'Media Explorer',
         link: { name: "home" },
+        requiresAuth: true,
+        permission: "FILE_SHOW_OWN",
         children: [
             {
                 icon: 'file_present',
                 text: 'media.file.title',
                 link: { name: "FileManagementPage" },
                 requiresAuth: true,
+                permission: "FILE_SHOW_OWN"
             },
 
             {
                 icon: 'dashboard',
                 text: 'media.userStorage.title',
                 link: { name: "UserStoragePage" },
+                requiresAuth: true,
                 permission: "USER_STORAGE_SHOW_ALL"
             },
 
@@ -81,13 +85,7 @@ export default [
             },
 
         ]
-    },
-    {
-        icon: 'perm_phone_msg',
-        text: 'base.about',
-        link: { name: "about" },
-        panel: false,
-    },
+    }
 
 
 ]

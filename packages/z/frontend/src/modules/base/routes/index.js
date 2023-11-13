@@ -7,12 +7,12 @@ import TestPage from '../pages/TestPage'
 
 const routes = [
     {name: "root",  path: '/', redirect: {name: 'home'}},
-    {name: "home", path: '/home', component: Home},
-    {name: "test", path: '/test', component: TestPage},
-    {name: "about", path: '/about', component: About},
-    {name: "serverStatus", path: '/server-status', component: ServerStatus},
-    {name: "serverTimeout", path: '/server-timeout', component: ServerTimeout},
-    {name: "errorSample", path: '/error-sample', component: ErrorSamplePage},
+    {name: "home", path: '/home', component: Home, meta: {requiresAuth: true} },
+    {name: "test", path: '/test', component: TestPage, meta: {requiresAuth: true}},
+    {name: "about", path: '/about', component: About, meta: {requiresAuth: true}},
+    {name: "serverStatus", path: '/server-status', component: ServerStatus, meta: {requiresAuth: true}},
+    {name: "serverTimeout", path: '/server-timeout', component: ServerTimeout, meta: {requiresAuth: true}},
+    {name: "errorSample", path: '/error-sample', component: ErrorSamplePage, meta: {requiresAuth: true}},
 
 ]
 

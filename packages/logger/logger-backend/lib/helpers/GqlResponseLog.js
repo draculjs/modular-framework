@@ -4,13 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _GqlResponseLogger = _interopRequireDefault(require("../loggers/GqlResponseLogger"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 const unwrap = s => s.replace(/\n/g, '');
-
 function GqlResponseLog(requestContext) {
   try {
     if (process.env.LOG_GRAPHQL_RESPONSE == "ON") {
@@ -22,13 +18,10 @@ function GqlResponseLog(requestContext) {
       info.variables = JSON.stringify(requestContext.request.variables) || "";
       info.resp = JSON.stringify(requestContext.response.data) || "";
       let message = `GqlResp ${info.type} op:${info.operation} user:${info.user} qry: ${info.query} vars: ${info.variables} resp: ${info.resp} \n`;
-
       _GqlResponseLogger.default.info(message);
     }
   } catch (e) {
     console.error(e);
   }
 }
-
-var _default = GqlResponseLog;
-exports.default = _default;
+var _default = exports.default = GqlResponseLog;

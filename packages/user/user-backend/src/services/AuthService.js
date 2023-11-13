@@ -167,7 +167,16 @@ const generateToken = (user, sessionId) => {
 
     const options = {
         expiresIn: process.env.JWT_LOGIN_EXPIRED_IN || '1h',
-        jwtid: user.id
+        jwtid: user.id,
+        algorithm: 'HS256'
+    }
+
+    if(process.env.AUDIENCE){
+        options.audience = process.env.AUDIENCE
+    }
+
+    if(process.env.ISSUER){
+        options.issuer = process.env.ISSUER
     }
 
     let token = jsonwebtoken.sign(

@@ -153,25 +153,14 @@ Object.defineProperty(exports, "updateQueue", {
     return _QueueCrudService.updateQueue;
   }
 });
-
 var _QueueModel = _interopRequireDefault(require("./models/QueueModel"));
-
 var _QueueStatsModel = _interopRequireDefault(require("./models/QueueStatsModel"));
-
 var _Queue = _interopRequireDefault(require("./queue/Queue"));
-
 var _Producer = _interopRequireDefault(require("./queue/Producer"));
-
 var _Consumer = _interopRequireDefault(require("./queue/Consumer"));
-
 var _Worker = _interopRequireDefault(require("./queue/Worker"));
-
 var _WorkerManager = _interopRequireDefault(require("./queue/WorkerManager"));
-
 var _QueueService = require("./services/QueueService");
-
 var _QueueStatsService = require("./services/QueueStatsService");
-
 var _QueueCrudService = require("./services/QueueCrudService");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

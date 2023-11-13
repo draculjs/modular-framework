@@ -1,11 +1,8 @@
 "use strict";
 
 var _commonBackend = require("@dracul/common-backend");
-
 const Schema = _commonBackend.mongoose.Schema;
-
 const mongoosePaginate = require('mongoose-paginate-v2');
-
 const QueueSchema = new Schema({
   // time until the job is blocked for processing
   blockedUntil: {
@@ -85,7 +82,5 @@ const QueueSchema = new Schema({
   timestamps: true
 });
 QueueSchema.plugin(mongoosePaginate);
-
 const QueueModel = _commonBackend.mongoose.model('Queue', QueueSchema);
-
 module.exports = QueueModel;

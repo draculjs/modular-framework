@@ -4,15 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _RequestLogger = _interopRequireDefault(require("../loggers/RequestLogger"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function sanatizeIp(ip) {
   return ip.replace("::ffff:", "");
 }
-
 function ResponseTimeMiddleware(req, res, next) {
   if (process.env.LOG_RESPONSE_TIME === "ON") {
     let start = new Date();
@@ -27,13 +23,9 @@ function ResponseTimeMiddleware(req, res, next) {
       info.responseTime = duration + "ms";
       info.statusCode = res.statusCode;
       let message = `${info.method} ${info.dst} ${info.ip} ${info.user} ${info.operation} response: ${info.statusCode} ${info.responseTime}`;
-
       _RequestLogger.default.info(message);
     });
   }
-
   next();
 }
-
-var _default = ResponseTimeMiddleware;
-exports.default = _default;
+var _default = exports.default = ResponseTimeMiddleware;
