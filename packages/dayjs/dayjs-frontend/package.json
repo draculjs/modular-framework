@@ -18,7 +18,7 @@
   "author": "Cristian Incarnato",
   "license": "MIT",
   "peerDependencies": {
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.11.10",
     "vue": "^2.7.15",
     "vuetify": "2.7.1"
   },

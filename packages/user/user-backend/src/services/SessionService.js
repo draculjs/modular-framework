@@ -1,6 +1,6 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import Session from "../models/SessionModel";
-import moment from "moment";
+import dayjs from "dayjs";
 import DeviceDetector from 'node-device-detector'
 import geoLookup from "./utils/geoLookup";
 import getMatchIpv4 from "./utils/getMatchIpv4";
@@ -58,7 +58,7 @@ export const updateSession = async function (user) {
     if(user != undefined && user.idSession != undefined){
         Session.findOne({_id: user.idSession}).then(doc => {
             if(doc){
-                let now = moment()
+                let now = dayjs()
                 doc.until = now
                 doc.duration = now.diff(doc.since, 'seconds')
                 doc.request++
@@ -72,7 +72,7 @@ export const updateSession = async function (user) {
 }
 
 function getFromDate(time, unit) {
-    let now = moment()
+    let now = dayjs()
     let from = now.subtract(time, unit)
     return from.toDate();
 }

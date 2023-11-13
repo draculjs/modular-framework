@@ -65,7 +65,8 @@
     "nodemailer-pug-engine": "^2.0.1",
     "saslprep": "^1.0.3",
     "supertest": "^6.2.2",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "dayjs": "^1.11.10"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.0",

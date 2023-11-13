@@ -1,6 +1,6 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import LoginFail from "../models/LoginFailModel";
-import moment from "moment";
+import dayjs from "dayjs";
 import DeviceDetector from 'node-device-detector'
 import geoLookup from "./utils/geoLookup";
 import getMatchIpv4 from "./utils/getMatchIpv4";
@@ -50,7 +50,7 @@ export const createLoginFail = async function (username, req) {
 
 export const loginFailByUsername = async function (time = 72, unit = 'hours') {
     return new Promise((resolve, reject) => {
-        let now = moment()
+        let now = dayjs()
         let from = now.subtract(time, unit)
         LoginFail.aggregate(
             [

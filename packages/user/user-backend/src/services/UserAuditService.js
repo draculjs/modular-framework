@@ -1,10 +1,10 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import UserAudit from './../models/UserAuditModel'
 import {UserInputError} from 'apollo-server-express'
-import moment from "moment";
+import dayjs from "dayjs";
 
 function getFromDate(time, unit) {
-    let now = moment()
+    let now = dayjs()
     let from = now.subtract(time, unit)
     return from.toDate();
 }
