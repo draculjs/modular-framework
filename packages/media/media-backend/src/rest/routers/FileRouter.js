@@ -1,10 +1,3 @@
-
-import express from 'express';
-import fs from 'fs';
-
-const router = express.Router();
-const multer = require('multer')
-const upload = multer()
 import { findFile, paginateFiles, updateFileRest } from "../../services/FileService";
 import { fileUpload } from "../../services/UploadService";
 import {
@@ -12,6 +5,13 @@ import {
     FILE_SHOW_OWN,
     FILE_CREATE, FILE_SHOW_PUBLIC
 } from "../../permissions/File";
+
+import express from 'express';
+import { Readable } from 'stream';
+import multer from 'multer';
+
+const upload = multer()
+const router = express.Router();
 
 router.get('/file/:id', function (req, res) {
 
@@ -58,26 +58,27 @@ router.get('/file', function (req, res) {
 });
 
 router.post('/file', upload.single('file'), async function (req, res) {
-    if (!req.user) res.status(401).json({ message: "Not Authorized" })
-    if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
+    try {
+        if (!req.user) res.status(401).json({ message: "Not Authorized" })
+        if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
+        if (!req.file) res.status(400).json({ message: 'File was not provided' })
 
-    const { expirationTime, isPublic } = req.body
-    const createReadStream = fs.createReadStream(req.file.buffer)
+        const { expirationTime, isPublic } = req.body
+        const file = {
+            filename: req.file.originalname,
+            mimetype: req.file.mimetype,
+            createReadStream: () => Readable.from(req.file.buffer),
+            encoding: req.file.encoding,
+        }
 
-    const file = {
-        filename: req.file.originalname,
-        mimetype: req.file.mimetype,
-        createReadStream,
-        encoding: req.file.encoding
+        const fileUploadingResult = await fileUpload(req.user, file, expirationTime, isPublic)
+        res.status(201).json(fileUploadingResult)
+    } catch (error) {
+        console.error(`An error happened at the file uploading endpoint: '${error}'`)
+        res.status(409).send("An error happened when we tried to upload the file")
     }
-
-    fileUpload(req.user, file, expirationTime, isPublic).then(result => {
-        res.status(201).json(result)
-    }).catch(err => {
-        res.status(409).json({ message: err.message })
-    })
-
 })
+
 
 router.patch('/file/:id', async function (req, res) {
 
