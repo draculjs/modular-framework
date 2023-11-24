@@ -63,7 +63,12 @@ router.post('/file', upload.single('file'), async function (req, res) {
         if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
         if (!req.file) res.status(400).json({ message: 'File was not provided' })
 
-        const { expirationTime, isPublic } = req.body
+        let { expirationTime, isPublic, description, tags } = req.body
+
+        if(tags && typeof tags ==='string' && tags.length > 0){
+            tags = tags.split(',').map(tag => tag.trim())
+        }
+
         const file = {
             filename: req.file.originalname,
             mimetype: req.file.mimetype,
@@ -71,7 +76,7 @@ router.post('/file', upload.single('file'), async function (req, res) {
             encoding: req.file.encoding,
         }
 
-        const fileUploadingResult = await fileUpload(req.user, file, expirationTime, isPublic)
+        const fileUploadingResult = await fileUpload(req.user, file, expirationTime, isPublic, description, tags)
         res.status(201).json(fileUploadingResult)
     } catch (error) {
         console.error(`An error happened at the file uploading endpoint: '${error}'`)
