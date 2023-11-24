@@ -8,7 +8,7 @@
         @close="$emit('close')"
       />
 
-      <v-card-text>
+      <v-card-text style="overflow: auto">
         <slot></slot>
       </v-card-text>
 
