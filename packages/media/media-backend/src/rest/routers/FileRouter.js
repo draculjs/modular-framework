@@ -1,39 +1,38 @@
+import { FILE_SHOW_ALL, FILE_SHOW_OWN, FILE_CREATE, FILE_SHOW_PUBLIC } from "../../permissions/File";
 import { findFile, paginateFiles, updateFileRest } from "../../services/FileService";
 import { fileUpload } from "../../services/UploadService";
-import {
-    FILE_SHOW_ALL,
-    FILE_SHOW_OWN,
-    FILE_CREATE, FILE_SHOW_PUBLIC
-} from "../../permissions/File";
+import FileDTO from '../../DTOs/FileDTO.js'
 
-import express from 'express';
+import { DefaultLogger as winston } from '@dracul/logger-backend';
 import { Readable } from 'stream';
+import express from 'express';
 import multer from 'multer';
 
 const upload = multer()
-const router = express.Router();
+const router = express.Router()
 
-router.get('/file/:id', function (req, res) {
+router.get('/file/:id', async function (req, res) {
+    try {
+        const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
+        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
+        const userCanSeePublicFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
-    if (!req.user) res.status(401).json({ message: "Not Authorized" })
-    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
+        if (!req.user || !req.rbac) res.status(401).json({ message: "Not Authorized" })
+        if (!userCanSeeAllFiles && !userCanSeeItsOwnFiles) res.status(403).json({ message: "Not Authorized" })
 
-    let allFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
-    let ownFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
-    let publicAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
+        const file = await findFile(req.params.id, req.user.id, userCanSeeAllFiles, userCanSeeItsOwnFiles, userCanSeePublicFiles)
 
-    const { id } = req.params
-
-    findFile(id, req.user.id, allFilesAllowed, ownFilesAllowed, publicAllowed).then(file => {
-        if (file) {
-            res.status(200).json(file);
-        } else {
+        if (!file) {
             res.status(404).json({ message: 'File not found' })
+        } else {
+            res.status(200).json(new FileDTO(file))
         }
-    }).catch(err => {
-        res.status(500).json({ message: err.message })
-    })
-});
+
+    } catch (error) {
+        winston.error(`An error happened at the file by id router: '${error}'`)
+        res.status(500).json({ message: error.message })
+    }
+})
 
 router.get('/file', function (req, res) {
 
