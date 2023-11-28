@@ -175,7 +175,7 @@ export const paginateFiles = async function (
         ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
     }
 
-    let populate = ['createdBy.user']
+    let populate = ['createdBy.user.username']
     let sort = getSort(orderBy, orderDesc)
     let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
 
@@ -200,7 +200,7 @@ export const updateFile = async function (authUser, newFile, { id, description, 
                 { new: true, runValidators: true, context: 'query' }
             )
 
-            await fileUpdateResult.populate('createdBy.user').execPopulate()
+            await fileUpdateResult.populate('createdBy.user.username').execPopulate()
             return fileUpdateResult
 
         } catch (error) {

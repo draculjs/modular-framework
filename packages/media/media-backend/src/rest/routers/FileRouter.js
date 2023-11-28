@@ -1,7 +1,6 @@
 import { FILE_SHOW_ALL, FILE_SHOW_OWN, FILE_CREATE, FILE_SHOW_PUBLIC } from "../../permissions/File";
 import { findFile, paginateFiles, updateFileRest } from "../../services/FileService";
 import { fileUpload } from "../../services/UploadService";
-import FileDTO from '../../DTOs/FileDTO.js'
 
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import { Readable } from 'stream';
@@ -25,7 +24,7 @@ router.get('/file/:id', async function (req, res) {
         if (!file) {
             res.status(404).json({ message: 'File not found' })
         } else {
-            res.status(200).json(new FileDTO(file))
+            res.status(200).json(file)
         }
 
     } catch (error) {
