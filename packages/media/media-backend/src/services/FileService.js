@@ -1,23 +1,26 @@
-import File from '../models/FileModel'
-import { UserInputError } from 'apollo-server-express'
-import dayjs from 'dayjs'
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
-import fs from 'fs';
+import File from '../models/FileModel';
+
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import { GroupService } from '@dracul/user-backend';
 import { storeFile } from '@dracul/common-backend';
 
-export const findFile = async function (id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+import { UserInputError } from 'apollo-server-express';
+import dayjs from 'dayjs'
+import fs from 'fs';
 
-    if (id) {
-        let userGroups = await GroupService.fetchMyGroups(userId)
-        return new Promise((resolve, reject) => {
-            File.findOne({ _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) }).populate('createdBy.user').exec((err, res) => (
-                err ? reject(err) : resolve(res)
-            ));
-        })
-    } else {
-        throw new Error({ message: 'id field is required' })
+export const findFile = async function (id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+    try {
+        if (!id) throw new Error({ message: 'id field is required' })
+        const userGroups = await GroupService.fetchMyGroups(userId)
+        const file = await File.findOne({
+            _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
+        }).populate('createdBy.user').exec()
+
+        return file
+    } catch (error) {
+        winston.error(`An error happened at the findFile service: '${error}'`)
+        throw error
     }
 }
 
@@ -187,44 +190,44 @@ export const paginateFiles = async function (
 
 export const updateFile = async function (authUser, newFile, { id, description, tags, expirationDate, isPublic, groups, users }, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
 
-        async function updateDocFile(){
-            const userGroups = await GroupService.fetchMyGroups(userId)
+    async function updateDocFile() {
+        const userGroups = await GroupService.fetchMyGroups(userId)
 
-            try {
-                const fileUpdateResult = await File.findOneAndUpdate(
-                    { _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
-                    { description, tags, expirationDate, isPublic, groups, users },
-                    { new: true, runValidators: true, context: 'query' }
-                )
-    
-                await fileUpdateResult.populate('createdBy.user').execPopulate()
-                return fileUpdateResult
+        try {
+            const fileUpdateResult = await File.findOneAndUpdate(
+                { _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
+                { description, tags, expirationDate, isPublic, groups, users },
+                { new: true, runValidators: true, context: 'query' }
+            )
 
-            } catch (error) {
-                if (error.name == "ValidationError") throw (new UserInputError(error.message, { inputErrors: error.errors }))
-                throw error
-            }
+            await fileUpdateResult.populate('createdBy.user').execPopulate()
+            return fileUpdateResult
+
+        } catch (error) {
+            if (error.name == "ValidationError") throw (new UserInputError(error.message, { inputErrors: error.errors }))
+            throw error
         }
+    }
 
-        async function updateFileWithNewOne(fileToUpdate, newFile){
-                const newFileExtension = '.' + (await newFile).filename.split('.').pop()
-                    if (fileToUpdate.extension !== newFileExtension) throw new Error('The file update could not be made: the file extensions differ')
+    async function updateFileWithNewOne(fileToUpdate, newFile) {
+        const newFileExtension = '.' + (await newFile).filename.split('.').pop()
+        if (fileToUpdate.extension !== newFileExtension) throw new Error('The file update could not be made: the file extensions differ')
 
-                const relativePath = fileToUpdate.relativePath
-                const { createReadStream } = await newFile
-                    
-                await storeFile(createReadStream(), relativePath)
-                    
-                fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username })
-                fileToUpdate.save()
+        const relativePath = fileToUpdate.relativePath
+        const { createReadStream } = await newFile
 
-                console.log(`updateFileWithNewOne done at path '${relativePath}': '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`)
-        }
-        
-        const fileToUpdate = await updateDocFile()
-        if (newFile) await updateFileWithNewOne(fileToUpdate, newFile)
+        await storeFile(createReadStream(), relativePath)
 
-        return fileToUpdate
+        fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username })
+        fileToUpdate.save()
+
+        console.log(`updateFileWithNewOne done at path '${relativePath}': '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`)
+    }
+
+    const fileToUpdate = await updateDocFile()
+    if (newFile) await updateFileWithNewOne(fileToUpdate, newFile)
+
+    return fileToUpdate
 }
 
 // Rest service
