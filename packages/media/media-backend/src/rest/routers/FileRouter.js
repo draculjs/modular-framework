@@ -73,7 +73,12 @@ router.post('/file', upload.single('file'), async function (req, res) {
         res.status(201).json(fileUploadingResult)
     } catch (error) {
         console.error(`An error happened at the file uploading endpoint: '${error}'`)
-        res.status(409).send("An error happened when we tried to upload the file")
+
+        if (error.code === 'MAX_FILE_SIZE_EXCEEDED'){
+            res.status(413).send(error.message)
+        }else{
+            res.status(409).send("An error happened when we tried to upload the file")
+        }
     }
 })
 
