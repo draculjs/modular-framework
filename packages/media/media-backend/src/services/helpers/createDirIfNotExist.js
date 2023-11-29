@@ -1,13 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import path from 'path';
+import fs from 'fs';
 
-const createDirIfNotExist = function(dst){
-    let dir = path.dirname(dst)
-
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir, { recursive: true });
-    }
+export default function createDirIfNotExist(dst){
+    const directoryPath = path.dirname(dst)
+    if (!fs.existsSync(directoryPath)) fs.mkdirSync(directoryPath, { recursive: true })
 }
-
-module.exports.createDirIfNotExist = createDirIfNotExist
-module.exports =  createDirIfNotExist
