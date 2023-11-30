@@ -34,27 +34,28 @@ router.get('/file/:id', async function (req, res) {
     }
 })
 
-router.get('/file', function (req, res) {
+router.get('/file', async function (req, res) {
+    try {
+        if (!req.user) res.status(401).json({ message: "Not Authorized" })
+        if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
 
-    if (!req.user) res.status(401).json({ message: "Not Authorized" })
-    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
+        let allFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
+        let ownFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
+        let publicAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
-    let allFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
-    let ownFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
-    let publicAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
-
-    const { pageNumber, itemsPerPage, search, orderBy, orderDesc } = req.query
-
-    paginateFiles({ pageNumber, itemsPerPage, search, orderBy, orderDesc }, req.user.id, allFilesAllowed, ownFilesAllowed, publicAllowed).then(result => {
-        if (result) {
-            res.status(200).json(result);
-        } else {
-            res.status(404).json({ message: 'File not found' })
-        }
-    }).catch(err => {
-        res.status(500).json({ message: err.message })
-    })
-});
+        const { pageNumber, itemsPerPage, search, orderBy, orderDesc } = req.query
+        
+        const hideSensitiveData = true
+        const paginatedFiles = await paginateFiles({ pageNumber, itemsPerPage, search, orderBy, orderDesc },
+            req.user.id, allFilesAllowed, ownFilesAllowed, publicAllowed, hideSensitiveData
+        )
+        
+        if (!paginatedFiles) res.status(404).json({ message: 'File not found' })
+        res.status(200).json(paginatedFiles)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
 
 router.post('/file', upload.single('file'), async function (req, res) {
     try {
@@ -64,7 +65,7 @@ router.post('/file', upload.single('file'), async function (req, res) {
 
         let { expirationTime, isPublic, description, tags } = req.body
 
-        if(tags && typeof tags ==='string' && tags.length > 0){
+        if (tags && typeof tags === 'string' && tags.length > 0) {
             tags = tags.split(',').map(tag => tag.trim())
         }
 

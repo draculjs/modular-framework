@@ -1,5 +1,6 @@
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 import File from '../models/FileModel';
+import FileDTO from '../DTOs/FileDTO';
 
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import { GroupService } from '@dracul/user-backend';
@@ -85,7 +86,10 @@ export const paginateFiles = async function (
     userId = null,
     allFilesAllowed = false,
     ownFilesAllowed = false,
-    publicAllowed = false) {
+    publicAllowed = false,
+    hideSensitiveData = false
+    
+    ) {
 
     function qs(search) {
         let qs = {}
@@ -168,6 +172,14 @@ export const paginateFiles = async function (
 
     }
 
+    function hideSensitiveDataFromPaginatedFiles(filePaginationObject){
+        for (let index = 0; index < filePaginationObject.items.length; index++) {
+            filePaginationObject.items[index] = new FileDTO(filePaginationObject.items[index])
+        }
+
+        return filePaginationObject
+    }
+
     let userGroups = await GroupService.fetchMyGroups(userId)
     let query = {
         ...qs(search),
@@ -179,12 +191,10 @@ export const paginateFiles = async function (
     let sort = getSort(orderBy, orderDesc)
     let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
 
-    return new Promise((resolve, reject) => {
-        File.paginate(query, params).then(result => {
-            resolve({ items: result.docs, totalItems: result.totalDocs, page: result.page })
-        }
-        ).catch(err => reject(err))
-    })
+    const filePaginationResult = await File.paginate(query, params)
+    const filePaginationObject = { items: filePaginationResult.docs, totalItems: filePaginationResult.totalDocs, page: filePaginationResult.page }
+
+    return (hideSensitiveData) ? hideSensitiveDataFromPaginatedFiles(filePaginationObject) : filePaginationObject
 }
 
 
