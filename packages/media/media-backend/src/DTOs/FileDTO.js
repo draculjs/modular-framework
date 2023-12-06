@@ -1,5 +1,7 @@
+import mongoose from 'mongoose'
 export default class FileDTO {
     constructor(file) {
+        this.id = mongoose.Types.ObjectId(file.id)
         this.filename = file.filename
         this.description = file.description
 
