@@ -13,8 +13,8 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
     if (!user) throw new Error("user is required")
 
     let { filename, mimetype, encoding, createReadStream } = await inputFile
-    filename = filename.replaceAll(' ', '_')
-    let type = mimetype.split("/")[0]
+    filename = filename.replace(/ /g, '_')
+    const type = mimetype.split("/")[0]
 
     const parseFileName = path.parse(filename);
     const extension = parseFileName.ext
@@ -53,7 +53,7 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
 
       updateUserUsedStorage(user.id, fileSizeMB)
 
-      let doc = new File({
+      const doc = new File({
         filename: finalFileName,
         mimetype: mimetype,
         encoding: encoding,
@@ -75,7 +75,6 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
       await doc.save()
       winston.info("fileUploadAnonymous file saved: " + doc._id)
       return await doc.populate('createdBy.user').execPopulate()
-
     }
 
   } catch (error) {
@@ -89,11 +88,11 @@ function validateExpirationDate(expirationTime) {
   const today = new Date();
   const expirationDate = new Date(expirationTime);
   if (expirationDate > today) {
-    return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
+    return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2)
   }
-  return null;
+  return null
 }
 
 
-export { fileUpload }
-export default fileUpload
+export { fileUpload };
+export default fileUpload;
