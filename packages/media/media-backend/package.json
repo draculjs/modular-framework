@@ -61,5 +61,5 @@
     "nodemon": "^1.19.4",
     "supertest": "^6.1.6"
   },
-  "gitHead": "80d422e8ae9934dbb34fefb7efddacf21200e548"
+  "gitHead": "e10d9dbe4c988729fecf43e6183cf37851defac0"
 }
