@@ -11,6 +11,8 @@ import ErrorHandlerMiddleware from "./middlewares/ErrorHandlerMiddleware";
 import mediaRoute from "./routes/MediaRoute";
 import statusRoute from "./routes/StatusRoute";
 
+import { swaggerUiMiddleware, swaggerUiOptions } from '@dracul/media-backend';
+
 export const expressApp = express();
 
 //Middlewares
@@ -28,11 +30,11 @@ expressApp.use(updateFileMiddleware)
 expressApp.use(mediaRoute)
 expressApp.use(statusRoute)
 
-
 //Error handler Middleware
 expressApp.use(ErrorHandlerMiddleware)
 
 
 expressApp.use("/api", [FileRouter, usersStorageRouter])
+expressApp.use("/api-docs", swaggerUiMiddleware, swaggerUiOptions)
 
 export default expressApp
