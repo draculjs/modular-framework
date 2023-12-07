@@ -12,8 +12,8 @@ const fileUpload = function (user, inputFile, expirationDate, isPublic = false, 
 
       if (!user) return rejects(new Error("user is required"))
 
-      let { filename, mimetype, encoding, createReadStream } = await inputFile
-      filename = filename.replaceAll(' ', '_')
+      const { filename, mimetype, encoding, createReadStream } = await inputFile;
+
       let type = mimetype.split("/")[0]
 
       const parseFileName = path.parse(filename);

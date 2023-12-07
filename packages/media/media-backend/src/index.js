@@ -1,9 +1,9 @@
-import { resolvers, types } from './graphql'
+import {resolvers, types} from './graphql'
 
 import * as FileService from './services/FileService'
 import * as UserStorageService from './services/UserStorageService'
 
-import { userStorageCheckAndCreate } from './services/UserStorageService'
+import {userStorageCheckAndCreate} from './services/UserStorageService'
 import fileUpload from './services/UploadService'
 import fileUploadAnonymous from './services/UploadAnonymousService'
 import InitMediaPermissions from './services/InitMediaPermissions'
@@ -13,8 +13,6 @@ import { userCreateListener } from './listeners/UserCreateListener'
 import { updateFileMiddleware } from "./middleware"
 import FileRouter from "./rest/routers/FileRouter"
 import usersStorageRouter from "./rest/routers/UsersStorageRouter.js"
-
-import { swaggerUiMiddleware, swaggerUiOptions } from './rest/swagger.js'
 
 import {
     findFile,
@@ -51,9 +49,5 @@ export {
     fetchFiles,
     deleteFile,
     paginateFiles,
-    updateFile,
-
-    //Swagger docs middleware
-    swaggerUiMiddleware,
-    swaggerUiOptions,
+    updateFile
 }
