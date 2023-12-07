@@ -80,7 +80,7 @@ paths:
     post:
       tags:
       - "file"
-      description: "Este endpoint permite cargar un archivo en un cuerpo multipart/form-data"
+      description: "Este endpoint permite cargar un fichero"
       summary: "Sube ficheros"
       operationId: "postFile"
       consumes:
