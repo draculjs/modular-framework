@@ -10,6 +10,10 @@ import { UserInputError } from 'apollo-server-express';
 import dayjs from 'dayjs'
 import fs from 'fs';
 
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
+
+
 export const findFile = async function (id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
     try {
         if (!id) throw new Error({ message: 'id field is required' })
@@ -88,8 +92,8 @@ export const paginateFiles = async function (
     ownFilesAllowed = false,
     publicAllowed = false,
     hideSensitiveData = false
-    
-    ) {
+
+) {
 
     function qs(search) {
         let qs = {}
@@ -172,7 +176,7 @@ export const paginateFiles = async function (
 
     }
 
-    function hideSensitiveDataFromPaginatedFiles(filePaginationObject){
+    function hideSensitiveDataFromPaginatedFiles(filePaginationObject) {
         for (let index = 0; index < filePaginationObject.items.length; index++) {
             filePaginationObject.items[index] = new FileDTO(filePaginationObject.items[index])
         }
@@ -180,16 +184,16 @@ export const paginateFiles = async function (
         return filePaginationObject
     }
 
-    let userGroups = await GroupService.fetchMyGroups(userId)
-    let query = {
+    const userGroups = await GroupService.fetchMyGroups(userId)
+    const query = {
         ...qs(search),
         ...filterValues(filters),
         ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
     }
 
-    let populate = ['createdBy.user']
-    let sort = getSort(orderBy, orderDesc)
-    let params = { page: pageNumber, limit: itemsPerPage, populate, sort }
+    const populate = ['createdBy.user']
+    const sort = getSort(orderBy, orderDesc)
+    const params = { page: pageNumber, limit: itemsPerPage, populate, sort }
 
     const filePaginationResult = await File.paginate(query, params)
     const filePaginationObject = { items: filePaginationResult.docs, totalItems: filePaginationResult.totalDocs, page: filePaginationResult.page }
@@ -241,187 +245,158 @@ export const updateFile = async function (authUser, newFile, { id, description, 
 }
 
 // Rest service
-export const updateFileRest = function (id, user, permissionType, input) {
-    // VER
-    return new Promise(async (resolve, reject) => {
+export const updateFileRest = async function (id, user, permissionType, { description, expirationDate, tags, isPublic }) {
+    try {
+        winston.info(`{ description, expirationDate, tags, isPublic }: '${description}|${expirationDate}|${tags}|${isPublic}'`)
+        if (!description && !expirationDate && !tags && !isPublic) throw new Error("File fields to update were not provided")
 
-        let updatedFile = purgeInput(input);
+        const userProvidedDate = dayjs(expirationDate, 'DD/MM/YYYY')
 
-        if (!input || Object.entries(input).length == 0) {
-            throw reject({ message: "File content can not be empty", status: 400 })
-        }
+        winston.info(`userProvidedDate: ${userProvidedDate}`)
 
-        let userStorage = await findUserStorageByUser(user)
+        if (!userProvidedDate.isValid()) throw new Error('Invalid date format')
 
-        let timeDiffExpirationDate = validateExpirationDate(input.expirationDate)
+        const formattedExpirationDate = userProvidedDate.format('YYYY/MM/DD')
+        winston.info(`formattedExpirationDate: ${formattedExpirationDate}`)
+
+        const userStorage = await findUserStorageByUser(user)
+        const timeDiffExpirationDate = validateExpirationDate(formattedExpirationDate)
 
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
-            throw reject({
-                message: `File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`,
-                status: 403
-            })
+            throw new Error(`File expiration can not be longer than max user expiration time per file: (${userStorage.fileExpirationTime} days)`)
         }
 
-        // Find file and update it with the request body
-        File.findOneAndUpdate({ _id: id, ...filterByPermissions(permissionType, user.id) },
-            { $set: updatedFile },
-            { new: true })
-            .then(file => {
-                if (!file) {
-                    throw reject({ message: `file not found with id ${id}`, status: 404 })
-                }
-                resolve(file);
-            }).catch(err => {
-                if (err.kind === 'ObjectId') {
-                    throw reject({ message: `file not found with id ${id}`, status: 404 })
-                }
-                throw reject({ message: `Error updating file with id ${id}. Error: ${err}`, status: 500 })
-            });
-    });
+        const updatedFile = await File.findOneAndUpdate(
+            { _id: id, ...filterByPermissions(permissionType, user.id) },
+            { $set: { description, expirationDate: formattedExpirationDate, tags, isPublic } },
+            { new: true }
+        )
+
+        if (!updatedFile) throw new Error(`file not found with id ${id}`)
+        return updatedFile
+    } catch (error) {
+        winston.error(`An error happened at the updateFileRest service: '${error}'`)
+    }
 }
 
-export const updateByRelativePath = function (relativePath) {
-
-    return new Promise((resolve, rejects) => {
-        File.findOneAndUpdate({ relativePath: relativePath },
+export const updateByRelativePath = async function (relativePath) {
+    try {
+        return await File.findOneAndUpdate(
+            { relativePath: relativePath },
             { lastAccess: Date.now(), '$inc': { hits: 1 } },
-            { runValidators: true, context: 'query' },
-            (error, doc) => {
-                if (error) {
-                    rejects(error)
-                }
-                if (doc) {
-                    resolve(doc)
-                } else {
-                    rejects('File not found')
-                }
-            })
-    })
+            { runValidators: true, context: 'query', new: true }
+        )
+    } catch (error) {
+        console.log(`An error happened at updateByRelativePath: '${error}'`)
+        throw error
+    }
 }
 
-export const deleteFile = function (id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+export async function deleteFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+    try {
+        const fileToDelete = await findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
+        if (!fileToDelete) throw new Error('File not found')
 
-    return new Promise((resolve, rejects) => {
-        findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed).then(async (doc) => {
-            if (doc) {
-                try {
+        await fs.promises.unlink(doc.relativePath)
+        winston.info('Se eliminó el archivo ' + doc.relativePath)
 
-                    fs.unlink(doc.relativePath, (error) => {
-                        if (error) winston.error(error)
-                        else winston.info('Se eliminó el archivo ' + doc.relativePath)
-                    });
-                    await File.deleteOne({ _id: id })
-                    await updateUserUsedStorage(userId, -doc.size)
-                    resolve({ id: id, success: true })
-                } catch (err) {
-                    rejects(err)
-                }
-            } else {
-                rejects('File not found')
-            }
-        })
-    })
+        await File.deleteOne({ _id: id })
+        await updateUserUsedStorage(userId, -doc.size)
+
+        return ({ id: id, success: true })
+    } catch (error) {
+        winston.error(`An error happened at the deleteFile function: '${error}'`)
+    }
 }
 
 export const findAndDeleteExpiredFiles = async function () {
-
-    function getDataEntity() {
-
-        return [
-            {
-                $match: {
-                    expirationDate: { $eq: null }
-                }
-            },
-            {
-                $lookup: {
-                    from: "userstorages",
-                    localField: "createdBy.user",
-                    foreignField: "user",
-                    as: "userStorage",
-                },
-            },
-            {
-                $unwind: "$userStorage",
-            },
-            {
-                $addFields: {
-                    timeDiffInMillis: {
-                        $cond: [
-                            {
-                                $eq: ["$userStorage.deleteByLastAccess", true]
-                            },
-                            { $subtract: ["$$NOW", "$lastAccess"] },
-                            { $subtract: ["$$NOW", "$createdAt"] }
-                        ]
+    try {
+        function getDataEntity() {
+            return [
+                {
+                    $match: {
+                        expirationDate: { $eq: null }
                     }
-                }
-            },
-            {
-                $addFields: {
-                    timeDiffInDays: { $divide: ["$timeDiffInMillis", 24 * 60 * 60 * 1000] }
-                }
-            },
-            {
-                $addFields: {
-                    roundedTime: { $round: ["$timeDiffInDays", 0] }
-                }
-            },
-            {
-                $match: {
-                    $expr: { $lte: ["$userStorage.fileExpirationTime", "$roundedTime"] },
                 },
-            }
-        ];
+                {
+                    $lookup: {
+                        from: "userstorages",
+                        localField: "createdBy.user",
+                        foreignField: "user",
+                        as: "userStorage",
+                    },
+                },
+                {
+                    $unwind: "$userStorage",
+                },
+                {
+                    $addFields: {
+                        timeDiffInMillis: {
+                            $cond: [
+                                {
+                                    $eq: ["$userStorage.deleteByLastAccess", true]
+                                },
+                                { $subtract: ["$$NOW", "$lastAccess"] },
+                                { $subtract: ["$$NOW", "$createdAt"] }
+                            ]
+                        }
+                    }
+                },
+                {
+                    $addFields: {
+                        timeDiffInDays: { $divide: ["$timeDiffInMillis", 24 * 60 * 60 * 1000] }
+                    }
+                },
+                {
+                    $addFields: {
+                        roundedTime: { $round: ["$timeDiffInDays", 0] }
+                    }
+                },
+                {
+                    $match: {
+                        $expr: { $lte: ["$userStorage.fileExpirationTime", "$roundedTime"] },
+                    },
+                }
+            ];
+        }
+
+        const entityData = getDataEntity()
+        const aggregateData = [entityData]
+
+        const docs = await File.aggregate(aggregateData)
+        return deleteAndUnlinkFiles(docs)
+    } catch (error) {
+        winston.error(`An error happened at the findAndDeleteExpiredFiles function: '${error}'`)
+        throw error
     }
-
-    const entityData = getDataEntity();
-    const aggregateData = [entityData];
-    let docs = []
-
-    await File.aggregate(aggregateData).then((result) => {
-        docs = result;
-    }).catch((error) => {
-        winston.error('FileService - findExpiredFiles - Error en aggregate: ' + error)
-    });
-
-    return deleteAndUnlinkFiles(docs);
 }
 
-export const findAndDeleteByExpirationDate = async function () {
+export async function findAndDeleteByExpirationDate() {
+    const expirationDate = new Date()
+    const docs = await fetchFiles(expirationDate)
 
-    let expirationDate = new Date();
-    let docs = [];
-
-    await fetchFiles(expirationDate).then((result) => {
-        docs = result;
-    }).catch((error) => {
-        winston.error('FileService - findAndDeleteByExpirationDate - Error en aggregate: ' + error)
-    });
-
-    return deleteAndUnlinkFiles(docs);
+    return deleteAndUnlinkFiles(docs)
 }
 
-function deleteAndUnlinkFiles(docs) {
-    // For each de los files con unlink y actualizo usedSpace de userStorage
-    if (docs) {
-        unlinkFiles(docs)
-    }
+async function deleteAndUnlinkFiles(docs) {
+    if (!docs) throw new Error("You need to provide a non-empty docs parameter")
+    unlinkFiles(docs)
+
     // Mappeo los ids de los files encontrados
-    let fileIds = docs.map(file => { return file._id });
-
-    // Borro los files encontrados
-    return deleteManyById(fileIds);
+    const fileIds = docs.map(file => { return file._id })
+    return deleteManyById(fileIds)
 }
 
 function unlinkFiles(files) {
-    files.forEach((file) => {
-        updateUserUsedStorage(file.createdBy.user, -file.size)
-        fs.unlink(file.relativePath, (error) => {
-            if (error) winston.error('FileService - findExpiredFiles. No se borró el archivo ' + file.relativePath + ':' + error)
-            else winston.info('Se eliminó el archivo ' + file.relativePath)
-        });
-    })
+    try {
+        files.forEach(async function (file) {
+            updateUserUsedStorage(file.createdBy.user, -file.size)
+            await fs.promises.unlink(file.relativePath)
+        })
+    } catch (error) {
+        winston.error(`An error happened at the unlinkFiles function: '${error}'`)
+        throw error
+    }
 }
 
 function deleteManyById(ids) {
@@ -444,14 +419,4 @@ function validateExpirationDate(expirationTime) {
         return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
     }
     return null;
-}
-
-function purgeInput(input) {
-    let updatedFile = {};
-    for (const key in input) {
-        if (key == 'description' || key == 'expirationDate' || key == 'tags' || key == 'isPublic') {
-            updatedFile[key] = input[key];
-        }
-    }
-    return updatedFile;
 }

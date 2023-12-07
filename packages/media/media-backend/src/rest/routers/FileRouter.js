@@ -11,13 +11,15 @@ import multer from 'multer';
 const upload = multer()
 const router = express.Router()
 
-router.get('/file/:id', async function (req, res) {
+router.get('/files/:id', async function (req, res) {
     try {
+        const userIsAuthenticated = req.user
+
         const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
         const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
         const userCanSeePublicFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
-        if (!req.user || !req.rbac) res.status(401).json({ message: "Not Authorized" })
+        if (!userIsAuthenticated || !req.rbac) res.status(401).json({ message: "Not authenticated" })
         if (!userCanSeeAllFiles && !userCanSeeItsOwnFiles) res.status(403).json({ message: "Not Authorized" })
 
         const file = await findFile(req.params.id, req.user.id, userCanSeeAllFiles, userCanSeeItsOwnFiles, userCanSeePublicFiles)
@@ -34,30 +36,44 @@ router.get('/file/:id', async function (req, res) {
     }
 })
 
-router.get('/file', async function (req, res) {
+router.get('/files', async function (req, res) {
     try {
-        if (!req.user) res.status(401).json({ message: "Not Authorized" })
-        if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
+        const userIsAuthenticated = req.user
 
-        let allFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
-        let ownFilesAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
-        let publicAllowed = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
+        const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
+        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
+        const userCanSeePublicFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
-        const { pageNumber, itemsPerPage, search, orderBy, orderDesc } = req.query
-        
+        if (!userIsAuthenticated) {
+            res.status(401).send("Unauthenticated")
+            return
+        }
+
+        if (!userCanSeeAllFiles && !userCanSeeItsOwnFiles && !userCanSeePublicFiles) {
+            res.status(403).send("Unauthorized")
+            return
+        }
+
         const hideSensitiveData = true
-        const paginatedFiles = await paginateFiles({ pageNumber, itemsPerPage, search, orderBy, orderDesc },
-            req.user.id, allFilesAllowed, ownFilesAllowed, publicAllowed, hideSensitiveData
+        const paginatedFiles = await paginateFiles(
+            req.query, req.user.id, userCanSeeAllFiles,
+            userCanSeeItsOwnFiles, userCanSeePublicFiles,
+            hideSensitiveData
         )
-        
-        if (!paginatedFiles) res.status(404).json({ message: 'File not found' })
-        res.status(200).json(paginatedFiles)
+
+        if (!paginatedFiles) {
+            res.status(404).json({ message: 'We didnt found any files' })
+            return
+        } else {
+            res.status(200).json(paginatedFiles)
+            return
+        }
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
 })
 
-router.post('/file', upload.single('file'), async function (req, res) {
+router.post('/files', upload.single('file'), async function (req, res) {
     try {
         if (!req.user) res.status(401).json({ message: "Not Authorized" })
         if (!req.rbac.isAllowed(req.user.id, FILE_CREATE)) res.status(403).json({ message: "Not Authorized" })
@@ -77,7 +93,7 @@ router.post('/file', upload.single('file'), async function (req, res) {
         }
 
         const fileUploadingResult = await fileUpload(req.user, file, expirationTime, isPublic, description, tags)
-        res.status(201).json(fileUploadingResult)
+        res.status(201).send(fileUploadingResult.id)
     } catch (error) {
         console.error(`An error happened at the file uploading endpoint: '${error}'`)
         res.status(409).send("An error happened when we tried to upload the file")
@@ -85,19 +101,46 @@ router.post('/file', upload.single('file'), async function (req, res) {
 })
 
 
-router.patch('/file/:id', async function (req, res) {
+router.patch('/files/:id', async function (req, res) {
+    try {
+        const userIsAuthenticated = req.user
 
-    if (!req.user) res.status(401).json({ message: "Not Authorized" })
-    if (!req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL) && !req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) res.status(403).json({ message: "Not Authorized" })
-    let permissionType = (req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)) ? FILE_SHOW_ALL : (req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)) ? FILE_SHOW_OWN : null;
+        const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
+        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
+        const permissionType = (userCanSeeAllFiles) ? FILE_SHOW_ALL : (userCanSeeItsOwnFiles) ? FILE_SHOW_OWN : null
 
-    // VER
-    updateFileRest(req.params.id, req.user, permissionType, req.body).then(result => {
-        res.status(200).json(result)
-    }).catch(err => {
-        res.status(err.status).json({ message: err.message })
-    })
+        if (!userIsAuthenticated) {
+            res.status(401).send("Not authenticated")
+            return
+        }
 
+        if (!userCanSeeAllFiles && !userCanSeeItsOwnFiles) {
+            res.status(403).send("Not Authorized")
+            return
+        }
+
+        const fileToUpdateId = req.params.id
+        const { description, expirationDate, tags, isPublic } = req.body
+
+        if ( !fileToUpdateId ) throw new Error("You must provide the ID of the file you want to update")
+        if ( !description && !expirationDate && !tags && !isPublic ) {
+            const noNewValuesError = new Error(
+                'You must provide new values for any of the following file fields: description, expirationDate, tags, or isPublic'
+            )
+            throw noNewValuesError
+        }
+
+        const updateFileResult = await updateFileRest(req.params.id, req.user, permissionType, { description, expirationDate, tags, isPublic })
+        if (!updateFileResult) {
+            res.status(500).send("The file was not found")
+            return
+        } else {
+            res.status(200).json(updateFileResult)
+            return
+        }
+    } catch (error) {
+        winston.error(`An error happened at the PATCH files/:id endpoint: '${error}'`)
+    }
 })
 
 export { router }
