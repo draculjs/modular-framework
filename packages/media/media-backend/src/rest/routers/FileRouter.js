@@ -132,14 +132,14 @@ router.patch('/files/:id', async function (req, res) {
 
         const updateFileResult = await updateFileRest(req.params.id, req.user, permissionType, { description, expirationDate, tags, isPublic })
         if (!updateFileResult) {
-            res.status(500).send("The file was not found")
-            return
+            throw new Error("An error happened: we didnt get an update file operation's result")
         } else {
             res.status(200).json(updateFileResult)
             return
         }
     } catch (error) {
         winston.error(`An error happened at the PATCH files/:id endpoint: '${error}'`)
+        res.status(500).send(error)
     }
 })
 

@@ -247,19 +247,14 @@ export const updateFile = async function (authUser, newFile, { id, description, 
 // Rest service
 export const updateFileRest = async function (id, user, permissionType, { description, expirationDate, tags, isPublic }) {
     try {
-        winston.info(`{ description, expirationDate, tags, isPublic }: '${description}|${expirationDate}|${tags}|${isPublic}'`)
         if (!description && !expirationDate && !tags && !isPublic) throw new Error("File fields to update were not provided")
 
-        const userProvidedDate = dayjs(expirationDate, 'DD/MM/YYYY')
-
-        winston.info(`userProvidedDate: ${userProvidedDate}`)
-
-        if (!userProvidedDate.isValid()) throw new Error('Invalid date format')
-
-        const formattedExpirationDate = userProvidedDate.format('YYYY/MM/DD')
-        winston.info(`formattedExpirationDate: ${formattedExpirationDate}`)
+        const userProvidedDate = expirationDate ? dayjs(expirationDate, 'DD/MM/YYYY') : null
+        if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format')
 
         const userStorage = await findUserStorageByUser(user)
+
+        const formattedExpirationDate = userProvidedDate ? userProvidedDate.format('YYYY/MM/DD') : null
         const timeDiffExpirationDate = validateExpirationDate(formattedExpirationDate)
 
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
