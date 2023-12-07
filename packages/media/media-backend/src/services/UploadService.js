@@ -12,7 +12,7 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
   try {
     if (!user) throw new Error("user is required")
 
-    const { filename, mimetype, encoding, createReadStream } = await inputFile
+    let { filename, mimetype, encoding, createReadStream } = await inputFile
     filename = filename.replaceAll(' ', '_')
     let type = mimetype.split("/")[0]
 
