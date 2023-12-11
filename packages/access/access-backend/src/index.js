@@ -1,3 +1,4 @@
+import { requireAuthentication, requireAuthorization } from "./middlewares/authMiddleware"
 import { cors as corsMiddleware } from "./middlewares/corsMiddleware"
 import { whitelistIp as whitelistIpMiddleware } from "./middlewares/whitelistIpMiddleware"
 
@@ -11,6 +12,8 @@ export {
     //middlewares
     corsMiddleware,
     whitelistIpMiddleware,
+    requireAuthentication,
+    requireAuthorization,
     
     //graphql
     types,
