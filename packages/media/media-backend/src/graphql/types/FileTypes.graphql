@@ -28,7 +28,7 @@ type fileReplaceInfo{
 }
 
 type CreatedBy{
-    user: User
+    user: ID
     username: String
 }
 
