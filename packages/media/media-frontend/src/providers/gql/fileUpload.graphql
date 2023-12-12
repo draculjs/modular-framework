@@ -13,11 +13,7 @@ mutation fileUpload( $file: Upload!, $expirationDate: String, $isPublic: Boolean
         url
         createdAt
         createdBy{
-            user{
-                id
-                name
-                username
-            }
+            user
             username
         }
         lastAccess
