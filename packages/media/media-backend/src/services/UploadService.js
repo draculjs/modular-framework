@@ -27,7 +27,7 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
     const absolutePath = path.resolve(relativePath);
 
     const storeResult = await storeFile(createReadStream(), relativePath, user)
-    winston.info("fileUploadAnonymous store result: " + storeResult)
+    winston.info("fileUpload: " + storeResult)
 
     if (expirationDate) {
       let timeDiffExpirationDate = validateExpirationDate(expirationDate)
@@ -73,8 +73,8 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
       })
 
       await doc.save()
-      winston.info("fileUploadAnonymous file saved: " + doc._id)
-      return await doc.populate('createdBy.user').execPopulate()
+      winston.info("fileUpload file saved: " + doc._id)
+      return doc
     }
 
   } catch (error) {
