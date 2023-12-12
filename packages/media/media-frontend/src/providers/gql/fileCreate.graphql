@@ -11,11 +11,7 @@ mutation fileCreate($filename:String!, $extension:String!, $relativePath:String!
         url
         createdAt
         createdBy{
-            user{
-                id
-                name
-                username
-            }
+            user
             username
         }
         lastAccess
