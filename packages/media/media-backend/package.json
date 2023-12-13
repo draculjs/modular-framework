@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.25.8",
+  "version": "1.25.9",
   "author": "Cristian Incarnato & Dracul Team",
   "main": "./lib/index.js",
   "scripts": {
