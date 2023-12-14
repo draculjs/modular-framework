@@ -12,7 +12,7 @@ import multer from 'multer';
 const upload = multer()
 const router = express.Router()
 
-router.get('/files/:id', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL, FILE_SHOW_PUBLIC, FILE_SHOW_OWN])], async function (req, res) {
+router.get('/file/:id', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL, FILE_SHOW_PUBLIC, FILE_SHOW_OWN])], async function (req, res) {
     try {
         const userCanSeeAllFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
         const userCanSeeItsOwnFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
@@ -31,7 +31,7 @@ router.get('/files/:id', [requireAuthentication, requireAuthorization([FILE_SHOW
     }
 })
 
-router.get('/files', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL, FILE_SHOW_PUBLIC, FILE_SHOW_OWN])], async function (req, res) {
+router.get('/file', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL, FILE_SHOW_PUBLIC, FILE_SHOW_OWN])], async function (req, res) {
     try {
         const userCanSeeAllFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
         const userCanSeeItsOwnFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
@@ -56,7 +56,7 @@ router.get('/files', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL
     }
 })
 
-router.post('/files', [requireAuthentication, requireAuthorization([FILE_CREATE]), upload.single('file')], async function (req, res) {
+router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE]), upload.single('file')], async function (req, res) {
     try {
         if (!req.file) res.status(400).json({ message: 'File was not provided' })
 
@@ -83,7 +83,7 @@ router.post('/files', [requireAuthentication, requireAuthorization([FILE_CREATE]
 })
 
 
-router.patch('/files/:id', [requireAuthentication, requireAuthorization([FILE_UPDATE_ALL, FILE_UPDATE_OWN])], async function (req, res) {
+router.patch('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPDATE_ALL, FILE_UPDATE_OWN])], async function (req, res) {
     try {        
         const fileToUpdateId = req.params.id
         const { description, expirationDate, tags, isPublic } = req.body

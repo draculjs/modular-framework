@@ -11,7 +11,7 @@ schemes:
 - "http"
 - "https"
 paths:
-  /files:
+  /file:
     get:
       tags:
       - "file"
@@ -130,7 +130,7 @@ paths:
           description: "Conflict - An error occurred during file upload"
       security:
       - Authorization: []
-  /files/{id}:
+  /file/{id}:
     get:
       tags:
       - "file"
@@ -270,16 +270,16 @@ definitions:
         type: string
       relativePath:
         type: string
-        example: "media/files/root/2021/9/foto.png"
+        example: "media/file/root/2021/9/foto.png"
       absolutePath:
         type: string
-        example: "/home/user/Projects/modular-framework/packages/media/media-backend/media/files/root/2021/9/foto.png"
+        example: "/home/user/Projects/modular-framework/packages/media/media-backend/media/file/root/2021/9/foto.png"
       size:
         type: integer
         example: 20097
       url:
         type: string
-        example: "http://localhost:7000/media/files/root/2021/9/foto.png"
+        example: "http://localhost:7000/media/file/root/2021/9/foto.png"
       lastAccess:
         type: string
       createdAt:
