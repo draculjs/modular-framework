@@ -71,7 +71,7 @@ router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE])
         }
 
         const fileUploadingResult = await fileUpload(req.user, file, expirationTime, isPublic, description, tags)
-        res.status(201).send(fileUploadingResult.id)
+        res.status(201).send(fileUploadingResult)
     } catch (error) {
         console.error(`An error happened at the file uploading endpoint: '${error}'`)
         if (error.code === 'MAX_FILE_SIZE_EXCEEDED'){
