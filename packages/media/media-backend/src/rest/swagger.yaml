@@ -117,9 +117,8 @@ paths:
         '201':
           description: "Successful file upload"
           schema:
-            type: "string"
-            example: "6570eafcfa31525edd072e45"
-            description: "Id del fichero subido"
+            type: "object"
+            $ref: "#/definitions/File"
         '400':
           description: "Bad Request - File was not provided"
         '401':
