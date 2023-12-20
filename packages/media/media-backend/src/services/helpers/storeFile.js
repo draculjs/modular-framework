@@ -26,6 +26,19 @@ class MaxFileSizeExceededError extends Error {
 }
 
 /**
+ * Custom error class for when the maximum storage capacity is exceeded.
+ * @class
+ * @extends Error
+ * @param {string} message - The error message.
+ */
+class storageCapacityExceededError extends Error {
+    constructor(message) {
+        super(message)
+        this.code = 'STORAGE_CAPACITY_EXCEEDED'
+    }
+}
+
+/**
  * A Transform stream to validate the size of the incoming data chunk.
  * @class
  * @extends Transform
@@ -56,8 +69,8 @@ class StreamSizeValidator extends Transform {
         }
 
         if (this.totalLength > this.storageLeft) {
-            this.error = 'STORAGE_CAPACITY_EXCEEDED'
-            this.destroy(new Error("Storage capacity exceeded; available storage: " + this.storageLeft))
+            this.error = new storageCapacityExceededError(`File upload failed. You dont have enough storage capacity; your available storage is '${this.storageLeft.toFixed(2)} MBs'`)
+            this.destroy(this.error)
         }
 
         this.push(chunk)
