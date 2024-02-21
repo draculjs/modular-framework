@@ -1,18 +1,18 @@
 <template>
-  <v-dialog :value="open" max-width="850" persistent :fullscreen="fullscreen">
+  <v-dialog :value="open" persistent scrollable :fullscreen="fullscreen">
     <v-card>
 
       <toolbar-dialog
           :title="title"
           @close="$emit('close')"
+          style="height:auto"
       />
 
       <v-card-text v-if="!!errorMessage">
         <error-alert :errorMessage="errorMessage"></error-alert>
       </v-card-text>
 
-
-      <v-card-text>
+      <v-card-text style="height:100%">
         <slot></slot>
       </v-card-text>
 
