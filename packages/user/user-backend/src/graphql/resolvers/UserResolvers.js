@@ -6,7 +6,7 @@ import {
     findUsersByRole,
     findUser,
     changePasswordAdmin,
-    paginateUsers
+    paginateUsers, findUsersByRoles
 } from '../../services/UserService'
 
 import {
@@ -35,6 +35,11 @@ export default {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
             return findUsersByRole(roleName)
+        },
+        usersByRoles: (_, {roleNames}, {user, rbac}) => {
+            if (!user) throw new AuthenticationError("UNAUTHENTICATED")
+            if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
+            return findUsersByRoles(roleNames)
         },
         user: (_, {id}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")

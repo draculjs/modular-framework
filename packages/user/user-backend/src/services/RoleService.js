@@ -59,7 +59,22 @@ export const findRole = function (id) {
 
 export const findRoleByName = function (roleName) {
     return new Promise((resolve, reject) => {
-        RoleModel.findOne({ name: roleName }).exec((err, res) => {
+        RoleModel.find({ name: roleName }).exec((err, res) => {
+
+            if(err){
+                winston.error("RoleService.findRoleByName ", err)
+                reject(err)
+            }
+            winston.debug('RoleService.findRoleByName successful')
+            resolve(res)
+
+        });
+    })
+}
+
+export const findRoleByNames = function (roleNames) {
+    return new Promise((resolve, reject) => {
+        RoleModel.findOne({ name: {$in: roleNames} }).exec((err, res) => {
 
             if(err){
                 winston.error("RoleService.findRoleByName ", err)

@@ -42,7 +42,8 @@ export default {
     filled: {type: Boolean, default: false},
     solo: {type: Boolean, default: false},
     flat: {type: Boolean, default: false},
-    roleName: {type: String}
+    roleName: {type: String},
+    roleNames: {type: Array}
 
   },
   data() {
@@ -74,6 +75,11 @@ export default {
       if(this.roleName){
         UserProvider.usersByRole(this.roleName)
             .then(r => {this.users = r.data.usersByRole})
+            .catch(err => {console.error(err)})
+            .finally(() => this.loading = false)
+      }else if(this.roleNames && this.roleNames.length > 0){
+        UserProvider.usersByRoles(this.roleNames)
+            .then(r => {this.users = r.data.usersByRoles})
             .catch(err => {console.error(err)})
             .finally(() => this.loading = false)
       }else{

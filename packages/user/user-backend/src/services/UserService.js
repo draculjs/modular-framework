@@ -6,7 +6,7 @@ import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-express'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
-import {findRoleByName} from "./RoleService";
+import {findRoleByName, findRoleByNames} from "./RoleService";
 
 const EventEmitter = require('events');
 
@@ -276,6 +276,25 @@ export const findUsersByRole = function (roleName) {
         if (!role) return resolve([])
 
         User.find({role: role.id}).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
+            if (err) {
+                winston.error("UserService.findUsersByRole ", err)
+                reject(err)
+            } else {
+                winston.debug('UserService.findUsersByRole successful')
+                resolve(res)
+            }
+        });
+    })
+}
+
+export const findUsersByRoles = function (roleNames) {
+    return new Promise(async (resolve, reject) => {
+
+        let roles = await findRoleByNames(roleNames)
+
+        if (!roles && roles.length === 0) return resolve([])
+
+        User.find({role: {$in: roles.map(r => r._id)} }).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
             if (err) {
                 winston.error("UserService.findUsersByRole ", err)
                 reject(err)

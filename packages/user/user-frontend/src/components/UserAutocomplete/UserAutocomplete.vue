@@ -89,7 +89,8 @@ export default {
     label: {type: String, default: 'user.users'},
     placeholder: {type: String, default: 'user.users'},
     defaultAvatar: {type: String},
-    roleName: {type: String}
+    roleName: {type: String},
+    roleNames: {type: Array}
   },
   data() {
     return {
@@ -137,6 +138,11 @@ export default {
       if(this.roleName){
         UserProvider.usersByRole(this.roleName)
             .then(r => {this.users = r.data.usersByRole})
+            .catch(err => {console.error(err)})
+            .finally(() => this.loading = false)
+      }else if(this.roleNames && this.roleNames.length > 0){
+        UserProvider.usersByRoles(this.roleNames)
+            .then(r => {this.users = r.data.usersByRoles})
             .catch(err => {console.error(err)})
             .finally(() => this.loading = false)
       }else{

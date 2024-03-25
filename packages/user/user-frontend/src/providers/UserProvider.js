@@ -39,6 +39,14 @@ class UserProvider {
         })
     }
 
+    usersByRoles(roleNames) {
+        return this.gqlc.query({
+            query: require('./gql/usersByRoles.graphql'),
+            fetchPolicy: "network-only",
+            variables: {roleNames: roleNames}
+        })
+    }
+
     roles() {
         return this.gqlc.query({
             query: require('./gql/roles.graphql'),

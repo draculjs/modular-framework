@@ -33,6 +33,7 @@ type UsersPaginated{
 type Query {
     users: [User!]
     usersByRole(roleName: String!): [User]
+    usersByRoles(roleNames: [String!]): [User]
     user(id: ID!): User
     paginateUsers(limit: Int!, pageNumber: Int, search: String, orderBy: String, orderDesc: Boolean, activeUsers: Boolean): UsersPaginated
 }
