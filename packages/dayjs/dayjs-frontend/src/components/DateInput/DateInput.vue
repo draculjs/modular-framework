@@ -26,7 +26,17 @@
           :readonly="readonly"
           :hide-details="hideDetails"
           :style="{width: width, maxWidth: width}"
-      ></v-text-field>
+      >
+        <template v-slot:message>
+          <slot name="message"></slot>
+        </template>
+        <template v-slot:prepend-inner>
+          <slot name="prepend-inner"></slot>
+        </template>
+        <template v-slot:prepend>
+          <slot name="prepend"></slot>
+        </template>
+      </v-text-field>
     </template>
     <v-date-picker
         v-model="item"
