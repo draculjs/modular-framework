@@ -12,7 +12,8 @@
           ref="date"
           v-model="item"
           :label="label"
-          prepend-icon="date_range"
+          :prepend-icon="prependIcon"
+          :prepend-inner-icon="prependInnerIcon"
           v-on="on"
           :rules="rules"
           :error="error"
@@ -48,6 +49,8 @@ export default {
     errorMessages: {type:Array},
     label: { type: String},
     color: { type: String, default: "secondary"},
+    prependIcon: { type: String, default: "date_range"},
+    prependInnerIcon: { type: String},
     rules: {type: Array, default: ()=>[]},
     clearable: {type:Boolean, default: true},
     outlined: {type:Boolean, default: false},

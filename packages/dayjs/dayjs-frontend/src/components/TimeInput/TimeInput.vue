@@ -13,7 +13,8 @@
           v-on="on"
           :value="item"
           :label="label"
-          prepend-icon="query_builder"
+          :prepend-icon="prependIcon"
+          :prepend-inner-icon="prependInnerIcon"
           readonly
           :rules="rules"
           :error="error"
@@ -40,7 +41,9 @@ export default {
     label: {type: String},
     rules: {type: Array, default: () => []},
     clearable: {type:Boolean, default: true},
-    format: {type: String, default: "24hr"}
+    format: {type: String, default: "24hr"},
+    prependIcon: { type: String, default: "query_builder"},
+    prependInnerIcon: { type: String},
   },
   mixins: [DayjsMixin],
   computed: {
