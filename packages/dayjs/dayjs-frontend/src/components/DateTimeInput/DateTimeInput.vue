@@ -1,11 +1,28 @@
 <template>
   <v-row>
     <v-col cols="12" sm="6">
-      <date-input ref="date" :value="item" :rules="dateRules" @input="setDate" :clearable="clearable"></date-input>
+      <date-input ref="date" :value="item" :rules="dateRules" @input="setDate"
+                  :clearable="clearable"
+                  :solo="solo"
+                  :outlined="outlined"
+                  :disabled="disabled"
+                  :readonly="readonly"
+                  :hide-details="hideDetails"
+                  :dense="dense"
+      ></date-input>
     </v-col>
 
     <v-col cols="12" sm="6">
-      <time-input ref="time" :value="item" :rules="timeRules" @input="setTime" :clearable="clearable" :format="timeFormat"></time-input>
+      <time-input ref="time" :value="item" :rules="timeRules" @input="setTime"
+                  :format="timeFormat"
+                  :clearable="clearable"
+                  :solo="solo"
+                  :outlined="outlined"
+                  :disabled="disabled"
+                  :readonly="readonly"
+                  :hide-details="hideDetails"
+                  :dense="dense"
+      ></time-input>
     </v-col>
 
   </v-row>
@@ -31,7 +48,13 @@ export default {
     dateRules: {type: Array, default: () => []},
     timeRules: {type: Array, default: () => []},
     clearable: {type: Boolean, default: true},
-    timeFormat: {type: String, default: "24hr"}
+    timeFormat: {type: String, default: "24hr"},
+    outlined: {type:Boolean, default: false},
+    dense: {type:Boolean, default: false},
+    solo: {type:Boolean, default: false},
+    readonly: {type:Boolean, default: true},
+    disabled: {type:Boolean, default: false},
+    hideDetails: {type: Boolean, default: false},
   },
   mixins: [DayjsMixin],
   computed: {

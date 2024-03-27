@@ -15,12 +15,17 @@
           :label="label"
           :prepend-icon="prependIcon"
           :prepend-inner-icon="prependInnerIcon"
-          readonly
           :rules="rules"
           :error="error"
           :error-messages="errorMessages"
           color="secondary"
           :clearable="clearable"
+          :solo="solo"
+          :outlined="outlined"
+          :disabled="disabled"
+          :readonly="readonly"
+          :hide-details="hideDetails"
+          :dense="dense"
       ></v-text-field>
     </template>
     <v-time-picker v-model="item"  :format="format">
@@ -44,6 +49,12 @@ export default {
     format: {type: String, default: "24hr"},
     prependIcon: { type: String, default: "query_builder"},
     prependInnerIcon: { type: String},
+    outlined: {type:Boolean, default: false},
+    dense: {type:Boolean, default: false},
+    solo: {type:Boolean, default: false},
+    readonly: {type:Boolean, default: true},
+    disabled: {type:Boolean, default: false},
+    hideDetails: {type: Boolean, default: false},
   },
   mixins: [DayjsMixin],
   computed: {

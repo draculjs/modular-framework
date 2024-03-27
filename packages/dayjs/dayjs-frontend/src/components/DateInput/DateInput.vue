@@ -19,13 +19,14 @@
           :error="error"
           :error-messages="errorMessages"
           :color="color"
+          :style="{width: width, maxWidth: width}"
           :clearable="clearable"
           :solo="solo"
           :outlined="outlined"
           :disabled="disabled"
           :readonly="readonly"
           :hide-details="hideDetails"
-          :style="{width: width, maxWidth: width}"
+          :dense="dense"
       >
         <template v-slot:message>
           <slot name="message"></slot>
@@ -64,6 +65,7 @@ export default {
     rules: {type: Array, default: ()=>[]},
     clearable: {type:Boolean, default: true},
     outlined: {type:Boolean, default: false},
+    dense: {type:Boolean, default: false},
     solo: {type:Boolean, default: false},
     readonly: {type:Boolean, default: true},
     disabled: {type:Boolean, default: false},
