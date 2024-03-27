@@ -94,15 +94,16 @@ export default async function storeFile(fileStream, dst, user) {
     try {
         if (!fileStream || !fileStream.readable) throw new Error("A readable stream is required")
         if (typeof fileStream.pipe !== 'function') throw new Error("Stream needs the pipe method")
-        if (!user) throw new Error("user parameter was not provided to storeFile")
 
         let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES
         let storageLeft = maxFileSize
 
-        const userStorage = await findUserStorageByUser(user)
-        if (userStorage) {
-            storageLeft = userStorage.capacity - userStorage.usedSpace
-            maxFileSize = userStorage.maxFileSize
+        if (user) {
+            const userStorage = await findUserStorageByUser(user)
+            if (userStorage) {
+                storageLeft = userStorage.capacity - userStorage.usedSpace
+                maxFileSize = userStorage.maxFileSize
+            }
         }
 
         const sizeValidator = new StreamSizeValidator(maxFileSize, storageLeft)
