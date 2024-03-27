@@ -14,9 +14,9 @@ export default {
             if (!date)
                 return null
 
-            if(timezone){
-                return dayjs.tz(date,timezone)
-            }else{
+            if (timezone) {
+                return dayjs.tz(date, timezone)
+            } else {
                 return dayjs.tz(date)
             }
         }
@@ -25,17 +25,33 @@ export default {
         getDateFormat() {
             return (date) => {
 
+                function isTimestamp(valor) {
+                    const regex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
+                    return regex.test(valor) && (new Date(parseInt(valor))).getTime() > 0;
+                }
+
                 if (!date)
                     return null
 
+                //DAYJS
                 if (dayjs.isDayjs(date)) {
                     return date.format("YYYY-MM-DD")
                 }
 
+                //ISO
+                if (/(\d{4})-(\d{2})-(\d{2})T/.test(date) && dayjs(date).isValid()) {
+                    return dayjs(date).tz().format("YYYY-MM-DD")
+                }
+
+                //FORMAT YYYY-MM-DD
                 if (/(\d{4})-(\d{2})-(\d{2})/.test(date)) {
                     return date
                 }
 
+                //TIMESTAMP
+                if(isTimestamp(date)){
+                    return dayjs(parseInt(date)).tz().format("YYYY-MM-DD")
+                }
 
                 return dayjs(parseInt(date)).tz().format("YYYY-MM-DD")
             }
@@ -43,15 +59,33 @@ export default {
         getDateTimeFormat() {
             return (date, showSeconds = false, showMilliseconds = false) => {
 
+                function isTimestamp(valor) {
+                    const regex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
+                    return regex.test(valor) && (new Date(parseInt(valor))).getTime() > 0;
+                }
+
                 if (!date) return null
 
                 let format = "YYYY-MM-DD HH:mm"
 
                 if (showSeconds) format += ":ss"
-                if (showMilliseconds) format += ":SSS" 
+                if (showMilliseconds) format += ":SSS"
 
+                //DAYJS
                 if (dayjs.isDayjs(date)) return date.format(format)
+
+                //ISO
+                if (/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/.test(date) && dayjs(date).isValid()) {
+                    return dayjs(date).tz().format(format)
+                }
+
+                //FORMAT YYYY-MM-DD HH:mm:ss
                 if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) return date
+
+                //TIMESTAMP
+                if(isTimestamp(date)){
+                    return dayjs(parseInt(date)).tz().format(format)
+                }
 
                 return dayjs(parseInt(date)).tz().format(format)
             }

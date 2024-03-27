@@ -5,6 +5,12 @@ const Dayjs = require('../src/utils/Dayjs');
 
 describe("DayjsMixin", () => {
 
+    //ISO
+    it('ISO getDateFormat 2024-03-26T03:00:00.000Z => 2022-11-24', async () => {
+        let result =DayjsMixin.default.computed.getDateFormat()('2024-03-26T03:00:00.000Z')
+        assert.strictEqual(result,'2024-03-26')
+    })
+
     //String
     it('getDateFormat 2022-11-24 => 2022-11-24', async () => {
         let result =DayjsMixin.default.computed.getDateFormat()('2022-11-24')
