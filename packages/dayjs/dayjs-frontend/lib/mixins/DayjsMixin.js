@@ -28,24 +28,60 @@ var _default = exports.default = {
   computed: {
     getDateFormat() {
       return date => {
+        function isTimestamp(valor) {
+          const regex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
+          return regex.test(valor) && new Date(parseInt(valor)).getTime() > 0;
+        }
         if (!date) return null;
+
+        //DAYJS
         if (_Dayjs.default.isDayjs(date)) {
           return date.format("YYYY-MM-DD");
         }
+
+        //ISO
+        if (/(\d{4})-(\d{2})-(\d{2})T/.test(date) && (0, _Dayjs.default)(date).isValid()) {
+          return (0, _Dayjs.default)(date).tz().format("YYYY-MM-DD");
+        }
+
+        //FORMAT YYYY-MM-DD
         if (/(\d{4})-(\d{2})-(\d{2})/.test(date)) {
           return date;
+        }
+
+        //TIMESTAMP
+        if (isTimestamp(date)) {
+          return (0, _Dayjs.default)(parseInt(date)).tz().format("YYYY-MM-DD");
         }
         return (0, _Dayjs.default)(parseInt(date)).tz().format("YYYY-MM-DD");
       };
     },
     getDateTimeFormat() {
       return (date, showSeconds = false, showMilliseconds = false) => {
+        function isTimestamp(valor) {
+          const regex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
+          return regex.test(valor) && new Date(parseInt(valor)).getTime() > 0;
+        }
         if (!date) return null;
         let format = "YYYY-MM-DD HH:mm";
         if (showSeconds) format += ":ss";
         if (showMilliseconds) format += ":SSS";
+
+        //DAYJS
         if (_Dayjs.default.isDayjs(date)) return date.format(format);
+
+        //ISO
+        if (/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/.test(date) && (0, _Dayjs.default)(date).isValid()) {
+          return (0, _Dayjs.default)(date).tz().format(format);
+        }
+
+        //FORMAT YYYY-MM-DD HH:mm:ss
         if (/(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2})(:(\d{2}))?)?/.test(date)) return date;
+
+        //TIMESTAMP
+        if (isTimestamp(date)) {
+          return (0, _Dayjs.default)(parseInt(date)).tz().format(format);
+        }
         return (0, _Dayjs.default)(parseInt(date)).tz().format(format);
       };
     },
