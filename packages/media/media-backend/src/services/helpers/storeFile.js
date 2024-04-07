@@ -46,10 +46,10 @@ class storageCapacityExceededError extends Error {
  * @param {number} storageLeft - The available storage space in megabytes.
  */
 class StreamSizeValidator extends Transform {
-    constructor(maxFileSize, storageLeft) {
+    constructor(maxFileSize = 5, storageLeft = 5) {
         super()
-        this.maxFileSize = maxFileSize
-        this.storageLeft = storageLeft
+        this.maxFileSize = parseFloat(maxFileSize)
+        this.storageLeft = parseFloat(storageLeft)
         this.totalLength = 0
         this.error = ''
     }
@@ -95,7 +95,7 @@ export default async function storeFile(fileStream, dst, user) {
         if (!fileStream || !fileStream.readable) throw new Error("A readable stream is required")
         if (typeof fileStream.pipe !== 'function') throw new Error("Stream needs the pipe method")
 
-        let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES
+        let maxFileSize = process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES ? parseFloat(process.env.MEDIA_MAX_SIZE_PER_FILE_IN_MEGABYTES) : 5
         let storageLeft = maxFileSize
 
         if (user) {
