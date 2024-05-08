@@ -1,7 +1,7 @@
 <template>
   <v-dialog
       v-model="value"
-      max-width="290"
+      max-width="25vw"
       persistent
   >
     <v-card>
