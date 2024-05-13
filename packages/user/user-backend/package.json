@@ -23,10 +23,10 @@
     "express-jwt": "^5.3.1",
     "form-data": "^3.0.0",
     "geoip-lite": "^1.4.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
     "ldapjs": "^2.3.3",
     "node-device-detector": "^1.2.1",
-    "nodemailer": "^6.3.1",
+    "nodemailer": "^6.9.13",
     "nodemailer-pug-engine": "^2.0.1",
     "saslprep": "^1.0.3",
     "uuid": "^8.3.2"
