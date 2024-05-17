@@ -1,6 +1,6 @@
 {
   "name": "@dracul/audit-backend",
-  "version": "1.28.7",
+  "version": "1.28.8",
   "description": "Audit Backend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
   "homepage": "https://github.com/draculjs/modular-framework#readme",
@@ -25,11 +25,11 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
-    "@dracul/common-backend": "^1.28.7",
+    "@dracul/common-backend": "^1.28.8",
     "@dracul/logger-backend": "^1.24.0",
-    "@dracul/notification-backend": "^1.28.7",
-    "@dracul/settings-backend": "^1.28.7",
-    "@dracul/user-backend": "^1.28.7"
+    "@dracul/notification-backend": "^1.28.8",
+    "@dracul/settings-backend": "^1.28.8",
+    "@dracul/user-backend": "^1.28.8"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
