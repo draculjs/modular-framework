@@ -27,7 +27,6 @@
     "@graphql-tools/merge": "^9.0.0",
     "apollo-server-errors": "^2.5.0 || ^3.0.0",
     "graphql": "^15.8.0 || ^16.0.0",
-    "graphql-tools": "^8.2.0",
     "graphql-type-json": "^0.3.2",
     "mongoose": "5.13.21",
     "mongoose-paginate-v2": "^1.7.4",

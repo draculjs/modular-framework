@@ -25,7 +25,6 @@
     "apollo-server-errors": "^2.5.0 || ^3.0.0",
     "express": "^4.17.1",
     "graphql": "^15.8.0 || ^16.0.0",
-    "graphql-tools": "^8.2.0",
     "mongoose": "5.13.21",
     "mongoose-paginate-v2": "^1.7.4",
     "mongoose-unique-validator": "^2.0.3"
@@ -42,7 +41,6 @@
     "chai": "^4.3.6",
     "express": "^4.17.1",
     "graphql": "^15.8.0",
-    "graphql-tools": "^8.2.0",
     "mocha": "^8.2.0",
     "mongodb-memory-server": "^8.12.2",
     "mongoose": "5.13.21",
