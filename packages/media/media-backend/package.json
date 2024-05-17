@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.28.1",
+  "version": "1.28.3",
   "author": "Cristian Incarnato & Dracul Team",
   "main": "./lib/index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "@dracul/access-backend": "^1.28.1",
     "@dracul/common-backend": "^1.28.1",
     "@dracul/logger-backend": "^1.24.0",
-    "@dracul/user-backend": "^1.28.1",
+    "@dracul/user-backend": "^1.28.3",
     "js-yaml": "^4.1.0",
     "multer": "^1.4.5-lts.1",
     "streamifier": "^0.1.1",
