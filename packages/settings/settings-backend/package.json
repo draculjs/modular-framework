@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-backend",
-  "version": "1.27.6",
+  "version": "1.28.0",
   "description": "Settings",
   "main": "./lib/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "dracul"
   ],
   "dependencies": {
-    "@dracul/common-backend": "^1.24.0"
+    "@dracul/common-backend": "^1.28.0"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
