@@ -59,5 +59,6 @@
     "mongoose-paginate-v2": "^1.7.4",
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3"
-  }
+  },
+  "gitHead": "bb3ca53298421b3f9f57f2d157e99fced365185d"
 }
