@@ -9,7 +9,6 @@
       <slot name="toolbar-left"></slot>
       <v-spacer></v-spacer>
       <slot name="toolbar-right"></slot>
-
     </v-app-bar>
 
     <v-main>

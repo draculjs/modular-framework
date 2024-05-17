@@ -50,7 +50,7 @@
     "fetch": "^1.1.0",
     "form-data": "^3.0.0",
     "geoip-lite": "^1.4.1",
-    "graphql": "^15.8.0",
+    "graphql": "^15.8.0 || ^16.0.0",
     "graphql-subscriptions": "^2.0.0",
     "graphql-tools": "^8.2.0",
     "graphql-type-json": "^0.3.2",
