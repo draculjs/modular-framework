@@ -1,5 +1,5 @@
 import Customization from '../models/CustomizationModel'
-import {UserInputError} from 'apollo-server-express'
+import {UserInputError} from 'apollo-server-errors'
 const path = require('path');
 import fs from "fs";
 import createDirIfNotExist from "./helpers/createDirIfNotExist";
