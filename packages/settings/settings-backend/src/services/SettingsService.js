@@ -1,6 +1,6 @@
 import Settings from '../models/SettingsModel'
 import {mongoose} from '@dracul/common-backend'
-import {UserInputError} from 'apollo-server-express'
+import {UserInputError} from 'apollo-server-errors'
 
 export const initializeSettings = async function (settings = []) {
 

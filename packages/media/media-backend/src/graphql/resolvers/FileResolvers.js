@@ -1,7 +1,7 @@
 
 import { createFile, updateFile, deleteFile, findFile, fetchFiles, paginateFiles } from '../../services/FileService'
 
-import { AuthenticationError, ForbiddenError } from "apollo-server-express";
+import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 
 import {
     FILE_SHOW_ALL,

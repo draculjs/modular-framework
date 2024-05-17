@@ -1,4 +1,4 @@
-import { AuthenticationError, ForbiddenError } from "apollo-server-express";
+import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 import { fetchUserStorage, updateUserStorage, findUserStorageByUser } from "../../services/UserStorageService";
 import { USER_STORAGE_SHOW_ALL, USER_STORAGE_SHOW_OWN, USER_STORAGE_UPDATE } from "../../permissions/UserStorage";
 

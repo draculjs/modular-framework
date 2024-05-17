@@ -22,7 +22,7 @@
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.0",
-    "apollo-server-express": "^2.26.2",
+    "apollo-server-errors": "^2.5.0 || ^3.0.0",
     "express": "^4.17.1",
     "graphql": "^15.8.0",
     "graphql-tools": "^8.2.0",
@@ -38,7 +38,7 @@
     "@babel/preset-env": "^7.23.3",
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.0",
-    "apollo-server-express": "^2.26.2",
+    "apollo-server-errors": "^2.5.0 || ^3.0.0",
     "chai": "^4.3.6",
     "express": "^4.17.1",
     "graphql": "^15.8.0 || ^16.0.0",

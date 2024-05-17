@@ -1,7 +1,7 @@
 
 import { fileGlobalMetrics, fileUserMetrics, almacenamientoPorUsuario, cantidadArchivosPorUsuario } from '../../services/FileMetricsService'
 
-import { AuthenticationError, ForbiddenError } from "apollo-server-express";
+import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 
 import {
     FILE_SHOW_ALL,

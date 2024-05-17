@@ -3,7 +3,7 @@ import {
     fetchQueueStats
 } from '@dracul/mongoose-queue'
 
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 
 import {
     QUEUE_SHOW,

@@ -8,7 +8,7 @@ import {
     fetchSettingsGroup
 } from '../../services/SettingsService'
 
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 
 import {
 

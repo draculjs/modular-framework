@@ -6,7 +6,7 @@ import { DefaultLogger as winston } from '@dracul/logger-backend';
 import { GroupService } from '@dracul/user-backend';
 import { storeFile } from '@dracul/common-backend';
 
-import { UserInputError } from 'apollo-server-express';
+import { UserInputError } from 'apollo-server-errors';
 import dayjs from 'dayjs'
 import fs from 'fs';
 
