@@ -1,4 +1,4 @@
-import {AuthenticationError} from "apollo-server-express";
+import {AuthenticationError} from "apollo-server-errors";
 import {avatarUpload, changePassword} from "../../services/ProfileService";
 
 export default {

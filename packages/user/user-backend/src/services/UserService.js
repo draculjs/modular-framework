@@ -4,7 +4,7 @@ import User from '../models/UserModel'
 import '../models/GroupModel'
 import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
-import {UserInputError} from 'apollo-server-express'
+import {UserInputError} from 'apollo-server-errors'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
 import {findRoleByName, findRoleByNames} from "./RoleService";
 

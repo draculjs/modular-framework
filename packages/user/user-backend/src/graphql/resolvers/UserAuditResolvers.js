@@ -2,7 +2,7 @@ import {
     fetchUserAuditsFrom,
     fetchUserAuditsLimit
 } from '../../services/UserAuditService'
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 import {SECURITY_USER_SHOW} from "../../permissions";
 
 export default {

@@ -1,5 +1,5 @@
 import PermissionModel from '../models/PermissionModel'
-import {UserInputError} from 'apollo-server-express'
+import {UserInputError} from 'apollo-server-errors'
 import {DefaultLogger as winston} from "@dracul/logger-backend";
 
 export const fetchPermissions = function () {

@@ -8,7 +8,7 @@ import {
     updateLogo,
     uploadLogo
 } from '../../services/CustomizationService'
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 import {
     CUSTOMIZATION_CREATE,
     CUSTOMIZATION_UPDATE,

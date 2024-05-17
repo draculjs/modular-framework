@@ -1,7 +1,7 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import {findRoleByName} from "./RoleService";
 import User from "../models/UserModel";
-import {UserInputError} from "apollo-server-express";
+import {UserInputError} from "apollo-server-errors";
 import jsonwebtoken from "jsonwebtoken";
 import {createUserAudit} from "./UserAuditService";
 import UserEmailManager from "./UserEmailManager";

@@ -6,7 +6,7 @@ import {DefaultLogger as winston} from "@dracul/logger-backend";
 import {createUserAudit} from "./UserAuditService";
 import fs from "fs";
 import bcryptjs from "bcryptjs";
-import {UserInputError} from "apollo-server-express";
+import {UserInputError} from "apollo-server-errors";
 import {hashPassword} from "./UserService";
 import {Transform} from 'stream'
 

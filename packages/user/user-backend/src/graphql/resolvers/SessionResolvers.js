@@ -5,7 +5,7 @@ import {
     sessionsByOs,
     sessionsByUser
 } from '../../services/SessionService'
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 import {SECURITY_USER_SHOW} from "../../permissions";
 
 export default {

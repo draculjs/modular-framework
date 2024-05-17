@@ -3,7 +3,7 @@ import {
 } from '../../services/UserService'
 import {apiKey, auth, refreshAuth} from "../../services/AuthService";
 
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 import {SECURITY_USER_EDIT} from "../../permissions";
 
 export default {

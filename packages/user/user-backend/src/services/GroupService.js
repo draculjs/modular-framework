@@ -1,6 +1,6 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import Group from './../models/GroupModel'
-import {UserInputError} from 'apollo-server-express'
+import {UserInputError} from 'apollo-server-errors'
 import {findUsersGroup, setUsersGroups} from "./UserService";
 
 

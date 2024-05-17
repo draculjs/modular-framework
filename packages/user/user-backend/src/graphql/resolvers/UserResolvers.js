@@ -12,7 +12,7 @@ import {
 import {
     AuthenticationError,
     ForbiddenError
-} from "apollo-server-express";
+} from "apollo-server-errors";
 
 import {
     SECURITY_USER_CREATE,

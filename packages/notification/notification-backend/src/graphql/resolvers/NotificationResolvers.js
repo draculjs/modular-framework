@@ -1,6 +1,6 @@
 import {markAsReadOrNotReadService, markAllReadOrNotReadService, fetchNotificationsService,createNotificationService,notificationsPaginateFilterService,fetchNotificationMethodService} from '../../services/NotificationService'
 
-import {AuthenticationError, ForbiddenError} from 'apollo-server-express';
+import {AuthenticationError, ForbiddenError} from 'apollo-server-errors';
 
 import{
     NOTIFICATION_SHOW,

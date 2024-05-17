@@ -14,7 +14,7 @@ import {
     SECURITY_GROUP_SHOW
 } from "../../permissions";
 
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 
 export default {
     Query: {

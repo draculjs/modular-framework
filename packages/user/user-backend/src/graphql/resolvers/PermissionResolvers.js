@@ -1,5 +1,5 @@
 import {fetchPermissions} from '../../services/PermissionService'
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 import {SECURITY_ROLE_SHOW, SECURITY_ROLE_SHOW_CHILD} from "../../permissions";
 
 export default {

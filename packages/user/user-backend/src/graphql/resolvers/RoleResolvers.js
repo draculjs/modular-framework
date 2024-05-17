@@ -6,7 +6,7 @@ import {
     SECURITY_ROLE_EDIT,
     SECURITY_ROLE_SHOW_CHILD
 } from "../../permissions";
-import {AuthenticationError, ForbiddenError} from "apollo-server-express";
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 import {findUser} from "../../services/UserService";
 
 export default {

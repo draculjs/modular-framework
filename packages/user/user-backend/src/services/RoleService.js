@@ -1,6 +1,6 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import RoleModel from '../models/RoleModel'
-import {UserInputError} from 'apollo-server-express'
+import {UserInputError} from 'apollo-server-errors'
 
 
 export const fetchRolesInName = function (roleNames) {
