@@ -16,7 +16,7 @@
   "dependencies": {
     "@dracul/common-backend": "^1.28.1",
     "@dracul/logger-backend": "^1.24.0",
-    "@dracul/settings-backend": "^1.28.5",
+    "@dracul/settings-backend": "^1.27.6",
     "bcryptjs": "^2.4.3",
     "email-templates": "^11.1.1",
     "express": "^4.17.1",
@@ -66,5 +66,5 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3"
   },
-  "gitHead": "9e258064d6b3ca3f5394580b5468bd62fb7cd2a0"
+  "gitHead": "2dea62f2d06fcc5e535504c9b6ad5941a5e57e52"
 }
