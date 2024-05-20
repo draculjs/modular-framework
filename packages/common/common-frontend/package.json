@@ -24,5 +24,6 @@
   "devDependencies": {
     "sass": "1.32.13",
     "sass-loader": "^8.0.2"
-  }
+  },
+  "gitHead": "5d4f4dae38220f30a62489b22d7a2241cc070c80"
 }

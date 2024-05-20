@@ -29,5 +29,6 @@
     "graphql": "^15.8.0 || ^16.0.0",
     "graphql-type-json": "^0.3.2",
     "mongoose": "5.13.21"
-  }
+  },
+  "gitHead": "5d4f4dae38220f30a62489b22d7a2241cc070c80"
 }

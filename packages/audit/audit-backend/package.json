@@ -18,7 +18,7 @@
     "url": "git+https://github.com/draculjs/modular-framework.git"
   },
   "scripts": {
-    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
+    "prepublish": "babel src -d lib --copy-files",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
@@ -42,5 +42,5 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3"
   },
-  "gitHead": "2dea62f2d06fcc5e535504c9b6ad5941a5e57e52"
+  "gitHead": "5d4f4dae38220f30a62489b22d7a2241cc070c80"
 }
