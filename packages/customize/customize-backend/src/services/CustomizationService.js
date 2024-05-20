@@ -28,11 +28,11 @@ export const createCustomization = async function ({lightTheme, darkTheme, logo,
         customization.id = doc._id;
         await customization.save()
         return customization
-    } catch (e) {
+    } catch (error) {
         if (error.name == "ValidationError") {
             throw new UserInputError(error.message, {inputErrors: error.errors})
         }
-        throw e
+        throw error
     }
 
 }
