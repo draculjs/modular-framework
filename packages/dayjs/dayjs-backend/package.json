@@ -1,6 +1,6 @@
 {
   "name": "@dracul/dayjs-backend",
-  "version": "1.29.3",
+  "version": "1.29.4",
   "private": false,
   "description": "dayjs backend module for Dracul",
   "main": "./lib/index.js",

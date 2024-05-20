@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.29.3",
+  "version": "1.29.4",
   "description": "",
   "main": "./lib/index.js",
   "type": "commonjs",
@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@dracul/common-backend": "^1.29.2",
-    "@dracul/dayjs-backend": "^1.29.3",
+    "@dracul/dayjs-backend": "^1.29.4",
     "@dracul/logger-backend": "^1.29.2",
     "@dracul/settings-backend": "^1.29.2",
     "bcryptjs": "^2.4.3",

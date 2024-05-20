@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-backend",
-  "version": "1.29.3",
+  "version": "1.29.4",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   "dependencies": {
     "@dracul/common-backend": "^1.29.2",
     "@dracul/logger-backend": "^1.29.2",
-    "@dracul/user-backend": "^1.29.3"
+    "@dracul/user-backend": "^1.29.4"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
