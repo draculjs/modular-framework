@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import routes from './routes'
 Vue.use(VueRouter)
 import store from '../store'
+import dayjs from "dayjs";
 
 const router = new VueRouter({
     mode: 'history',
@@ -23,8 +24,10 @@ router.beforeEach((to, from, next) => {
                 query: {redirect: to.fullPath}
             })
         } else {
-
-            if (to.meta.role && !store.getters.hasRole(to.meta.role)) {
+            if(store.getters.me.lastPasswordChange && to.path != '/password' &&
+                dayjs(store.getters.me.lastPasswordChange).isBefore(dayjs().subtract(90, 'days' )) ){
+                next({path: '/password'})
+            }else if (to.meta.role && !store.getters.hasRole(to.meta.role)) {
                 next({path: '/', query: {redirect: to.fullPath}})
             } else if (to.meta.permission && !store.getters.hasPermission(to.meta.permission)) {
                 //console.warn("PERMISO DENEGADO", to.meta.permission)

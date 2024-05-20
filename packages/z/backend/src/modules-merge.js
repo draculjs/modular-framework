@@ -7,6 +7,7 @@ import { types as notificationTypes, resolvers as notificationResolvers } from '
 import { types as settingsTypes, resolvers as settingsResolvers } from '@dracul/settings-backend'
 import { types as mediaTypes, resolvers as mediaResolvers } from '@dracul/media-backend'
 import { types as auditTypes, resolvers as auditResolvers } from '@dracul/audit-backend'
+import {dayjsTypes, dayjsResolvers } from '@dracul/dayjs-backend'
 
 //BASE RESOLVERS
 import { resolvers as baseResolvers } from './modules/base/graphql'
@@ -16,6 +17,7 @@ import { types as baseTypes } from './modules/base/graphql'
 
 export const resolvers = mergeResolvers([
     baseResolvers,
+    dayjsResolvers,
     securityResolvers,
     notificationResolvers,
     customResolvers,
@@ -26,6 +28,7 @@ export const resolvers = mergeResolvers([
 
 export const typeDefs = mergeTypeDefs([
     commonTypes,
+    dayjsTypes,
     baseTypes,
     securityTypes,
     notificationTypes,

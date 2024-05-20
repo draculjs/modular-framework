@@ -1,0 +1,32 @@
+{
+  "name": "@dracul/dayjs-backend",
+  "version": "1.29.2",
+  "description": "dayjs backend module for Dracul",
+  "main": "./lib/index.js",
+  "scripts": {
+    "prepublish": "babel src -d lib --copy-files",
+    "test": "jest"
+  },
+  "keywords": [
+    "dayjs",
+    "api",
+    "backend"
+  ],
+  "author": "Cristian Incarnato & Dracul Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/draculjs/modular-framework/issues"
+  },
+  "homepage": "https://github.com/draculjs/modular-framework#readme",
+  "peerDependencies": {
+    "@graphql-tools/load-files": "^7.0.0",
+    "@graphql-tools/merge": "^9.0.0",
+    "apollo-server-errors": "^3.3.1",
+    "graphql": "^15.8.0 || ^16.0.0",
+    "dayjs": "^1.11.11"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.5"
+  },
+  "gitHead": "ebf831c4fb68fe274681a09f59ddfebe4d34ef55"
+}

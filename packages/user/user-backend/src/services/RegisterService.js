@@ -26,7 +26,8 @@ export const registerUser = function ({username, password, name, email, phone}) 
             phone,
             active,
             role: roleObject,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+            lastPasswordChange: new Date()
         })
         newUser.id = newUser._id
 

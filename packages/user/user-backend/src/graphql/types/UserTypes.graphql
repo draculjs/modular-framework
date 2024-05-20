@@ -11,6 +11,7 @@ type User {
     active: Boolean!
     createdAt: String
     updatedAt: String
+    lastPasswordChange: Date
 }
 
 input UserInput{

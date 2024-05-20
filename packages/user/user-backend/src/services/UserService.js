@@ -124,6 +124,7 @@ export const createUser = async function ({username, password, name, email, phon
         role,
         groups,
         createdAt: Date.now(),
+        lastPasswordChange: new Date(),
         refreshToken: [],
         fromLDAP
     })
@@ -459,7 +460,7 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
             }
 
             User.findOneAndUpdate(
-                {_id: id}, {password: hashPassword(password)}, {new: true},
+                {_id: id}, {password: hashPassword(password), lastPasswordChange: new Date()}, {new: true},
                 (err, doc) => {
                     if (err) {
                         winston.error("UserService.changePasswordAdmin ", err)

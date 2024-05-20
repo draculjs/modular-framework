@@ -87,7 +87,7 @@ export default {
             if(this.getRedirectParam){
               this.$router.push(this.getRedirectParam)
             }else{
-              this.$router.push({name:'home'})
+              this.$router.push({name:'home'}).catch(() => {});
             }
 
           })

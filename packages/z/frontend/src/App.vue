@@ -6,7 +6,7 @@
       </template>
 
       <template v-slot:toolbar-right>
-        <notification-button v-if="me" :user-id="getUserId"/>
+        <notification-button v-if="me && $store.getters.hasPermission('NOTIFICATION_SHOW')" :user-id="getUserId"/>
         <dashboard-button/>
         <app-bar-user-menu/>
       </template>

@@ -18,6 +18,7 @@
     "@dracul/common-backend": "^1.29.2",
     "@dracul/logger-backend": "^1.29.2",
     "@dracul/settings-backend": "^1.29.2",
+    "@dracul/dayjs-backend": "^1.29.2",
     "bcryptjs": "^2.4.3",
     "email-templates": "^11.1.1",
     "express": "^4.17.1",

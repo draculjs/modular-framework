@@ -115,11 +115,11 @@ export default {
                     return reject(error.i18nMessage)
                 }
 
-                
+
 
                 AuthProvider.auth(username, password, useLDAP)
                     .then((response) => {
-                        console.log(response.data.auth)
+                        //console.log(response.data.auth)
                         commit('setAccessToken', response.data.auth.token)
                         commit('setRefreshToken', response.data.auth.refreshToken)
                         dispatch('fetchMe')

@@ -181,7 +181,7 @@ export const changePassword = function (id, {currentPassword, newPassword}, acti
         let user = await User.findOne({_id: id})
         if (bcryptjs.compareSync(currentPassword, user.password)) {
             User.findOneAndUpdate(
-                {_id: id}, {password: hashPassword(newPassword)}, {new: true},
+                {_id: id}, {password: hashPassword(newPassword), lastPasswordChange: new Date()}, {new: true},
                 (err, doc) => {
                     if (err) {
                         winston.error("UserService.changePassword ", err)

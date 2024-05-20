@@ -20,7 +20,9 @@ export const messages = {
             changePasswordSuccessfully: "Password changed successfully",
             wrongPassword: 'Wrong Password',
             validatingToken: 'Validating Token',
-            messagePasswordIsEqual: 'New password must be different from the current password'
+            messagePasswordIsEqual: 'New password must be different from the current password',
+            changePassword: 'Change Password',
+            passwordChanged: 'Password changed successfully',
         }
     },
     es: {
@@ -44,7 +46,9 @@ export const messages = {
             changePasswordSuccessfully: "contraseña modificada con exito",
             wrongPassword: 'Contraseña incorrecta',
             validatingToken: 'Validando Token',
-            messagePasswordIsEqual: 'La contraseña nueva debe ser diferente de la actual'
+            messagePasswordIsEqual: 'La contraseña nueva debe ser diferente de la actual',
+            changePassword: 'Cambiar contraseña',
+            passwordChanged: 'Contraseña modificada con exito',
         }
     },
     pt: {
@@ -68,7 +72,9 @@ export const messages = {
             changePasswordSuccessfully: "Senha modificada com sucesso",
             wrongPassword: 'Senha incorreta',
             validatingToken: 'Token de validação',
-            messagePasswordIsEqual: 'A nova senha deve ser diferente da senha atual'
+            messagePasswordIsEqual: 'A nova senha deve ser diferente da senha atual',
+            changePassword: 'Alterar senha',
+            passwordChanged: 'Senha modificada com sucesso',
         }
     }
 

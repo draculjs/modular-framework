@@ -16,6 +16,7 @@ query me{
             id
             name
         }
+        lastPasswordChange
 
     }
 }
