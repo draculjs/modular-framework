@@ -55,27 +55,26 @@ export const findSettingsByKey = async function (key) {
 export const getSettingsValueByKey = async function (key) {
 
     try {
-        const settings = await Settings.findOne({key: key}).exec()
-        if (settings) {
-            switch (doc.type) {
+        const setting = await Settings.findOne({key: key}).exec()
+        if (setting) {
+            switch (setting.type) {
                 case 'stringList':
                 case 'enumList':
-                    return settings.valueList
+                    return setting.valueList
                 case 'numberList':
-                    return settings.valueList.map(v => parseFloat(v))
+                    return setting.valueList.map(v => parseFloat(v))
                 case 'number':
                     return parseFloat(settings.value)
                 case 'boolean':
-                    return settings.value === "enable"
+                    return setting.value === "enable"
                 default:
-                    return settings.value
+                    return setting.value
             }
         }
         return null
-    } catch (e) {
-        throw e
+    } catch (error) {
+        throw error
     }
-
 }
 
 export const findSettingsByKeys = async function (keys = []) {
