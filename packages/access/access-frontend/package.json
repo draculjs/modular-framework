@@ -1,6 +1,6 @@
 {
   "name": "@dracul/access-frontend",
-  "version": "1.29.0",
+  "version": "1.29.1",
   "description": "vue access-control",
   "main": "./src/index.js",
   "scripts": {},

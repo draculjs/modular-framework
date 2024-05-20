@@ -1,6 +1,6 @@
 {
   "name": "@dracul/audit-frontend",
-  "version": "1.29.0",
+  "version": "1.29.1",
   "description": "Audit frontend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
   "scripts": {
@@ -9,8 +9,8 @@
   },
   "main": "./src/index.js",
   "dependencies": {
-    "@dracul/common-frontend": "^1.29.0",
-    "@dracul/dayjs-frontend": "^1.29.0"
+    "@dracul/common-frontend": "^1.29.1",
+    "@dracul/dayjs-frontend": "^1.29.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
