@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.31.0",
+  "version": "1.31.1",
   "description": "",
   "main": "./lib/index.js",
   "type": "commonjs",
