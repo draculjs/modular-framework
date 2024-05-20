@@ -1,6 +1,6 @@
 {
   "name": "@dracul/access-backend",
-  "version": "1.29.2",
+  "version": "1.30.0",
   "description": "Access Backend",
   "author": "Dracul Team",
   "homepage": "https://github.com/draculjs/modular-framework#readme",
@@ -28,7 +28,7 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
-    "@dracul/common-backend": "^1.29.2",
+    "@dracul/common-backend": "^1.30.0",
     "@dracul/logger-backend": "^1.29.2"
   },
   "peerDependencies": {
