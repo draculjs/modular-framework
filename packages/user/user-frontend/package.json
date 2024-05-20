@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.27.1",
+  "version": "1.29.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -18,22 +18,22 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.25.13",
-    "@dracul/dayjs-frontend": "^1.27.1"
+    "@dracul/common-frontend": "^1.29.0",
+    "@dracul/dayjs-frontend": "^1.29.0"
   },
   "peerDependencies": {
+    "chartjs-plugin-labels": "^1.1.0",
+    "deepmerge": "^4.2.2",
     "graphql": "^15.8.0",
+    "jwt-decode": "^2.2.0",
     "vue": "^2.7.15",
+    "vue-chartjs": "^3.5.0",
     "vue-i18n": "^8.18.1",
+    "vue-map-chart": "0.0.2",
     "vue-router": "^3.5.3",
-    "vuex": "^3.6.2",
     "vuetify": "2.7.1",
     "vuetify-loader": "^1.9.2",
-    "vue-chartjs": "^3.5.0",
-    "chartjs-plugin-labels": "^1.1.0",
-    "vue-map-chart": "0.0.2",
-    "deepmerge": "^4.2.2",
-    "jwt-decode": "^2.2.0"
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "flush-promises": "^1.0.2",

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/dayjs-frontend",
-  "version": "1.27.1",
+  "version": "1.29.0",
   "description": "vue dayjs utils",
   "main": "./src/index.js",
   "scripts": {
@@ -20,9 +20,6 @@
     "dayjs": "^1.11.11",
     "vue": "^2.7.15",
     "vuetify": "2.7.1"
-  },
-  "devDependencies": {
-
   },
   "bugs": {
     "url": "https://github.com/draculjs/modular-framework/issues"

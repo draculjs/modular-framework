@@ -1,6 +1,6 @@
 {
   "name": "@dracul/common-backend",
-  "version": "1.28.8",
+  "version": "1.29.0",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -29,8 +29,5 @@
     "graphql": "^15.8.0 || ^16.0.0",
     "graphql-type-json": "^0.3.2",
     "mongoose": "5.13.21"
-  },
-  "devDependencies": {
-
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.28.9",
+  "version": "1.29.0",
   "description": "",
   "main": "./lib/index.js",
   "type": "commonjs",
@@ -15,9 +15,9 @@
   "author": "Cristian Incarnato & Dracul Team",
   "license": "ISC",
   "dependencies": {
-    "@dracul/common-backend": "^1.28.8",
-    "@dracul/logger-backend": "^1.24.0",
-    "@dracul/settings-backend": "^1.28.8",
+    "@dracul/common-backend": "^1.29.0",
+    "@dracul/logger-backend": "^1.29.0",
+    "@dracul/settings-backend": "^1.29.0",
     "bcryptjs": "^2.4.3",
     "email-templates": "^11.1.1",
     "express": "^4.17.1",
@@ -42,8 +42,6 @@
     "mongoose-paginate-v2": "1.7.4",
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3"
-  },
-  "devDependencies": {
   },
   "gitHead": "2dea62f2d06fcc5e535504c9b6ad5941a5e57e52"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-backend",
-  "version": "1.28.9",
+  "version": "1.29.0",
   "author": "Cristian Incarnato & Dracul Team",
   "main": "./lib/index.js",
   "scripts": {
@@ -23,10 +23,10 @@
   },
   "homepage": "https://github.com/skeleton-metal/apollo-server-express#readme",
   "dependencies": {
-    "@dracul/access-backend": "^1.28.8",
-    "@dracul/common-backend": "^1.28.8",
-    "@dracul/logger-backend": "^1.24.0",
-    "@dracul/user-backend": "^1.28.9",
+    "@dracul/access-backend": "^1.29.0",
+    "@dracul/common-backend": "^1.29.0",
+    "@dracul/logger-backend": "^1.29.0",
+    "@dracul/user-backend": "^1.29.0",
     "js-yaml": "^4.1.0",
     "multer": "^1.4.5-lts.1",
     "streamifier": "^0.1.1",
@@ -44,8 +44,6 @@
     "mongoose-paginate-v2": "^1.7.4",
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3"
-  },
-  "devDependencies": {
   },
   "gitHead": "2dea62f2d06fcc5e535504c9b6ad5941a5e57e52"
 }

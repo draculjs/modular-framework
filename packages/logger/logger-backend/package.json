@@ -1,6 +1,6 @@
 {
   "name": "@dracul/logger-backend",
-  "version": "1.24.0",
+  "version": "1.29.0",
   "description": "",
   "main": "./lib/index.js",
   "scripts": {
@@ -9,9 +9,6 @@
   "peerDependencies": {
     "dotenv": "^16.3.1",
     "winston": "^3.3.3"
-  },
-  "devDependencies": {
-
   },
   "author": "Cristian Incarnato",
   "license": "ISC"

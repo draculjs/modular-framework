@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.27.1",
+  "version": "1.29.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -16,23 +16,20 @@
     "build": "vue-cli-service build --dest dist --mode production"
   },
   "dependencies": {
-    "@dracul/common-frontend": "^1.25.13",
-    "@dracul/dayjs-frontend": "^1.27.1",
-    "@dracul/user-frontend": "^1.27.1"
+    "@dracul/common-frontend": "^1.29.0",
+    "@dracul/dayjs-frontend": "^1.29.0",
+    "@dracul/user-frontend": "^1.29.0"
   },
   "peerDependencies": {
+    "deepmerge": "^4.2.2",
     "graphql": "^15.8.0",
+    "graphql-tag": "^2.10.3",
     "vue": "^2.7.15",
-    "vue-template-compiler": "^2.7.15",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.5.3",
+    "vue-template-compiler": "^2.7.15",
     "vuetify": "2.7.1",
-    "vuex": "^3.6.2",
-    "deepmerge": "^4.2.2",
-    "graphql-tag": "^2.10.3"
-  },
-  "devDependencies": {
-
+    "vuex": "^3.6.2"
   },
   "eslintConfig": {
     "root": true,
