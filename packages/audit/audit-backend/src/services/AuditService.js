@@ -2,19 +2,22 @@ const Audit = require('../models/AuditModel.js')
 const { UserInputError } = require('apollo-server-errors')
 
 const findAudit = async function (id) {
-    return new Promise((resolve, reject) => {
-        Audit.findOne({ _id: id }).populate('user').exec((err, res) => (
-            err ? reject(err) : resolve(res)
-        ));
-    })
+    try{
+        const audit = await Audit.findOne({ _id: id }).populate('user').exec()
+        return audit
+    }catch (e) {
+        throw e
+    }
 }
 
 const fetchAudit = async function () {
-    return new Promise((resolve, reject) => {
-        Audit.find({}).populate('user').exec((err, res) => (
-            err ? reject(err) : resolve(res)
-        ));
-    })
+
+    try{
+        const audit = await Audit.find({ }).populate('user').exec()
+        return audit
+    }catch (e) {
+        throw e
+    }
 }
 
 const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null, filters = null, orderBy = null, orderDesc = false) {
@@ -77,25 +80,21 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
 
 const createAudit = async function (authUser, { user, action, resource, description }) {
 
-    const doc = new Audit({
-        user, action, resource, description
-    })
+    try{
+        const doc = new Audit({
+            user, action, resource, description
+        })
 
-    doc.id = doc._id
+        doc.id = doc._id
+        await doc.populate('user')
+        return doc
+    }catch (error) {
+        if (error.name == "ValidationError") {
+            throw new UserInputError(error.message, { inputErrors: error.errors })
+        }
+        throw error
+    }
 
-    return new Promise((resolve, rejects) => {
-        doc.save((error => {
-
-            if (error) {
-                if (error.name == "ValidationError") {
-                    return rejects(new UserInputError(error.message, { inputErrors: error.errors }));
-                }
-                return rejects(error)
-            }
-
-            doc.populate('user').execPopulate(() => resolve(doc))
-        }))
-    })
 }
 
 module.exports = {

@@ -59,7 +59,7 @@
     "graphql-upload": "^13.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongo-cursor-pagination": "^7.2.0",
-    "mongoose": "5.13.21",
+    "mongoose": "5.13.22",
     "mongoose-paginate-v2": "^1.7.4",
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3",

@@ -5,7 +5,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.notificationsPaginateFilterService = exports.markAsReadOrNotReadService = exports.markAllReadOrNotReadService = exports.fetchNotificationsService = exports.fetchNotificationMethodService = exports.deleteNotificationsService = exports.createNotificationService = void 0;
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 var _NotificationModel = _interopRequireDefault(require("../models/NotificationModel"));
 var _loggerBackend = require("@dracul/logger-backend");
 var _dayjs = _interopRequireDefault(require("dayjs"));
@@ -23,51 +25,69 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
  * @param {string} icon
  * @return {Promise}
  */
-var createNotificationService = exports.createNotificationService = function createNotificationService(userId, title, content, type, icon) {
-  return new Promise(function (resolve, reject) {
-    if (!userId) throw new Error("userId must be provider");
-    if (!_mongoose["default"].isValidObjectId(userId)) throw new Error("userId must be a valid objectId");
-    if (!title) throw new Error("title must be provider");
-    if (!content) throw new Error("content must be provider");
-    var newNotification = new _NotificationModel["default"]({
-      user: userId,
-      title: title,
-      content: content,
-      type: type,
-      icon: icon,
-      creationDate: Date.now(),
-      readDate: null,
-      read: false
-    });
-    newNotification.id = newNotification._id;
-    saveNotification(newNotification).then(function (documentNotification) {
-      _loggerBackend.DefaultLogger.info("Notificacion creada con exito: " + documentNotification.id);
-      _PubSub.pubsub.publish('notification', documentNotification);
-      resolve(documentNotification);
-    })["catch"](function (err) {
-      _loggerBackend.DefaultLogger.error("Error al crear la notificacion. Error: ", err);
-      reject(err);
-    });
-  });
-};
-
-/**
- * Save a notification document in the MongoDB collection
- *
- * @param {Object} documentNotification
- * @return {Promise}
- */
-var saveNotification = function saveNotification(documentNotification) {
-  return new Promise(function (resolve, reject) {
-    documentNotification.save(function (error, docNotification) {
-      if (error) {
-        _loggerBackend.DefaultLogger.error("Error al guardar la notificacion. Error: ", error);
-        reject(error);
+var createNotificationService = exports.createNotificationService = /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(userId, title, content, type, icon) {
+    var newNotification;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          _context.prev = 0;
+          if (userId) {
+            _context.next = 3;
+            break;
+          }
+          throw new Error("userId must be provider");
+        case 3:
+          if (_mongoose["default"].isValidObjectId(userId)) {
+            _context.next = 5;
+            break;
+          }
+          throw new Error("userId must be a valid objectId");
+        case 5:
+          if (title) {
+            _context.next = 7;
+            break;
+          }
+          throw new Error("title must be provider");
+        case 7:
+          if (content) {
+            _context.next = 9;
+            break;
+          }
+          throw new Error("content must be provider");
+        case 9:
+          newNotification = new _NotificationModel["default"]({
+            user: userId,
+            title: title,
+            content: content,
+            type: type,
+            icon: icon,
+            creationDate: Date.now(),
+            readDate: null,
+            read: false
+          });
+          newNotification.id = newNotification._id;
+          _context.next = 13;
+          return newNotification.save();
+        case 13:
+          _loggerBackend.DefaultLogger.info("Notificacion creada con exito: " + newNotification.id);
+          _PubSub.pubsub.publish('notification', newNotification);
+          return _context.abrupt("return", newNotification);
+        case 18:
+          _context.prev = 18;
+          _context.t0 = _context["catch"](0);
+          _loggerBackend.DefaultLogger.error("Error al crear la notificacion. Error: ", _context.t0);
+          throw _context.t0;
+        case 22:
+        case "end":
+          return _context.stop();
       }
-      resolve(docNotification);
-    });
-  });
-};
+    }, _callee, null, [[0, 18]]);
+  }));
+  return function createNotificationService(_x, _x2, _x3, _x4, _x5) {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 /**
  * Get notifications from a certain user
@@ -78,24 +98,44 @@ var saveNotification = function saveNotification(documentNotification) {
  * @param {String} type
  * @return {Promise}
  */
-var fetchNotificationsService = exports.fetchNotificationsService = function fetchNotificationsService(userId) {
-  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var isRead = arguments.length > 2 ? arguments[2] : undefined;
-  var type = arguments.length > 3 ? arguments[3] : undefined;
-  return new Promise(function (resolve, reject) {
-    var query = getFilters(userId, isRead, type);
-    _NotificationModel["default"].find(query).sort({
-      creationDate: -1
-    }).limit(limit).populate("user").exec(function (err, documents) {
-      if (err) {
-        _loggerBackend.DefaultLogger.error("No se pudo obtener las notificaciones del usuario: " + userId + " error: ", error);
-        rejects(err);
+var fetchNotificationsService = exports.fetchNotificationsService = /*#__PURE__*/function () {
+  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(userId) {
+    var limit,
+      isRead,
+      type,
+      _query,
+      notifications,
+      _args2 = arguments;
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          limit = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : 0;
+          isRead = _args2.length > 2 ? _args2[2] : undefined;
+          type = _args2.length > 3 ? _args2[3] : undefined;
+          _context2.prev = 3;
+          _query = getFilters(userId, isRead, type);
+          _context2.next = 7;
+          return _NotificationModel["default"].find(_query).sort({
+            creationDate: -1
+          }).limit(limit).populate("user").exec();
+        case 7:
+          notifications = _context2.sent;
+          return _context2.abrupt("return", notifications);
+        case 11:
+          _context2.prev = 11;
+          _context2.t0 = _context2["catch"](3);
+          _loggerBackend.DefaultLogger.error("No se pudo obtener las notificaciones del usuario: " + userId + " error: ", _context2.t0);
+          throw _context2.t0;
+        case 15:
+        case "end":
+          return _context2.stop();
       }
-      _loggerBackend.DefaultLogger.info("Notificaciones obtenidas con exito del usuario: " + userId);
-      resolve(documents);
-    });
-  });
-};
+    }, _callee2, null, [[3, 11]]);
+  }));
+  return function fetchNotificationsService(_x6) {
+    return _ref2.apply(this, arguments);
+  };
+}();
 
 /**
  * Get notifications filters paginate from a certain user
@@ -174,22 +214,37 @@ var getFilters = function getFilters(userId, isRead, type) {
  * @param {Boolean} readValue
  * @return {Promise}
  */
-var markAsReadOrNotReadService = exports.markAsReadOrNotReadService = function markAsReadOrNotReadService(idNotification, readValue) {
-  return new Promise(function (resolve, reject) {
-    //Si readValue es true, necesitamos guardar la fecha de leido
-    var query = getReadDate(readValue);
-    _NotificationModel["default"].findOneAndUpdate({
-      _id: idNotification
-    }, query, {
-      "new": true
-    }).then(function (documentNotification) {
-      resolve(documentNotification);
-    })["catch"](function (err) {
-      _loggerBackend.DefaultLogger.error("Error al marcar la notificacion, error: ", err);
-      reject(err);
-    });
-  });
-};
+var markAsReadOrNotReadService = exports.markAsReadOrNotReadService = /*#__PURE__*/function () {
+  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(idNotification, readValue) {
+    var notification;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          _context3.next = 3;
+          return _NotificationModel["default"].findOneAndUpdate({
+            _id: idNotification
+          }, query, {
+            "new": true
+          }).exec();
+        case 3:
+          notification = _context3.sent;
+          return _context3.abrupt("return", notification);
+        case 7:
+          _context3.prev = 7;
+          _context3.t0 = _context3["catch"](0);
+          _loggerBackend.DefaultLogger.error("Error al marcar la notificacion, error: ", _context3.t0);
+          throw _context3.t0;
+        case 11:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3, null, [[0, 7]]);
+  }));
+  return function markAsReadOrNotReadService(_x7, _x8) {
+    return _ref3.apply(this, arguments);
+  };
+}();
 
 /**
  * Allows marking all user notifications as read or not read
@@ -198,24 +253,39 @@ var markAsReadOrNotReadService = exports.markAsReadOrNotReadService = function m
  * @param {Boolean} readValue
  * @return {Promise}
  */
-var markAllReadOrNotReadService = exports.markAllReadOrNotReadService = function markAllReadOrNotReadService(idUserAuth, readValue) {
-  //Si readValue es true, necesitamos guardar la fecha de leidos
-  var query = getReadDate(readValue);
-  return new Promise(function (resolve, reject) {
-    _NotificationModel["default"].updateMany({
-      user: idUserAuth,
-      read: readValue
-    }, query).exec(function (err, documentsNotification) {
-      if (err) {
-        _loggerBackend.DefaultLogger.error("Error al marcar las notificaciones, error: ", err);
-        reject(err);
+var markAllReadOrNotReadService = exports.markAllReadOrNotReadService = /*#__PURE__*/function () {
+  var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(idUserAuth, readValue) {
+    var _query2, notifications;
+    return _regenerator["default"].wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          _query2 = getReadDate(readValue);
+          _context4.next = 4;
+          return _NotificationModel["default"].updateMany({
+            user: idUserAuth,
+            read: readValue
+          }, _query2).exec();
+        case 4:
+          notifications = _context4.sent;
+          return _context4.abrupt("return", {
+            success: documentsNotification.ok
+          });
+        case 8:
+          _context4.prev = 8;
+          _context4.t0 = _context4["catch"](0);
+          _loggerBackend.DefaultLogger.error("Error al marcar las notificaciones, error: ", _context4.t0);
+          throw _context4.t0;
+        case 12:
+        case "end":
+          return _context4.stop();
       }
-      resolve({
-        success: documentsNotification.ok
-      });
-    });
-  });
-};
+    }, _callee4, null, [[0, 8]]);
+  }));
+  return function markAllReadOrNotReadService(_x9, _x10) {
+    return _ref4.apply(this, arguments);
+  };
+}();
 
 /**
  * Returns an object query, which will be used to save the read notification date in the DB.

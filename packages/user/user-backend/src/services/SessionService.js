@@ -28,7 +28,6 @@ export const createSession = async function (user, req) {
         }
 
 
-
         const newSession = new Session({
             user: user._id,
             username: user.username,
@@ -45,7 +44,7 @@ export const createSession = async function (user, req) {
         newSession.save().then(() => {
             resolve(newSession)
         }).catch(err => {
-            winston.error('SessionService.createSession ',err)
+            winston.error('SessionService.createSession ', err)
             reject(err)
         })
 
@@ -55,9 +54,9 @@ export const createSession = async function (user, req) {
 
 //TODO improve: Think in performance and high demand
 export const updateSession = async function (user) {
-    if(user != undefined && user.idSession != undefined){
+    if (user != undefined && user.idSession != undefined) {
         Session.findOne({_id: user.idSession}).then(doc => {
-            if(doc){
+            if (doc) {
                 let now = dayjs()
                 doc.until = now
                 doc.duration = now.diff(doc.since, 'seconds')
@@ -65,7 +64,7 @@ export const updateSession = async function (user) {
                 doc.save()
             }
         }).catch(err => {
-            winston.error('SessionService.updateSession ',err)
+            winston.error('SessionService.updateSession ', err)
         })
     }
 
@@ -79,8 +78,9 @@ function getFromDate(time, unit) {
 
 
 export const sessionsByUser = async function (time, unit = 'days') {
-    return new Promise((resolve, reject) => {
-        Session.aggregate(
+
+    try {
+        const r = await Session.aggregate(
             [
                 {$match: {since: {$gte: getFromDate(time, unit)}}},
                 {
@@ -97,25 +97,21 @@ export const sessionsByUser = async function (time, unit = 'days') {
                         requestAvg: {$avg: "$request"},
                     }
                 }
-            ], function (err, result) {
+            ]).exec()
 
-                if(err){
-                    winston.error('SessionService.sessionsByUser ',err)
-                }
-
-                resolve(result)
-            })
-
-    })
+        return r
+    } catch (e) {
+        winston.error('SessionService.sessionsByUser ', e)
+        throw e
+    }
 
 }
 
 
-
-
 export const sessionsByCountry = async function (time, unit = 'days') {
-    return new Promise((resolve, reject) => {
-        Session.aggregate(
+
+    try {
+        const r = await Session.aggregate(
             [
                 {$match: {since: {$gte: getFromDate(time, unit)}}},
                 {
@@ -125,22 +121,20 @@ export const sessionsByCountry = async function (time, unit = 'days') {
                         sum: {$sum: 1},
                     }
                 }
-            ], function (err, result) {
+            ]).exec()
 
-                if(err){
-                    winston.error('SessionService.sessionsByCountry ',err)
-                }
-
-                resolve(result)
-            })
-
-    })
+        return r
+    } catch (e) {
+        winston.error('SessionService.sessionsByCountry ', e)
+        throw e
+    }
 
 }
 
 export const sessionsByOs = async function (time, unit = 'days') {
-    return new Promise((resolve, reject) => {
-        Session.aggregate(
+
+    try {
+        const r = await Session.aggregate(
             [
                 {$match: {since: {$gte: getFromDate(time, unit)}}},
                 {
@@ -150,22 +144,21 @@ export const sessionsByOs = async function (time, unit = 'days') {
                         sum: {$sum: 1},
                     }
                 }
-            ], function (err, result) {
+            ]).exec()
 
-                if(err){
-                    winston.error('SessionService.sessionsByOs ',err)
-                }
+        return r
+    } catch (e) {
+        winston.error('SessionService.sessionsByOs ', e)
+        throw e
+    }
 
-                resolve(result)
-            })
-
-    })
 
 }
 
 export const sessionsByDeviceType = async function (time, unit = 'days') {
-    return new Promise((resolve, reject) => {
-        Session.aggregate(
+
+    try {
+        const r = await Session.aggregate(
             [
                 {$match: {since: {$gte: getFromDate(time, unit)}}},
                 {
@@ -175,23 +168,21 @@ export const sessionsByDeviceType = async function (time, unit = 'days') {
                         sum: {$sum: 1},
                     }
                 }
-            ], function (err, result) {
+            ]).exec()
 
-                if(err){
-                    winston.error('SessionService.sessionsByDeviceType ',err)
-                }
-
-                resolve(result)
-            })
-
-    })
+        return r
+    } catch (e) {
+        winston.error('SessionService.sessionsByDeviceType ', e)
+        throw e
+    }
 
 }
 
 
 export const sessionsByCity = async function (time, unit = 'days') {
-    return new Promise((resolve, reject) => {
-        Session.aggregate(
+
+    try {
+        const r = await Session.aggregate(
             [
                 {$match: {since: {$gte: getFromDate(time, unit)}}},
                 {
@@ -201,23 +192,23 @@ export const sessionsByCity = async function (time, unit = 'days') {
                         sum: {$sum: 1},
                     }
                 }
-            ], function (err, result) {
+            ]).exec()
 
-                if(err){
-                    winston.error('SessionService.sessionsByCity ',err)
-                }
+        return r
+    } catch (e) {
+        winston.error('SessionService.sessionsByCity ', e)
+        throw e
+    }
 
-                resolve(result)
-            })
 
-    })
 
 }
 
 
 export const sessionsByClient = async function (time, unit = 'days') {
-    return new Promise((resolve, reject) => {
-        Session.aggregate(
+
+    try {
+        const r = await Session.aggregate(
             [
                 {$match: {since: {$gte: getFromDate(time, unit)}}},
                 {
@@ -227,14 +218,12 @@ export const sessionsByClient = async function (time, unit = 'days') {
                         sum: {$sum: 1},
                     }
                 }
-            ], function (err, result) {
-                if(err){
-                    winston.error('SessionService.sessionsByClient ',err)
-                }
+            ]).exec()
 
-                resolve(result)
-            })
-
-    })
+        return r
+    } catch (e) {
+        winston.error('SessionService.sessionsByClient ', e)
+        throw e
+    }
 
 }

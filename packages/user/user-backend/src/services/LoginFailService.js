@@ -49,23 +49,19 @@ export const createLoginFail = async function (username, req) {
 
 
 export const loginFailByUsername = async function (time = 72, unit = 'hours') {
-    return new Promise((resolve, reject) => {
+
+    try{
         let now = dayjs()
         let from = now.subtract(time, unit)
-        LoginFail.aggregate(
+        const r = await LoginFail.aggregate(
             [
                 {$match: {date: {$gte: from.toDate()}}},
                 {$group: {_id: "$username", username: {$last: "$username"}, attempts: {$sum: 1}}}
-            ], function (err, result) {
-
-                if(err){
-                    winston.error("LoginFailService.loginFailByUsername ", err)
-                    reject(err)
-                }
-
-                resolve(result)
-            })
-
-    })
+            ]).exec()
+        return r
+    }catch (e) {
+        winston.error("LoginFailService.loginFailByUsername ", e)
+        throw e
+    }
 
 }

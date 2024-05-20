@@ -10,6 +10,10 @@
     "lib": "lib",
     "test": "__tests__"
   },
+  "scripts": {
+    "prepublish": "babel src -d lib --copy-files",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
   "files": [
     "lib"
   ],
@@ -17,10 +21,7 @@
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
   },
-  "scripts": {
-    "prepublish": "babel src -d lib --copy-files",
-    "test": "echo \"Error: run tests from root\" && exit 1"
-  },
+
   "bugs": {
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
@@ -37,7 +38,7 @@
     "apollo-server-errors": "^3.3.1",
     "dayjs": "^1.11.11",
     "graphql": "^15.8.0 || ^16.0.0",
-    "mongoose": "5.13.21",
+    "mongoose": "5.13.22",
     "mongoose-paginate-v2": "1.7.4",
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3"

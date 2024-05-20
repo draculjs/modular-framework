@@ -3,159 +3,122 @@ import RoleModel from '../models/RoleModel'
 import {UserInputError} from 'apollo-server-errors'
 
 
-export const fetchRolesInName = function (roleNames) {
-    return new Promise((resolve, reject) => {
-        RoleModel.find({name: {$in: roleNames }}).exec((err, res) => {
+export const fetchRolesInName = async function (roleNames) {
 
-            if(err){
-                winston.error("RoleService.fetchRolesInName ", err)
-                reject(err)
-            }
-            winston.debug('RoleService.fetchRolesInName successful')
-            resolve(res)
+    try {
+        const role = await RoleModel.find({name: {$in: roleNames}}).exec()
+        return role
+    } catch (e) {
+        winston.error("RoleService.fetchRolesInName ", e)
+        throw e
+    }
 
-        });
-    })
+
 }
 
 
-export const findRoles = function (roles = []) {
-    return new Promise((resolve, reject) => {
+export const findRoles = async function (roles = []) {
 
+    try {
         let qs = {}
 
         if (roles && roles.length) {
             qs._id = {$in: roles}
         }
 
-        RoleModel.find(qs).isDeleted(false).exec((err, res) => {
+        const rolesDoc = await RoleModel.find(qs).isDeleted(false).exec()
+        return rolesDoc
+    } catch (e) {
+        winston.error("RoleService.findRoles ", e)
+        throw e
+    }
 
-            if(err){
-                winston.error("RoleService.findRoles ", err)
-                reject(err)
-            }
-            winston.debug('RoleService.findRoles successful')
-            resolve(res)
 
-        });
-    })
 }
 
-export const findRole = function (id) {
-    return new Promise((resolve, reject) => {
-        RoleModel.findOne({ _id: id }).exec((err, res) => {
-
-            if(err){
-                winston.error("RoleService.findRole ", err)
-                reject(err)
-            }
-
-            winston.debug('RoleService.findRole successful')
-            resolve(res)
-
-        });
-    })
+export const findRole = async function (id) {
+    try {
+        const role = await RoleModel.findOne({_id: id}).exec()
+        return role
+    } catch (e) {
+        winston.error("RoleService.findRole ", e)
+        throw e
+    }
 }
 
-export const findRoleByName = function (roleName) {
-    return new Promise((resolve, reject) => {
-        RoleModel.findOne({ name: roleName }).exec((err, res) => {
+export const findRoleByName = async function (roleName) {
 
-            if(err){
-                winston.error("RoleService.findRoleByName ", err)
-                reject(err)
-            }
-            winston.debug('RoleService.findRoleByName successful')
-            resolve(res)
-
-        });
-    })
+    try {
+        const role = await RoleModel.findOne({name: roleName}).exec()
+        return role
+    } catch (e) {
+        winston.error("RoleService.findRoleByName ", e)
+        throw e
+    }
 }
 
-export const findRoleByNames = function (roleNames) {
-    return new Promise((resolve, reject) => {
-        RoleModel.find({ name: {$in: roleNames} }).exec((err, res) => {
-
-            if(err){
-                winston.error("RoleService.findRoleByName ", err)
-                reject(err)
-            }
-            winston.debug('RoleService.findRoleByName successful')
-            resolve(res)
-
-        });
-    })
+export const findRoleByNames = async function (roleNames) {
+    try {
+        const roles = await RoleModel.find({name: {$in: roleNames}}).exec()
+        return roles
+    } catch (e) {
+        winston.error("RoleService.findRoleByName ", e)
+        throw e
+    }
 }
 
 
-export const deleteRole = function (id) {
-    return new Promise((resolve, rejects) => {
-        findRole(id).then((doc) => {
-            doc.softdelete(function (err) {
+export const deleteRole = async function (id) {
+    try{
+        const role = await findRole(id)
+        await role.softdelete()
+        return {id: id, success: true}
+    }catch (e) {
+        winston.error("RoleService.deleteRole ", e)
+        throw e
+    }
+}
 
-                if(err){
-                    winston.error("RoleService.deleteRole ", err)
-                    reject(err)
-                }
+export const createRole = async function ({name, childRoles, permissions, readonly}) {
 
-                winston.info('RoleService.deleteRole successful')
-                resolve({ id: id, success: true })
-
-            });
+    try {
+        const newRole = new RoleModel({
+            name,
+            childRoles,
+            permissions,
+            readonly
         })
-    })
-}
+        newRole.id = newRole._id;
+        await newRole.save()
+        return newRole
+    } catch (error) {
+        if (error.name == "ValidationError") {
+            winston.warn("RoleService.createRole.ValidationError ", error)
+            throw new UserInputError(error.message, {inputErrors: error.errors});
+        }
+        winston.error("RoleService.createRole ", error)
+        throw error
+    }
 
-export const createRole = function ({ name, childRoles, permissions, readonly }) {
-    const newRole = new RoleModel({
-        name,
-        childRoles,
-        permissions,
-        readonly
-    })
-    newRole.id = newRole._id;
-    return new Promise((resolve, rejects) => {
-        newRole.save((error => {
-            if (error) {
-
-                if (error.name == "ValidationError") {
-                    winston.warn("RoleService.createRole.ValidationError ", error)
-                    rejects(new UserInputError(error.message, {inputErrors: error.errors}));
-                }else{
-                    winston.error("RoleService.createRole ", error)
-                }
-
-                rejects(error)
-            } else {
-
-                winston.info('RoleService.createRole successful')
-                resolve(newRole)
-            }
-        }))
-    })
 }
 
 
-export const updateRole = async function (id, { name,  childRoles, permissions = [], readonly }) {
-    return new Promise((resolve, rejects) => {
-        RoleModel.findOneAndUpdate({ _id: id },
-            { name, childRoles, permissions, readonly },
-            { new: true, runValidators: true, context: 'query' },
-            (error, doc) => {
+export const updateRole = async function (id, {name, childRoles, permissions = [], readonly}) {
 
-                if (error) {
-                    if (error.name == "ValidationError") {
-                        winston.warn("RoleService.updateRole.ValidationError ", error)
-                        rejects(new UserInputError(error.message, { inputErrors: error.errors }));
-                    }else{
-                        winston.error("RoleService.updateRole ", error)
-                    }
-                    rejects(error)
-                }
+    try {
+        const role = await  RoleModel.findOneAndUpdate({_id: id},
+            {name, childRoles, permissions, readonly},
+            {new: true, runValidators: true, context: 'query'}).exec()
 
-                winston.info('RoleService.updateRole successful')
-                resolve(doc)
-            })
-    })
+        return role
+    } catch (error) {
+        if (error.name == "ValidationError") {
+            winston.warn("RoleService.updateRole.ValidationError ", error)
+            throw new UserInputError(error.message, {inputErrors: error.errors})
+        }
+        winston.error("RoleService.updateRole ", error)
+
+        throw error
+    }
 }
 

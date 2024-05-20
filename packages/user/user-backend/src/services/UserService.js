@@ -6,7 +6,7 @@ import {createUserAudit} from './UserAuditService'
 import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-errors'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
-import {findRoleByName, findRoleByNames} from "./RoleService";
+import { findRoleByName, findRoleByNames} from "./RoleService";
 import {passwordRules, validateRegexPassword} from "./PasswordService";
 
 const EventEmitter = require('events');
@@ -24,10 +24,20 @@ export const hashPassword = function (password) {
     return hashPassword;
 }
 
-export const restoreDeletedUser = function (id, {username, password, name, email, phone, role, groups, active, refreshToken}, actionBy = null) {
+export const restoreDeletedUser = async function (id, {
+    username,
+    password,
+    name,
+    email,
+    phone,
+    role,
+    groups,
+    active,
+    refreshToken
+}, actionBy = null) {
 
-    return new Promise(async (resolve, reject) => {
-        winston.info('UserService.restoreDeletedUser restoring id: '+id+ ' username: ' + username)
+    try {
+        winston.info('UserService.restoreDeletedUser restoring id: ' + id + ' username: ' + username)
 
         let updatedAt = Date.now()
 
@@ -42,7 +52,7 @@ export const restoreDeletedUser = function (id, {username, password, name, email
             toAddGroups = groups.filter(group => !oldGroups.some(ngroup => ngroup.id === group.id))
         }
 
-        User.findOneAndUpdate(
+        const user = User.findOneAndUpdate(
             {_id: id},
             {
                 name: name.trim(),
@@ -55,58 +65,71 @@ export const restoreDeletedUser = function (id, {username, password, name, email
                 new: true,
                 runValidators: true,
                 context: 'query'
-            },
-            async (error, doc) => {
-                if (error) {
+            }).exec()
 
-                    if (error.name == "ValidationError") {
-                        winston.warn("updateUser ValidationError ", error)
-                        reject(new UserInputError(error.message, {inputErrors: error.errors}));
-                    } else {
-                        winston.error("UserService.updateUser ", error)
-                    }
-
-                    reject(error)
-                } else {
-
-                    //Add user to groups
-                    //console.log("toAddGroups", toAddGroups)
-                    if (toAddGroups && toAddGroups.length) {
-                        for (let groupId of toAddGroups) {
-                            await addUserToGroup(groupId, doc._id)
-                        }
-                    }
-
-                    //Remove user to groups
-                    //console.log("toRemoveGroups", toRemoveGroups)
-                    if (toRemoveGroups && toRemoveGroups.length) {
-                        for (let group of toRemoveGroups) {
-                            await removeUserToGroup(group.id, doc._id)
-                        }
-                    }
-
-
-                    winston.info('UserService.restoreDeletedUser successful for ' + doc.username)
-                    createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userRestored')
-                    doc.populate('role').populate('groups').execPopulate(() => {
-                        UserEventEmitter.emit('updated', doc)
-                        resolve(doc)
-                    })
-                }
+        //Add user to groups
+        //console.log("toAddGroups", toAddGroups)
+        if (toAddGroups && toAddGroups.length) {
+            for (let groupId of toAddGroups) {
+                await addUserToGroup(groupId, user._id)
             }
-        );
-    })
+        }
+
+        //Remove user to groups
+        //console.log("toRemoveGroups", toRemoveGroups)
+        if (toRemoveGroups && toRemoveGroups.length) {
+            for (let group of toRemoveGroups) {
+                await removeUserToGroup(group.id, user._id)
+            }
+        }
+
+        winston.info('UserService.restoreDeletedUser successful for ' + user.username)
+        await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userRestored')
+
+        await user.populate(['role','groups'])
+        UserEventEmitter.emit('updated', user)
+        return user
+
+    } catch (error) {
+        if (error.name == "ValidationError") {
+            winston.warn("updateUser ValidationError ", error)
+            throw new UserInputError(error.message, {inputErrors: error.errors})
+        }
+        winston.error("UserService.updateUser ", error)
+        throw error
+    }
+
 }
 
 
-export const createUser = async function ({username, password, name, email, phone, role, groups, active, fromLDAP = false}, actionBy = null) {
-    const existingUser = await findUserByUsernameOrEmailDeleted(username,email)
+export const createUser = async function ({
+                                              username,
+                                              password,
+                                              name,
+                                              email,
+                                              phone,
+                                              role,
+                                              groups,
+                                              active,
+                                              fromLDAP = false
+                                          }, actionBy = null) {
+    const existingUser = await findUserByUsernameOrEmailDeleted(username, email)
 
-    if(existingUser){
-        return restoreDeletedUser(existingUser._id, {username, password, name, email, phone, role, groups, active, fromLDAP}, actionBy = null)
+    if (existingUser) {
+        return restoreDeletedUser(existingUser._id, {
+            username,
+            password,
+            name,
+            email,
+            phone,
+            role,
+            groups,
+            active,
+            fromLDAP
+        }, actionBy = null)
     }
 
-    if(validateRegexPassword(password) === false) {
+    if (validateRegexPassword(password) === false) {
         return Promise.reject(new UserInputError('auth.invalidPassword', {
             inputErrors: {
                 password: {properties: {message: passwordRules.requirements}}
@@ -129,41 +152,47 @@ export const createUser = async function ({username, password, name, email, phon
         fromLDAP
     })
 
-    return new Promise((resolve, reject) => {
-        newUser.save(async (error, doc) => {
-            if (error) {
-                if (error.name == "ValidationError") {
-                    winston.warn("createUser ValidationError ", error)
-                    reject(new UserInputError(error.message, {inputErrors: error.errors}))
-                } else {
-                    winston.error("UserService.createUser ", error)
-                }
-                reject(error)
-            } else {
+    try {
+        await newUser.save()
 
-                if (groups && groups.length) {
-                    for (let group of groups) {
-                        await addUserToGroup(group, doc._id)
-                    }
-                }
-
-                winston.info('UserService.createUser successful for ' + doc.username)
-                createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userCreated')
-
-                doc.populate('role').populate('groups').execPopulate(() => {
-                        UserEventEmitter.emit('created', doc)
-                        resolve(doc)
-                    }
-                )
+        if (groups && groups.length) {
+            for (let group of groups) {
+                await addUserToGroup(group, newUser._id)
             }
-        })
-    })
+        }
+
+        winston.info('UserService.createUser successful for ' + newUser.username)
+        await createUserAudit(actionBy ? actionBy.id : null, newUser._id, 'userCreated')
+
+        await newUser.populate(['role','groups'])
+        UserEventEmitter.emit('created', newUser)
+        return newUser
+
+    } catch (e) {
+        if (error.name == "ValidationError") {
+            winston.warn("createUser ValidationError ", error)
+            throw new UserInputError(error.message, {inputErrors: error.errors})
+        } else {
+            winston.error("UserService.createUser ", error)
+        }
+        throw e
+    }
+
 }
 
 
-export const updateUser = function (id, {username, name, email, phone, role, groups, active, refreshToken}, actionBy = null) {
+export const updateUser = async function (id, {
+    username,
+    name,
+    email,
+    phone,
+    role,
+    groups,
+    active,
+    refreshToken
+}, actionBy = null) {
 
-    return new Promise(async (resolve, reject) => {
+    try {
         let updatedAt = Date.now()
 
         //Prepare group push and pull
@@ -177,83 +206,74 @@ export const updateUser = function (id, {username, name, email, phone, role, gro
             toAddGroups = groups.filter(group => !oldGroups.some(ngroup => ngroup.id === group.id))
         }
 
-        User.findOneAndUpdate(
+        const user = await User.findOneAndUpdate(
             {_id: id},
             {
                 name: name.trim(),
                 username: username.trim(),
                 email: email.trim(),
-                phone, role, groups, active, updatedAt, refreshToken}, {
+                phone, role, groups, active, updatedAt, refreshToken
+            }, {
                 new: true,
                 runValidators: true,
                 context: 'query'
-            },
-            async (error, doc) => {
-                if (error) {
+            }).exec()
 
-                    if (error.name == "ValidationError") {
-                        winston.warn("updateUser ValidationError ", error)
-                        reject(new UserInputError(error.message, {inputErrors: error.errors}));
-                    } else {
-                        winston.error("UserService.updateUser ", error)
-                    }
-
-                    reject(error)
-                } else {
-
-                    //Add user to groups
-                    //console.log("toAddGroups", toAddGroups)
-                    if (toAddGroups && toAddGroups.length) {
-                        for (let groupId of toAddGroups) {
-                            await addUserToGroup(groupId, doc._id)
-                        }
-                    }
-
-                    //Remove user to groups
-                    //console.log("toRemoveGroups", toRemoveGroups)
-                    if (toRemoveGroups && toRemoveGroups.length) {
-                        for (let group of toRemoveGroups) {
-                            await removeUserToGroup(group.id, doc._id)
-                        }
-                    }
-
-
-                    winston.info('UserService.updateUser successful for ' + doc.username)
-                    createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userModified')
-                    doc.populate('role').populate('groups').execPopulate(() => {
-                        UserEventEmitter.emit('updated', doc)
-                        resolve(doc)
-                    })
-                }
+        //Add user to groups
+        //console.log("toAddGroups", toAddGroups)
+        if (toAddGroups && toAddGroups.length) {
+            for (let groupId of toAddGroups) {
+                await addUserToGroup(groupId, user._id)
             }
-        );
-    })
+        }
+
+        //Remove user to groups
+        //console.log("toRemoveGroups", toRemoveGroups)
+        if (toRemoveGroups && toRemoveGroups.length) {
+            for (let group of toRemoveGroups) {
+                await removeUserToGroup(group.id, user._id)
+            }
+        }
+
+
+        winston.info('UserService.updateUser successful for ' + user.username)
+        await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userModified')
+        await user.populate(['role','groups'])
+        UserEventEmitter.emit('updated', user)
+        return user
+
+
+    } catch (error) {
+        if (error.name == "ValidationError") {
+            winston.warn("updateUser ValidationError ", error)
+            throw new UserInputError(error.message, {inputErrors: error.errors});
+        } else {
+            winston.error("UserService.updateUser ", error)
+        }
+
+        throw error
+    }
+
+
 }
 
-export const deleteUser = function (id, actionBy = null) {
-    return new Promise((resolve, reject) => {
-
-        findUser(id).then((doc) => {
-            doc.softdelete(function (err) {
-                createUserAudit(actionBy ? actionBy.id : null, doc._id, 'userDeleted')
-                if (err) {
-                    winston.error("UserService.deleteUser ", err)
-                    reject(err)
-                } else {
-                    winston.info('UserService.deleteUser successful for ' + doc.username)
-                    UserEventEmitter.emit('deleted', doc)
-                    resolve({success: true, id: id})
-                }
-            });
-        })
-
-    })
+export const deleteUser = async function (id, actionBy = null) {
+    try{
+        const user = await findUser(id)
+        await user.softdelete()
+        await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userDeleted')
+        UserEventEmitter.emit('deleted', user)
+        return {success: true, id: id}
+    }catch (e) {
+        winston.error("UserService.deleteUser ", e)
+        throw e
+    }
 }
 
 
-export const findUsers = function (roles = [], userId = null) {
-    return new Promise((resolve, reject) => {
+export const findUsers = async function (roles = [], userId = null) {
 
+    try {
         let qs = {}
 
         if (roles && roles.length) {
@@ -265,55 +285,44 @@ export const findUsers = function (roles = [], userId = null) {
             }
         }
 
-        User.find(qs).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUsers ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUsers successful')
-                resolve(res)
-            }
-        });
-    })
+        const users = await User.find(qs).isDeleted(false).populate(['role','groups']).exec()
+        return users
+    } catch (e) {
+        winston.error("UserService.findUsers ", e)
+        throw e
+    }
+
 }
 
 
-export const findUsersByRole = function (roleName) {
-    return new Promise(async (resolve, reject) => {
+export const findUsersByRole = async function (roleName) {
 
+    try {
         let role = await findRoleByName(roleName)
 
         if (!role) return resolve([])
 
-        User.find({role: role.id}).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUsersByRole ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUsersByRole successful')
-                resolve(res)
-            }
-        });
-    })
+        const users = await User.find({role: role.id}).isDeleted(false).populate(['role','groups']).exec()
+
+        return users
+    } catch (e) {
+        winston.error("UserService.findUsersByRole ", e)
+        throw e
+    }
+
+
 }
 
-export const findUsersByRoles = function (roleNames) {
-    return new Promise(async (resolve, reject) => {
-
+export const findUsersByRoles = async function (roleNames) {
+    try {
         let roles = await findRoleByNames(roleNames)
-
         if (!roles && roles.length === 0) return resolve([])
-
-        User.find({role: {$in: roles.map(r => r._id)} }).isDeleted(false).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUsersByRole ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUsersByRole successful')
-                resolve(res)
-            }
-        });
-    })
+        const users = await User.find({role: {$in: roles.map(r => r._id)}}).isDeleted(false).populate(['role','groups']).exec()
+        return users
+    } catch (e) {
+        winston.error("UserService.findUsersByRole ", e)
+        throw e
+    }
 }
 
 
@@ -370,114 +379,93 @@ export const paginateUsers = function (limit, pageNumber = 1, search = null, ord
     })
 }
 
-export const findUser = function (id) {
-    return new Promise((resolve, reject) => {
-        User.findOne({_id: id}).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUser ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUser successful')
-                resolve(res)
-            }
-        });
-    })
-}
-
-export const findUserByUsername = function (username) {
-    return new Promise((resolve, reject) => {
-        User.findOne({username: username}).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUserByUsername ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUserByUsername successful')
-                resolve(res)
-            }
-        });
-    })
-}
-
-export const findUserByEmail = function (email) {
-    return new Promise((resolve, reject) => {
-        User.findOne({email: email}).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUserByEmail ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUserByEmail successful')
-                resolve(res)
-            }
-        });
-    })
-}
-
-export const findUserByUsernameOrEmail = function (username, email) {
-    return new Promise((resolve, reject) => {
-        User.findOne({ $or: [{username:username}, {email: email}] } ).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUserByEmail ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUserByEmail successful')
-                resolve(res)
-            }
-        });
-    })
-}
-
-export const findUserByUsernameOrEmailDeleted = function (username, email) {
-    return new Promise((resolve, reject) => {
-        User.findOne({ $or: [{username:username}, {email: email}], deleted: true } ).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUserByEmail ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUserByEmail successful')
-                resolve(res)
-            }
-        });
-    })
-}
-
-
-
-
-export const changePasswordAdmin = function (id, {password, passwordVerify}, actionBy = null) {
-
-    if (password == passwordVerify) {
-
-
-
-        return new Promise((resolve, reject) => {
-
-            if(validateRegexPassword(password) === false) {
-                reject(new UserInputError('auth.invalidPassword', {
-                    inputErrors: {
-                        password: {properties: {message: passwordRules.requirements}}
-                    }
-                }))
-            }
-
-            User.findOneAndUpdate(
-                {_id: id}, {password: hashPassword(password), lastPasswordChange: new Date()}, {new: true},
-                (err, doc) => {
-                    if (err) {
-                        winston.error("UserService.changePasswordAdmin ", err)
-                        reject({status: false, message: "Change password fail"})
-                    } else {
-                        winston.debug('UserService.changePasswordAdmin successful')
-                        createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'changePasswordAdmin')
-                        resolve({success: true, message: "PasswordChange", operation: "changePasswordAdmin"})
-                    }
-                }
-            );
-        })
-
-
-    } else {
-        return Promise.reject({status: false, message: "Passwords do not match"})
+export const findUser = async function (id) {
+    try {
+        const user = await User.findOne({_id: id}).populate(['role','groups']).exec()
+        return user
+    } catch (e) {
+        winston.error("UserService.findUser ", e)
+        throw e
     }
+}
+
+export const findUserByUsername = async function (username) {
+    try {
+        const user = await User.findOne({username: username}).populate(['role','groups']).exec()
+        return user
+    } catch (e) {
+        winston.error("UserService.findUserByUsername ", e)
+        throw e
+    }
+}
+
+export const findUserByEmail = async function (email) {
+
+    try {
+        const user = await User.findOne({email: email}).populate(['role','groups']).exec()
+        return user
+    } catch (e) {
+        winston.error("UserService.findUserByEmail ", e)
+        throw e
+    }
+
+
+}
+
+export const findUserByUsernameOrEmail = async function (username, email) {
+    try {
+        const user = await User.findOne({$or: [{username: username}, {email: email}]}).populate(['role','groups']).exec()
+        return user
+    } catch (e) {
+        winston.error("UserService.findUserByEmail ", e)
+        throw e
+    }
+}
+
+export const findUserByUsernameOrEmailDeleted = async function (username, email) {
+
+    try {
+        const user = await User.findOne({
+            $or: [{username: username}, {email: email}],
+            deleted: true
+        }).populate(['role','groups']).exec()
+
+        return user
+    } catch (e) {
+        winston.error("UserService.findUserByUsernameOrEmailDeleted ", e)
+        throw e
+    }
+}
+
+
+export const changePasswordAdmin = async function (id, {password, passwordVerify}, actionBy = null) {
+
+    if (password !== passwordVerify) {
+        throw new Error("Passwords do not match")
+    }
+
+    try {
+        if (validateRegexPassword(password) === false) {
+            throw new UserInputError('auth.invalidPassword', {
+                inputErrors: {
+                    password: {properties: {message: passwordRules.requirements}}
+                }
+            })
+        }
+
+        const user = await User.findOneAndUpdate({_id: id}, {
+            password: hashPassword(password),
+            lastPasswordChange: new Date()
+        }, {new: true})
+        await createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'changePasswordAdmin')
+        return {success: true, message: "PasswordChange", operation: "changePasswordAdmin"}
+
+
+    } catch (e) {
+        winston.error("UserService.changePasswordAdmin ", e)
+        throw e
+    }
+
 }
 
 
@@ -490,7 +478,7 @@ export const findUsersGroup = async function (group, showDeletedUsers) {
 }
 
 
-export const setUsersGroups = function (group, users) {
+export const setUsersGroups = async function (group, users) {
 
     function getDeletePromises(oldUsers) {
         return oldUsers.map((oldUser) => {
@@ -503,18 +491,19 @@ export const setUsersGroups = function (group, users) {
                     {_id: oldUser.id},
                     {$pullAll: {groups: [group.id]}},
                     {new: true, runValidators: true, context: 'query'}
-                )
+                ).exec()
+
             }
         });
     }
 
     function getPushPromises() {
-        return users.map(user => {
+        return users.map( (user) => {
             return User.findOneAndUpdate(
                 {_id: user},
                 {$push: {groups: group.id}},
                 {new: true, runValidators: true, context: 'query'},
-            )
+            ).exec()
         });
     }
 
@@ -548,22 +537,19 @@ export const setUsersGroups = function (group, users) {
     })
 }
 
-export const findUserByRefreshToken = function (id) {
+export const findUserByRefreshToken = async function (id) {
 
-    return new Promise(async (resolve, reject) => {
+    try {
         let now = new Date()
-        User.findOne({
+        const user = await User.findOne({
             active: true,
             'refreshToken.id': id,
             'refreshToken.expiryDate': {$gte: now}
-        }).populate('role').populate('groups').exec((err, res) => {
-            if (err) {
-                winston.error("UserService.findUserByRefreshToken ", err)
-                reject(err)
-            } else {
-                winston.debug('UserService.findUserByRefreshToken successful')
-                resolve(res)
-            }
-        })
-    })
+        }).populate(['role','groups']).exec()
+        return user
+    } catch (e) {
+        winston.error("UserService.findUserByRefreshToken ", e)
+        throw e
+    }
+
 }

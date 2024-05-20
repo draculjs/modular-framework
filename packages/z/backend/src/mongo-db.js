@@ -44,12 +44,7 @@ const connectToMongo = function (mongoUri){
         mongoose.Promise = global.Promise;
 
         mongoose.connect(mongoUri,
-            {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false
-
-            })
+            {})
             .then(() => {
                 DefaultLogger.info("Mongoose connected")
                 resolve()

@@ -14,7 +14,7 @@ import mongoose from "mongoose";
  * @param {string} icon
  * @return {Promise}
  */
-export const createNotificationService = (
+export const createNotificationService = async (
     userId,
     title,
     content,
@@ -22,16 +22,16 @@ export const createNotificationService = (
     icon
 ) => {
 
-    return new Promise((resolve, reject) => {
 
-    if(!userId)
-        throw new Error("userId must be provider")
-    if(!mongoose.isValidObjectId(userId))
-        throw new Error("userId must be a valid objectId")
-    if(!title)
-        throw new Error("title must be provider")
-    if(!content)
-        throw new Error("content must be provider")
+    try{
+        if(!userId)
+            throw new Error("userId must be provider")
+        if(!mongoose.isValidObjectId(userId))
+            throw new Error("userId must be a valid objectId")
+        if(!title)
+            throw new Error("title must be provider")
+        if(!content)
+            throw new Error("content must be provider")
 
         let newNotification = new Notification({
             user: userId,
@@ -46,36 +46,17 @@ export const createNotificationService = (
 
         newNotification.id = newNotification._id;
 
-        saveNotification(newNotification)
-            .then((documentNotification) => {
-                winston.info("Notificacion creada con exito: " + documentNotification.id);
-                pubsub.publish('notification', documentNotification)
-                resolve(documentNotification);
-            })
-            .catch((err) => {
-                winston.error("Error al crear la notificacion. Error: ", err);
-                reject(err);
-            });
-    });
-};
+        await newNotification.save()
+        winston.info("Notificacion creada con exito: " + newNotification.id);
+        pubsub.publish('notification', newNotification)
+        return newNotification
+    }catch (e) {
+        winston.error("Error al crear la notificacion. Error: ", e);
+        throw e
+    }
 
-/**
- * Save a notification document in the MongoDB collection
- *
- * @param {Object} documentNotification
- * @return {Promise}
- */
-const saveNotification = (documentNotification) => {
-    return new Promise((resolve, reject) => {
-        documentNotification.save((error, docNotification) => {
-            if (error) {
-                winston.error("Error al guardar la notificacion. Error: ", error);
-                reject(error);
-            }
-            resolve(docNotification);
-        });
-    });
-};
+
+}
 
 /**
  * Get notifications from a certain user
@@ -86,30 +67,20 @@ const saveNotification = (documentNotification) => {
  * @param {String} type
  * @return {Promise}
  */
-export const fetchNotificationsService = (userId, limit = 0, isRead, type) => {
-    return new Promise((resolve, reject) => {
-        let query = getFilters(userId, isRead, type);
+export const fetchNotificationsService = async (userId, limit = 0, isRead, type) => {
 
-        Notification.find(query)
+    try{
+        let query = getFilters(userId, isRead, type);
+        let notifications = await  Notification.find(query)
             .sort({creationDate: -1})
             .limit(limit)
             .populate("user")
-            .exec(function (err, documents) {
-                if (err) {
-                    winston.error(
-                        "No se pudo obtener las notificaciones del usuario: " +
-                        userId +
-                        " error: ",
-                        error
-                    );
-                    rejects(err);
-                }
-                winston.info(
-                    "Notificaciones obtenidas con exito del usuario: " + userId
-                );
-                resolve(documents);
-            });
-    });
+            .exec()
+        return notifications
+    }catch (e) {
+        winston.error("No se pudo obtener las notificaciones del usuario: " + userId + " error: ", e);
+        throw e
+    }
 };
 
 /**
@@ -178,20 +149,16 @@ const getFilters = (userId, isRead, type) => {
  * @param {Boolean} readValue
  * @return {Promise}
  */
-export const markAsReadOrNotReadService = (idNotification, readValue) => {
-    return new Promise((resolve, reject) => {
-        //Si readValue es true, necesitamos guardar la fecha de leido
-        let query = getReadDate(readValue);
+export const markAsReadOrNotReadService = async (idNotification, readValue) => {
 
-        Notification.findOneAndUpdate({_id: idNotification}, query, {new:true})
-            .then((documentNotification) => {
-                resolve(documentNotification);
-            })
-            .catch((err) => {
-                winston.error("Error al marcar la notificacion, error: ", err);
-                reject(err);
-            });
-    });
+    try{
+        const notification = await Notification.findOneAndUpdate({_id: idNotification}, query, {new:true}).exec()
+        return notification
+    }catch (e) {
+        winston.error("Error al marcar la notificacion, error: ", e);
+        throw e
+    }
+
 };
 
 /**
@@ -201,20 +168,17 @@ export const markAsReadOrNotReadService = (idNotification, readValue) => {
  * @param {Boolean} readValue
  * @return {Promise}
  */
-export const markAllReadOrNotReadService = (idUserAuth, readValue) => {
-    //Si readValue es true, necesitamos guardar la fecha de leidos
-    let query = getReadDate(readValue);
+export const markAllReadOrNotReadService = async (idUserAuth, readValue) => {
 
-    return new Promise((resolve, reject) => {
-        Notification.updateMany({user: idUserAuth, read: readValue}, query)
-            .exec(function (err, documentsNotification) {
-                if (err) {
-                    winston.error("Error al marcar las notificaciones, error: ", err);
-                    reject(err);
-                }
-                resolve({success: documentsNotification.ok});
-            });
-    });
+    try{
+        let query = getReadDate(readValue);
+        const notifications = await Notification.updateMany({user: idUserAuth, read: readValue}, query).exec()
+        return {success: documentsNotification.ok}
+    }catch (e) {
+        winston.error("Error al marcar las notificaciones, error: ", e)
+        throw e
+    }
+
 };
 
 /**
