@@ -15,7 +15,7 @@ const {
     DOMAIN_DELETE
 } =  require("../../permissions/DomainPermissions");
 
-const {AuthenticationError, ForbiddenError} = require("apollo-server-express");
+const {AuthenticationError, ForbiddenError} = require("apollo-server-errors");
 
 const resolvers = {
     Query: {

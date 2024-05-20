@@ -5,6 +5,10 @@ import {UserRbacFactory} from "../services/RbacService";
 export default async function (req, res, next) {
     try {
 
+        if(req && req.auth){
+            req.user = req.auth
+        }
+
         if(req && req.user){
             req.rbac = await UserRbacFactory(req.user)
         }

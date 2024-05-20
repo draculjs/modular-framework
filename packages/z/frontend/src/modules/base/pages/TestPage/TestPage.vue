@@ -5,7 +5,7 @@
     <v-card>
       <v-card-text>
         <form-list :value="list" :new-item="{name:'', age:1}" :min-length="1" :max-length="3">
-          <template v-slot:default="{item,index}">
+          <template v-slot:default="{index}">
             <v-row>
               <v-col cols="12" sm="6">
                 <v-text-field v-model="list[index].name" label="name"></v-text-field>

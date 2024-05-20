@@ -4,8 +4,8 @@
   "description": "Modulo de notificaciones de usuario",
   "main": "./lib/index.js",
   "scripts": {
-    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files",
-    "test": "./node_modules/.bin/mocha --require @babel/register"
+    "prepublish": "babel src -d lib --copy-files",
+    "test": "mocha --require @babel/register"
   },
   "repository": {
     "type": "git",
@@ -28,31 +28,14 @@
     "graphql": "^15.8.0 || ^16.0.0",
     "graphql-subscriptions": "^2.0.0",
     "mongoose": "5.13.21",
-    "mongoose-paginate-v2": "^1.7.4",
+    "mongoose-paginate-v2": "1.7.4",
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3",
-    "subscriptions-transport-ws": "^0.9.18"
+    "subscriptions-transport-ws": "^0.9.18",
+    "apollo-server-express": "^2.26.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.0",
-    "@babel/core": "^7.23.3",
-    "@babel/node": "^7.22.19",
-    "@babel/plugin-transform-runtime": "^7.23.3",
-    "@babel/preset-env": "^7.23.3",
-    "@babel/runtime": "^7.12.5",
-    "@graphql-tools/load-files": "^7.0.0",
-    "@graphql-tools/merge": "^9.0.0",
-    "apollo-server-express": "^2.26.2",
-    "express": "^4.17.1",
-    "graphql": "^15.8.0",
-    "graphql-subscriptions": "^2.0.0",
-    "mocha": "^8.2.0",
-    "mongodb-memory-server": "^6.5.2",
-    "mongoose": "5.13.21",
-    "mongoose-paginate-v2": "^1.7.4",
-    "mongoose-softdelete": "1.1.0",
-    "mongoose-unique-validator": "^2.0.3",
-    "subscriptions-transport-ws": "^0.9.18"
+
   },
   "author": "Dracul team",
   "license": "ISC",

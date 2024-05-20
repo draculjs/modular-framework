@@ -1,5 +1,5 @@
 const Audit = require('../models/AuditModel.js')
-const { UserInputError } = require('apollo-server-express')
+const { UserInputError } = require('apollo-server-errors')
 
 const findAudit = async function (id) {
     return new Promise((resolve, reject) => {
@@ -36,7 +36,7 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
     function qsFilter(filters) {
         if (filters) {
             const qsFilter = {}
-            
+
             filters.forEach(({ field, operator, value }) => {
                 switch (field) {
                     case 'user':

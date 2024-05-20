@@ -101,6 +101,13 @@ class UserProvider {
             },
         })
     }
+
+    fetchPasswordRules(){
+        return this.gqlc.query({
+            query: require('./gql/fetchPasswordRules.graphql'),
+            fetchPolicy: "network-only"
+        })
+    }
 }
 
 const userProvider = new UserProvider()

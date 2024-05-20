@@ -31,9 +31,9 @@
                         :label="$t('user.label.newPassword')"
                         :placeholder="$t('user.label.newPassword')"
                         autocomplete="new-password"
-                        :rules="required"
-                        :error="hasInputErrors('newPassword')"
-                        :error-messages="getInputErrors('newPassword')"
+                        :rules="newPasswordRules"
+                        :error="hasInputErrors('password')"
+                        :error-messages="getInputErrors('password')"
                         required
           />
         </v-col>
@@ -86,21 +86,45 @@ export default {
         password: null,
         passwordVerify: null,
       },
-      errors: {}
+      errors: {},
+      passwordRules: {
+        regex: '/.*/',
+        requirements: ''
+      }
     }
   },
   computed: {
     passwordMatchError() {
       return (this.form.password === this.form.passwordVerify) ? null : this.$t('user.validation.passwordVerify')
     },
+    passwordRegex(){
+      let r = new RegExp(this.passwordRules.regex)
+      return r
+    },
+    newPasswordRules(){
+      return [
+        v => !!v || this.$t('user.validation.required'),
+        v => this.passwordRegex.test(this.form.password) || this.passwordRules.requirements,
+      ]
+    },
     passwordMatchRules() {
       return [
         v => !!v || this.$t('user.validation.required'),
+        //v => this.passwordRegex.test(this.form.password) || this.passwordRules.requirements,
         () => (this.form.password === this.form.passwordVerify) || this.$t('user.validation.passwordVerify')
       ]
     },
   },
+  created() {
+    this.fetchPasswordRules()
+  },
   methods: {
+    fetchPasswordRules() {
+      UserProvider.fetchPasswordRules()
+          .then(r => {
+            this.passwordRules = r.data.fetchPasswordRules
+          })
+    },
     resetValidation: function () {
       this.errors = {}
     },

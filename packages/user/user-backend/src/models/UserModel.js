@@ -3,6 +3,9 @@ import softDelete from 'mongoose-softdelete'
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 import uniqueValidator from 'mongoose-unique-validator';
+import {passwordRules} from "../services/PasswordService";
+
+
 
 // Defining user Mongoose Schema
 const UserSchema = new mongoose.Schema({
@@ -20,7 +23,9 @@ const UserSchema = new mongoose.Schema({
             message: "validation.emailFormat"
         }
     },
-    password: {type: String, required: true},
+    password: {
+        type: String, required: true
+    },
     code: {type: String, required: false},
     name: {type: String, required: true},
     active: {type: Boolean, required: true, default: false},

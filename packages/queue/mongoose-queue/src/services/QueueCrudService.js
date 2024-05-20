@@ -1,5 +1,5 @@
 const QueueModel = require('../models/QueueModel');
-import {UserInputError} from 'apollo-server-express'
+import {UserInputError} from 'apollo-server-errors'
 import mongoose from 'mongoose'
 
 export const findQueue = async function (id) {

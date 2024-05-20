@@ -1,16 +1,9 @@
-const {IgnorePlugin} = require("webpack")
+const { defineConfig } = require('@vue/cli-service')
 
-module.exports = {
-  "transpileDependencies": [
-    "vuetify"
+module.exports = defineConfig({
+  transpileDependencies: [
+    'vuetify'
   ],
-  configureWebpack: {
-    plugins: [
-      new IgnorePlugin({
-        resourceRegExp: /moment$/,
-      })
-    ]
-  },
   chainWebpack: (config) => {
     config.module
         .rule('gql')
@@ -19,5 +12,5 @@ module.exports = {
         .loader('graphql-tag/loader')
         .end();
   },
+})
 
-}

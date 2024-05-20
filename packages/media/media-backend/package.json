@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "jest --runInBand",
-    "prepublish": "./node_modules/.bin/babel src -d lib --copy-files"
+    "prepublish": "babel src -d lib --copy-files"
   },
   "repository": {
     "type": "git",
@@ -36,8 +36,8 @@
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/merge": "^9.0.0",
-    "apollo-server-errors": "^2.5.0 || ^3.0.0",
-    "dayjs": "^1.10.7",
+    "apollo-server-errors": "^3.3.1",
+    "dayjs": "^1.11.11",
     "express": "^4.19.2",
     "graphql": "^15.8.0 || ^16.0.0",
     "mongoose": "5.13.21",
@@ -46,20 +46,6 @@
     "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.0",
-    "@babel/core": "^7.23.3",
-    "@babel/node": "^7.22.19",
-    "@babel/plugin-transform-runtime": "^7.23.3",
-    "@babel/preset-env": "^7.23.3",
-    "@shelf/jest-mongodb": "^1.1.5",
-    "babel-jest": "^29.7.0",
-    "jest": "^29.7.0",
-    "mime-types": "^2.1.33",
-    "mock-express-request": "^0.2.2",
-    "mockingoose": "^2.13.2",
-    "mongodb-memory-server": "^6.5.2",
-    "nodemon": "^1.19.4",
-    "supertest": "^6.1.6"
   },
   "gitHead": "2dea62f2d06fcc5e535504c9b6ad5941a5e57e52"
 }

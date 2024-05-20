@@ -1,3 +1,5 @@
+import {passwordRules, validateRegexPassword} from "./PasswordService";
+
 require('dotenv').config()
 import path from "path";
 import createDirIfNotExist from "./utils/createDirIfNotExist";
@@ -153,7 +155,7 @@ function randomstring(length) {
 }
 
 export const changePassword = function (id, {currentPassword, newPassword}, actionBy = null) {
-    
+
     return new Promise(async (resolve, rejects) => {
 
         if (!currentPassword || !newPassword) {
@@ -167,7 +169,15 @@ export const changePassword = function (id, {currentPassword, newPassword}, acti
               }
             }));
         }
-          
+
+        if(validateRegexPassword(newPassword) === false) {
+            rejects(new UserInputError('auth.invalidPassword', {
+              inputErrors: {
+                newPassword: {properties: {message: passwordRules.requirements}}
+              }
+            }));
+        }
+
         let user = await User.findOne({_id: id})
         if (bcryptjs.compareSync(currentPassword, user.password)) {
             User.findOneAndUpdate(

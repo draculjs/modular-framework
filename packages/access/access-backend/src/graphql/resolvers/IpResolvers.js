@@ -15,7 +15,7 @@ const {
     IP_DELETE
 } =  require("../../permissions/IpPermissions");
 
-const {AuthenticationError, ForbiddenError} = require("apollo-server-express");
+const {AuthenticationError, ForbiddenError} = require("apollo-server-errors");
 
 const resolvers = {
     Query: {

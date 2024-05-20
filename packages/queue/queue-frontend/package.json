@@ -21,10 +21,6 @@
     "@dracul/dayjs-frontend": "^1.27.1"
   },
   "peerDependencies": {
-    "apollo-cache-inmemory": "^1.6.6",
-    "apollo-client": "^2.6.10",
-    "apollo-link": "^1.2.14",
-    "apollo-link-error": "^1.1.13",
     "deepmerge": "^4.2.2",
     "vue": "^2.7.15",
     "vue-i18n": "^8.18.1",
@@ -32,29 +28,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.3",
-    "@mdx-js/loader": "^1.6.6",
-    "@storybook/addon-actions": "^6.0.28",
-    "@storybook/addon-essentials": "^6.0.28",
-    "@storybook/addon-links": "^6.0.28",
-    "@storybook/vue": "^6.0.28",
-    "@vue/cli-plugin-babel": "^4.5.19",
-    "@vue/cli-plugin-eslint": "^4.5.19",
-    "@vue/cli-plugin-unit-jest": "^4.5.19",
-    "@vue/cli-service": "^4.5.19",
-    "@vue/test-utils": "^1.3.6",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
-    "babel-preset-vue": "^2.0.2",
-    "graphql": "^15.8.0",
-    "graphql-tag": "^2.11.0",
-    "mock-apollo-client": "^0.4.0",
-    "react-is": "^17.0.1",
-    "sass": "^1.69.5",
-    "sass-loader": "^8.0.2",
-    "vue": "^2.7.15",
-    "vue-cli-plugin-vuetify": "^2.0.6",
-    "vue-template-compiler": "^2.7.15"
+
   },
   "gitHead": "a51f38b5b3051afb454934cfa2bf5800004744cc"
 }

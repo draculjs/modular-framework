@@ -21,7 +21,7 @@
   "author": "Dracul team",
   "license": "MIT",
   "peerDependencies": {
-    "graphql": "^15.4.0",
+    "graphql": "^15.8.0",
     "vue": "^2.7.15",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.5.3",
@@ -29,22 +29,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.0",
-    "@babel/core": "^7.23.3",
-    "@babel/node": "^7.22.19",
-    "@babel/preset-env": "^7.23.3",
-    "@babel/register": "^7.22.15",
-    "babel-eslint": "^10.1.0",
-    "cpx": "^1.5.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "mocha": "^8.2.0",
-    "vue": "^2.7.15",
-    "vue-i18n": "^8.18.1",
-    "vue-router": "^3.5.3",
-    "vue-template-compiler": "^2.7.15",
-    "vuetify": "2.7.1",
-    "vuex": "^3.6.2"
+
   },
   "bugs": {
     "url": "https://github.com/draculjs/modular-framework/issues"

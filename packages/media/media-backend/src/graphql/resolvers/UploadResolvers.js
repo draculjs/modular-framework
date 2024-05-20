@@ -2,7 +2,7 @@
 import { fileUpload } from '../../services/UploadService'
 import fileUploadAnonymous from "../../services/UploadAnonymousService";
 
-import { AuthenticationError, ForbiddenError } from "apollo-server-e";
+import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 
 import {
     FILE_CREATE,

@@ -7,6 +7,7 @@ import bcryptjs from 'bcryptjs'
 import {UserInputError} from 'apollo-server-errors'
 import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
 import {findRoleByName, findRoleByNames} from "./RoleService";
+import {passwordRules, validateRegexPassword} from "./PasswordService";
 
 const EventEmitter = require('events');
 
@@ -103,6 +104,14 @@ export const createUser = async function ({username, password, name, email, phon
 
     if(existingUser){
         return restoreDeletedUser(existingUser._id, {username, password, name, email, phone, role, groups, active, fromLDAP}, actionBy = null)
+    }
+
+    if(validateRegexPassword(password) === false) {
+        return Promise.reject(new UserInputError('auth.invalidPassword', {
+            inputErrors: {
+                password: {properties: {message: passwordRules.requirements}}
+            }
+        }))
     }
 
     const newUser = new User({
@@ -437,7 +446,18 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
 
     if (password == passwordVerify) {
 
+
+
         return new Promise((resolve, reject) => {
+
+            if(validateRegexPassword(password) === false) {
+                reject(new UserInputError('auth.invalidPassword', {
+                    inputErrors: {
+                        password: {properties: {message: passwordRules.requirements}}
+                    }
+                }))
+            }
+
             User.findOneAndUpdate(
                 {_id: id}, {password: hashPassword(password)}, {new: true},
                 (err, doc) => {
@@ -455,9 +475,7 @@ export const changePasswordAdmin = function (id, {password, passwordVerify}, act
 
 
     } else {
-        return new Promise((resolve, _reject) => {
-            resolve({status: false, message: "Password doesn't match"})
-        })
+        return Promise.reject({status: false, message: "Passwords do not match"})
     }
 }
 
