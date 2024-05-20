@@ -18,10 +18,10 @@
   "peerDependencies": {
     "apollo-server-errors": "^3.3.1",
     "dotenv": "^16.3.1",
-    "mongoose": "5.13.22",
+    "mongoose": "^8.4.0",
     "mongoose-paginate-v2": "^1.6.3",
     "mongoose-softdelete": "1.1.0",
-    "mongoose-unique-validator": "^2.0.3"
+    "mongoose-unique-validator": "^5.0.0"
   },
   "devDependencies": {
     "istanbul": "^0.4.5",

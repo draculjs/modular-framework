@@ -13,10 +13,10 @@
     "graphql-subscriptions": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^2.2.0",
-    "mongoose": "^5.13.22",
-    "mongoose-paginate-v2": "1.7.4",
+    "mongoose": "^8.4.0",
+    "mongoose-paginate-v2": "1.8.1",
+    "mongoose-unique-validator": "^5.0.0",
     "mongoose-softdelete": "1.1.0",
-    "mongoose-unique-validator": "^2.0.3",
     "subscriptions-transport-ws": "^0.9.18",
     "symbol-observable": "^3.0.0"
   },
