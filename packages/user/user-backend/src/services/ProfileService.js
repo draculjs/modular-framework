@@ -55,11 +55,11 @@ const storeFS = (sourceStream, dst) => {
 
             sizeValidator
                 .on("error", error => {
-                winston.error("UserService.storeFS: sizeValidator error: ", error)
-                sourceStream.destroy(error)
-                fileWriteStream.destroy(error)
-                reject(error)
-            })
+                    winston.error("UserService.storeFS: sizeValidator error: ", error)
+                    sourceStream.destroy(error)
+                    fileWriteStream.destroy(error)
+                    reject(error)
+                })
 
 
             fileWriteStream
@@ -89,13 +89,13 @@ export const avatarUpload = function (user, file) {
 
     return new Promise(async (resolve, reject) => {
 
-        const mimetypesAllowed = ['image/jpeg','image/jpg','image/png','image/gif']
+        const mimetypesAllowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
 
         try {
 
             const {filename, mimetype, encoding, createReadStream} = await file;
 
-            if(!mimetypesAllowed.includes(mimetype)){
+            if (!mimetypesAllowed.includes(mimetype)) {
 
                 reject(new Error("MIMETYPE_NOT_ALLOWED"))
                 return;
@@ -108,15 +108,15 @@ export const avatarUpload = function (user, file) {
             //Store
             createDirIfNotExist(dst)
 
-            storeFS(createReadStream(), dst).then( async () => {
+            storeFS(createReadStream(), dst).then(async () => {
 
                 const rand = randomstring(3)
                 const url = process.env.APP_API_URL + "/media/avatar/" + finalFileName + "?" + rand
 
-                try{
+                try {
                     await User.findOneAndUpdate({_id: user.id}, {avatar: finalFileName, avatarurl: url}).exec()
                     return resolve({filename, mimetype, encoding, url})
-                }catch (error) {
+                } catch (error) {
                     winston.error("UserService.avatarUpload: update fail", error)
                     throw error
                 }
@@ -125,8 +125,6 @@ export const avatarUpload = function (user, file) {
                 winston.error("UserService.avatarUpload: store fail", err)
                 reject(new Error(err.message))
             })
-
-
 
 
         } catch (e) {
@@ -148,53 +146,55 @@ function randomstring(length) {
     return result;
 }
 
-export const changePassword = function (id, {currentPassword, newPassword}, actionBy = null) {
+export const changePassword = async function (id, {currentPassword, newPassword}, actionBy = null) {
 
-    return new Promise(async (resolve, rejects) => {
-
+    try {
         if (!currentPassword || !newPassword) {
-            return rejects(new Error('Current password and new password must not be null or empty'))
+            throw new Error('Current password and new password must not be null or empty')
         }
 
-        if(currentPassword === newPassword) {
-            rejects(new UserInputError('auth.messagePasswordIsEqual', {
-              inputErrors: {
-                newPassword: {properties: {message: 'auth.messagePasswordIsEqual'}}
-              }
-            }));
+        if (currentPassword === newPassword) {
+            throw new UserInputError('auth.messagePasswordIsEqual', {
+                inputErrors: {
+                    newPassword: {properties: {message: 'auth.messagePasswordIsEqual'}}
+                }
+            })
         }
 
-        if(validateRegexPassword(newPassword) === false) {
-            rejects(new UserInputError('auth.invalidPassword', {
-              inputErrors: {
-                newPassword: {properties: {message: passwordRules.requirements}}
-              }
-            }));
+        if (validateRegexPassword(newPassword) === false) {
+            throw new UserInputError('auth.invalidPassword', {
+                inputErrors: {
+                    newPassword: {properties: {message: passwordRules.requirements}}
+                }
+            })
         }
 
         let user = await User.findOne({_id: id})
+
         if (bcryptjs.compareSync(currentPassword, user.password)) {
-            User.findOneAndUpdate(
-                {_id: id}, {password: hashPassword(newPassword), lastPasswordChange: new Date()}, {new: true},
-                (err, doc) => {
-                    if (err) {
-                        winston.error("UserService.changePassword ", err)
-                        rejects(error)
-                    } else {
-                        winston.debug('UserService.changePassword successful')
-                        createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'adminPasswordChange')
-                        resolve({status: true, message: "Password Changed"})
-                    }
-                }
-            );
+
+            await User.findOneAndUpdate(
+                {_id: id},
+                {password: hashPassword(newPassword), lastPasswordChange: new Date()}, {new: true})
+                .exec()
+
+            await createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'adminPasswordChange')
+
+            return {status: true, message: "Password Changed"}
+
         } else {
             winston.warn("UserService.changePassword: password doesnt match")
-            rejects(new UserInputError('auth.wrongPassword',
+            throw new UserInputError('auth.wrongPassword',
                 {
                     inputErrors: {
                         currentPassword: {properties: {message: 'auth.wrongPassword'}}
                     }
-                }));
+                })
         }
-    })
+
+    } catch (e) {
+        winston.error("UserService.changePassword ", e)
+        throw e
+    }
+
 }
