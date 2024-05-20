@@ -25,7 +25,7 @@ export const createCustomization = async function ({lightTheme, darkTheme, logo,
         const customization = new Customization({
             lightTheme, darkTheme, logo, language
         })
-        customization.id = doc._id;
+        customization.id = customization._id;
         await customization.save()
         return customization
     } catch (error) {
