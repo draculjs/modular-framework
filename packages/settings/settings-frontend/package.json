@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-frontend",
-  "version": "1.29.1",
+  "version": "1.29.2",
   "description": "vue settings",
   "main": "./src/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "author": "Cristian Incarnato",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.29.1"
+    "@dracul/common-frontend": "^1.29.2"
   },
   "peerDependencies": {
     "graphql": "^15.8.0",
