@@ -11,46 +11,37 @@ function getFromDate(time, unit) {
 
 
 export const fetchUserAuditsFrom = async function (time = 7, unit = 'days') {
-    return new Promise((resolve, reject) => {
-        UserAudit.find({date: {$gte: getFromDate(time, unit)}}).sort({date: -1}).populate('actionBy').populate('actionFor').exec((err, res) => {
+    try {
+        const r = UserAudit.find({date: {$gte: getFromDate(time, unit)}}).sort({date: -1}).populate('actionBy').populate('actionFor').exec()
+        return r
+    } catch (error) {
+        winston.error("UserAuditService.fetchUserAuditsFrom ", error)
+        reject(error)
+    }
 
-            if (err) {
-                winston.error("UserAuditService.fetchUserAuditsFrom ", err)
-                reject(err)
-            }
-            resolve(res)
-
-        });
-    })
 }
 
 export const fetchUserAuditsLimit = async function (limit = 10) {
-    return new Promise((resolve, reject) => {
-        UserAudit.find({}).sort({date: -1}).limit(limit).populate('actionBy').populate('actionFor').exec((err, res) => {
 
-            if (err) {
-                winston.error("UserAuditService.fetchUserAuditsLimit ", err)
-                reject(err)
-            }
-            resolve(res)
+    try {
+        const r = UserAudit.find({}).sort({date: -1}).limit(limit).populate('actionBy').populate('actionFor').exec()
+        return r
+    } catch (error) {
+        winston.error("UserAuditService.fetchUserAuditsLimit ", error)
+        reject(error)
+    }
 
-        });
-    })
 }
 
 
 export const findUserAudit = async function (id) {
-    return new Promise((resolve, reject) => {
-        UserAudit.findOne({_id: id}).exec((err, res) => {
-
-            if (err) {
-                winston.error("UserAuditService.findUserAudit ", err)
-                reject(err)
-            }
-            resolve(res)
-
-        });
-    })
+    try {
+        const r = UserAudit.findOne({_id: id}).exec()
+        return r
+    } catch (error) {
+        winston.error("UserAuditService.findUserAudit", error)
+        reject(error)
+    }
 }
 
 
@@ -60,35 +51,32 @@ export const createUserAudit = async function (actionBy, actionFor, action) {
         actionBy, actionFor, action
     })
     doc.id = doc._id;
-    return new Promise((resolve, rejects) => {
-        doc.save(async error => {
 
-            if (error) {
+    try {
+        await doc.save()
+        return doc
+    } catch (error) {
+        if (error.name == "ValidationError") {
+            winston.warn("UserAuditService.createUserAudit.ValidationError ", error)
+            rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+        }
+        winston.error("UserAuditService.createUserAudit ", error)
+        rejects(error)
+    }
 
-                if (error.name == "ValidationError") {
-                    winston.warn("UserAuditService.createUserAudit.ValidationError ", error)
-                    rejects(new UserInputError(error.message, {inputErrors: error.errors}));
-                }
-                winston.error("UserAuditService.createUserAudit ", error)
-                rejects(error)
-            }
-
-            resolve(doc)
-        })
-    })
 }
 
 
 export const deleteUserAudit = function (id) {
     return new Promise((resolve, rejects) => {
         findUserAudit(id).then((doc) => {
-            doc.softdelete(function (err) {
-                    if (err) {
-                        winston.error("UserAuditService.deleteUserAudit ", err)
-                        reject(err)
-                    }
-                    resolve({id: id, deleteSuccess: true})
-                })
+            doc.softdelete( (err)=>  {
+                if (err) {
+                    winston.error("UserAuditService.deleteUserAudit ", err)
+                    rejects(err)
+                }
+                resolve({id: id, deleteSuccess: true})
+            })
         })
     })
 }

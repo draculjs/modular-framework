@@ -108,24 +108,18 @@ export const avatarUpload = function (user, file) {
             //Store
             createDirIfNotExist(dst)
 
-            storeFS(createReadStream(), dst).then(() => {
+            storeFS(createReadStream(), dst).then( async () => {
 
                 const rand = randomstring(3)
                 const url = process.env.APP_API_URL + "/media/avatar/" + finalFileName + "?" + rand
 
-                User.findOneAndUpdate(
-                    {_id: user.id}, {avatar: finalFileName, avatarurl: url}, {useFindAndModify: false},
-                    (error) => {
-                        if (error) {
-                            winston.error("UserService.avatarUpload: update fail", error)
-                            reject(error)
-                        } else {
-                            winston.debug('UserService.avatarUpload successful')
-                            createUserAudit(user.id, user.id, 'avatarChange')
-                            resolve({filename, mimetype, encoding, url})
-                        }
-                    }
-                )
+                try{
+                    await User.findOneAndUpdate({_id: user.id}, {avatar: finalFileName, avatarurl: url}).exec()
+                    return resolve({filename, mimetype, encoding, url})
+                }catch (error) {
+                    winston.error("UserService.avatarUpload: update fail", error)
+                    throw error
+                }
 
             }).catch(err => {
                 winston.error("UserService.avatarUpload: store fail", err)

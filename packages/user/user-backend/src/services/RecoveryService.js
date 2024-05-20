@@ -92,8 +92,7 @@ export const recoveryChangePasswordCode = function (code, newPassword) {
         User.findOneAndUpdate(
             {code: code},
             {password: newPassword, lastPasswordChange: new Date()})
-            .populate('role')
-            .populate('groups')
+            .populate(['role','groups'])
             .exec(
                 (error, user) => {
                     if (user){
@@ -132,8 +131,7 @@ export const recoveryChangePassword = function (token, newPassword, req) {
             {_id: userDecoded.id},
             {password: hashPassword(newPassword), lastPasswordChange: new Date()},
             {new: true})
-            .populate('role')
-            .populate('groups')
+            .populate(['role','groups'])
             .exec(
                 (error, user) => {
 

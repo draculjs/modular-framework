@@ -75,8 +75,7 @@ export const activationUser = function (token, req) {
             {_id: decoded.id},
             {active: true}
         )
-            .populate('role')
-            .populate('groups')
+            .populate(['role','groups'])
             .exec(
                 (error, user) => {
 

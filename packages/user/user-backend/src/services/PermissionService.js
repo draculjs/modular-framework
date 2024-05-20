@@ -2,118 +2,95 @@ import PermissionModel from '../models/PermissionModel'
 import {UserInputError} from 'apollo-server-errors'
 import {DefaultLogger as winston} from "@dracul/logger-backend";
 
-export const fetchPermissions = function () {
-    return new Promise((resolve, reject) => {
-        PermissionModel.find({}).exec((err, res) => {
+export const fetchPermissions = async function () {
 
-            if(err){
-                winston.error("PermissionService.fetchPermissions ", err)
-                reject(err)
-            }
-            resolve(res)
-
-        });
-    })
+    try {
+        return await PermissionModel.find({}).exec()
+    } catch (e) {
+        winston.error("PermissionService.fetchPermissions ", e)
+        reject(e)
+    }
 }
 
-export const fetchPermissionsInName = function (permissions) {
-    return new Promise((resolve, reject) => {
-        PermissionModel.find({name: {$in: permissions }}).exec((err, res) => {
+export const fetchPermissionsInName = async function (permissions) {
+    try {
+        return await PermissionModel.find({name: {$in: permissions}}).exec()
+    } catch (e) {
+        winston.error("PermissionService.fetchPermissionsInName ", e)
+        reject(e)
+    }
 
-            if(err){
-                winston.error("PermissionService.fetchPermissionsInName ", err)
-                reject(err)
-            }
-            resolve(res)
-
-        });
-    })
 }
 
-export const findPermission = function (id) {
-    return new Promise((resolve, reject) => {
-        PermissionModel.findOne({ _id: id }).exec((err, res) => {
+export const findPermission = async function (id) {
 
-            if(err){
-                winston.error("PermissionService.findPermission ", err)
-                reject(err)
-            }
-            resolve(res)
-
-        });
-    })
+    try {
+        return await PermissionModel.findOne({_id: id}).exec()
+    } catch (e) {
+        winston.error("PermissionService.findPermission ", e)
+        reject(e)
+    }
 }
 
-export const findPermissionByName = function (name) {
-    return new Promise((resolve, reject) => {
-        PermissionModel.findOne({ name: name }).exec((err, res) => {
+export const findPermissionByName = async function (name) {
 
-            if(err){
-                winston.error("PermissionService.findPermission ", err)
-                reject(err)
-            }
-            resolve(res)
-
-        });
-    })
+    try {
+        return await PermissionModel.findOne({name: name}).exec()
+    } catch (e) {
+        winston.error("PermissionService.findPermission ", e)
+        reject(e)
+    }
 }
 
-export const createPermission = function (name) {
-    const newPermission = new PermissionModel({
-        name
-    })
+export const createPermission = async function (name) {
+    const newPermission = new PermissionModel({name})
     newPermission.id = newPermission._id;
-    return new Promise((resolve, reject) => {
-        newPermission.save(
-            (err) => {
 
-                if(err){
-                    winston.error("PermissionService.createPermission ", err)
-                    reject(err)
-                }
-                resolve(newPermission)
-
-            }
-        )
-    })
+    try {
+        await newPermission.save()
+        return newPermission
+    } catch (e) {
+        winston.error("PermissionService.createPermission ", e)
+        reject(e)
+    }
 }
-
 
 
 export const updatePermission = async function (id, name) {
-    return new Promise((resolve, reject) => {
-        PermissionModel.findOneAndUpdate({ _id: id },
-            { name, permissions },
-            { new: true, runValidators: true, context: 'query' },
-            (error, doc) => {
-                if (error) {
-                    if (error.name == "ValidationError") {
-                        winston.warn("PermissionService.updatePermission.ValidationError ", err)
-                        rejects(new UserInputError(error.message, { inputErrors: error.errors }));
-                    }
-                    winston.error("PermissionService.updatePermission ", err)
-                    reject(error)
-                }
-                resolve(doc)
-            })
-    })
+
+    try {
+        const r = PermissionModel.findOneAndUpdate(
+            {_id: id},
+            {name, permissions},
+            {new: true, runValidators: true, context: 'query'})
+            .exec()
+        return r
+    } catch (error) {
+        if (error.name == "ValidationError") {
+            winston.warn("PermissionService.updatePermission.ValidationError ", err)
+            rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+        }
+        winston.error("PermissionService.updatePermission ", err)
+        reject(error)
+    }
+
 }
 
 export const deletePermission = function (id) {
+
     return new Promise((resolve, reject) => {
         findPermission(id).then((doc) => {
             doc.softdelete(
                 function (err) {
 
-                    if(err){
+                    if (err) {
                         winston.error("PermissionService.deletePermission ", err)
                         reject(err)
                     }
 
-                    resolve({ id: id, success: true })
+                    resolve({id: id, success: true})
 
                 }
-
             )
         })
     })
