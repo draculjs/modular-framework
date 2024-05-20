@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-frontend",
-  "version": "1.29.4",
+  "version": "1.29.5",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
   "main": "./src/index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "gitHead": "59a15af297363ca22f2466652d678b144953e3c3",
   "dependencies": {
     "@dracul/common-frontend": "^1.29.2",
-    "@dracul/user-frontend": "^1.29.4"
+    "@dracul/user-frontend": "^1.29.5"
   },
   "peerDependencies": {
     "material-design-icons-iconfont": "^6.1.0",
