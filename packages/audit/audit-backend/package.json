@@ -42,5 +42,5 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3"
   },
-  "gitHead": "ebf831c4fb68fe274681a09f59ddfebe4d34ef55"
+  "gitHead": "ec645d6661814b65d59dcad1a774f22442c48cca"
 }

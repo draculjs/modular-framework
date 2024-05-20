@@ -17,7 +17,7 @@
   ],
   "author": "Cristian Incarnato",
   "license": "MIT",
-  "gitHead": "ebf831c4fb68fe274681a09f59ddfebe4d34ef55",
+  "gitHead": "ec645d6661814b65d59dcad1a774f22442c48cca",
   "dependencies": {
     "@dracul/common-frontend": "^1.29.2",
     "@dracul/user-frontend": "^1.29.3"

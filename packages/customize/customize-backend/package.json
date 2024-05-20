@@ -36,5 +36,5 @@
     "graphql": "^15.8.0 || ^16.0.0",
     "mongoose": "5.13.21"
   },
-  "gitHead": "ebf831c4fb68fe274681a09f59ddfebe4d34ef55"
+  "gitHead": "ec645d6661814b65d59dcad1a774f22442c48cca"
 }
