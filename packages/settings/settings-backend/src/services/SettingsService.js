@@ -1,6 +1,9 @@
 import Settings from '../models/SettingsModel'
 import {mongoose} from '@dracul/common-backend'
 import {UserInputError} from 'apollo-server-errors'
+import Settings from '../models/SettingsModel'
+import {mongoose} from '@dracul/common-backend'
+import {UserInputError} from 'apollo-server-errors'
 
 export const initializeSettings = async function (settings = []) {
 
@@ -57,7 +60,7 @@ export const getSettingsValueByKey = async function (key) {
     try {
         const settings = await Settings.findOne({key: key}).exec()
         if (settings) {
-            switch (doc.type) {
+            switch (settings.type) {
                 case 'stringList':
                 case 'enumList':
                     return settings.valueList
