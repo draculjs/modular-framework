@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-backend",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "",
   "main": "./lib/index.js",
   "type": "commonjs",
@@ -15,10 +15,10 @@
   "author": "Cristian Incarnato & Dracul Team",
   "license": "ISC",
   "dependencies": {
-    "@dracul/common-backend": "^1.32.0",
-    "@dracul/dayjs-backend": "^1.32.0",
-    "@dracul/logger-backend": "^1.32.0",
-    "@dracul/settings-backend": "^1.32.0",
+    "@dracul/common-backend": "^1.33.0",
+    "@dracul/dayjs-backend": "^1.33.0",
+    "@dracul/logger-backend": "^1.33.0",
+    "@dracul/settings-backend": "^1.33.0",
     "bcryptjs": "^2.4.3",
     "email-templates": "^11.1.1",
     "express": "^4.17.1",
@@ -44,5 +44,5 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3 || ^5.0.0"
   },
-  "gitHead": "b970b407d8c592c24935370ba0ff3395db20d120"
+  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
 }

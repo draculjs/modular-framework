@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-frontend",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "description": "vue settings",
   "main": "./src/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "author": "Cristian Incarnato",
   "license": "MIT",
   "dependencies": {
-    "@dracul/common-frontend": "^1.32.0"
+    "@dracul/common-frontend": "^1.33.0"
   },
   "peerDependencies": {
     "graphql": "^15.8.0",
@@ -50,5 +50,5 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "gitHead": "ebf831c4fb68fe274681a09f59ddfebe4d34ef55"
+  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
 }

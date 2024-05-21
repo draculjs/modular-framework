@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "scripts": {
@@ -18,8 +18,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.32.0",
-    "@dracul/dayjs-frontend": "^1.32.0"
+    "@dracul/common-frontend": "^1.33.0",
+    "@dracul/dayjs-frontend": "^1.33.0"
   },
   "peerDependencies": {
     "chartjs-plugin-labels": "^1.1.0",
@@ -72,5 +72,5 @@
     "last 2 versions",
     "not dead"
   ],
-  "gitHead": "59a15af297363ca22f2466652d678b144953e3c3"
+  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
 }
