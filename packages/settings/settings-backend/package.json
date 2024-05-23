@@ -3,6 +3,9 @@
   "version": "1.33.0",
   "description": "Settings",
   "main": "./lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prepublish": "babel src -d lib --copy-files",
     "test": "mocha --require @babel/register"
@@ -35,5 +38,5 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
+  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
 }

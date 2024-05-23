@@ -3,6 +3,9 @@
   "version": "1.33.0",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "jest --runInBand",
     "prepublish": "babel src -d lib --copy-files"
@@ -40,5 +43,5 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3 || ^5.0.0"
   },
-  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
+  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
 }

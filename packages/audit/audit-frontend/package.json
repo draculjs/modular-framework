@@ -3,6 +3,9 @@
   "version": "1.33.0",
   "description": "Audit frontend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test:unit": "vue-cli-service test:unit",
     "test": "echo \"Error: run tests from root\" && exit 1"
@@ -35,5 +38,5 @@
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
   },
-  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
+  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
 }

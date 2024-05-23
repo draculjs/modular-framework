@@ -3,6 +3,9 @@
   "version": "1.33.0",
   "description": "",
   "main": "./src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build-storybook": "build-storybook --no-dll",
     "storybook": "start-storybook -p 6006 --no-dll"
@@ -44,5 +47,5 @@
     "sass-loader": "^8.0.2"
   },
   "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
+  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
 }

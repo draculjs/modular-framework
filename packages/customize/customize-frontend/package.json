@@ -3,6 +3,9 @@
   "version": "1.33.0",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
   "main": "./src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-storybook": "build-storybook"
@@ -17,7 +20,7 @@
   ],
   "author": "Cristian Incarnato",
   "license": "MIT",
-  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54",
+  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e",
   "dependencies": {
     "@dracul/common-frontend": "^1.33.0",
     "@dracul/user-frontend": "^1.33.0"

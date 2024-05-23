@@ -3,6 +3,9 @@
   "version": "1.33.0",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "mocha --require @babel/register",
     "prepublish": "babel src -d lib --copy-files"
@@ -36,5 +39,5 @@
     "graphql": "^15.8.0 || ^16.0.0",
     "mongoose": "^5.13.22 || ^8.4.0"
   },
-  "gitHead": "b85a33afbb34fcd4b3f080b5de4810c896c3dd54"
+  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
 }
