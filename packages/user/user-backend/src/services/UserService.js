@@ -168,7 +168,7 @@ export const createUser = async function ({
         UserEventEmitter.emit('created', newUser)
         return newUser
 
-    } catch (e) {
+    } catch (error) {
         if (error.name == "ValidationError") {
             winston.warn("createUser ValidationError ", error)
             throw new UserInputError(error.message, {inputErrors: error.errors})
