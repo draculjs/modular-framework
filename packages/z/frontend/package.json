@@ -1,6 +1,6 @@
 {
   "name": "integration-frontend",
-  "version": "1.34.0",
+  "version": "1.34.2",
   "private": true,
   "scripts": {
     "front": "vue-cli-service serve",
@@ -17,7 +17,7 @@
     "@dracul/audit-frontend": "^1.34.0",
     "@dracul/common-frontend": "^1.34.0",
     "@dracul/customize-frontend": "^1.34.0",
-    "@dracul/media-frontend": "^1.34.0",
+    "@dracul/media-frontend": "^1.34.2",
     "@dracul/notification-frontend": "^1.34.0",
     "@dracul/settings-frontend": "^1.34.0",
     "@dracul/user-frontend": "^1.34.0",
@@ -53,12 +53,12 @@
     "deepmerge": "^4.3.1",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "graphql-tag": "^2.12.6",
     "sass": "~1.32.0",
     "sass-loader": "^10.0.0",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-template-compiler": "^2.6.14",
-    "vuetify-loader": "^1.7.0",
-    "graphql-tag": "^2.12.6"
+    "vuetify-loader": "^1.7.0"
   },
   "eslintConfig": {
     "root": true,
