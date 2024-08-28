@@ -77,63 +77,61 @@ export const createUserStorage = async function (user, capacity, usedSpace, maxF
     const doc = new userStorage({
         user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt
     })
-    return new Promise((resolve, rejects) => {
-        doc.save(((error) => {
-            if (error) {
-                if (error.name == "ValidationError") {
-                    rejects(new UserInputError(error.message, { inputErrors: error.errors }))
-                }
-                rejects(error);
-            }
+    return new Promise(async (resolve, rejects) => {
+        try{
+            await doc.save()
             winston.info("Media UserStorage createUserStorage for: " + user.username)
             resolve(doc)
-        }))
+        }catch (error) {
+            if (error.name == "ValidationError") {
+                rejects(new UserInputError(error.message, { inputErrors: error.errors }))
+            }
+            rejects(error);
+        }
+
     })
 }
 
 export const updateUserUsedStorage = async function (userId, size) {
-    return new Promise((resolve, rejects) => {
-        userStorage.findOneAndUpdate({ user: userId },
-            { $inc: { usedSpace: size } },
-            { runValidators: true, context: "query" },
-            (error, doc) => {
-                if (error) {
-                    if (error.name == "ValidationError") {
-                        rejects(new UserInputError(error.message, { inputErrors: error.errors }))
-                    }
-                    rejects(error)
-                }
-                resolve(doc)
-            })
+    return new Promise(async (resolve, rejects) => {
+        try{
+            let r = await  userStorage.findOneAndUpdate({ user: userId },
+                { $inc: { usedSpace: size } },
+                { runValidators: true, context: "query" })
+            resolve(r)
+        }catch (error) {
+            if (error.name == "ValidationError") {
+                rejects(new UserInputError(error.message, { inputErrors: error.errors }))
+            }
+            rejects(error)
+        }
+
     })
 }
 
 export const updateUserStorage = async function (authUser, id, { name, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt }) {
-    return new Promise((resolve, rejects) => {
-        userStorage.findOneAndUpdate({ _id: id },
-            { capacity, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt },
-            { runValidators: true, context: "query" },
-            (error, doc) => {
+    return new Promise(async (resolve, rejects) => {
 
-                if (error) {
-                    if (error.name == "ValidationError") {
-                        rejects(new UserInputError(error.message, { inputErrors: error.errors }))
-                    }
-                    rejects(error)
-                }
+        try{
+            let r = userStorage.findOneAndUpdate({ _id: id },
+                { capacity, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt },
+                { runValidators: true, context: "query" })
+            resolve(r)
+        }catch (error) {
+            if (error.name == "ValidationError") {
+                rejects(new UserInputError(error.message, { inputErrors: error.errors }))
+            }
+            rejects(error)
+        }
 
-                resolve(doc)
-            })
     })
 }
 
 export const checkUserStorage = async function (userId, newFileSize) {
-    return new Promise((resolve, reject) => {
-        userStorage.findOne({ user: userId }).exec((err, res) => {
-            if (err) {
-                reject(err)
-            }
+    return new Promise(async (resolve, reject) => {
 
+        try{
+            let res = await userStorage.findOne({ user: userId }).exec()
             let spaceLeft = res.capacity - res.usedSpace
 
             if (spaceLeft >= newFileSize) {
@@ -141,28 +139,31 @@ export const checkUserStorage = async function (userId, newFileSize) {
             } else {
                 resolve(false)
             }
-        })
+        }catch (e) {
+            reject(e)
+        }
+
     })
 }
 
 export const checkUserStorageLeft = async function (userId) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
         if (!userId) {
             return resolve(new Error("checkUserStorageLeft: UserId must be provided"))
         }
 
-        userStorage.findOne({ user: userId }).exec((err, doc) => {
-            if (err) {
-                reject(err)
-            }
-
+        try{
+            let doc = await userStorage.findOne({ user: userId }).exec()
             if (doc) {
                 let storageLeft = doc.capacity - doc.usedSpace
                 return resolve(storageLeft)
             } else {
                 return resolve(0)
             }
-        })
+        }catch (e) {
+            reject(e)
+        }
+
     })
 }

@@ -1,4 +1,5 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
+import {mongoose} from '@dracul/common-backend';
 
 import User from '../models/UserModel'
 import '../models/GroupModel'
@@ -86,7 +87,12 @@ export const restoreDeletedUser = async function (id, {
         winston.info('UserService.restoreDeletedUser successful for ' + user.username)
         await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userRestored')
 
-        await user.populate(['role','groups'])
+        if(/^5/.test(mongoose.version)){
+            await user.populate(['role','groups']).execPopulate()
+        }else{
+            await user.populate(['role','groups'])
+        }
+
         UserEventEmitter.emit('updated', user)
         return user
 
@@ -164,7 +170,13 @@ export const createUser = async function ({
         winston.info('UserService.createUser successful for ' + newUser.username)
         await createUserAudit(actionBy ? actionBy.id : null, newUser._id, 'userCreated')
 
-        await newUser.populate(['role','groups'])
+
+        if(/^5/.test(mongoose.version)){
+            await newUser.populate(['role','groups']).execPopulate()
+        }else{
+            await newUser.populate(['role','groups'])
+        }
+
         UserEventEmitter.emit('created', newUser)
         return newUser
 
@@ -238,7 +250,13 @@ export const updateUser = async function (id, {
 
         winston.info('UserService.updateUser successful for ' + user.username)
         await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userModified')
-        await user.populate(['role','groups'])
+
+        if(/^5/.test(mongoose.version)){
+            await user.populate(['role','groups']).execPopulate()
+        }else{
+            await user.populate(['role','groups'])
+        }
+
         UserEventEmitter.emit('updated', user)
         return user
 
