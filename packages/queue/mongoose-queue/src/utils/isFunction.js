@@ -4,7 +4,9 @@
  * @returns {boolean}
  */
 function isFunction(functionToCheck) {
-    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+    return functionToCheck &&
+        ({}.toString.call(functionToCheck) === '[object Function]' ||
+            {}.toString.call(functionToCheck) === '[object AsyncFunction]');
 }
 
 module.exports = isFunction
