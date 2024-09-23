@@ -11,49 +11,49 @@ const {
   incrementFailedStat,
   incrementGottenStat
 } = require('./QueueStatsService');
-const fetchQueues = function () {
-  return new Promise((resolve, reject) => {
-    QueueModel.find({}).exec((err, res) => {
-      if (err) {
-        DefaultLogger.error("QueueService.fetchQueues ", err);
-        reject(err);
-      }
-      DefaultLogger.debug("QueueService.fetchQueues successful");
-      resolve(res);
-    });
-  });
+const fetchQueues = async function () {
+  try {
+    const res = await QueueModel.find({});
+    DefaultLogger.debug("QueueService.fetchQueues successful");
+    return res;
+  } catch (err) {
+    DefaultLogger.error("QueueService.fetchQueues ", err);
+    throw err;
+  }
 };
-const addJob = function (topic, payload, delay, maxRetries) {
-  if (!topic) return Promise.reject(new Error('Topic missing.'));else if (!topic instanceof String) return Promise.reject(new Error('Topic is not a String.'));
-  if (!payload) return Promise.reject(new Error('Payload missing.'));else if (!isPlainObject(payload)) return Promise.reject(new Error('Payload is not a plain object.'));
-  if (delay === null || delay === undefined) return Promise.reject(new Error('delay missing.'));else if (!delay instanceof Number) return Promise.reject(new Error('delay is not a number.'));
-  return new Promise((resolve, reject) => {
-    new QueueModel({
-      topic: topic,
-      payload: payload,
-      blockedUntil: new Date(Date.now() + delay),
-      maxRetries: maxRetries,
-      state: 'PENDING'
-    }).save(function (err, job) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      incrementAddedStat(topic);
-      resolve(job);
-    });
+const addJob = async function (topic, payload, delay, maxRetries) {
+  if (!topic) throw new Error('Topic missing.');
+  if (!(typeof topic === 'string')) throw new Error('Topic is not a String.');
+  if (!payload) throw new Error('Payload missing.');
+  if (!isPlainObject(payload)) throw new Error('Payload is not a plain object.');
+  if (delay === null || delay === undefined) throw new Error('delay missing.');
+  if (!(typeof delay === 'number')) throw new Error('delay is not a number.');
+  const job = new QueueModel({
+    topic: topic,
+    payload: payload,
+    blockedUntil: new Date(Date.now() + delay),
+    maxRetries: maxRetries,
+    state: 'PENDING'
   });
+  try {
+    const savedJob = await job.save();
+    incrementAddedStat(topic);
+    return savedJob;
+  } catch (err) {
+    throw err;
+  }
 };
-const getJob = function (topic, workerId, maxRetries, blockDuration) {
-  if (!topic) return Promise.reject(new Error('Topic missing.'));else if (!topic instanceof String) return Promise.reject(new Error('Topic is not a String.'));
-  if (!workerId) return Promise.reject(new Error('workerId missing.'));else if (!workerId instanceof String) return Promise.reject(new Error('workerId is not a String.'));
-  return new Promise((resolve, reject) => {
-    QueueModel.findOneAndUpdate({
+const getJob = async function (topic, workerId, maxRetries, blockDuration) {
+  if (!topic) throw new Error('Topic missing.');
+  if (!(typeof topic === 'string')) throw new Error('Topic is not a String.');
+  if (!workerId) throw new Error('workerId missing.');
+  if (!(typeof workerId === 'string')) throw new Error('workerId is not a String.');
+  try {
+    const job = await QueueModel.findOneAndUpdate({
       topic: topic,
       blockedUntil: {
         $lt: Date.now()
       },
-      //Fix MongoDB 3.6+
       ...(!process.env.MONGO_OLD && {
         $expr: {
           $lt: ["$retries", "$maxRetries"]
@@ -80,23 +80,19 @@ const getJob = function (topic, workerId, maxRetries, blockDuration) {
       sort: {
         createdAt: 1
       }
-    }).exec(function (err, job) {
-      if (err) {
-        reject(err);
-        return;
-      } else if (!job) {
-        resolve(null);
-      } else {
-        incrementGottenStat(topic);
-        resolve(job);
-      }
     });
-  });
+    if (!job) return null;
+    incrementGottenStat(topic);
+    return job;
+  } catch (err) {
+    throw err;
+  }
 };
-const ackJob = function (jobId, output) {
-  if (!jobId) return Promise.reject(new Error('jobId missing.'));else if (!jobId instanceof String) return Promise.reject(new Error('jobId is not a String.'));
-  return new Promise((resolve, reject) => {
-    QueueModel.findOneAndUpdate({
+const ackJob = async function (jobId, output) {
+  if (!jobId) throw new Error('jobId missing.');
+  if (!(typeof jobId === 'string')) throw new Error('jobId is not a String.');
+  try {
+    const job = await QueueModel.findOneAndUpdate({
       _id: jobId
     }, {
       $set: {
@@ -108,23 +104,21 @@ const ackJob = function (jobId, output) {
       }
     }, {
       new: true
-    }, function (err, job) {
-      if (err) {
-        reject(err);
-        return;
-      } else if (!job) {
-        reject(new Error('Job id invalid, job not found.'));
-        return;
-      } else incrementDoneStat(job.topic);
-      resolve(job);
     });
-  });
+    if (!job) throw new Error('Job id invalid, job not found.');
+    incrementDoneStat(job.topic);
+    return job;
+  } catch (err) {
+    throw err;
+  }
 };
-const errorJob = function (jobId, errorMessage, done = false) {
-  if (!jobId) return Promise.reject(new Error('jobId missing.'));else if (!jobId instanceof String) return Promise.reject(new Error('jobId is not a String.'));
-  if (!errorMessage) return Promise.reject(new Error('errorMessage missing.'));else if (!errorMessage instanceof String) return Promise.reject(new Error('errorMessage is not a String.'));
-  return new Promise((resolve, reject) => {
-    QueueModel.findOneAndUpdate({
+const errorJob = async function (jobId, errorMessage, done = false) {
+  if (!jobId) throw new Error('jobId missing.');
+  if (!(typeof jobId === 'string')) throw new Error('jobId is not a String.');
+  if (!errorMessage) throw new Error('errorMessage missing.');
+  if (!(typeof errorMessage === 'string')) throw new Error('errorMessage is not a String.');
+  try {
+    const job = await QueueModel.findOneAndUpdate({
       _id: jobId
     }, {
       $set: {
@@ -134,22 +128,25 @@ const errorJob = function (jobId, errorMessage, done = false) {
       }
     }, {
       new: true
-    }, function (err, job) {
-      if (err) reject(err);else if (!job) reject(new Error('Job id invalid, job not found.'));else incrementFailedStat(job.topic);
-      resolve(job);
     });
-  });
+    if (!job) throw new Error('Job id invalid, job not found.');
+    incrementFailedStat(job.topic);
+    return job;
+  } catch (err) {
+    throw err;
+  }
 };
-const resetQueue = function () {
-  return new Promise((resolve, reject) => {
-    QueueModel.remove({}, function (err) {
-      if (err) reject(err);else resolve(true);
-    });
-  });
+const resetQueue = async function () {
+  try {
+    await QueueModel.deleteMany({});
+    return true;
+  } catch (err) {
+    throw err;
+  }
 };
-const cleanQueue = function () {
-  return new Promise((resolve, reject) => {
-    QueueModel.remove({
+const cleanQueue = async function () {
+  try {
+    await QueueModel.deleteMany({
       $or: [{
         done: true
       }, {
@@ -157,10 +154,11 @@ const cleanQueue = function () {
           $gt: this.options.maxRetries
         }
       }]
-    }, function (err) {
-      if (err) reject(err);else resolve(true);
     });
-  });
+    return true;
+  } catch (err) {
+    throw err;
+  }
 };
 module.exports = {
   addJob,
