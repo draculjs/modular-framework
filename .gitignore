@@ -3,3 +3,4 @@ lerna-debug.log
 node_modules
 packages/*/*/lib
 packages/z/backend/media/files/*
+openai
