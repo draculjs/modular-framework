@@ -1,7 +1,7 @@
 <template>
   <v-dialog
       v-model="value"
-      max-width="290"
+      :max-width=maxWidth
       persistent
   >
     <v-card>
@@ -42,7 +42,8 @@ export default {
     value: {type: Boolean},
     title: {type: String},
     description: {type: String},
-    confirmColor: {type:String, default: 'red darken-1 white--text'}
+    confirmColor: {type:String, default: 'red darken-1 white--text'},
+    maxWidth: {type: String, default: '25vw'},
   },
   methods: {
     close(){
