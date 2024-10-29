@@ -151,8 +151,6 @@
                    }).catch(err => {
                        console.error(err)
                    }).finally(() => this.loading = false)
-
-                AuditProvider.createAudit('Testing', 'audit module', 'just a test for a new service')
                },
                setFilters(auditFilters) {
                 console.log('auditFilters', auditFilters)
