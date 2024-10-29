@@ -87,7 +87,7 @@ const createAudit = async function (authUser, { user, action, resource, descript
 
         doc.id = doc._id
         await doc.populate('user')
-        return doc
+        return await doc.save()
     }catch (error) {
         if (error.name == "ValidationError") {
             throw new UserInputError(error.message, { inputErrors: error.errors })
