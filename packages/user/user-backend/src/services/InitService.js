@@ -1,7 +1,7 @@
-import {DefaultLogger} from "@dracul/logger-backend";
+import { DefaultLogger } from "@dracul/logger-backend";
 
 
-import {createRole, findRoleByName, fetchRolesInName, updateRole} from './RoleService'
+import {createRole, findRoleByName, fetchRolesInName, updateRole, updateRoleReadOnly} from './RoleService'
 import {changePasswordAdmin, createUser, findUserByUsername} from './UserService'
 import {createPermission, fetchPermissionsInName} from './PermissionService'
 
@@ -34,6 +34,8 @@ import {
 import {LDAP_SETTINGS} from "../data/ldap-settings";
 
 import {initializeSettings} from "@dracul/settings-backend";
+
+export const nonPrivilegedRolesReadOnly = false
 
 const initPermissions = async (permissions) => {
     if (!permissions) {
@@ -103,8 +105,13 @@ const initAdminRole = async () => {
 const initSupervisorRole = async () => {
     let supervisorRoleT = await supervisorRoleTemplate()
     let supervisorRole = await findRoleByName(supervisorRoleT.name)
-    if (supervisorRole) {
 
+    if(!supervisorRole){
+        supervisorRole = await createRole(supervisorRoleT)
+        loggingEvent("created", "role", supervisorRole.name, supervisorRole.id)
+    }
+
+    if (supervisorRole && supervisorRole.readonly) {
         let supervisorRoleUpdated = await updateRole(
             supervisorRole.id,
             {
@@ -113,18 +120,23 @@ const initSupervisorRole = async () => {
                 permissions: supervisorRoleT.permissions,
                 readonly: true
             })
+
         loggingEvent("updated", "role", supervisorRoleUpdated.name, supervisorRoleUpdated.id)
-    } else {
-        supervisorRole = await createRole(supervisorRoleT)
-        loggingEvent("created", "role", supervisorRole.name, supervisorRole.id)
     }
 }
 
 
+
 const initOperatorRole = async () => {
-    let operatorRoleT = await operatorRoleTemplate()
-    let operatorRole = await findRoleByName(operatorRoleT.name)
-    if (operatorRole) {
+    const roleTemplate = operatorRoleTemplate()
+    let operatorRole = await findRoleByName(roleTemplate.name)
+
+    if (!operatorRole) {
+        operatorRole = await createRole(roleTemplate)
+        loggingEvent("created", "role", operatorRole.name, operatorRole.id)
+    }
+
+    if (operatorRole && operatorRole.readonly) {
 
         let operatorRoleUpdated = await updateRole(operatorRole.id,
             {
@@ -132,15 +144,12 @@ const initOperatorRole = async () => {
                 permissions: operatorRoleT.permissions,
                 readonly: true
             })
-
+    
         loggingEvent("updated", "role", operatorRoleUpdated.name, operatorRoleUpdated.id)
-    } else {
-        operatorRole = await createRole(operatorRoleT)
-        loggingEvent("created", "role", operatorRole.name, operatorRole.id)
     }
 }
 
-const initRoles = async (roles) => {
+const initRoles = async (roles) => {    
     if (!roles) {
         roles = [operatorRoleTemplate()]
     }
@@ -148,12 +157,22 @@ const initRoles = async (roles) => {
     let rolesName = roles.map(r => r.name)
 
     //Fetch roles already created
-    let rolesFound = await fetchRolesInName(rolesName)
+    let rolesAlreadyPersistedFound = await fetchRolesInName(rolesName)
+    DefaultLogger.info(`"rolesFound: "${(JSON.stringify(rolesAlreadyPersistedFound, null, 2))}"`)
 
     //Filter roles created (avoid duplicate)
     let rolesToCreate
-    if (rolesFound) {
-        rolesToCreate = roles.filter(r => !rolesFound.some(f => f.name == r.name))
+    if (rolesAlreadyPersistedFound) {
+        rolesToCreate = roles.filter(
+            (newRole) => {
+                const existingRoleNames = rolesAlreadyPersistedFound.map(existingRole => existingRole.name.toLowerCase())
+                const roleIsNotDuplicated = !existingRoleNames.includes(newRole.name.toLowerCase())
+                
+                return roleIsNotDuplicated
+            }
+        )
+
+        DefaultLogger.info(`rolesToCreate: '${JSON.stringify(rolesToCreate, null, 2)}'`)
     } else {
         rolesToCreate = roles
     }
@@ -183,34 +202,55 @@ const initRoles = async (roles) => {
     })
 
     //Update Roles
-    const rolesUpdated = await rolesFound.reduce(async (memo, role) => {
-        const results = await memo;
-        console.log(`Updating ${role.name}`)
-        let p = roles.find(r => r.name === role.name).permissions
-        let crs = roles.find(r => r.name === role.name).childRoles
+    const updatedRoles = []
 
-        let childRoles = []
-        if (crs && crs.length > 0) {
-            for (const childRoleName of crs) {
-                let cr = await findRoleByName(childRoleName)
-                if (cr) {
-                    childRoles.push(cr.id)
-                }else{
-                }
+    for (let index = 0; index < rolesAlreadyPersistedFound.length; index++) {
+        const roleAlreadyPersisted = rolesAlreadyPersistedFound[index]
+        if (!roleAlreadyPersisted.readonly) continue
+
+        const roleAlreadyPersistedNewConfiguration = roles.find((newRoleConfiguration) => newRoleConfiguration.name.toLowerCase() === roleAlreadyPersisted.name.toLowerCase())
+
+        function getRolePermissions(){
+            if (roleAlreadyPersistedNewConfiguration.readonly) {
+                return roleAlreadyPersistedNewConfiguration.permissions
+            }else{
+                return roleAlreadyPersistedNewConfiguration.permissions.concat(roleAlreadyPersisted.permissions)
             }
         }
-        role = await updateRole(role.id, {name: role.name, permissions: p, childRoles: childRoles, readonly: role.readonly})
-        console.log(`Updated ${role.name}`)
 
-        return [...results, role];
-    }, []);
+        const rolePermissions = getRolePermissions()
+        const roleChildRoles = roleAlreadyPersistedNewConfiguration.childRoles
+
+        const childRoles = []
+
+        if (roleChildRoles && roleChildRoles.length > 0) {
+            for (const childRoleName of roleChildRoles) {
+                const cr = await findRoleByName(childRoleName)
+                
+                if (cr) childRoles.push(cr.id)
+            }
+        }
+
+        await updateRole(roleAlreadyPersisted.id, {
+            name: roleAlreadyPersisted.name,
+            permissions: rolePermissions,
+            childRoles: childRoles,
+            readonly: roleAlreadyPersistedNewConfiguration.readonly,
+        })
+
+        
+        updatedRoles.push(roleAlreadyPersisted)
+        DefaultLogger.info(`Updated ${roleAlreadyPersisted.name}`)
+    }
 
 
-    rolesUpdated.forEach(r => {
-        loggingEvent("updated", "role", r.name, r.id)
-    })
+    if(updatedRoles && updatedRoles.length){
+        updatedRoles.forEach(r => {
+            loggingEvent("updated", "role", r.name, r.id)
+        })
+    }
 
-    return {rolesCreated: rolesCreated, rolesUpdated: rolesUpdated}
+    return {rolesCreated: rolesCreated, rolesUpdated: updatedRoles}
 }
 
 const initRootUser = async (user) => {
