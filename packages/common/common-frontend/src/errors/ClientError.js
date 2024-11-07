@@ -2,6 +2,7 @@
 const MESSAGE_GENERIC_ERROR = "client.error.unexpectedError"
 const MESSAGE_NETWORK_ERROR = "client.error.networkError"
 const MESSAGE_VALIDATION = "client.error.validation"
+const roleNameAlreadyExistsMessage = "client.error.roleNameAlreadyExists"
 const MESSAGE_FORBIDDEN = "client.error.forbidden"
 const MESSAGE_UNAUTHENTICATED = "client.error.unauthenticated"
 
@@ -101,10 +102,10 @@ class ClientError extends Error {
             else if (gqlError.extensions.code == CUSTOM_ERROR) {
 
                 this.code = CUSTOM_ERROR
-                this.errorMessage = gqlError.message
+                this.errorMessage = gqlError.message === "roleNameAlreadyTaken" ? roleNameAlreadyExistsMessage :  gqlError.message
 
-                this.i18nMessage = gqlError.message
-                this.showMessage = gqlError.message
+                this.i18nMessage = gqlError.message === "roleNameAlreadyTaken" ? roleNameAlreadyExistsMessage :  gqlError.message
+                this.showMessage = gqlError.message === "roleNameAlreadyTaken" ? roleNameAlreadyExistsMessage :  gqlError.message
                 this.i18nMessages.push(gqlError.message)
             }
 

@@ -7,6 +7,7 @@ const clientMessages = {
                 validation: 'Validation Errors',
                 networkError: 'Network error. The server does not respond.',
                 unexpectedError: 'unexpectedError',
+                roleNameAlreadyExists: 'The name chosen for the new role was already taken'
             }
         }
     },
@@ -18,6 +19,7 @@ const clientMessages = {
                 validation: 'Error de validación.',
                 networkError: 'Error de Red. El servidor no responde',
                 unexpectedError: 'unexpectedError',
+                roleNameAlreadyExists: 'El nombre elegido para el nuevo rol ya fue tomado'
             }
         }
 
@@ -30,6 +32,7 @@ const clientMessages = {
                 validationError: 'Validation Error',
                 networkError: 'networkError',
                 unexpectedError: 'unexpectedError',
+                roleNameAlreadyExists: 'O nome escolhido para o novo papel já foi assumido'
             }
         }
 
