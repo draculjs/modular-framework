@@ -118,7 +118,7 @@ const initSupervisorRole = async () => {
                 name: supervisorRoleT.name,
                 childRoles: supervisorRoleT.childRoles,
                 permissions: supervisorRoleT.permissions,
-                readonly: true
+                readonly: supervisorRoleT.readonly
             })
 
         loggingEvent("updated", "role", supervisorRoleUpdated.name, supervisorRoleUpdated.id)
@@ -128,11 +128,11 @@ const initSupervisorRole = async () => {
 
 
 const initOperatorRole = async () => {
-    const roleTemplate = operatorRoleTemplate()
-    let operatorRole = await findRoleByName(roleTemplate.name)
+    const operatorRoleT = operatorRoleTemplate()
+    let operatorRole = await findRoleByName(operatorRoleT.name)
 
     if (!operatorRole) {
-        operatorRole = await createRole(roleTemplate)
+        operatorRole = await createRole(operatorRoleT)
         loggingEvent("created", "role", operatorRole.name, operatorRole.id)
     }
 
@@ -142,14 +142,14 @@ const initOperatorRole = async () => {
             {
                 name: operatorRoleT.name,
                 permissions: operatorRoleT.permissions,
-                readonly: true
+                readonly: operatorRoleT.readonly
             })
-    
+
         loggingEvent("updated", "role", operatorRoleUpdated.name, operatorRoleUpdated.id)
     }
 }
 
-const initRoles = async (roles) => {    
+const initRoles = async (roles) => {
     if (!roles) {
         roles = [operatorRoleTemplate()]
     }
@@ -167,7 +167,7 @@ const initRoles = async (roles) => {
             (newRole) => {
                 const existingRoleNames = rolesAlreadyPersistedFound.map(existingRole => existingRole.name.toLowerCase())
                 const roleIsNotDuplicated = !existingRoleNames.includes(newRole.name.toLowerCase())
-                
+
                 return roleIsNotDuplicated
             }
         )
@@ -226,7 +226,7 @@ const initRoles = async (roles) => {
         if (roleChildRoles && roleChildRoles.length > 0) {
             for (const childRoleName of roleChildRoles) {
                 const cr = await findRoleByName(childRoleName)
-                
+
                 if (cr) childRoles.push(cr.id)
             }
         }
@@ -238,7 +238,7 @@ const initRoles = async (roles) => {
             readonly: roleAlreadyPersistedNewConfiguration.readonly,
         })
 
-        
+
         updatedRoles.push(roleAlreadyPersisted)
         DefaultLogger.info(`Updated ${roleAlreadyPersisted.name}`)
     }
