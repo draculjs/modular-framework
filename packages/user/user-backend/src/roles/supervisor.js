@@ -11,6 +11,7 @@ import {
     SECURITY_USER_EDIT,
     SECURITY_USER_SHOW
 } from "../permissions";
+import { nonPrivilegedRolesReadOnly } from "../services/InitService";
 
 import {findRoleByName} from "../services/RoleService";
 
@@ -28,7 +29,7 @@ async function supervisorRole() {
             SECURITY_DASHBOARD_SHOW,
             SECURITY_ADMIN_MENU,
         ],
-        readonly: true
+        readonly: nonPrivilegedRolesReadOnly
     }
 
     const operatorRole = await findRoleByName("operator")

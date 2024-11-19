@@ -1,7 +1,8 @@
 import { DefaultLogger } from "@dracul/logger-backend";
+import { nonPrivilegedRolesReadOnly } from "../services/InitService";
 
 
-import {createRole, findRoleByName, fetchRolesInName, updateRole, updateRoleReadOnly} from './RoleService'
+import {createRole, findRoleByName, fetchRolesInName, updateRole} from './RoleService'
 import {changePasswordAdmin, createUser, findUserByUsername} from './UserService'
 import {createPermission, fetchPermissionsInName} from './PermissionService'
 
@@ -118,7 +119,7 @@ const initSupervisorRole = async () => {
                 name: supervisorRoleT.name,
                 childRoles: supervisorRoleT.childRoles,
                 permissions: supervisorRoleT.permissions,
-                readonly: true
+                readonly: nonPrivilegedRolesReadOnly
             })
 
         loggingEvent("updated", "role", supervisorRoleUpdated.name, supervisorRoleUpdated.id)
@@ -142,7 +143,7 @@ const initOperatorRole = async () => {
             {
                 name: operatorRoleT.name,
                 permissions: operatorRoleT.permissions,
-                readonly: true
+                readonly: nonPrivilegedRolesReadOnly
             })
     
         loggingEvent("updated", "role", operatorRoleUpdated.name, operatorRoleUpdated.id)
