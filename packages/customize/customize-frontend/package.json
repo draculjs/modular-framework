@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-frontend",
-  "version": "1.34.7",
+  "version": "1.35.1",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
   "main": "./src/index.js",
   "publishConfig": {
@@ -22,8 +22,8 @@
   "license": "MIT",
   "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e",
   "dependencies": {
-    "@dracul/common-frontend": "^1.34.7",
-    "@dracul/user-frontend": "^1.34.7"
+    "@dracul/common-frontend": "^1.35.1",
+    "@dracul/user-frontend": "^1.35.1"
   },
   "peerDependencies": {
     "material-design-icons-iconfont": "^6.1.0",
