@@ -1,63 +1,49 @@
 <template>
   <v-autocomplete
-      v-model="userValue"
-      :items="users"
-      :filled="filled"
-      :solo="solo"
-      :chips="chips"
-      :color="color"
-      :background-color="backgroundColor"
-      :label="$t(label)"
-      :placeholder="$t(placeholder)"
-      :item-text="'username'"
-      :item-value="'id'"
-      :multiple="multiple"
-      :loading="loading"
-      :clearable="clearable"
-      :rules="rules"
-      :hide-details="hideDetails"
+    v-model="userValue"
+    :items="users"
+    :filled="filled"
+    :solo="solo"
+    :chips="chips"
+    :color="color"
+    :background-color="backgroundColor"
+    :label="$t(label)"
+    :placeholder="$t(placeholder)"
+    :item-text="'username'"
+    :item-value="'id'"
+    :multiple="multiple"
+    :loading="loading"
+    :clearable="clearable"
+    :rules="rules"
+    :hide-details="hideDetails"
   >
-    <template v-slot:selection="data">
-      <v-chip
-          v-if="chips"
-          v-bind="data.attrs"
-          :input-value="data.selected"
-          close
-          @click="data.select"
-          @click:close="remove(data.item.id)"
-      >
-        <v-avatar left>
-          <v-img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
-          <v-img v-else :src="getDefaultAvatar"/>
-        </v-avatar>
-        {{ data.item.username }}
-      </v-chip>
-
-      <v-list-item v-else>
-        <v-list-item-avatar>
-          <img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
-          <img v-else :src="getDefaultAvatar"/>
-
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title v-html="data.item.username"></v-list-item-title>
-          <v-list-item-subtitle v-html="data.item.name"></v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </template>
+    
     <template v-slot:item="data">
-      <template v-if="typeof data.item !== 'object'">
-        <v-list-item-content v-text="data.item"></v-list-item-content>
+      <template v-if="(typeof data.item !== 'object')">
+        <v-list-item-content
+          v-text="data.item"
+        />
       </template>
+      
       <template v-else>
         <v-list-item-avatar>
-          <img v-if="data.item.avatarurl" :src="data.item.avatarurl"/>
-          <img v-else :src="getDefaultAvatar"/>
-
+          <img v-if="data.item.avatarurl" 
+            :src="data.item.avatarurl"
+          />
+          
+          <img v-else 
+            :src="getDefaultAvatar"
+          />
         </v-list-item-avatar>
+        
         <v-list-item-content>
-          <v-list-item-title v-html="data.item.username"></v-list-item-title>
-          <v-list-item-subtitle v-html="data.item.name"></v-list-item-subtitle>
+          <v-list-item-title 
+            v-html="data.item.username"
+          />
+
+          <v-list-item-subtitle 
+            v-html="data.item.name"
+          />
         </v-list-item-content>
       </template>
     </template>

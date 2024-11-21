@@ -71,12 +71,12 @@ const initService = async () => {
     await InitService.initPermissions(modulesPermissions)
 
     await InitService.initAdminRole()
+    await InitService.initSupervisorRole()
 
     await InitService.initRoles([operatorRole, managerRole, desarrolloRole])
 
     await InitService.initRootUser()
     await InitService.initOperatorUser()
-
     await testNotification()
 
     await initCustomization({})

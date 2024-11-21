@@ -1,26 +1,26 @@
-const Audit = require('../models/AuditModel.js')
-const { UserInputError } = require('apollo-server-errors')
+import { DefaultLogger as winston } from '@dracul/logger-backend';
+import { UserInputError } from 'apollo-server-errors';
+import { Audit } from '../models/AuditModel.js';
 
-const findAudit = async function (id) {
+export async function findAudit(id){
     try{
         const audit = await Audit.findOne({ _id: id }).populate('user').exec()
         return audit
-    }catch (e) {
-        throw e
+    }catch (error) {
+        winston.error('An error happened at the findAudit method', error.message)
     }
 }
 
-const fetchAudit = async function () {
-
+export async function fetchAudit(){
     try{
         const audit = await Audit.find({ }).populate('user').exec()
         return audit
-    }catch (e) {
-        throw e
+    }catch (error) {
+        winston.error('An error happened at the fetchAudit method', error.message)
     }
 }
 
-const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null, filters = null, orderBy = null, orderDesc = false) {
+export function paginateAudit(pageNumber = 1, itemsPerPage = 5, search = null, filters = null, orderBy = null, orderDesc = false) {
 
     function qs(search, filters) {
         let qs = {}
@@ -62,7 +62,9 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
         return (orderBy) ? (orderDesc ? '-' : '') + orderBy : null
     }
 
-    const populate = ['user']
+    const populate = [
+        { path: 'user', populate: [{ path: 'role' }, { path: 'groups' }] }
+    ];
     const sort = getSort(orderBy, orderDesc)
 
     const query = {
@@ -73,30 +75,35 @@ const paginateAudit = function (pageNumber = 1, itemsPerPage = 5, search = null,
 
     return new Promise((resolve, reject) => {
         Audit.paginate(query, params).then(result => {
-            resolve({ items: result.docs, totalItems: result.totalDocs, page: result.page })
+            const valueToReturn = { items: result.docs, totalItems: result.totalDocs, page: result.page }
+            winston.info(`valueToReturn: ${JSON.stringify(valueToReturn, null , 2)}`)
+            resolve(valueToReturn)
         }).catch(err => reject(err))
     })
 }
 
-const createAudit = async function (authUser, { user, action, resource, description }) {
 
-    try{
+export async function createAudit(authUser, { action, entity, details, changes }) {
+    try {
         const doc = new Audit({
-            user, action, resource, description
+            user: authUser.id,
+            action,
+            entity,
+            details,
+            changes
         })
 
         doc.id = doc._id
-        await doc.populate('user')
-        return await doc.save()
-    }catch (error) {
-        if (error.name == "ValidationError") {
+
+        const createdAuditory = await doc.save()
+        await createdAuditory.populate({ path: 'user' });
+        
+        return await findAudit(doc.id);
+    } catch (error) {
+        if (error.name === "ValidationError") {
             throw new UserInputError(error.message, { inputErrors: error.errors })
         }
+
         throw error
     }
-
-}
-
-module.exports = {
-    createAudit, fetchAudit, paginateAudit, findAudit
 }

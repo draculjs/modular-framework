@@ -26,6 +26,8 @@ import * as permissions from './permissions'
 
 import rbac from './rbac/index'
 
+import { nonPrivilegedRolesReadOnly } from './services/InitService'
+
 export {
     //Models
     UserModel,
@@ -66,6 +68,7 @@ export {
     RbacService,
 
     //permissions
-    permissions
+    permissions,
+    nonPrivilegedRolesReadOnly
 }
 

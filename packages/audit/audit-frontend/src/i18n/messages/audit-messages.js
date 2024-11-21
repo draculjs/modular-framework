@@ -11,9 +11,11 @@ const i18nMessages = {
             labels: {
                 user: 'User',
                 action: 'Action',
-                targetResource: 'Resource',
+                entity: 'Entity',
                 createdAt: 'Date',
-                description: 'Description'
+                details: 'Details',
+                role: 'Role',
+                changes: 'Changes'
             },
 
             userAudit: 'User audit',
@@ -24,6 +26,26 @@ const i18nMessages = {
             actionBy: 'Action By',
             actionFor: 'Action For',
             action: 'Action',
+
+            actions: {
+                create: 'Crear',
+                read: 'Visualizar',
+                update: 'Modificar',
+                delete: 'Eliminar',
+                
+                detailMessages: {
+                    create: 'A resource with ID "{resourceID}" was created',
+                    read: 'A resource with ID "{resourceID}" was visualized',
+                    update: 'A resource with ID "{resourceID}" was updated',
+                    delete: 'A resource with ID "{resourceID}" was deleted',
+                },
+
+                changes: {
+                    field: 'Campo',
+                    oldValue: 'Valor anterior',
+                    newValue: 'Valor nuevo',
+                },
+            },
 
             today: 'Today',
             yesterday: 'Yesterday',
@@ -56,9 +78,11 @@ const i18nMessages = {
             labels: {
                 user: 'Usuario',
                 action: 'Acción',
-                targetResource: 'Recurso',
+                entity: 'Entidad',
                 createdAt: 'Fecha',
-                description: 'Descripcion'
+                details: 'Detalles',
+                role: 'Rol',
+                changes: 'Cambios'
             },
 
             userAudit: 'Auditoria de usuario',
@@ -68,6 +92,26 @@ const i18nMessages = {
             actionBy: 'Acción Por',
             actionFor: 'Acción Para',
             action: 'Acción',
+
+            actions: {
+                create: 'Crear',
+                read: 'Visualizar',
+                update: 'Modificar',
+                delete: 'Eliminar',
+                
+                detailMessages: {
+                    create: 'Se ha creado un recurso con ID "{resourceID}"',
+                    read: 'Se ha visualizado un recurso con ID "{resourceID}"',
+                    update: 'Se ha modificado un recurso con ID "{resourceID}"',
+                    delete: 'Se ha eliminado un recurso con ID "{resourceID}"',
+                },
+
+                changes: {
+                    field: 'Campo',
+                    oldValue: 'Valor anterior',
+                    newValue: 'Valor nuevo',
+                },
+            },
 
             today: 'Hoy',
             yesterday: 'ayer',
@@ -100,9 +144,11 @@ const i18nMessages = {
             labels: {
                 user: 'Nome do usuário',
                 action: 'Açao',
-                targetResource: 'Alvo',
+                entity: 'Entity',
                 createdAt: 'Data',
-                description: 'Description'
+                details: 'Details',
+                role: 'Rol',
+                changes: 'Changes'
             },
 
             userAudit: 'Auditoria de Usuário',
@@ -112,6 +158,26 @@ const i18nMessages = {
             actionBy: 'Ação por',
             actionFor: 'Ação Para',
             action: 'Ação',
+
+            actions: {
+                create: 'Crear',
+                read: 'Visualizar',
+                update: 'Modificar',
+                delete: 'Eliminar',
+                
+                detailMessages: {
+                    create: 'Se ha creado un recurso con ID "{resourceID}"',
+                    read: 'Se ha visualizado un recurso con ID "{resourceID}"',
+                    update: 'Se ha modificado un recurso con ID "{resourceID}"',
+                    delete: 'Se ha eliminado un recurso con ID "{resourceID}"',
+                },
+
+                changes: {
+                    field: 'Campo',
+                    oldValue: 'Valor anterior',
+                    newValue: 'Valor nuevo',
+                },
+            },
 
             today: 'hoje',
             yesterday: 'ontem',
