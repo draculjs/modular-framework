@@ -2,9 +2,10 @@ type Audit{
     id: ID!
     user: User!
     action: String!
-    resource: String!
+    entity: String!
     createdAt: String,
-    description: String
+    details: String
+    changes: [Changes]
 }
 
 type AuditPaginated{
@@ -20,5 +21,17 @@ type Query {
 }
 
 type Mutation {
-  createAudit(action: String!, resource: String!, description: String): Audit
+  createAudit(action: String!, entity: String!, details: String, changes: [ChangesInput]): Audit
+}
+
+input ChangesInput {
+    field: String!
+    oldValue: JSON
+    newValue: JSON
+}
+
+type Changes{
+    field: String
+    oldValue: JSON
+    newValue: JSON
 }

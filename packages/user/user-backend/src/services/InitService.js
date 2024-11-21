@@ -1,6 +1,4 @@
 import { DefaultLogger } from "@dracul/logger-backend";
-import { nonPrivilegedRolesReadOnly } from "../services/InitService";
-
 
 import {createRole, findRoleByName, fetchRolesInName, updateRole} from './RoleService'
 import {changePasswordAdmin, createUser, findUserByUsername} from './UserService'

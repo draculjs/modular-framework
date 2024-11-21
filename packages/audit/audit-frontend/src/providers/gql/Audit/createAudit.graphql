@@ -1,12 +1,21 @@
-mutation createAudit($action: String!, $resource: String!, $description: String){
-    createAudit(action: $action, resource: $resource, description: $description){
+mutation createAudit(
+    $action: String!,
+    $entity: String!,
+    $details: String,
+    $changes: [ChangesInput]
+) {
+    createAudit(action: $action, entity: $entity, details: $details, changes: $changes) {
         id
-        user{
-                id
-                username
-            }
+        user {
+            username
+        }
         action
-        resource
+        entity
+        details
+        changes {
+            field
+            oldValue
+            newValue
+        }
     }
 }
-
