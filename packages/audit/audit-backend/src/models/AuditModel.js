@@ -2,7 +2,6 @@ const { mongoose } = require('@dracul/common-backend')
 const mongoosePaginate = require('mongoose-paginate-v2')
 const uniqueValidator = require('mongoose-unique-validator')
 
-export const auditAdmittedActions = ["CREATE", "READ", "UPDATE", "DELETE"]
 const Schema = mongoose.Schema
 
 const ChangeSchema = new Schema({
@@ -13,7 +12,7 @@ const ChangeSchema = new Schema({
 
 const AuditSchema = new Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: false, index: false },
-    action: { type: String, enum: auditAdmittedActions, required: true, index: false },
+    action: { type: String, required: true, index: false },
     entity: { type: String, required: true, unique: false, index: false },
     details: { type: String, required: false, unique: false, index: false },
     changes: { type: [ChangeSchema], required: false, unique: false, index: false } 
