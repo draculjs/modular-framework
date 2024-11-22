@@ -214,7 +214,7 @@ export default {
                 this.getOrderDesc
             ).then(r => {
                 console.log('paginate audit', r)
-                // r.data.paginateAudit.items.forEach((item) => item.changes = 1)
+                r.data.paginateAudit.items.forEach((item) => item.changes.length == 0 ? item.changes.length = 1 : null)
                 this.items = r.data.paginateAudit.items
                 this.totalItems = r.data.paginateAudit.totalItems
             }).catch(err => {
