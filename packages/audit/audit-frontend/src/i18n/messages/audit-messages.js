@@ -38,6 +38,7 @@ const i18nMessages = {
                     read: 'A resource with ID "{resourceID}" was visualized',
                     update: 'A resource with ID "{resourceID}" was updated',
                     delete: 'A resource with ID "{resourceID}" was deleted',
+                    restart: 'A resource with ID "{resourceID}" was restarted',
                 },
 
                 changes: {
@@ -104,6 +105,7 @@ const i18nMessages = {
                     read: 'Se ha visualizado un recurso con ID "{resourceID}"',
                     update: 'Se ha modificado un recurso con ID "{resourceID}"',
                     delete: 'Se ha eliminado un recurso con ID "{resourceID}"',
+                    restart: 'Se ha reiniciado un recurso con ID "{resourceID}"',
                 },
 
                 changes: {
@@ -160,22 +162,23 @@ const i18nMessages = {
             action: 'Ação',
 
             actions: {
-                create: 'Crear',
-                read: 'Visualizar',
+                create: 'Criar',
+                read: 'Exibir',
                 update: 'Modificar',
-                delete: 'Eliminar',
+                delete: 'Excluir',
                 
                 detailMessages: {
-                    create: 'Se ha creado un recurso con ID "{resourceID}"',
-                    read: 'Se ha visualizado un recurso con ID "{resourceID}"',
-                    update: 'Se ha modificado un recurso con ID "{resourceID}"',
-                    delete: 'Se ha eliminado un recurso con ID "{resourceID}"',
+                    create: 'Um recurso com a ID “{resourceID}” foi criado',
+                    read: 'Um recurso com ID “{resourceID}” foi exibido',
+                    update: 'Um recurso com a ID “{resourceID}” foi modificado',
+                    delete: 'Um recurso com a ID “{resourceID}” foi excluído',
+                    restart: 'Um recurso com a ID “{resourceID}” foi reiniciado',
                 },
 
                 changes: {
                     field: 'Campo',
-                    oldValue: 'Valor anterior',
-                    newValue: 'Valor nuevo',
+                    oldValue: 'Valor antigo',
+                    newValue: 'Novo valor',
                 },
             },
 

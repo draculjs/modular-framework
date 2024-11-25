@@ -6,6 +6,12 @@ query findAudit($id:ID!){
                 username
             }
         action
-        resource
+        entity
+        details
+        changes {
+            field
+            oldValue
+            newValue
+        }
     }
 }

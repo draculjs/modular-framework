@@ -35,7 +35,7 @@ export function paginateAudit(pageNumber = 1, itemsPerPage = 5, search = null, f
 
         return qs
     }
-
+    
     function qsFilter(filters) {
         if (filters) {
             const qsFilter = {}
@@ -48,8 +48,11 @@ export function paginateAudit(pageNumber = 1, itemsPerPage = 5, search = null, f
                     case 'action':
                         (value) && (qsFilter.action = { [operator]: value, $options: "i" })
                         break
-                    case 'resource':
-                        value && (qsFilter.resource = { [operator]: value, $options: "i" })
+                    case 'entity':
+                        value && (qsFilter.entity = { [operator]: value, $options: "i" })
+                        break
+                    case 'details':
+                        value && (qsFilter.details = { [operator]: value, $options: "i" })
                         break
                 }
             })
