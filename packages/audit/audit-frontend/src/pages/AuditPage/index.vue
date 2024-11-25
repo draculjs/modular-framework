@@ -150,7 +150,7 @@ export default {
                     value: null
                 },
                 {
-                    field: 'resource',
+                    field: 'entity',
                     operator: '$regex',
                     value: null
                 }
@@ -203,7 +203,10 @@ export default {
             this.pageNumber = 1
             this.fetch()
         },
-        fetch() {
+        async fetch() {
+            
+            const fetchAll = await AuditProvider.fetchAudit()
+            console.log(fetchAll)
             this.loading = true
             AuditProvider.paginateAudit(
                 this.pageNumber,
