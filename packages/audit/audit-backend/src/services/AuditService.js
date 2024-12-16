@@ -79,7 +79,6 @@ export function paginateAudit(pageNumber = 1, itemsPerPage = 5, search = null, f
     return new Promise((resolve, reject) => {
         Audit.paginate(query, params).then(result => {
             const valueToReturn = { items: result.docs, totalItems: result.totalDocs, page: result.page }
-            winston.info(`valueToReturn: ${JSON.stringify(valueToReturn, null , 2)}`)
             resolve(valueToReturn)
         }).catch(err => reject(err))
     })

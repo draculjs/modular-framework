@@ -303,7 +303,7 @@ export const findUsers = async function (roles = [], userId = null) {
             }
         }
 
-        const users = await User.find(qs).isDeleted(false).populate(['role','groups']).exec()
+        const users = await User.find(qs).populate(['role','groups']).exec()
         return users
     } catch (e) {
         winston.error("UserService.findUsers ", e)
@@ -320,8 +320,7 @@ export const findUsersByRole = async function (roleName) {
 
         if (!role) return resolve([])
 
-        const users = await User.find({role: role.id}).isDeleted(false).populate(['role','groups']).exec()
-
+        const users = await User.find({role: role.id}).populate(['role','groups']).exec()
         return users
     } catch (e) {
         winston.error("UserService.findUsersByRole ", e)
@@ -333,9 +332,9 @@ export const findUsersByRole = async function (roleName) {
 
 export const findUsersByRoles = async function (roleNames) {
     try {
-        let roles = await findRoleByNames(roleNames)
+        const roles = await findRoleByNames(roleNames)
         if (!roles && roles.length === 0) return resolve([])
-        const users = await User.find({role: {$in: roles.map(r => r._id)}}).isDeleted(false).populate(['role','groups']).exec()
+        const users = await User.find({role: {$in: roles.map(r => r._id)}}).populate(['role','groups']).exec()
         return users
     } catch (e) {
         winston.error("UserService.findUsersByRole ", e)
