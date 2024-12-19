@@ -6,6 +6,7 @@ type Audit{
     createdAt: String,
     details: String
     changes: [Changes]
+    resourceData: JSON
 }
 
 type AuditPaginated{
@@ -21,7 +22,7 @@ type Query {
 }
 
 type Mutation {
-  createAudit(action: String!, entity: String!, details: String, changes: [ChangesInput]): Audit
+  createAudit(action: String!, entity: String!, details: String, changes: [ChangesInput], resourceData: JSON): Audit
 }
 
 input ChangesInput {

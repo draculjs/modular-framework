@@ -85,14 +85,15 @@ export function paginateAudit(pageNumber = 1, itemsPerPage = 5, search = null, f
 }
 
 
-export async function createAudit(authUser, { action, entity, details, changes }) {
+export async function createAudit(authUser, { action, entity, details, changes, resourceData = {} }) {
     try {
         const doc = new Audit({
             user: authUser.id,
             action,
             entity,
             details,
-            changes
+            changes,
+            resourceData,
         })
 
         doc.id = doc._id
