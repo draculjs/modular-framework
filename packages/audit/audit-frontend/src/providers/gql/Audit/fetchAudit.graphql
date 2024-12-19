@@ -13,6 +13,7 @@ query fetchAudit{
             oldValue
             newValue
         }
+        resourceData
     }
 }
 

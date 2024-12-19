@@ -79,21 +79,21 @@ export function paginateAudit(pageNumber = 1, itemsPerPage = 5, search = null, f
     return new Promise((resolve, reject) => {
         Audit.paginate(query, params).then(result => {
             const valueToReturn = { items: result.docs, totalItems: result.totalDocs, page: result.page }
-            winston.info(`valueToReturn: ${JSON.stringify(valueToReturn, null , 2)}`)
             resolve(valueToReturn)
         }).catch(err => reject(err))
     })
 }
 
 
-export async function createAudit(authUser, { action, entity, details, changes }) {
+export async function createAudit(authUser, { action, entity, details, changes, resourceData = {} }) {
     try {
         const doc = new Audit({
             user: authUser.id,
             action,
             entity,
             details,
-            changes
+            changes,
+            resourceData,
         })
 
         doc.id = doc._id

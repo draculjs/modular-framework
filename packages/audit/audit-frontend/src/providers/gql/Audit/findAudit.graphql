@@ -13,5 +13,6 @@ query findAudit($id:ID!){
             oldValue
             newValue
         }
+        resourceData
     }
 }

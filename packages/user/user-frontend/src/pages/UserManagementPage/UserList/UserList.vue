@@ -101,7 +101,7 @@
           </v-icon>
 
 
-          <v-icon
+          <!-- <v-icon
               v-if="canDelete"
               color="red"
               small
@@ -109,7 +109,7 @@
               @click="$emit('open-delete', item)"
           >
             delete
-          </v-icon>
+          </v-icon> -->
         </template>
 
       </v-data-table>

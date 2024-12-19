@@ -35,7 +35,7 @@ class UserProvider {
         return this.gqlc.query({
             query: require('./gql/usersByRole.graphql'),
             fetchPolicy: "network-only",
-            variables: {roleName: roleName}
+            variables: {roleName}
         })
     }
 
@@ -43,7 +43,7 @@ class UserProvider {
         return this.gqlc.query({
             query: require('./gql/usersByRoles.graphql'),
             fetchPolicy: "network-only",
-            variables: {roleNames: roleNames}
+            variables: {roleNames}
         })
     }
 

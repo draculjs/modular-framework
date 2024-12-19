@@ -31,9 +31,9 @@ const resolvers = {
     },
 
     Mutation: {
-        createAudit: (_, { action, entity, details, changes}, { user }) => {
+        createAudit: (_, { action, entity, details, changes, resourceData}, { user }) => {
           if (!user) throw new AuthenticationError("Unauthenticated")
-          return createAudit(user, {action, entity, details, changes})
+          return createAudit(user, {action, entity, details, changes, resourceData})
         }
       }
 }
