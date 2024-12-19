@@ -64,11 +64,11 @@
                         <template v-slot:[`item.createdAt`]="{ item }">
                             {{ getDateTimeFormat(item.createdAt) }}
                         </template>
-
                         <template v-slot:[`item.changes`]="{ item }">
-                            <v-menu
-                                bottom
-                                left
+                            <v-dialog
+                                v-model="item.dialogVisible"
+                                content-class='rounded-0'
+                                scrollable
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-btn
@@ -76,23 +76,106 @@
                                         color="secondary"
                                         outlined
                                         tile
-                                        
                                         v-bind="attrs"
                                         v-on="on"
-                                        :disabled="item.action !== 'UPDATE'"
                                     >
                                         {{ item.changes.length }}
                                     </v-btn>
                                 </template>
 
-                                <v-data-table
-                                    :headers=changeHeaders
-                                    :items="item.changes"
-                                    :hide-default-footer="true"
-                                ></v-data-table>
-                            </v-menu>
+                                <v-card
+                                    class="rounded-0"
+                                >
 
+                                <!-- MAKE THIS STICKY -->
+                                 <div class="sticky-header">
+
+                                        <v-toolbar
+                                            dense
+                                        >
+                                            Cambios de auditoria
+                                            <v-spacer />
+                                            
+                                            <v-btn
+                                                icon
+                                                small
+                                                @click="item.dialogVisible = false"
+                                            >
+                                                <v-icon>mdi-close</v-icon>
+                                            </v-btn>
+                                        </v-toolbar>
+
+                                        <v-card
+                                            class="d-flex pl-5 rounded-0 text-h2"
+                                        >
+                                            <v-card-text>
+                                                <b>{{$t('audit.labels.createdAt')}}</b>: {{ getDateTimeFormat(item.createdAt) }}
+                                            </v-card-text>
+
+                                            <v-card-text>
+                                                <b>{{$t('audit.labels.role')}}</b>: {{ item.user.role.name }}
+                                            </v-card-text>
+
+                                            <v-card-text>
+                                                <b>{{$t('audit.labels.user')}}</b>: {{ item.user.username }}
+                                            </v-card-text>
+
+                                            <v-card-text>
+                                                <b>{{$t('audit.labels.entity')}}</b>: {{ item.entity }}
+                                            </v-card-text>
+
+                                            <v-card-text>
+                                                <b>{{$t('audit.labels.action')}}</b>: {{ $t(`audit.actions.${item.action.toLowerCase()}`) }}
+                                            </v-card-text>
+
+                                            <v-card-text>
+                                                <b>{{$t('audit.labels.details')}}</b>: {{ item.details }}
+                                            </v-card-text>
+                                        </v-card>
+                                    </div>
+
+                                <!-- MAKE THIS STICKY -->
+
+
+                                    <v-spacer></v-spacer>
+
+                                    <div class="scrollable-content">
+                                        <v-card
+                                            outlined
+                                            class="rounded-0"
+                                            elevation="0"
+                                        >
+                                            <v-card-text
+                                                class="px-8"
+                                            >
+                                                <v-data-table v-if="item.action == 'UPDATE'"
+                                                    :headers="changeHeaders"
+                                                    :items="item.changes"
+                                                    :hide-default-footer="true"
+                                                    class="rounded-0"
+                                                >
+                                                    <template v-slot:[`item.oldValue`]="{ item }">
+                                                        {{ item.oldValue }}
+                                                    </template>
+                                                    <template v-slot:[`item.newValue`]="{ item }">
+                                                        {{ item.newValue }}
+                                                    </template>
+                                                </v-data-table>
+
+                                                <v-treeview
+                                                    :items="getAuditDataChanges(item)"
+                                                    item-text="name"
+                                                    item-children="children"
+                                                    open-on-click
+                                                    class="rounded-0"
+                                                />
+                                            </v-card-text>
+                                        </v-card>
+                                    </div>
+                                </v-card>
+                            </v-dialog>
                         </template>
+
 
 
                         <template v-slot:[`item.details`]="{ item }">
@@ -133,8 +216,8 @@ export default {
             items: [],
             totalItems: null,
             loading: false,
-            orderBy: null,
-            orderDesc: false,
+            orderBy: 'createdAt',
+            orderDesc: true,
             itemsPerPage: 5,
             pageNumber: 1,
             search: '',
@@ -154,7 +237,8 @@ export default {
                     operator: '$regex',
                     value: null
                 }
-            ]
+            ],
+            dialogVisible: false, 
         }
     },
     computed: {
@@ -204,26 +288,28 @@ export default {
             this.fetch()
         },
         async fetch() {
-            
-            const fetchAll = await AuditProvider.fetchAudit()
-            console.log(fetchAll)
-            this.loading = true
-            AuditProvider.paginateAudit(
+        this.loading = true;
+        try {
+            const response = await AuditProvider.paginateAudit(
                 this.pageNumber,
                 this.itemsPerPage,
                 this.search,
                 this.filters,
                 this.getOrderBy,
                 this.getOrderDesc
-            ).then(r => {
-                console.log('paginate audit', r)
-                r.data.paginateAudit.items.forEach((item) => item.changes.length == 0 ? item.changes.length = 1 : null)
-                this.items = r.data.paginateAudit.items
-                this.totalItems = r.data.paginateAudit.totalItems
-            }).catch(err => {
-                console.error(err)
-            }).finally(() => this.loading = false)
-        },
+            );
+            this.items = response.data.paginateAudit.items.map(item => ({
+                ...item,
+                changes: item.changes.length === 0 ? [{ length: 1 }] : item.changes,
+                dialogVisible: false,
+            }));
+            this.totalItems = response.data.paginateAudit.totalItems;
+        } catch (err) {
+            console.error(err);
+        } finally {
+            this.loading = false;
+        }
+    },
         setFilters(auditFilters) {
             console.log('auditFilters', auditFilters)
             this.filters = auditFilters
@@ -235,8 +321,15 @@ export default {
             })
             this.fetch()
         },
-        visualizeAuditChanges(audit){
-            console.log(audit)
+        getAuditDataChanges(audit) {
+            if (!audit || typeof audit.resourceData !== 'object' || !audit.resourceData) return [];
+
+            return Object.entries(audit.resourceData).map(([key, value]) => ({
+                name: key,
+                children: Array.isArray(value) || typeof value === 'object'
+                    ? Object.entries(value).map(([subKey, subValue]) => ({ name: `${subKey}: ${subValue}` }))
+                    : [{ name: `${value}` }]
+            }))
         }
     }
 
@@ -247,5 +340,19 @@ export default {
 .v-data-table-header th {
     white-space: nowrap !important;
     align-self: center
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white; /* Ajusta según el diseño */
+  box-shadow: 0 rgba(0, 0, 0, 0.1); /* Opcional */
+}
+
+.scrollable-content {
+  max-height: 60vh; /* Ajusta según el tamaño del v-dialog */
+  overflow-y: auto;
+  padding: 16px; /* Opcional, para espaciar el contenido */
 }
 </style>
