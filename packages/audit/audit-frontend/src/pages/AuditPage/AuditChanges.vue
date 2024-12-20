@@ -56,14 +56,22 @@
         },
         methods: {
             getAuditDataChanges(audit) {
-                if (!audit || typeof audit.resourceData !== 'object' || !audit.resourceData) return [];
-
-                return Object.entries(audit.resourceData).map(([key, value]) => ({
-                    name: key,
-                    children: Array.isArray(value) || typeof value === 'object'
-                        ? Object.entries(value).map(([subKey, subValue]) => ({ name: `${subKey}: ${subValue}` }))
-                        : [{ name: `${value}` }]
-                }))
+                try {
+                    if (audit && audit.resourceData && typeof audit.resourceData !== 'object'){
+                        audit.resourceData = JSON.parse(audit.resourceData)
+                    }
+    
+                    if (!audit || typeof audit.resourceData !== 'object' || !audit.resourceData) return [];
+    
+                    return Object.entries(audit.resourceData).map(([key, value]) => ({
+                        name: key,
+                        children: Array.isArray(value) || typeof value === 'object'
+                            ? Object.entries(value).map(([subKey, subValue]) => ({ name: `${subKey}: ${subValue}` }))
+                            : [{ name: `${value}` }]
+                    }))
+                } catch (error) {
+                    console.error(`An error happened at the getAuditDataChanges method: '${error}'`)
+                }
             }
         },
         computed: {
