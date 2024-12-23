@@ -87,7 +87,6 @@
                                     class="rounded-0"
                                 >
 
-                                <!-- MAKE THIS STICKY -->
                                  <div class="sticky-header">
 
                                         <v-toolbar
@@ -134,9 +133,6 @@
                                         </v-card>
                                     </div>
 
-                                <!-- MAKE THIS STICKY -->
-
-
                                     <v-spacer></v-spacer>
 
                                     <div class="scrollable-content">
@@ -162,7 +158,7 @@
                                                     </template>
                                                 </v-data-table>
 
-                                                <v-treeview
+                                                <v-treeview v-if="item.dialogVisible"
                                                     :items="getAuditDataChanges(item)"
                                                     item-text="name"
                                                     item-children="children"
@@ -288,28 +284,31 @@ export default {
             this.fetch()
         },
         async fetch() {
-        this.loading = true;
-        try {
-            const response = await AuditProvider.paginateAudit(
-                this.pageNumber,
-                this.itemsPerPage,
-                this.search,
-                this.filters,
-                this.getOrderBy,
-                this.getOrderDesc
-            );
-            this.items = response.data.paginateAudit.items.map(item => ({
-                ...item,
-                changes: item.changes.length === 0 ? [{ length: 1 }] : item.changes,
-                dialogVisible: false,
-            }));
-            this.totalItems = response.data.paginateAudit.totalItems;
-        } catch (err) {
-            console.error(err);
-        } finally {
-            this.loading = false;
-        }
-    },
+            this.loading = true
+
+            try {
+                const response = await AuditProvider.paginateAudit(
+                    this.pageNumber,
+                    this.itemsPerPage,
+                    this.search,
+                    this.filters,
+                    this.getOrderBy,
+                    this.getOrderDesc
+                )
+
+                this.items = response.data.paginateAudit.items.map(item => ({
+                    ...item,
+                    changes: item.changes.length === 0 ? [{ length: 1 }] : item.changes,
+                    dialogVisible: false,
+                }))
+
+                this.totalItems = response.data.paginateAudit.totalItems
+            } catch (err) {
+                console.error(err)
+            } finally {
+                this.loading = false
+            }
+        },
         setFilters(auditFilters) {
             console.log('auditFilters', auditFilters)
             this.filters = auditFilters
@@ -322,14 +321,32 @@ export default {
             this.fetch()
         },
         getAuditDataChanges(audit) {
-            if (!audit || typeof audit.resourceData !== 'object' || !audit.resourceData) return [];
+            if (audit && typeof audit.resourceData === 'string') {
+                try {
+                    audit.resourceData = JSON.parse(audit.resourceData)
+                } catch {
+                    console.error('Invalid JSON format in resourceData')
+                    return []
+                }
+            }
 
-            return Object.entries(audit.resourceData).map(([key, value]) => ({
-                name: key,
-                children: Array.isArray(value) || typeof value === 'object'
-                    ? Object.entries(value).map(([subKey, subValue]) => ({ name: `${subKey}: ${subValue}` }))
-                    : [{ name: `${value}` }]
-            }))
+            if (!audit || typeof audit.resourceData !== 'object') return []
+
+            const buildTree = (data) => {
+                return Object.entries(data).map(([key, value]) => {
+                    if (typeof value === 'object' && value !== null) {
+                        return {
+                            name: key,
+                            children: buildTree(value) // Recursión para niveles anidados
+                        }
+                    }
+                    return {
+                        name: `${key}: ${String(value)}`
+                    }
+                })
+            }
+
+            return buildTree(audit.resourceData)
         }
     }
 
