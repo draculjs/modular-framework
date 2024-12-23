@@ -1,6 +1,6 @@
 {
   "name": "integration-frontend",
-  "version": "1.35.6",
+  "version": "1.35.7",
   "private": true,
   "scripts": {
     "front": "vue-cli-service serve",
@@ -14,7 +14,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@dracul/audit-frontend": "^1.35.6",
+    "@dracul/audit-frontend": "^1.35.7",
     "@dracul/common-frontend": "^1.35.1",
     "@dracul/customize-frontend": "^1.35.6",
     "@dracul/media-frontend": "^1.35.6",
