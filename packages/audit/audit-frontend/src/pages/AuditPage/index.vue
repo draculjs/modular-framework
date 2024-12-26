@@ -321,7 +321,7 @@ export default {
             this.fetch()
         },
         getAuditDataChanges(audit) {
-            if (audit && typeof audit.resourceData === 'string') {
+            if (audit && audit.resourceData && audit.resourceData !== '' && typeof audit.resourceData === 'string' && audit.resourceData !== null && audit.resourceData !== undefined) {
                 try {
                     audit.resourceData = JSON.parse(audit.resourceData)
                 } catch {
@@ -333,6 +333,7 @@ export default {
             if (!audit || typeof audit.resourceData !== 'object') return []
 
             const buildTree = (data) => {
+                if (!data) return [];
                 return Object.entries(data).map(([key, value]) => {
                     if (typeof value === 'object' && value !== null) {
                         return {
