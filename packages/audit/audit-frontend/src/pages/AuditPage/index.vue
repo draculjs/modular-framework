@@ -321,7 +321,7 @@ export default {
             this.fetch()
         },
         getAuditDataChanges(audit) {
-            if (audit && typeof audit.resourceData === 'string') {
+            if (audit && audit.resourceData && audit.resourceData !== '' && typeof audit.resourceData === 'string' && audit.resourceData !== null && audit.resourceData !== undefined) {
                 try {
                     audit.resourceData = JSON.parse(audit.resourceData)
                 } catch {
