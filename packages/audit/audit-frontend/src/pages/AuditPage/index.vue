@@ -333,6 +333,7 @@ export default {
             if (!audit || typeof audit.resourceData !== 'object') return []
 
             const buildTree = (data) => {
+                if (!data) return [];
                 return Object.entries(data).map(([key, value]) => {
                     if (typeof value === 'object' && value !== null) {
                         return {
