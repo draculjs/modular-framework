@@ -175,7 +175,7 @@
 
 
                         <template v-slot:[`item.details`]="{ item }">
-                            {{ $t(`audit.actions.detailMessages.${item.action.toLowerCase()}`, {resourceID: item.details}) }}
+                            {{ $t(`audit.actions.detailMessages.${item.action.toLowerCase()}`, {resourceID: getDetailsText(item)}) }}
                         </template>
 
                         <template slot="no-data">
@@ -278,6 +278,9 @@ export default {
             }
 
             return actionColors[action]
+        },
+        getDetailsText(item){
+            return item.resourceData.Spec.Name ? item.resourceData.Spec.Name : item.details
         },
         performSearch() {
             this.pageNumber = 1
