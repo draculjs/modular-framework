@@ -280,7 +280,7 @@ export default {
             return actionColors[action]
         },
         getDetailsText(item){
-            return item.resourceData.Spec.Name ? item.resourceData.Spec.Name : item.details
+            return item.resourceData?.Spec?.Name || item.details
         },
         performSearch() {
             this.pageNumber = 1
