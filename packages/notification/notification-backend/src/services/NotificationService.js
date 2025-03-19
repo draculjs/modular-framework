@@ -47,7 +47,6 @@ export const createNotificationService = async (
         newNotification.id = newNotification._id;
 
         await newNotification.save()
-        winston.info("Notificacion creada con exito: " + newNotification.id);
         pubsub.publish('notification', newNotification)
         return newNotification
     }catch (e) {
