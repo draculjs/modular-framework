@@ -161,7 +161,6 @@ const initRoles = async (roles) => {
 
     //Fetch roles already created
     let rolesAlreadyPersistedFound = await fetchRolesInName(rolesName)
-    DefaultLogger.info(`"rolesFound: "${(JSON.stringify(rolesAlreadyPersistedFound, null, 2))}"`)
 
     //Filter roles created (avoid duplicate)
     let rolesToCreate

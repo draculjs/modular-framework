@@ -34,11 +34,11 @@ const i18nMessages = {
                 delete: 'Delete',
                 restart: 'Reiniciar',
                 detailMessages: {
-                    create: 'A resource with ID "{resourceID}" was created',
-                    read: 'A resource with ID "{resourceID}" was visualized',
-                    update: 'A resource with ID "{resourceID}" was updated',
-                    delete: 'A resource with ID "{resourceID}" was deleted',
-                    restart: 'Se ha reiniciado un recurso con ID "{resourceID}',
+                    create: 'The resource “{resourceID}” has been created',
+                    read: 'The resource “{resourceID}” has been readed',
+                    update: 'The resource “{resourceID}” has been updated',
+                    delete: 'The resource “{resourceID}” has been deleted',
+                    restart: 'The resource “{resourceID}” has been restarted',
                 },
 
                 changes: {
@@ -101,11 +101,11 @@ const i18nMessages = {
                 delete: 'Eliminar',
                 restart: 'Reiniciar',
                 detailMessages: {
-                    create: 'Se ha creado un recurso con ID "{resourceID}"',
-                    read: 'Se ha visualizado un recurso con ID "{resourceID}"',
-                    update: 'Se ha modificado un recurso con ID "{resourceID}"',
-                    delete: 'Se ha eliminado un recurso con ID "{resourceID}"',
-                    restart: 'Se ha reiniciado un recurso con ID "{resourceID}',
+                    create: 'Se ha creado el recurso "{resourceID}"',
+                    read: 'Se ha visualizado el recurso "{resourceID}"',
+                    update: 'Se ha modificado el recurso "{resourceID}"',
+                    delete: 'Se ha eliminado el recurso "{resourceID}"',
+                    restart: 'Se ha reiniciado el recurso "{resourceID}',
                 },
 
                 changes: {
@@ -168,11 +168,11 @@ const i18nMessages = {
                 delete: 'Eliminar',
                 restart: 'Reiniciar',
                 detailMessages: {
-                    create: 'Se ha creado un recurso con ID "{resourceID}"',
-                    read: 'Se ha visualizado un recurso con ID "{resourceID}"',
-                    update: 'Se ha modificado un recurso con ID "{resourceID}"',
-                    delete: 'Se ha eliminado un recurso con ID "{resourceID}"',
-                    restart: 'Se ha reiniciado un recurso con ID "{resourceID}',
+                    create: 'Se ha creado el recurso "{resourceID}"',
+                    read: 'Se ha visualizado el recurso "{resourceID}"',
+                    update: 'Se ha modificado el recurso "{resourceID}"',
+                    delete: 'Se ha eliminado el recurso "{resourceID}"',
+                    restart: 'Se ha reiniciado el recurso "{resourceID}',
                 },
 
                 changes: {
