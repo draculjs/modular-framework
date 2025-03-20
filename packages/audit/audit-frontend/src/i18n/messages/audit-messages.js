@@ -105,7 +105,7 @@ const i18nMessages = {
                     read: 'Se ha visualizado el recurso "{resourceID}"',
                     update: 'Se ha modificado el recurso "{resourceID}"',
                     delete: 'Se ha eliminado el recurso "{resourceID}"',
-                    restart: 'Se ha reiniciado el recurso "{resourceID}',
+                    restart: 'Se ha reiniciado el recurso "{resourceID}"',
                 },
 
                 changes: {
@@ -161,24 +161,24 @@ const i18nMessages = {
             actionFor: 'Ação Para',
             action: 'Ação',
 
-            actions: {
-                create: 'Crear',
-                read: 'Visualizar',
+            ações: {
+                create: 'Criar',
+                read: 'Display',
                 update: 'Modificar',
-                delete: 'Eliminar',
+                delete: 'Excluir',
                 restart: 'Reiniciar',
                 detailMessages: {
-                    create: 'Se ha creado el recurso "{resourceID}"',
-                    read: 'Se ha visualizado el recurso "{resourceID}"',
-                    update: 'Se ha modificado el recurso "{resourceID}"',
-                    delete: 'Se ha eliminado el recurso "{resourceID}"',
-                    restart: 'Se ha reiniciado el recurso "{resourceID}"',
+                    create: 'O recurso “{resourceID}” foi criado',
+                    read: 'O recurso “{resourceID}” foi exibido',
+                    update: 'O recurso “{resourceID}” foi modificado',
+                    delete: 'O recurso “{resourceID}” foi excluído',
+                    restart: 'O recurso “{resourceID}” foi reiniciado',
                 },
 
                 changes: {
                     field: 'Campo',
-                    oldValue: 'Valor anterior',
-                    newValue: 'Valor nuevo',
+                    oldValue: 'Valor antigo',
+                    newValue: 'Novo valor',
                 },
             },
 
