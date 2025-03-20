@@ -70,19 +70,18 @@ var createNotificationService = exports.createNotificationService = /*#__PURE__*
           _context.next = 13;
           return newNotification.save();
         case 13:
-          _loggerBackend.DefaultLogger.info("Notificacion creada con exito: " + newNotification.id);
           _PubSub.pubsub.publish('notification', newNotification);
           return _context.abrupt("return", newNotification);
-        case 18:
-          _context.prev = 18;
+        case 17:
+          _context.prev = 17;
           _context.t0 = _context["catch"](0);
           _loggerBackend.DefaultLogger.error("Error al crear la notificacion. Error: ", _context.t0);
           throw _context.t0;
-        case 22:
+        case 21:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 18]]);
+    }, _callee, null, [[0, 17]]);
   }));
   return function createNotificationService(_x, _x2, _x3, _x4, _x5) {
     return _ref.apply(this, arguments);
