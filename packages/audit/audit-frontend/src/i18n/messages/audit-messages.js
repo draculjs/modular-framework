@@ -172,7 +172,7 @@ const i18nMessages = {
                     read: 'Se ha visualizado el recurso "{resourceID}"',
                     update: 'Se ha modificado el recurso "{resourceID}"',
                     delete: 'Se ha eliminado el recurso "{resourceID}"',
-                    restart: 'Se ha reiniciado el recurso "{resourceID}',
+                    restart: 'Se ha reiniciado el recurso "{resourceID}"',
                 },
 
                 changes: {
