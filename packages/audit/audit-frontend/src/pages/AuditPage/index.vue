@@ -279,8 +279,21 @@ export default {
 
             return actionColors[action]
         },
-        getDetailsText(item){
-            return item.resourceData?.Spec?.Name || item.details
+        getDetailsText(audit){
+
+            console.log(`audit: ${JSON.stringify(audit, null, 2)}`)
+            console.log(`typeof resource data: ${typeof audit.resourceData}`)
+
+            if (audit && audit.resourceData && audit.resourceData !== '' && typeof audit.resourceData === 'string' && audit.resourceData !== null && audit.resourceData !== undefined) {
+                try {
+                    audit.resourceData = JSON.parse(audit.resourceData)
+                } catch {
+                    console.error('Invalid JSON format in resourceData')
+                    return []
+                }
+            }
+            
+            return audit.resourceData?.Spec?.Name || audit.details
         },
         performSearch() {
             this.pageNumber = 1
