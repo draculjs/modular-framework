@@ -293,7 +293,7 @@ export default {
                 }
             }
             
-            return audit.resourceData?.Spec?.Name || audit.details
+            return audit.resourceName || audit.resourceData?.Spec?.Name || audit.details
         },
         performSearch() {
             this.pageNumber = 1

@@ -22,6 +22,7 @@ query paginateAudit( $pageNumber: Int, $itemsPerPage:Int, $search: String, $filt
                 newValue
             }
         resourceData
+        resourceName
         }
     }
 }

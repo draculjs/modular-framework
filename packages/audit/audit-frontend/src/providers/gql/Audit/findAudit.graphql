@@ -14,5 +14,6 @@ query findAudit($id:ID!){
             newValue
         }
         resourceData
+        resourceName
     }
 }

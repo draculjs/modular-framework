@@ -41,10 +41,10 @@ class AuditProvider {
         })
     }
 
-    createAudit(action, entity, details, changes, resourceData){
+    createAudit(action, entity, details, changes, resourceData, resourceName){
         return this.getGraphqlClient().mutate({
             mutation: require('./gql/Audit/createAudit.graphql'),
-            variables: {action, entity, details, changes, resourceData},
+            variables: {action, entity, details, changes, resourceData, resourceName},
             fetchPolicy: "no-cache"
         }) 
     }
