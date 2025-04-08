@@ -16,7 +16,8 @@ const AuditSchema = new Schema({
     entity: { type: String, required: true, unique: false, index: false },
     details: { type: String, required: false, unique: false, index: false },
     changes: { type: [ChangeSchema], required: false, unique: false, index: false },
-    resourceData: { type: Object, required: false}
+    resourceData: { type: Object, required: false},
+    resourceName: { type: String, required: false, unique: false, index: false },
 }, { timestamps: true })
 
 AuditSchema.plugin(mongoosePaginate)

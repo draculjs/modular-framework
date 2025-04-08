@@ -3,9 +3,10 @@ mutation createAudit(
     $entity: String!,
     $details: String,
     $changes: [ChangesInput],
-    $resourceData: JSON
+    $resourceData: JSON,
+    $resourceName: String,
 ) {
-    createAudit(action: $action, entity: $entity, details: $details, changes: $changes, resourceData: $resourceData) {
+    createAudit(action: $action, entity: $entity, details: $details, changes: $changes, resourceData: $resourceData, resourceName: $resourceName) {
         id
         user {
             username
@@ -19,5 +20,6 @@ mutation createAudit(
             newValue
         }
         resourceData
+        resourceName
     }
 }
