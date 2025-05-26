@@ -28,7 +28,7 @@
           @update:items-per-page="fetch"
       >
 
-        <template v-slot:item.isPublic="{ item }">
+        <template v-slot:[`item.isPublic`]="{ item }">
           <div v-if="item.isPublic">
             <v-icon color="success">check_circle</v-icon>
           </div>
@@ -45,27 +45,27 @@
           <div class="text-xs-center" v-t="'common.loading'"></div>
         </template>
 
-        <template v-slot:item.size="{item}">
+        <template v-slot:[`item.size`]="{item}">
           {{ item.size.toFixed(2) }} Mb
         </template>
 
-        <template v-slot:item.type="{item}">
+        <template v-slot:[`item.type`]="{item}">
           {{ $t(`media.file.${item.type}`) }}
         </template>
 
-        <template v-slot:item.createdAt="{item}">
+        <template v-slot:[`item.createdAt`]="{item}">
           {{ getDateTimeFormat(item.createdAt, true) }}
         </template>
 
-        <template v-slot:item.lastAccess="{item}">
+        <template v-slot:[`item.lastAccess`]="{item}">
           {{ getDateTimeFormat(item.lastAccess, true) }}
         </template>
 
-        <template v-slot:item.action="{ item }">
+        <template v-slot:[`item.action`]="{ item }">
           <show-button @click="$emit('show', item)"/>
           <edit-button
               v-if="$store.getters.hasPermission('FILE_UPDATE_ALL') ||
-              ($store.getters.hasPermission('FILE_UPDATE_OWN') && item.createdBy.user.id === $store.getters.me.id)"
+              ($store.getters.hasPermission('FILE_UPDATE_OWN') && item.createdBy.user === $store.getters.me.id)"
               @click="$emit('update', item)"
           />
           <delete-button
