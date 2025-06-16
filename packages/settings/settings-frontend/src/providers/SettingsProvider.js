@@ -1,11 +1,31 @@
+/**
+ * @typedef {Object} UploadFileResponseData
+ * @prop {string} url
+ * 
+ * @typedef {Object} UploadFileResponse
+ * @prop {UploadFileResponseData} data
+ * 
+ * @typedef {Object} UploadProvider
+ * @property {function(File): UploadFileResponse} uploadFile
+ */
+
 class SettingsProvider {
 
     constructor() {
         this.gqlc = null
+        this.uploadProvider = null
     }
 
     setGqlc(gqlc) {
         this.gqlc = gqlc
+    }
+
+    /**
+     * 
+     * @param {UploadProvider} uploadProvider 
+     */
+    setUploadProvider(uploadProvider) {
+        this.uploadProvider = uploadProvider
     }
 
 

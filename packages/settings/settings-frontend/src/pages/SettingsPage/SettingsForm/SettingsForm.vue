@@ -73,6 +73,13 @@
         >
         </v-combobox>
 
+        <!--fileSetting-->
+        <v-file-input v-if="item.type === 'file'"
+          prepend-icon="attach_file" :name="item.key"
+          v-model="form.value"
+          :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
+          color="secondary"
+        ></v-file-input>
       </v-col>
     </v-row>
   </v-form>
