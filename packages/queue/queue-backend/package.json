@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-backend",
-  "version": "1.35.9",
+  "version": "1.36.0",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "publishConfig": {
@@ -30,7 +30,7 @@
   "dependencies": {
     "@dracul/logger-backend": "^1.35.0",
     "@dracul/mongoose-queue": "^1.35.0",
-    "@dracul/user-backend": "^1.35.9",
+    "@dracul/user-backend": "^1.36.0",
     "graphql-type-json": "^0.3.2"
   },
   "peerDependencies": {
