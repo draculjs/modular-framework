@@ -52,21 +52,27 @@ export default {
     }
   },
   methods: {
-    update() {
+    async update() {
       if (this.$refs.form.validate()) {
-        this.loading = true
-        SettingsProvider.settingValueUpdateByKey(this.item.key, this.getValue, this.getValueList).then(r => {
-              this.$store.dispatch('loadSettings')
-              this.$emit('itemUpdated', r.data.settingValueUpdateByKey)
-              this.$emit('close')
-            }
-        ).catch(error => {
+        try {
+          this.loading = true
+          const { type } = this.item
+          if(type === 'file'){
+            const { data: {fileUpload} } = await SettingsProvider.uploadProvider.uploadFile(this.form.value)
+            this.form.value = fileUpload.url
+          }
+          const { data: { settingValueUpdateByKey } } = await SettingsProvider.settingValueUpdateByKey(this.item.key, this.getValue, this.getValueList)
+          this.$store.dispatch('loadSettings')
+          this.$emit('itemUpdated', settingValueUpdateByKey)
+          this.$emit('close')
+        } catch(error) {
           let clientError = new ClientError(error)
           this.inputErrors = clientError.inputErrors
           this.errorMessage = clientError.i18nMessage
-        }).finally(() => this.loading = false)
+        } finally {
+          this.loading = false
+        }
       }
-
     }
   },
 }

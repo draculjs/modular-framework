@@ -15,7 +15,7 @@ const SettingsSchema = new Schema({
         pt: {type: String, required: false},
     },
     group: {type: String, required: true},
-    type: {type: String, default: "string", enum: ['string','number','enum','boolean', 'password', 'dynamic','stringList','numberList', 'enumList'], required: false, unique: false},
+    type: {type: String, default: "string", enum: ['string','number','enum','boolean', 'password', 'dynamic','stringList','numberList', 'enumList', 'file'], required: false, unique: false},
     options: [{type: String}],
     regex: {type: String},
     entity: {type: String, required: false},

@@ -72,6 +72,14 @@ const settings = [
         valueList: [],
         group: 'List',
         label: {en: 'String List', es: 'String List', pt: 'String List'},
+    },
+
+    {
+        key: 'fileKey',
+        type: 'file',
+        value: '',
+        group: 'File',
+        label: {en: 'File Setting', es: 'archivo configurable', pt: 'File Setting'}
     }
 ]
 

@@ -18,7 +18,10 @@ setGraphQlClientToProviders(apolloClient)
 customizationProvider.setGqlc(apolloClient)
 notificationProvider.setGqlc(apolloClient)
 notificationProvider.setGqlcWs(apolloClient)
+
 SettingsProvider.setGqlc(apolloClient)
+//set uploadProvider at SettingsProvider from @dracul/media-frontend
+SettingsProvider.setUploadProvider(UploadProvider)
 
 UploadProvider.setGqlc(apolloClient)
 UserStorageProvider.setGqlc(apolloClient)
