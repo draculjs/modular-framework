@@ -1,4 +1,4 @@
-import { updateByRelativePath } from "../services/FileService"
+import FileService from "../services/FileService";
 
 
 export default function (req, res, next) {
@@ -7,7 +7,7 @@ export default function (req, res, next) {
         // Elimino la primera barra para poder comparar contra el campo 'relativePath' del modelo
         let uri_dec = decodeURIComponent(req.originalUrl).replace('/', '');
         if(!req.headers.range){
-            updateByRelativePath(uri_dec)
+            FileService.updateByRelativePath(uri_dec)
         }
 
         next()

@@ -1,5 +1,5 @@
 
-import { createFile, updateFile, deleteFile, findFile, fetchFiles, paginateFiles } from '../../services/FileService'
+import FileService from '../../services/FileService'
 
 import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 
@@ -23,7 +23,7 @@ export default {
             let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
-            return findFile(id, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
+            return FileService.findFile(id, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
         },
         filePaginate: (_, { input }, { user, rbac }) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
@@ -32,7 +32,7 @@ export default {
             let allFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_ALL)
             let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
-            return paginateFiles(input,  user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
+            return FileService.paginateFiles(input,  user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
         },
     },
     Mutation: {
@@ -45,7 +45,7 @@ export default {
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
 
-            return await updateFile(user, file, input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
+            return await FileService.updateFile(user, file, input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
 
         },
         fileDelete: (_, { id }, { user, rbac }) => {
@@ -56,7 +56,7 @@ export default {
             let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
-            return deleteFile(id, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
+            return FileService.deleteFile(id, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
         },
     }
 
