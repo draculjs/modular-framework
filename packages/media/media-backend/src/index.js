@@ -1,6 +1,6 @@
 import { resolvers, types } from './graphql'
 
-import * as FileService from './services/FileService'
+import FileService from './services/FileService'
 import * as UserStorageService from './services/UserStorageService'
 
 import { userStorageCheckAndCreate } from './services/UserStorageService'

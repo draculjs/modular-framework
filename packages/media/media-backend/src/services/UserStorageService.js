@@ -34,7 +34,7 @@ export const getUserStoragesByUsedPercentage = async (usedPercentage) => {
 
 export const findUserStorageByUser = async function (user) {
     try {
-        return await userStorage.findOne({ user: user.id }).populate('user');
+        return (await userStorage.findOne({ user: user.id }).populate('user').exec())
     } catch (error) {
         winston.error(`An error happened at the findUserStorageByUser function: ${error}`);
     }

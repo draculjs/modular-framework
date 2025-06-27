@@ -1,6 +1,5 @@
 import { FILE_SHOW_ALL, FILE_SHOW_OWN, FILE_CREATE, FILE_SHOW_PUBLIC, FILE_UPDATE_OWN, FILE_UPDATE_ALL } from "../../permissions/File";
-import { findFile, paginateFiles, updateFileRest } from "../../services/FileService";
-import { fileUpload } from "../../services/UploadService";
+import FileService from "../../services/FileService";
 import FileDTO from '../../DTOs/FileDTO.js'
 
 import { DefaultLogger as winston } from '@dracul/logger-backend';
@@ -12,13 +11,14 @@ import multer from 'multer';
 const upload = multer()
 const router = express.Router()
 
+
 router.get('/file/:id', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL, FILE_SHOW_PUBLIC, FILE_SHOW_OWN])], async function (req, res) {
     try {
         const userCanSeeAllFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
         const userCanSeeItsOwnFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
         const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
-        const file = await findFile(req.params.id, req.user.id, userCanSeeAllFiles, userCanSeeItsOwnFiles, userCanSeePublicFiles)
+        const file = await FileService.findFile(req.params.id, req.user.id, userCanSeeAllFiles, userCanSeeItsOwnFiles, userCanSeePublicFiles)
 
         if (!file) {
             res.status(404).send('File not found')
@@ -38,7 +38,7 @@ router.get('/file', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL,
         const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
         const hideSensitiveData = true
-        const paginatedFiles = await paginateFiles(
+        const paginatedFiles = await FileService.paginateFiles(
             req.query, req.user.id, userCanSeeAllFiles,
             userCanSeeItsOwnFiles, userCanSeePublicFiles,
             hideSensitiveData
@@ -70,7 +70,7 @@ router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE])
             encoding: req.file.encoding,
         }
 
-        const fileUploadingResult = await fileUpload(req.user, file, expirationTime, isPublic, description, tags)
+        const fileUploadingResult = await FileService.fileUpload(req.user, file, expirationTime, isPublic, description, tags)
         res.status(201).send(fileUploadingResult)
     } catch (error) {
         console.error(`An error happened at the file uploading endpoint: '${error}'`)
@@ -80,6 +80,25 @@ router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE])
             res.status(409).send("An error happened when we tried to upload the file")
         }
     }
+})
+
+router.put('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPDATE_ALL, FILE_UPDATE_OWN]), upload.single('file')], async function (req, res) {
+    if ( !req.params.id ) throw new Error("You must provide the ID of the file you want to update")
+    if (!req.file) res.status(400).json({ message: 'File was not provided' })
+    
+    const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
+    const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
+    const permissionType = (userCanSeeAllFiles) ? FILE_SHOW_ALL : (userCanSeeItsOwnFiles) ? FILE_SHOW_OWN : null
+
+    const file = {
+        filename: req.file.originalname,
+        mimetype: req.file.mimetype,
+        createReadStream: () => Readable.from(req.file.buffer),
+        encoding: req.file.encoding,
+    }
+
+    const updateFileResult = FileService.updateFileRest(req.params.id, req.user, permissionType, file, req.body)
+    if (updateFileResult) res.status(200).send('File updated')
 })
 
 
@@ -99,7 +118,7 @@ router.patch('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPD
         const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
         const permissionType = (userCanSeeAllFiles) ? FILE_SHOW_ALL : (userCanSeeItsOwnFiles) ? FILE_SHOW_OWN : null
 
-        const updateFileResult = await updateFileRest(req.params.id, req.user, permissionType, { description, expirationDate, tags, isPublic })
+        const updateFileResult = await FileService.updateFileMetadata(req.params.id, req.user, permissionType, { description, expirationDate, tags, isPublic })
         if (!updateFileResult) {
             throw new Error("An error happened: we didnt get an update file operation's result")
         } else {

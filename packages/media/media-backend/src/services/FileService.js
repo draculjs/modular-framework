@@ -1,351 +1,371 @@
-import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
-import File from '../models/FileModel';
-import FileDTO from '../DTOs/FileDTO';
-import { DefaultLogger as winston } from '@dracul/logger-backend';
-import { GroupService } from '@dracul/user-backend';
-import { storeFile } from '@dracul/common-backend';
-import { UserInputError } from 'apollo-server-errors';
-import dayjs from 'dayjs';
-import fs from 'fs';
+import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService'
+import { FILE_SHOW_ALL, FILE_SHOW_OWN } from '../permissions/File'
+import { DefaultLogger as winston } from '@dracul/logger-backend'
+import { GroupService } from '@dracul/user-backend'
+import { storeFile } from '@dracul/common-backend'
+import File from '../models/FileModel'
+import FileDTO from '../DTOs/FileDTO'
+import dayjs from 'dayjs'
+import fs from 'fs'
 
-const customParseFormat = require('dayjs/plugin/customParseFormat');
-dayjs.extend(customParseFormat);
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 
-export const findFile = async function (id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
-    try {
-        if (!id) throw new Error({ message: 'id field is required' });
-        const userGroups = await GroupService.fetchMyGroups(userId);
-        const file = await File.findOne({
-            _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
-        }).populate('createdBy.user');
+class FileService {
 
-        return file;
-    } catch (error) {
-        winston.error(`An error happened at the findFile service: '${error}'`);
-        throw error;
-    }
-};
+    async findFile(id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+        try {
+            if (!id) throw new Error('id field is required')
+            const userGroups = await GroupService.fetchMyGroups(userId)
+            const file = await File.findOne({
+                _id: id,
+                ...this._filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
+            }).populate('createdBy.user')
 
-export const fetchFiles = async function (expirationDate = null) {
-    function filter(expirationDate) {
-        let operationsRange = {};
-        let dateSinceForQuery = null;
-        let dateUntilForQuery = null;
-
-        if (expirationDate) {
-            dateSinceForQuery = new Date(expirationDate);
-            dateSinceForQuery.setHours(0);
-            dateSinceForQuery.setMinutes(0);
-
-            dateUntilForQuery = new Date(expirationDate);
-            dateUntilForQuery.setHours(23);
-            dateUntilForQuery.setMinutes(59);
-
-            operationsRange = {
-                $and: [
-                    { createdAt: { $gte: dateSinceForQuery } },
-                    { createdAt: { $lte: dateUntilForQuery } },
-                ],
-            };
-        }
-        return operationsRange;
-    }
-
-    const query = filter(expirationDate);
-    return await File.find(query).populate('createdBy.user');
-};
-
-function filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
-    let q = {};
-
-    if (allFilesAllowed) return q;
-
-    if (ownFilesAllowed && publicAllowed) {
-        q = { $or: [{ 'createdBy.user': userId }, { 'isPublic': true }, { 'groups': { $in: userGroups } }, { 'users': { $in: [userId] } }] };
-    } else if (ownFilesAllowed) {
-        q = { $or: [{ 'createdBy.user': userId }, { 'groups': { $in: userGroups } }, { 'users': { $in: [userId] } }] };
-    } else if (publicAllowed) {
-        q = { $or: [{ 'isPublic': true }, { 'groups': { $in: userGroups } }, { 'users': { $in: [userId] } }] };
-    } else {
-        throw new Error("User doesn't have permissions for reading files");
-    }
-
-    return q;
-}
-
-export const paginateFiles = async function (
-    { pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false },
-    userId = null,
-    allFilesAllowed = false,
-    ownFilesAllowed = false,
-    publicAllowed = false,
-    hideSensitiveData = false
-) {
-    function qs(search) {
-        let qs = {};
-        if (search) {
-            qs = {
-                $or: [
-                    { filename: { $regex: search, $options: 'i' } },
-                ]
-            };
-        }
-        return qs;
-    }
-
-    function getSort(orderBy, orderDesc) {
-        return orderBy ? (orderDesc ? '-' : '') + orderBy : null;
-    }
-
-    function filterValues(filters) {
-        let qsFilter = {};
-
-        if (filters) {
-            filters.forEach(({ field, operator, value }) => {
-                switch (field) {
-                    case 'dateFrom':
-                        if (value) {
-                            let dayBefore = dayjs(value).isValid() && dayjs(value);
-                            qsFilter.createdAt = { [operator]: dayBefore.$d };
-                        }
-                        break;
-                    case 'dateTo':
-                        if (value) {
-                            let dayAfter = dayjs(value).isValid() && dayjs(value).add(1, 'day');
-                            qsFilter.createdAt = { ...qsFilter.createdAt, [operator]: dayAfter.$d };
-                        }
-                        break;
-                    case 'filename':
-                        value && (qsFilter.filename = { [operator]: value, $options: "i" });
-                        break;
-                    case 'createdBy.user':
-                        value && (qsFilter["createdBy.user"] = { [operator]: value });
-                        break;
-                    case 'type':
-                        value && (qsFilter.type = { [operator]: value, $options: "i" });
-                        break;
-                    case 'minSize':
-                        value && (qsFilter.size = { [operator]: parseFloat(value) });
-                        break;
-                    case 'maxSize':
-                        if (value) {
-                            qsFilter.size = { ...qsFilter.size, [operator]: parseFloat(value) };
-                        }
-                        break;
-                    case 'isPublic':
-                        value && (qsFilter.isPublic = { [operator]: value });
-                        break;
-                    case 'groups':
-                        value && (qsFilter.groups = { [operator]: value });
-                        break;
-                    case 'users':
-                        value && (qsFilter.users = { [operator]: value });
-                        break;
-                    default:
-                        break;
-                }
-            });
-            return qsFilter;
+            return file
+        } catch (error) {
+            winston.error(`FileService.findFile error: ${error}`)
+            throw error
         }
     }
 
-    function hideSensitiveDataFromPaginatedFiles(filePaginationObject) {
-        filePaginationObject.items = filePaginationObject.items.map(item => new FileDTO(item));
-        return filePaginationObject;
+    async fetchFiles(expirationDate = null) {
+        const query = this._buildExpirationFilter(expirationDate)
+        return await File.find(query).populate('createdBy.user')
     }
 
-    const userGroups = await GroupService.fetchMyGroups(userId);
-    const query = {
-        ...qs(search),
-        ...filterValues(filters),
-        ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
-    };
+    async paginateFiles(
+        { pageNumber = 1, itemsPerPage = 5, search = null, filters, orderBy = null, orderDesc = false },
+        userId = null,
+        allFilesAllowed = false,
+        ownFilesAllowed = false,
+        publicAllowed = false,
+        hideSensitiveData = false
+    ) {
+        const userGroups = await GroupService.fetchMyGroups(userId)
+        const query = {
+            ...this._buildSearchQuery(search),
+            ...this._buildFilterQuery(filters),
+            ...this._filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)
+        }
 
-    const populate = ['createdBy.user.username'];
-    const sort = getSort(orderBy, orderDesc);
-    const params = { page: pageNumber, limit: itemsPerPage, populate, sort };
+        const populate = ['createdBy.user.username']
+        const sort = this._getSortOption(orderBy, orderDesc)
+        const params = { page: pageNumber, limit: itemsPerPage, populate, sort }
 
-    const filePaginationResult = await File.paginate(query, params);
-    const filePaginationObject = { items: filePaginationResult.docs, totalItems: filePaginationResult.totalDocs, page: filePaginationResult.page };
+        const filePaginationResult = await File.paginate(query, params)
+        const filePaginationObject = {
+            items: filePaginationResult.docs,
+            totalItems: filePaginationResult.totalDocs,
+            page: filePaginationResult.page
+        }
 
-    return hideSensitiveData ? hideSensitiveDataFromPaginatedFiles(filePaginationObject) : filePaginationObject;
-};
-
-export const updateFile = async function (authUser, newFile, { id, description, tags, expirationDate, isPublic, groups, users }, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
-    async function updateDocFile() {
-        const userGroups = await GroupService.fetchMyGroups(userId);
-
-        const fileUpdateResult = await File.findOneAndUpdate(
-            { _id: id, ...filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups) },
-            { description, tags, expirationDate, isPublic, groups, users },
-            { new: true, runValidators: true, context: 'query' }
-        ).populate('createdBy.user.username');
-
-        return fileUpdateResult;
+        return hideSensitiveData ? this._applySensitiveDataFilter(filePaginationObject) : filePaginationObject
     }
 
-    async function updateFileWithNewOne(fileToUpdate, newFile) {
-        const newFileExtension = '.' + (await newFile).filename.split('.').pop();
-        if (fileToUpdate.extension !== newFileExtension) throw new Error('The file update could not be made: the file extensions differ');
+    async updateFile(authUser, newFile, { id, description, tags, expirationDate, isPublic, groups, users }, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+        const updatedFile = await this._updateFileDocument(
+            id, 
+            { description, tags, expirationDate, isPublic, groups, users }, 
+            userId,
+            allFilesAllowed,
+            ownFilesAllowed,
+            publicAllowed
+        )
 
-        const relativePath = fileToUpdate.relativePath;
-        const { createReadStream } = await newFile;
+        if (newFile) {
+            await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
+        }
 
-        await storeFile(createReadStream(), relativePath);
-
-        fileToUpdate.fileReplaces.push({ user: userId, date: dayjs(), username: authUser.username });
-        await fileToUpdate.save();
-
-        console.log(`updateFileWithNewOne done at path '${relativePath}': '${fileToUpdate.fileReplaces[fileToUpdate.fileReplaces.length - 1]}'`);
+        return updatedFile
     }
 
-    const fileToUpdate = await updateDocFile();
-    if (newFile) await updateFileWithNewOne(fileToUpdate, newFile);
+    async updateFileRest(id, user, permissionType, newFile) {
+        try {
+            const fileDocument = await this._getFileForUpdate(id, user, permissionType)
+            if (fileDocument) {
+                await this._replaceFileContent(fileDocument, newFile, user.id, user.username)
+            }
+        } catch (error) {
+            winston.error(`FileService.updateFileRest error: ${error}`)
+            throw error
+        }
+    }
 
-    return fileToUpdate;
-};
+    async updateFileMetadata(id, user, permissionType, { description, expirationDate, tags, isPublic }) {
+        if (!description && !expirationDate && !tags && !isPublic) {
+            throw new Error("File fields to update were not provided")
+        }
 
-export const updateFileRest = async function (id, user, permissionType, { description, expirationDate, tags, isPublic }) {
-    try {
-        if (!description && !expirationDate && !tags && !isPublic) throw new Error("File fields to update were not provided");
+        const userProvidedDate = expirationDate ? dayjs(expirationDate, 'DD/MM/YYYY') : null
+        if (userProvidedDate && !userProvidedDate.isValid()) {
+            throw new Error('Invalid date format')
+        }
 
-        const userProvidedDate = expirationDate ? dayjs(expirationDate, 'DD/MM/YYYY') : null;
-        if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format');
-
-        const userStorage = await findUserStorageByUser(user);
-        const formattedExpirationDate = userProvidedDate ? userProvidedDate.format('YYYY/MM/DD') : null;
-        const timeDiffExpirationDate = validateExpirationDate(formattedExpirationDate);
+        const userStorage = await findUserStorageByUser(user)
+        const formattedExpirationDate = userProvidedDate ? userProvidedDate.format('YYYY/MM/DD') : null
+        const timeDiffExpirationDate = this._validateExpirationDate(formattedExpirationDate)
 
         if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
-            throw new Error(`File expiration cannot be longer than max user expiration time per file: (${userStorage.fileExpirationTime} days)`);
+            throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
         }
 
         const updatedFile = await File.findOneAndUpdate(
-            { _id: id, ...filterByPermissions(permissionType, user.id) },
+            { _id: id, ...this._getPermissionFilter(permissionType, user.id) },
             { $set: { description, expirationDate: formattedExpirationDate, tags, isPublic } },
             { new: true }
-        );
+        )
 
-        if (!updatedFile) throw new Error(`file not found with id ${id}`);
-        return updatedFile;
-    } catch (error) {
-        winston.error(`An error happened at the updateFileRest service: '${error}'`);
+        if (!updatedFile) throw new Error(`File not found with id ${id}`)
+        return updatedFile
     }
-};
 
-export const updateByRelativePath = async function (relativePath) {
-    try {
-        return await File.findOneAndUpdate(
-            { relativePath: relativePath },
-            { lastAccess: Date.now(), '$inc': { hits: 1 } },
-            { runValidators: true, context: 'query', new: true }
-        );
-    } catch (error) {
-        console.log(`An error happened at updateByRelativePath: '${error}'`);
-        throw error;
+    async updateByRelativePath(relativePath) {
+        try {
+            return await File.findOneAndUpdate(
+                { relativePath: relativePath },
+                { lastAccess: Date.now(), '$inc': { hits: 1 } },
+                { runValidators: true, context: 'query', new: true }
+            )
+        } catch (error) {
+            winston.error(`FileService.updateByRelativePath error: ${error}`)
+            throw error
+        }
     }
-};
 
-export async function deleteFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
-    try {
-        const fileToDelete = await findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed);
-        if (!fileToDelete) throw new Error('File not found');
+    async deleteFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+        try {
+            const file = await this.findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
+            if (!file) throw new Error('File not found')
 
-        await fs.promises.unlink(fileToDelete.relativePath);
-        winston.info('Se eliminó el archivo ' + fileToDelete.relativePath);
+            await fs.promises.unlink(file.relativePath)
+            await File.deleteOne({ _id: id })
+            await updateUserUsedStorage(userId, -file.size)
 
-        await File.deleteOne({ _id: id });
-        await updateUserUsedStorage(userId, -fileToDelete.size);
-
-        return ({ id: id, success: true });
-    } catch (error) {
-        winston.error(`An error happened at the deleteFile function: '${error}'`);
+            winston.info(`Deleted file: ${file.relativePath}`)
+            return { id: id, success: true }
+        } catch (error) {
+            winston.error(`FileService.deleteFile error: ${error}`)
+            throw error
+        }
     }
-};
 
-export const findAndDeleteExpiredFiles = async function () {
-    try {
-        const docs = await File.aggregate([
-            {
-                $match: {
-                    expirationDate: { $eq: null }
-                }
-            },
-            {
-                $lookup: {
-                    from: "userstorages",
-                    localField: "createdBy.user",
-                    foreignField: "user",
-                    as: "userStorage",
+    async findAndDeleteExpiredFiles() {
+        try {
+            const docs = await File.aggregate([
+                { $match: { expirationDate: { $eq: null } }},
+                {
+                    $lookup: {
+                        from: "userstorages",
+                        localField: "createdBy.user",
+                        foreignField: "user",
+                        as: "userStorage",
+                    }
                 },
-            },
-            {
-                $unwind: "$userStorage",
-            },
-            {
-                $addFields: {
-                    timeDiffInMillis: {
-                        $cond: [
-                            {
-                                $eq: ["$userStorage.deleteByLastAccess", true]
-                            },
-                            { $subtract: ["$$NOW", "$lastAccess"] },
-                            { $subtract: ["$$NOW", "$createdAt"] }
-                        ]
+                { $unwind: "$userStorage" },
+                {
+                    $addFields: {
+                        timeDiffInMillis: {
+                            $cond: [
+                                { $eq: ["$userStorage.deleteByLastAccess", true] },
+                                { $subtract: ["$$NOW", "$lastAccess"] },
+                                { $subtract: ["$$NOW", "$createdAt"] }
+                            ]
+                        }
+                    }
+                },
+                {
+                    $addFields: {
+                        timeDiffInDays: { $divide: ["$timeDiffInMillis", 24 * 60 * 60 * 1000] }
+                    }
+                },
+                {
+                    $match: {
+                        $expr: { $lte: ["$userStorage.fileExpirationTime", "$timeDiffInDays"] }
                     }
                 }
-            },
-            {
-                $addFields: {
-                    timeDiffInDays: { $divide: ["$timeDiffInMillis", 24 * 60 * 60 * 1000] }
-                }
-            },
-            {
-                $match: {
-                    $expr: { $lte: ["$userStorage.fileExpirationTime", "$timeDiffInDays"] },
-                }
+            ])
+
+            return this._deleteFilesBatch(docs)
+        } catch (error) {
+            winston.error(`FileService.findAndDeleteExpiredFiles error: ${error}`)
+            throw error
+        }
+    }
+
+    async findAndDeleteByExpirationDate() {
+        const expirationDate = new Date()
+        const docs = await this.fetchFiles(expirationDate)
+        return this._deleteFilesBatch(docs)
+    }
+
+
+    // Private methods
+
+
+    _filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
+        if (allFilesAllowed) return {}
+
+        if (ownFilesAllowed && publicAllowed) {
+            return { $or: [
+                { 'createdBy.user': userId }, 
+                { 'isPublic': true }, 
+                { 'groups': { $in: userGroups } }, 
+                { 'users': { $in: [userId] } }
+            ]}
+        } 
+        
+        if (ownFilesAllowed) {
+            return { $or: [
+                { 'createdBy.user': userId }, 
+                { 'groups': { $in: userGroups } }, 
+                { 'users': { $in: [userId] } }
+            ]}
+        } 
+        
+        if (publicAllowed) {
+            return { $or: [
+                { 'isPublic': true }, 
+                { 'groups': { $in: userGroups } }, 
+                { 'users': { $in: [userId] } }
+            ]}
+        } 
+        
+        throw new Error("User doesn't have permissions for reading files")
+    }
+
+    _buildExpirationFilter(expirationDate) {
+        if (!expirationDate) return {}
+
+        const start = new Date(expirationDate)
+        start.setHours(0, 0, 0)
+
+        const end = new Date(expirationDate)
+        end.setHours(23, 59, 59)
+
+        return { $and: [{ createdAt: { $gte: start } }, { createdAt: { $lte: end } }] }
+    }
+
+    _buildSearchQuery(search) {
+        return search ? { filename: { $regex: search, $options: 'i' } } : {}
+    }
+
+    _buildFilterQuery(filters) {
+        if (!filters) return {}
+
+        return filters.reduce((query, { field, operator, value }) => {
+            if (!value) return query
+
+            switch (field) {
+                case 'dateFrom':
+                    return { 
+                        ...query, 
+                        createdAt: { 
+                            ...query.createdAt, 
+                            [operator]: new Date(value) 
+                        } 
+                    }
+                case 'dateTo':
+                    return { 
+                        ...query, 
+                        createdAt: { 
+                            ...query.createdAt, 
+                            [operator]: dayjs(value).add(1, 'day').toDate() 
+                        } 
+                    }
+                case 'filename':
+                    return { ...query, filename: { [operator]: value, $options: "i" } }
+                case 'createdBy.user':
+                    return { ...query, 'createdBy.user': { [operator]: value } }
+                case 'type':
+                    return { ...query, type: { [operator]: value, $options: "i" } }
+                case 'minSize':
+                    return { ...query, size: { [operator]: parseFloat(value) } }
+                case 'maxSize':
+                    return { ...query, size: { ...query.size, [operator]: parseFloat(value) } }
+                case 'isPublic':
+                    return { ...query, isPublic: { [operator]: value } }
+                case 'groups':
+                    return { ...query, groups: { [operator]: value } }
+                case 'users':
+                    return { ...query, users: { [operator]: value } }
+                default:
+                    return query
             }
-        ]);
-
-        return deleteAndUnlinkFiles(docs);
-    } catch (error) {
-        winston.error(`An error happened at the findAndDeleteExpiredFiles function: '${error}'`);
-        throw error;
+        }, {})
     }
-};
 
-export async function findAndDeleteByExpirationDate() {
-    const expirationDate = new Date();
-    const docs = await fetchFiles(expirationDate);
+    _getSortOption(orderBy, orderDesc) {
+        return orderBy ? (orderDesc ? '-' : '') + orderBy : null
+    }
 
-    return deleteAndUnlinkFiles(docs);
-}
+    _applySensitiveDataFilter(paginationResult) {
+        return {...paginationResult, items: paginationResult.items.map(item => new FileDTO(item))}
+    }
 
-async function deleteAndUnlinkFiles(docs) {
-    if (!docs) throw new Error("You need to provide a non-empty docs parameter");
-    unlinkFiles(docs);
+    async _updateFileDocument(id, updateData, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
+        const userGroups = await GroupService.fetchMyGroups(userId)
+        
+        return await File.findOneAndUpdate(
+            { _id: id, ...this._filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups)},
+            updateData, { new: true, runValidators: true }
+        ).populate('createdBy.user.username')
+    }
 
-    const fileIds = docs.map(file => file._id);
-    return await File.deleteMany({ _id: { $in: fileIds } });
-}
+    async _replaceFileContent(file, newFile, userId, username) {
+        const newExtension = '.' + (await newFile).filename.split('.').pop()
+        if (file.extension !== newExtension) throw new Error('File extension mismatch during update')
 
-function unlinkFiles(files) {
-    try {
-        files.forEach(async function (file) {
-            await updateUserUsedStorage(file.createdBy.user, -file.size);
-            await fs.promises.unlink(file.relativePath);
-        });
-    } catch (error) {
-        winston.error(`An error happened at the unlinkFiles function: '${error}'`);
-        throw error;
+        await storeFile((await newFile).createReadStream(), file.relativePath)
+
+        file.fileReplaces.push({ 
+            user: userId, 
+            date: dayjs(), 
+            username 
+        })
+        
+        await file.save()
+    }
+
+    async _getFileForUpdate(id, user, permissionType) {
+        const showAll = permissionType === FILE_SHOW_ALL
+        const showOwn = permissionType === FILE_SHOW_OWN
+        
+        return await File.findOne({ _id: id, ...this._filterByPermissions(user, showAll, showOwn, false) })
+        .populate('createdBy.user.username')
+    }
+
+    _getPermissionFilter(permissionType, userId) {
+        return permissionType === FILE_SHOW_ALL ? {} : { 'createdBy.user': userId }
+    }
+
+    async _deleteFilesBatch(files) {
+        if (!files || !files.length) return
+
+        const deletePromises = files.map(async file => {
+            try {
+                await fs.promises.unlink(file.relativePath)
+                await updateUserUsedStorage(file.createdBy.user, -file.size)
+            } catch (error) {
+                winston.error(`Error deleting file ${file.relativePath}: ${error}`)
+            }
+        })
+
+        await Promise.all(deletePromises)
+        const fileIds = files.map(file => file._id)
+        return await File.deleteMany({ _id: { $in: fileIds } })
+    }
+
+    _validateExpirationDate(expirationTime) {
+        if (!expirationTime) return 0
+        
+        const today = new Date()
+        const expirationDate = new Date(expirationTime)
+        
+        if (expirationDate > today) return (expirationDate - today) / (1000 * 3600 * 24)
+
+        return 0
     }
 }
 
-function validateExpirationDate(expirationTime) {
-    const today = new Date();
-    const expirationDate = new Date(expirationTime);
-    if (expirationDate > today) {
-        return ((expirationDate - today) / (1000 * 3600 * 24)).toFixed(2);
-    }
-    return null;
-}
+export default new FileService()
