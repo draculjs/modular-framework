@@ -80,7 +80,8 @@ class FileService {
     async updateFileRest(id, user, permissionType, newFile) {
         try {
             const fileDocument = await this._getFileForUpdate(id, user, permissionType)
-            if (fileDocument)  await this._replaceFileContent(fileDocument, newFile, user.id, user.username)
+            if (fileDocument) await this._replaceFileContent(fileDocument, newFile, user.id, user.username)
+            return true
         } catch (error) {
             winston.error(`FileService.updateFileRest error: ${error}`)
             return false
