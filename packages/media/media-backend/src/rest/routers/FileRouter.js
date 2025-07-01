@@ -7,6 +7,7 @@ import { requireAuthentication, requireAuthorization } from '@dracul/access-back
 import { Readable } from 'stream';
 import express from 'express';
 import multer from 'multer';
+import fileUpload from "../../services/UploadService.js";
 
 const upload = multer()
 const router = express.Router()
@@ -70,7 +71,7 @@ router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE])
             encoding: req.file.encoding,
         }
 
-        const fileUploadingResult = await FileService.fileUpload(req.user, file, expirationTime, isPublic, description, tags)
+        const fileUploadingResult = await fileUpload(req.user, file, expirationTime, isPublic, description, tags)
         res.status(201).send(fileUploadingResult)
     } catch (error) {
         console.error(`An error happened at the file uploading endpoint: '${error}'`)
