@@ -1,6 +1,6 @@
 {
   "name": "@dracul/mongoose-queue",
-  "version": "1.35.0",
+  "version": "1.37.5",
   "description": "",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dracul/common-backend": "^1.34.0",
+    "@dracul/common-backend": "^1.37.5",
     "@dracul/logger-backend": "^1.35.0",
     "underscore": "^1.11.0"
   },
