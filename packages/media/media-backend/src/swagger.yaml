@@ -1,107 +1,107 @@
 swagger: "2.0"
 info:
-  description: "Dracul Media Storage es una aplicación que brinda servicios para almacenar archivos."
+  description: "Storage Hub es una aplicación que brinda servicios para almacenar archivos."
   version: "1.0.0"
-  title: "Dracul Media Storage"
+  title: "Storage Hub"
 basePath: "/"
 tags:
-- name: "file"
-  description: "Servicios para interactuar con archivos"
+  - name: "file"
+    description: "Servicios para interactuar con archivos"
 schemes:
-- "http"
-- "https"
+  - "http"
+  - "https"
 paths:
   /file:
     get:
       tags:
-      - "file"
+        - "file"
       summary: "Busca archivos paginado"
       operationId: "findFile"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "pageNumber"
-        in: "path"
-        description: "Número de página"
-        required: false
-      - name: "itemsPerPage"
-        in: "path"
-        description: "Cantidad de items por página"
-        required: false
-      - name: "search"
-        in: "path"
-        description: "Elemento buscado"
-        required: false
-      - name: "orderBy"
-        in: "path"
-        description: "Tipo de orden"
-        required: false
-      - name: "orderDesc"
-        in: "path"
-        description: "Booleano para que la query devuelve resultado ordenado en forma descendente"
-        required: false
+        - name: "pageNumber"
+          in: "path"
+          description: "Número de página"
+          required: false
+        - name: "itemsPerPage"
+          in: "path"
+          description: "Cantidad de items por página"
+          required: false
+        - name: "search"
+          in: "path"
+          description: "Elemento buscado"
+          required: false
+        - name: "orderBy"
+          in: "path"
+          description: "Tipo de orden"
+          required: false
+        - name: "orderDesc"
+          in: "path"
+          description: "Booleano para que la query devuelve resultado ordenado en forma descendente"
+          required: false
       responses:
-        '200':
+        "200":
           description: "successful operation"
           schema:
             type: "array"
             items:
               $ref: "#/definitions/File"
-        '400':
+        "400":
           description: "Invalid status value"
       security:
-      - Authorization: []
+        - Authorization: []
     post:
       tags:
-      - "file"
+        - "file"
       summary: "Guarda un archivo"
       operationId: "postFile"
       consumes:
-      - "multipart/form-data"
+        - "multipart/form-data"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "file"
-        in: "formData"
-        description: "Archivo a subir"
-        required: true
-        type: "file"
+        - name: "file"
+          in: "formData"
+          description: "Archivo a subir"
+          required: true
+          type: "file"
       responses:
-        '200':
+        "200":
           description: "successful operation"
           schema:
             type: "object"
             $ref: "#/definitions/File"
-        '400':
+        "400":
           description: "Invalid status value"
       security:
-      - Authorization: []
+        - Authorization: []
   /file/{id}:
     get:
       tags:
-      - "file"
+        - "file"
       summary: "Busca archivos por id"
       operationId: "findFileById"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "id"
-        in: "path"
-        description: "Id del archivo"
-        required: true
-        type: "string"
+        - name: "id"
+          in: "path"
+          description: "Id del archivo"
+          required: true
+          type: "string"
       responses:
-        '200':
+        "200":
           description: "successful operation"
           schema:
             type: "object"
             $ref: "#/definitions/File"
-        '400':
+        "400":
           description: "Invalid status value"
       security:
-      - Authorization: []
+        - Authorization: []
 securityDefinitions:
   Authorization:
     type: "apiKey"
@@ -113,19 +113,19 @@ definitions:
   File:
     type: "object"
     required:
-    - "_id"
-    - "extesion"
-    - "relativePath"
-    - "absolutePath"
-    - "size"
-    - "url"
-    - "createdAt"
-    - "deleted"
-    - "deletedAt"
-    - "filename"
-    - "mimetype"
-    - "buffer"
-    - "encoding"
+      - "_id"
+      - "extesion"
+      - "relativePath"
+      - "absolutePath"
+      - "size"
+      - "url"
+      - "createdAt"
+      - "deleted"
+      - "deletedAt"
+      - "filename"
+      - "mimetype"
+      - "buffer"
+      - "encoding"
     properties:
       _id:
         type: String
