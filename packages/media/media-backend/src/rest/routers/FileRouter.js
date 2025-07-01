@@ -84,22 +84,31 @@ router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE])
 })
 
 router.put('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPDATE_ALL, FILE_UPDATE_OWN]), upload.single('file')], async function (req, res) {
-    if ( !req.params.id ) throw new Error("You must provide the ID of the file you want to update")
-    if (!req.file) res.status(400).json({ message: 'File was not provided' })
+    try {
+        if ( !req.params.id ) throw new Error("You must provide the ID of the file you want to update")
+        if (!req.file) res.status(400).json({ message: 'File was not provided' })
+        
+        const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
+        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
+        const permissionType = (userCanSeeAllFiles) ? FILE_SHOW_ALL : (userCanSeeItsOwnFiles) ? FILE_SHOW_OWN : null
     
-    const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
-    const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
-    const permissionType = (userCanSeeAllFiles) ? FILE_SHOW_ALL : (userCanSeeItsOwnFiles) ? FILE_SHOW_OWN : null
-
-    const file = {
-        filename: req.file.originalname,
-        mimetype: req.file.mimetype,
-        createReadStream: () => Readable.from(req.file.buffer),
-        encoding: req.file.encoding,
+        const file = {
+            filename: req.file.originalname,
+            mimetype: req.file.mimetype,
+            createReadStream: () => Readable.from(req.file.buffer),
+            encoding: req.file.encoding,
+        }
+    
+        const updateFileResult = await FileService.updateFileRest(req.params.id, req.user, permissionType, file, req.body)
+        if (updateFileResult){
+            res.status(200).send('File updated')
+        }else{
+            res.status(400).send('File extension mismatch during update')
+        }
+    } catch (error) {
+        winston.error(`An error happened at the put files/:id endpoint: '${error}'`)
+        res.status(500).send(error)
     }
-
-    const updateFileResult = FileService.updateFileRest(req.params.id, req.user, permissionType, file, req.body)
-    if (updateFileResult) res.status(200).send('File updated')
 })
 
 

@@ -49,7 +49,7 @@
 
             </div>
 
-            <img v-if="isImage" :style="{width: '100%'}" :src="getSrc"/>
+            <img v-if="isImage" :style="{width: 'auto'}" :src="getSrc"/>
 
             <audio v-if="isAudio" controls>
               <source :src="getSrc" :type="file.mimetype">
