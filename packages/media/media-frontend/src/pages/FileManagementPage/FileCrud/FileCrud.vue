@@ -7,7 +7,7 @@
           @update="update"
           @delete="remove"
           @show="show"
-
+          v-on:itemUpdated="onItemUpdated"
       />
     </template>
 
