@@ -63,11 +63,18 @@
 
         <template v-slot:[`item.action`]="{ item }">
           <show-button @click="$emit('show', item)"/>
+
           <edit-button
-              v-if="$store.getters.hasPermission('FILE_UPDATE_ALL') ||
-              ($store.getters.hasPermission('FILE_UPDATE_OWN') && item.createdBy.user === $store.getters.me.id)"
-              @click="$emit('update', item)"
+            v-if="$store.getters.hasPermission('FILE_UPDATE_ALL') ||
+            ($store.getters.hasPermission('FILE_UPDATE_OWN') && item.createdBy.user === $store.getters.me.id)"
+            @click="$emit('update', item)"
           />
+
+          <FileEditButton v-if="editTextButtonMustBeRender(item.extension)" 
+            :file="item"
+            v-on:itemUpdated="$emit('itemUpdated')"
+          />
+
           <delete-button
               v-if="$store.getters.hasPermission('FILE_DELETE_ALL') ||
               ($store.getters.hasPermission('FILE_DELETE_OWN') && item.createdBy.user.id === $store.getters.me.id)"
@@ -81,17 +88,19 @@
 </template>
 
 <script>
-import FileProvider from "../../../providers/FileProvider";
 
 import {DeleteButton, EditButton, ShowButton} from "@dracul/common-frontend"
-import redeableBytesMixin from "../../../mixins/readableBytesMixin";
-import FileFilters from "../FileFilters/FileFilters"
 import {DayjsMixin} from "@dracul/dayjs-frontend"
+import FileEditButton from "./FileEditButton.vue"
+
+import redeableBytesMixin from "../../../mixins/readableBytesMixin";
+import FileProvider from "../../../providers/FileProvider";
+import FileFilters from "../FileFilters/FileFilters"
 
 export default {
   name: "FileList",
   mixins: [redeableBytesMixin, DayjsMixin],
-  components: {DeleteButton, EditButton, ShowButton, FileFilters},
+  components: {DeleteButton, EditButton, ShowButton, FileFilters, FileEditButton},
 
   data() {
     return {
@@ -188,6 +197,9 @@ export default {
         filter.value = null
       })
       this.fetch()
+    },
+    editTextButtonMustBeRender(itemExtension){
+      return itemExtension === '.json' || itemExtension === '.md' || itemExtension === '.txt'
     }
   },
   watch: {
