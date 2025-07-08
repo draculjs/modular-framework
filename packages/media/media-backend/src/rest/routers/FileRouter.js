@@ -1,4 +1,4 @@
-import { FILE_SHOW_ALL, FILE_SHOW_OWN, FILE_CREATE, FILE_SHOW_PUBLIC, FILE_UPDATE_OWN, FILE_UPDATE_ALL } from "../../permissions/File";
+import { FILE_SHOW_ALL, FILE_SHOW_OWN, FILE_CREATE, FILE_SHOW_PUBLIC, FILE_UPDATE_OWN, FILE_UPDATE_ALL, FILE_DELETE_ALL, FILE_DELETE_OWN } from "../../permissions/File";
 import FileService from "../../services/FileService";
 import FileDTO from '../../DTOs/FileDTO.js'
 
@@ -137,6 +137,24 @@ router.patch('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPD
         }
     } catch (error) {
         winston.error(`An error happened at the PATCH files/:id endpoint: '${error}'`)
+        res.status(500).send(error)
+    }
+})
+
+router.delete('/file/:id', [requireAuthentication, requireAuthorization([FILE_DELETE_ALL, FILE_DELETE_OWN])], async function (req, res) {
+    try {        
+        const fileToDeleteId = req.params.id
+        if ( !fileToDeleteId ) throw new Error("You must provide the ID of the file you want to delete")
+
+        const userCanDeleteAllFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_ALL)
+        const userCanDeleteItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN)
+        const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
+
+        await FileService.deleteFile(fileToDeleteId, req.user.id, userCanDeleteAllFiles, userCanDeleteItsOwnFiles, userCanSeePublicFiles)
+        res.status(200).send('File deleted')
+        return
+    } catch (error) {
+        winston.error(`An error happened at the DELETE files/:id endpoint: '${error}'`)
         res.status(500).send(error)
     }
 })

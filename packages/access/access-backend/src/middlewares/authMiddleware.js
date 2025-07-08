@@ -7,12 +7,12 @@ const notAuthorizedErrorMessage = "You are not authorized to perform this action
  * @param {import('express').Request} req - Express request object.
  * @param {import('express').Response} res - Express response object.
  * @param {import('express').NextFunction} next - Express next middleware function.
- * @throws Will throw an error with the notAuthenticatedErrorMessage if authentication fails.
  */
 export function requireAuthentication(req, res, next){
     if (!req.user) {
         res.status(401).send(notAuthenticatedErrorMessage)
-        throw new Error(notAuthenticatedErrorMessage)
+        return;
+
     }
     next()
 }
@@ -22,7 +22,6 @@ export function requireAuthentication(req, res, next){
  * If not, it sends a 403 Forbidden response and throws an error.
  * @param {string[]} actions - An array of action names to check authorization for.
  * @returns {import('express').RequestHandler} Express middleware function.
- * @throws Will throw an error with the notAuthorizedErrorMessage if authorization fails.
  */
 export function requireAuthorization (actions, authorizedForAll = false){
     return (req, res, next) => {
@@ -32,7 +31,7 @@ export function requireAuthorization (actions, authorizedForAll = false){
 
         if (!isAuthorized) {
             res.status(403).send(notAuthorizedErrorMessage)
-            throw new Error(notAuthorizedErrorMessage)
+            return;
         }
 
         next()
