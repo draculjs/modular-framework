@@ -75,8 +75,10 @@
 
         <!--fileSetting-->
         <v-file-input v-if="item.type === 'file'"
+          :loading="chargeFileValueLoading"
           prepend-icon="attach_file" :name="item.key"
-          v-model="form.value"
+          :value="fileValue"
+          @change="updateFileValue($event)"
           :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
           color="secondary"
         ></v-file-input>
@@ -100,7 +102,9 @@ export default {
   },
   data() {
     return {
-      entityOptions: []
+      entityOptions: [],
+      fileValue: null,
+      chargeFileValueLoading: false
     }
   },
   computed: {
@@ -149,11 +153,34 @@ export default {
     }
   },
   mounted() {
+    if (this.item.type === 'file'){
+      this.chargeFileValue()
+    }
     if (this.item.type === 'dynamic') {
       this.fetchEntityOptions()
     }
   },
   methods: {
+    async chargeFileValue(){
+      try{
+        this.chargeFileValueLoading = true
+        if(this.form.value && (typeof this.form.value) == 'string'){
+          const valueSplit = this.form.value.split('/')
+          const filename = valueSplit[valueSplit.length - 1]
+          const response = await fetch(this.value)
+          const blob = await response.blob()
+          this.fileValue = new File([Blob], filename, { type: blob.type })
+          return
+        }
+        if(this.form.value){
+          this.fileValue = this.form.value
+          return
+        }
+        return null
+      } finally {
+        this.chargeFileValueLoading = false
+      }
+    },
     validate() {
       return this.$refs.form.validate()
     },
@@ -162,6 +189,10 @@ export default {
       SettingsProvider.fetchEntityOptions(this.item.key).then(response => {
         this.entityOptions = response.data.fetchEntityOptions
       })
+    },
+    updateFileValue(value){
+      console.log('value: ', value)
+      this.form.value = value
     }
   },
 
