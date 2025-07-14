@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-backend",
-  "version": "1.37.5",
+  "version": "1.39.0",
   "description": "node, express, graphql, custom color, theme, logo and i18n",
   "main": "lib/index.js",
   "publishConfig": {
@@ -28,9 +28,9 @@
   },
   "homepage": "https://github.com/cincarnato/ci-custom-module#readme",
   "dependencies": {
-    "@dracul/common-backend": "^1.37.5",
+    "@dracul/common-backend": "^1.39.0",
     "@dracul/logger-backend": "^1.35.0",
-    "@dracul/user-backend": "^1.37.5"
+    "@dracul/user-backend": "^1.39.0"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
