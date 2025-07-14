@@ -144,20 +144,29 @@ router.patch('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPD
 router.delete('/file/:id', [requireAuthentication, requireAuthorization([FILE_DELETE_ALL, FILE_DELETE_OWN])], async function (req, res) {
     try {        
         const fileToDeleteId = req.params.id
-        if ( !fileToDeleteId ) throw new Error("You must provide the ID of the file you want to delete")
+        const isValidMongoId = /^[a-fA-F0-9]{24}$/.test(fileToDeleteId);
+
+        if (!fileToDeleteId || !isValidMongoId) {
+            return res.status(400).json({ error: "You must provide a valid file ID." });
+        }
 
         const userCanDeleteAllFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_ALL)
         const userCanDeleteItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN)
         const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
         await FileService.deleteFile(fileToDeleteId, req.user.id, userCanDeleteAllFiles, userCanDeleteItsOwnFiles, userCanSeePublicFiles)
-        res.status(200).send('File deleted')
-        return
+        res.status(200).json({message: 'The file was deleted', id: fileToDeleteId})
     } catch (error) {
-        winston.error(`An error happened at the DELETE files/:id endpoint: '${error}'`)
-        res.status(500).send(error)
+        if (error && error.message.includes('File not found')){
+            res.status(404).json({message: error.message})
+        }else{
+            winston.error(`An error happened at the DELETE /file/:id endpoint: '${error}'`)
+            res.status(500).json({ error: "Internal Server Error" })
+        }
+
     }
-})
+});
+
 
 export { router };
 export default router;
