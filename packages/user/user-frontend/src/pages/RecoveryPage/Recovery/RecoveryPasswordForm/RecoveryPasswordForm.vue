@@ -4,7 +4,7 @@
 
     <v-card-text class="pt-4 px-8 my-0 pb-0 text-center">
       <v-btn fab class="onPrimary--text" color="primary">
-        <v-icon>lock</v-icon>
+        <v-icon>mdi-lock</v-icon>
       </v-btn>
       <h2 class="mt-3" v-t="'auth.passwordRecovery'"></h2>
     </v-card-text>
@@ -70,13 +70,13 @@
 
 <script>
 
-import InputErrors from "../../../../mixins/InputErrors";
-import UserValidations from "../../../../mixins/UserValidations";
-import recoveryProvider from "../../../../providers/RecoveryProvider";
+import InputErrors from "../../../../mixins/InputErrors.js";
+import UserValidations from "../../../../mixins/UserValidations.js";
+import recoveryProvider from "../../../../providers/RecoveryProvider.js";
 import ClientError from "../../../../errors/ClientError";
 import {SubmitButton} from '@dracul/common-frontend'
 import {mapActions} from "vuex";
-import RecoveryPasswordFormSuccess from "./RecoveryPasswordFormSuccess";
+import RecoveryPasswordFormSuccess from "./RecoveryPasswordFormSuccess.vue";
 
 export default {
   name: "RecoveryPasswordForm",

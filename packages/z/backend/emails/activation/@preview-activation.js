@@ -1,5 +1,6 @@
-require('dotenv').config();
-const Email = require('email-templates');
+import { config } from 'dotenv';
+config();
+import Email from 'email-templates';
 
 //Preview: node emails/activation/@preview-activation.js
 

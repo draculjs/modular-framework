@@ -1,60 +1,68 @@
+import customizationRaw from './gql/customization.graphql?raw';
+import customizationUpdateRaw from './gql/customizationUpdate.graphql?raw';
+import colorsUpdateRaw from './gql/colorsUpdate.graphql?raw';
+import logoUpdateRaw from './gql/logoUpdate.graphql?raw';
+import langUpdateRaw from './gql/langUpdate.graphql?raw';
+import logoUploadRaw from './gql/logoUpload.graphql?raw';
+import { gql } from '@apollo/client/core';
+
+const customizationGql = gql(customizationRaw);
+const customizationUpdateGql = gql(customizationUpdateRaw);
+const colorsUpdateGql = gql(colorsUpdateRaw);
+const logoUpdateGql = gql(logoUpdateRaw);
+const langUpdateGql = gql(langUpdateRaw);
+const logoUploadGql = gql(logoUploadRaw);
+
 class CustomizationProvider {
-
     constructor() {
-        this.gqlc = null
+        this.gqlc = null;
     }
 
-    setGqlc(gqlc){
-        this.gqlc = gqlc
+    setGqlc(gqlc) {
+        this.gqlc = gqlc;
     }
-
 
     customization() {
         return this.gqlc.query({
-            query: require('./gql/customization.graphql')
-        })
+            query: customizationGql
+        });
     }
-
-
 
     updateCustomization(form) {
         return this.gqlc.mutate({
-            mutation: require('./gql/customizationUpdate.graphql'),
+            mutation: customizationUpdateGql,
             variables: form
-        })
+        });
     }
 
     updateColors(input) {
         return this.gqlc.mutate({
-            mutation: require('./gql/colorsUpdate.graphql'),
+            mutation: colorsUpdateGql,
             variables: {input}
-        })
+        });
     }
 
     updateLogo(form) {
         return this.gqlc.mutate({
-            mutation: require('./gql/logoUpdate.graphql'),
+            mutation: logoUpdateGql,
             variables: form
-        })
+        });
     }
 
     updateLanguage(form) {
         return this.gqlc.mutate({
-            mutation: require('./gql/langUpdate.graphql'),
+            mutation: langUpdateGql,
             variables: form
-        })
+        });
     }
 
     logoUpload(file) {
         return this.gqlc.mutate({
-            mutation: require('./gql/logoUpload.graphql'),
+            mutation: logoUploadGql,
             variables: {file}
-        })
+        });
     }
-
 }
 
-const customizationProvider = new CustomizationProvider()
-
-export default customizationProvider
-
+const customizationProvider = new CustomizationProvider();
+export default customizationProvider;

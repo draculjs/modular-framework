@@ -1,6 +1,6 @@
-import { GraphQLScalarType } from "graphql";
-const GraphQLJSON = require('graphql-type-json');
 import {UserInputError} from 'apollo-server-errors'
+import GraphQLJSON from 'graphql-type-json';
+import { GraphQLScalarType } from "graphql";
 
 
 export default {

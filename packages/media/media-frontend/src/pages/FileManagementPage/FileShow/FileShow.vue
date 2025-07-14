@@ -8,7 +8,7 @@
 
 <script>
     import {CrudShow} from '@dracul/common-frontend'
-    import FileView from "../../../components/FileView/FileView";
+    import FileView from "../../../components/FileView/FileView.vue";
  
     export default {
         name: "FileShow",

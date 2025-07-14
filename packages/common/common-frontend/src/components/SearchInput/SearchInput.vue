@@ -17,7 +17,7 @@ export default {
     value: {type: String, default: ''},
     label: {type: String, default: 'common.search'},
     clearable: {type: Boolean, default: true},
-    prependInnerIcon: {type: String, default: 'search'},
+    prependInnerIcon: {type: String, default: 'mdi-magnify'},
 
   },
   computed: {

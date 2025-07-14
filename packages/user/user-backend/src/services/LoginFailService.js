@@ -1,9 +1,9 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
-import LoginFail from "../models/LoginFailModel";
 import dayjs from "dayjs";
-import DeviceDetector from 'node-device-detector'
-import geoLookup from "./utils/geoLookup";
-import getMatchIpv4 from "./utils/getMatchIpv4";
+
+import DeviceDetector from 'node-device-detector';
+import LoginFail from "../models/LoginFailModel.js";
+import getMatchIpv4 from "./utils/getMatchIpv4.js";
 
 const detector = new DeviceDetector;
 
@@ -23,7 +23,7 @@ export const createLoginFail = async function (username, req) {
 
         if (req && req.headers && (req.headers['x-forwarded-for'] || req.connection.remoteAddress)) {
             ip = getMatchIpv4((req.headers['x-forwarded-for'] || req.connection.remoteAddress))
-            geo = geoLookup(ip);
+            geo = {country: 'AR', region: 'Local', city: 'Local', timezone: ''}
         }
 
         const doc = new LoginFail({

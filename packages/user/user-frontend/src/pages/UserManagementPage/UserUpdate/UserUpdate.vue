@@ -13,9 +13,9 @@
 </template>
 
 <script>
-    import UserProvider from "../../../providers/UserProvider";
+    import UserProvider from "../../../providers/UserProvider.js";
     import {CrudUpdate, ClientError} from '@dracul/common-frontend'
-    import UserForm from "../UserForm/UserForm";
+    import UserForm from "../UserForm/UserForm.vue";
 
     export default {
         name: "UserUpdate",

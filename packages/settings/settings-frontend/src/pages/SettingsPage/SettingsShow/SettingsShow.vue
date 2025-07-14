@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import SettingsShowData from "./SettingsShowData";
+    import SettingsShowData from "./SettingsShowData.vue";
     import {CrudShow} from '@dracul/common-frontend'
 
     export default {

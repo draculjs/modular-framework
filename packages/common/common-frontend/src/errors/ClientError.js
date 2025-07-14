@@ -12,7 +12,7 @@ const FORBIDDEN = "FORBIDDEN"
 const UNAUTHENTICATED = "UNAUTHENTICATED"
 const CUSTOM_ERROR = "CUSTOM_ERROR"
 
-class ClientError extends Error {
+export default class ClientError extends Error {
     constructor(error) {
         super(error.message);
         this.name = "ClientError"
@@ -124,4 +124,3 @@ class ClientError extends Error {
 
 }
 
-module.exports = ClientError;

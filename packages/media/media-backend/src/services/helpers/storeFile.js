@@ -5,8 +5,8 @@
  */
 
 import { DefaultLogger as winston } from '@dracul/logger-backend';
-import { findUserStorageByUser } from "../UserStorageService";
-import createDirIfNotExist from './createDirIfNotExist';
+import { findUserStorageByUser } from "../UserStorageService.js";
+import createDirIfNotExist from './createDirIfNotExist.js';
 
 import { Transform, pipeline } from 'stream';
 import util from "util";
@@ -18,7 +18,7 @@ import fs from "fs";
  * @extends Error
  * @param {string} message - The error message.
  */
-class MaxFileSizeExceededError extends Error {
+export class MaxFileSizeExceededError extends Error {
     constructor(message) {
         super(message)
         this.code = 'MAX_FILE_SIZE_EXCEEDED'

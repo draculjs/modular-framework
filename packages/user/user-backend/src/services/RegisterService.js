@@ -1,27 +1,25 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
-import {findRoleByName} from "./RoleService";
-import User from "../models/UserModel";
 import {UserInputError} from "apollo-server-errors";
 import jsonwebtoken from "jsonwebtoken";
-import {createUserAudit} from "./UserAuditService";
-import UserEmailManager from "./UserEmailManager";
-import {hashPassword} from "./UserService";
-import {session, tokenSignPayload} from "./AuthService";
-import {createSession} from "./SessionService";
+
+import UserEmailManager from "./UserEmailManager.js";
+import {tokenSignPayload} from "./AuthService.js";
+import {createSession} from "./SessionService.js";
+import RoleService from "./RoleService.js";
+import UserService from "./UserService.js";
+import User from "../models/UserModel.js";
 
 export const registerUser = function ({username, password, name, email, phone}) {
-    console.log(`DATA!: '${username, password, name, email, phone}'`)
-
     return new Promise(async (resolve, reject) => {
         const ROLE_NAME = process.env.REGISTER_ROLE ? process.env.REGISTER_ROLE : "operator"
 
-        let roleObject = await findRoleByName(ROLE_NAME)
+        let roleObject = await RoleService.findRoleByName(ROLE_NAME)
         let active = false
 
         const newUser = new User({
             username,
             email,
-            password: hashPassword(password),
+            password: UserService.hashPassword(password),
             name,
             phone,
             active,
@@ -52,7 +50,6 @@ export const registerUser = function ({username, password, name, email, phone}) 
 
 
                 const url = `${process.env.APP_WEB_URL}/activation/${token}`
-                createUserAudit(newUser.id, newUser.id, 'userRegistered')
                 UserEmailManager.activation(newUser.email, url, newUser);
 
 
@@ -84,7 +81,6 @@ export const activationUser = function (token, req) {
                         resolve({status: false, message: "common.operation.fail"})
                     }
 
-                    createUserAudit(user._id, user._id, 'userActivated')
 
                     createSession(user, req).then(session => {
 

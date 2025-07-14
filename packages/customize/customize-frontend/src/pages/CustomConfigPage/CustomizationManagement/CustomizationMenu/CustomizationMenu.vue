@@ -42,15 +42,15 @@
             return {
                 items: [
                     {
-                        icon: 'translate',
+                        icon: 'mdi-translate',
                         text: 'customization.lang.title',
                     },
                     {
-                        icon: 'palette',
+                        icon: 'mdi-palette',
                         text: 'customization.colors.title',
                     },
                     {
-                        icon: 'stars',
+                        icon: 'mdi-star',
                         text: 'customization.logo.title',
                     },
                 ]

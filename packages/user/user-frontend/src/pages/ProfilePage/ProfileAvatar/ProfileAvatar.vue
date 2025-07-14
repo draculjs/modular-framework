@@ -5,8 +5,8 @@
 </template>
 
 <script>
-    import ProfileAvatarImg from "./ProfileAvatarImg";
-    import ProfileAvatarForm from "./ProfileAvatarForm";
+    import ProfileAvatarImg from "./ProfileAvatarImg.vue";
+    import ProfileAvatarForm from "./ProfileAvatarForm.vue";
     export default {
         name: "ProfileAvatar",
         components: {ProfileAvatarForm, ProfileAvatarImg},

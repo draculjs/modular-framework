@@ -8,7 +8,7 @@
             <v-card-actions>
                 <v-btn color="primary" @click="createNewAudit">Create audit</v-btn>
                 <v-btn color="secondary" @click="updateAudit">Update audit</v-btn>
-                <v-btn color="warning" @click="deleteAudit">Delete audit</v-btn>
+                <v-btn color="warning" @click="deleteAudit">mdi-delete audit</v-btn>
             </v-card-actions>
 
         </v-card>

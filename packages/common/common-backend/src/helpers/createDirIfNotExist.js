@@ -1,13 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-
-const createDirIfNotExist = function(dst){
-    let dir = path.dirname(dst)
-
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir, { recursive: true });
+import { DefaultLogger } from '@dracul/logger-backend';
+import fs from 'fs';
+import path from 'path';
+export default function createDirIfNotExist(directoryPath){
+    try {
+        const directoryName = path.dirname(directoryPath)
+        if (!fs.existsSync(directoryName)) fs.mkdirSync(directoryName, { recursive: true })
+    } catch (error) {
+        DefaultLogger(`An error happened at the createDirIfNotExist function: ${error}`)
     }
 }
-
-module.exports.createDirIfNotExist = createDirIfNotExist
-module.exports =  createDirIfNotExist

@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12" sm="6">
                 <v-text-field
-                        prepend-icon="account_box"
+                        prepend-icon="mdi-account_box"
                         name="name"
                         type="text"
                         v-model="form.name"
@@ -37,10 +37,10 @@
 </template>
 
 <script>
-    import UserProvider from "../../../providers/UserProvider";
-    import GroupColorInput from "../GroupColorInput/GroupColorInput";
+    import UserProvider from "../../../providers/UserProvider.js";
+    import GroupColorInput from "../GroupColorInput/GroupColorInput.vue";
     import {InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
-    import UserAutocomplete from "../../../components/UserAutocomplete";
+    import UserAutocomplete from "../../../components/UserAutocomplete/index.js";
 
     export default {
         name: "GroupForm",

@@ -10,7 +10,7 @@ const BAD_USER_INPUT = "BAD_USER_INPUT"
 const FORBIDDEN = "FORBIDDEN"
 const UNAUTHENTICATED = "UNAUTHENTICATED"
 
-class ClientError extends Error {
+export class ClientError extends Error {
     constructor(error) {
         super(error.message);
         this.name = "ClientError"
@@ -89,5 +89,3 @@ class ClientError extends Error {
 
 
 }
-
-module.exports = ClientError;

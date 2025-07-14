@@ -1,16 +1,14 @@
-import {
-    findUser,
-} from '../../services/UserService'
-import {apiKey, auth, refreshAuth} from "../../services/AuthService";
+import UserService from '../../services/UserService.js'
+import { apiKey, auth, refreshAuth } from "../../services/AuthService.js";
 
-import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
-import {SECURITY_USER_EDIT} from "../../permissions";
+import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
+import { SECURITY_USER_EDIT } from "../../permissions/include/security-permissions.js";
 
 export default {
     Query: {
         me: (_, {}, {user}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
-            return findUser(user.id)
+            return UserService.findUser(user.id)
         },
     },
     Mutation: {

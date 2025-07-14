@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import userImage from "../../assets/user.png"
 export default {
   name: "UserAvatar",
   props: {
@@ -22,7 +23,7 @@ export default {
   },
   data: () => ({
     avatarSize: 120,
-    src: require("../../assets/user.png")
+    src: userImage
   }),
 }
 </script>

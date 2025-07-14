@@ -7,7 +7,7 @@
             <v-col v-if="$vuetify.breakpoint.smAndDown" 
                 cols="4" align="end">
                 <v-btn fab color="primary" @click="addNewIp" class="floating-button">
-                    <v-icon>add</v-icon>
+                    <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </v-col>
         </v-row>

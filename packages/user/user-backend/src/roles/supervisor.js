@@ -1,3 +1,7 @@
+import { nonPrivilegedRolesReadOnly } from "../services/InitService.js";
+
+import RoleService from "../services/RoleService.js";
+
 import {
     SECURITY_ROLE_SHOW_CHILD,
 
@@ -10,14 +14,12 @@ import {
     SECURITY_USER_DELETE,
     SECURITY_USER_EDIT,
     SECURITY_USER_SHOW
-} from "../permissions";
-import { nonPrivilegedRolesReadOnly } from "../services/InitService";
+} from "../permissions/include/security-permissions.js";
 
-import {findRoleByName} from "../services/RoleService";
 
-async function supervisorRole() {
+export default async function supervisorRole() {
 
-    let supervisorRole = {
+    const supervisorRole = {
         name: "supervisor",
         permissions: [
             SECURITY_USER_CREATE,
@@ -32,11 +34,11 @@ async function supervisorRole() {
         readonly: nonPrivilegedRolesReadOnly
     }
 
-    const operatorRole = await findRoleByName("operator")
+    const operatorRole = await RoleService.findRoleByName("operator")
+
     if (operatorRole) {
         supervisorRole.childRoles = [operatorRole.id]
     }
+
     return supervisorRole
 }
-
-export default supervisorRole

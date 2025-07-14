@@ -1,4 +1,4 @@
-import RecoveryPasswordForm from "./RecoveryPasswordForm";
+import RecoveryPasswordForm from "./RecoveryPasswordForm.vue";
 
 export {RecoveryPasswordForm}
 export default RecoveryPasswordForm

@@ -3,10 +3,11 @@
 Sistema de colas de javascript soportado sobre mongodb y mongoose.
 
 ## Funcionalidades
+
 - Producir y consumir tareas
 - Marcar tareas como terminadas
-- Poder registrar errores en la ejecución de tareas  
-- Segmentacion por topicos para manejar diferente tipo de tareas 
+- Poder registrar errores en la ejecución de tareas
+- Segmentacion por topicos para manejar diferente tipo de tareas
 - Posibilidad de agregar retraso a las tareas para posponer su ejecución
 - Obtener estadisticas de la cola. Tareas: Agregadas, Tomadas, Terminadas.
 
@@ -19,210 +20,245 @@ Sistema de colas de javascript soportado sobre mongodb y mongoose.
 - WorkerManager
 
 ## Producer
+
 Permite agregar tareas a la cola
 
 ### Metodo: _constructor_
-Inicializa una instancia de Producer  
 
-**Argumentos**:  
-    - {string} **topic**: nombre del topico que identifica el tipo de tarea
-    
-**Ejemplo**: 
+Inicializa una instancia de Producer
+
+**Argumentos**:\
+- {string} **topic**: nombre del topico que identifica el tipo de tarea
+
+**Ejemplo**:
+
 ```js
-const {Producer} = require('@dracul/mongoose-queue')
-let producer = new Producer('test')
+import { Producer } from "@dracul/mongoose-queue";
+let producer = new Producer("test");
 ```
-    
+
 ### Metodo: _add_
+
 Agregar un trabajo a la cola
 
-**Argumentos**:  
-    - {Plain Object} **payload**: información para el procesamiento de la tarea   
+**Argumentos**:\
+- {Plain Object} **payload**: información para el procesamiento de la tarea
 
 **Retorna**: {String} ObjectId del documento en MongoDB
 
-**Ejemplo**: 
+**Ejemplo**:
 
 ```js
-const {Producer} = require('@dracul/mongoose-queue')
-let producer = new Producer('test')
-let jobId = await producer.add( {data: 'somedata'} )
+import { Producer } from "@dracul/mongoose-queue";
+let producer = new Producer("test");
+let jobId = await producer.add({ data: "somedata" });
 ```
 
-
 ## Consumer
+
 Permite obtener tareas de la cola
 
 ### Metodo: _constructor_
-Inicializa una instancia de Consumer  
-**Argumentos**:  
+
+Inicializa una instancia de Consumer\
+**Argumentos**:
+
 - {string} **topic**: nombre del topico que identifica el tipo de tarea
-    
-**Ejemplo**: 
+
+**Ejemplo**:
+
 ```js
-const {Consumer} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
+import { Consumer } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
 ```
 
-### Metodo: _get_  
+### Metodo: _get_
+
 Obtener un trabajo de la cola
 
-**Argumentos**:  
-- {string} **workerId**: identificador del worker que toma la tarea 
+**Argumentos**:
 
-**Retorna**: {Object|null} Objecto con todos los datos del job o null si no hay tareas pendientes en la cola
+- {string} **workerId**: identificador del worker que toma la tarea
 
-**Ejemplo**: 
+**Retorna**: {Object|null} Objecto con todos los datos del job o null si no hay
+tareas pendientes en la cola
+
+**Ejemplo**:
 
 ```js
-const {Consumer} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-let job = await consumer.get('worker')
+import { Consumer } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+let job = await consumer.get("worker");
 ```
 
-### Metodo: _ack_  
+### Metodo: _ack_
+
 Marca un trabajo como terminado
 
-**Argumentos**:  
+**Argumentos**:
+
 - {string} **jobId**: identificador del trabajo
 
 **Retorna**: {Object} Objecto con todos los datos del job
 
-**Ejemplo**: 
+**Ejemplo**:
 
 ```js
-const {Consumer} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-let job = await consumer.get('worker')
+import { Consumer } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+let job = await consumer.get("worker");
 //...Procesar trabajo...
-job = await consumer.ack(job.id)
+job = await consumer.ack(job.id);
 ```
 
-### Metodo: _error_  
+### Metodo: _error_
+
 Marca un trabajo con error
 
-**Argumentos**:  
+**Argumentos**:
+
 - {string} **jobId**: identificador del trabajo
 - {string} **errorMessage**: mensaje con el error registrado
 
 **Retorna**: {Object} Objecto con todos los datos del job
 
-**Ejemplo**: 
+**Ejemplo**:
 
 ```js
-const {Consumer} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-let job = await consumer.get('worker')
+import { Consumer } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+let job = await consumer.get("worker");
 //...Procesar trabajo...
-job = await consumer.error(job.id,"FatalError")
+job = await consumer.error(job.id, "FatalError");
 ```
 
 ## Worker
+
 Permite crear trabajadores que consuman y procesen tareas de la cola
 
 ### Metodo: _constructor_
-Inicializa una instancia de Worker  
-**Argumentos**:  
+
+Inicializa una instancia de Worker\
+**Argumentos**:
+
 - {Consumer} **consumer**: Instancia de un consumidor
 - {string} **workerId**: Identificador del worker
 - {function} **handler**: Funcion para procesar el trabajo
-    
-**Ejemplo**: 
+
+**Ejemplo**:
+
 ```js
-const {Consumer,Worker} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.payload)}
-let worker = new Worker(consumer,'worker1',handler)
+import { Consumer, Worker } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+const handler = (job) => {
+    console.log(job.payload);
+};
+let worker = new Worker(consumer, "worker1", handler);
 ```
 
 ### Metodo: _work_
+
 Obtiene una tarea de la cola y la procesa con la funcion handler
 
-**Argumentos**:  
+**Argumentos**:\
 Sin argumentos
-    
-**Ejemplo**: 
-```js
-const {Consumer,Worker} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.payload)}
-let worker = new Worker(consumer,'worker1',handler)
-worker.work()
-```
 
+**Ejemplo**:
+
+```js
+import { Consumer, Worker } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+const handler = (job) => {
+    console.log(job.payload);
+};
+let worker = new Worker(consumer, "worker1", handler);
+worker.work();
+```
 
 ### Metodo: _run_
-Ejecuta el worker como daemon. El worker ejecutara el metodo "work" continuamente con un intervalo de tiempo
 
-**Argumentos**:  
-- {number} waitTime: Tiempo de espera en milisengundos (ms) entre ejecución de trabajos
-    
-**Ejemplo**: 
+Ejecuta el worker como daemon. El worker ejecutara el metodo "work"
+continuamente con un intervalo de tiempo
+
+**Argumentos**:
+
+- {number} waitTime: Tiempo de espera en milisengundos (ms) entre ejecución de
+  trabajos
+
+**Ejemplo**:
+
 ```js
-const {Consumer,Worker} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.payload)}
-let worker = new Worker(consumer,'worker1',handler)
-worker.run(10000)
+import { Consumer, Worker } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+const handler = (job) => {
+    console.log(job.payload);
+};
+let worker = new Worker(consumer, "worker1", handler);
+worker.run(10000);
 ```
-
 
 ### Metodo: _stop_
+
 Detiene el daemon del worker
 
-**Argumentos**:  
+**Argumentos**:\
 sin argumentos
-   
-**Ejemplo**: 
+
+**Ejemplo**:
+
 ```js
-const {Consumer,Worker} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-const handler = (job)=>{console.log(job.payload)}
-let worker = new Worker(consumer,'worker1',handler)
-worker.run(10000)
+import { Consumer, Worker } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+const handler = (job) => {
+    console.log(job.payload);
+};
+let worker = new Worker(consumer, "worker1", handler);
+worker.run(10000);
 //...
-worker.stop()
+worker.stop();
 ```
 
-
 ### Metodo: _on_
+
 El worker permite suscribirse a un EventEmitter con los siguientes eventos
 
+**Eventos**:
 
-**Eventos**:  
 - **workStart**: El worker inicia un trabajo
 - **workGet**: El worker obtiene un trabajo de la cola
 - **workAck**: El worker da un trabajo por terminado
 - **workError**: El worker registra un error en un trabajo
-    
-**Ejemplo**: 
+
+**Ejemplo**:
+
 ```js
-const {Consumer,Worker} = require('@dracul/mongoose-queue')
-let consumer = new Consumer('test')
-const handler = (payload)=>{console.log(payload)}
-let worker = new Worker(consumer,'worker1',handler)
+import { Consumer, Worker } from "@dracul/mongoose-queue";
+let consumer = new Consumer("test");
+const handler = (payload) => {
+    console.log(payload);
+};
+let worker = new Worker(consumer, "worker1", handler);
 
-worker.on('workStart',()=>{
-console.log("El worker inicia un trabajo")
-})
+worker.on("workStart", () => {
+    console.log("El worker inicia un trabajo");
+});
 
-worker.on('workGet',(job)=>{
-console.log("El worker toma un trabajo", job)
-})
+worker.on("workGet", (job) => {
+    console.log("El worker toma un trabajo", job);
+});
 
-worker.on('workAck',(job)=>{
-console.log("El worker da un trabajo por terminado", job)
-})
+worker.on("workAck", (job) => {
+    console.log("El worker da un trabajo por terminado", job);
+});
 
-worker.on('workError',(job, error)=>{
-console.log("El worker registra un error en un trabajo", job,  error)
-})
+worker.on("workError", (job, error) => {
+    console.log("El worker registra un error en un trabajo", job, error);
+});
 
-worker.run(10000)
+worker.run(10000);
 ```
 
 ### Recomendacion
-Se aconseja utilizar scaffold dónde tenés todos los módulos ya integrados y link de scafold
 
-
-
+Se aconseja utilizar scaffold dónde tenés todos los módulos ya integrados y link
+de scafold

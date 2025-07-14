@@ -1,4 +1,4 @@
-import RecoveryRequestFormSuccess from "./RecoveryRequestFormSuccess";
+import RecoveryRequestFormSuccess from "./RecoveryRequestFormSuccess.vue";
 
 export {RecoveryRequestFormSuccess}
 export default RecoveryRequestFormSuccess

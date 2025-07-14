@@ -1,9 +1,9 @@
 //Graphql: types & resolvers
-import {types, resolvers} from "./graphql"
+import {types, resolvers} from "./graphql/index.js"
 //Models
-import SettingsModel  from "./models/SettingsModel"
+import SettingsModel  from "./models/SettingsModel.js"
 //Permissions
-import * as permissions from "./permissions/Settings"
+import * as permissions from "./permissions/Settings.js"
 //Services
 import {
     findSettingsByKey,
@@ -19,9 +19,9 @@ import {
     deleteSettings,
     initializeSettings,
     initializeSetting
-} from "./services/SettingsService"
+} from "./services/SettingsService.js"
 
-import SettingCache from "./cache/SettingCache";
+import SettingCache from "./cache/SettingCache.js";
 
 export {
     //Types and resolvers

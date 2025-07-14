@@ -18,8 +18,8 @@
 <script>
 
 import {CrudShow} from '@dracul/common-frontend'
-import UserAvatarForm from "./UserAvatar/UserAvatarForm";
-import UserAvatarImg from "./UserAvatar/UserAvatarImg";
+import UserAvatarForm from "./UserAvatar/UserAvatarForm.vue";
+import UserAvatarImg from "./UserAvatar/UserAvatarImg.vue";
 
 export default {
   name: "AdminChangePassword",

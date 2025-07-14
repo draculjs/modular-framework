@@ -1,8 +1,9 @@
 import {mongoose} from '@dracul/common-backend';
-const {DefaultLogger} = require('@dracul/logger-backend')
-require('dotenv').config()
+import { DefaultLogger } from '@dracul/logger-backend'
+import { config } from 'dotenv'
+config()
 
-const mongoConnect = async function(){
+export const mongoConnect = async function(){
 
     if(!process.env.MONGO_URI){
         DefaultLogger.error("MongoDB connection error: process.env.MONGO_URI not found")
@@ -57,5 +58,3 @@ const connectToMongo = function (mongoUri){
     })
 
 }
-
-module.exports = mongoConnect

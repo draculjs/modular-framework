@@ -8,7 +8,7 @@ import {
     FILE_DELETE_OWN,
     FILE_SHOW_PUBLIC,
     FILE_DOWNLOAD
-} from '../permissions/File'
+} from '../permissions/File.js'
 
 import {
     USER_STORAGE_SHOW_ALL,
@@ -16,7 +16,7 @@ import {
     USER_STORAGE_UPDATE,
     USER_STORAGE_CREATE,
     USER_STORAGE_DELETE
-} from '../permissions/UserStorage'
+} from '../permissions/UserStorage.js'
 
 import { InitService } from "@dracul/user-backend";
 

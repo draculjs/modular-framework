@@ -1,6 +1,6 @@
-const { mongoose } = require('@dracul/common-backend')
-const mongoosePaginate = require('mongoose-paginate-v2')
-const uniqueValidator = require('mongoose-unique-validator')
+import uniqueValidator from 'mongoose-unique-validator';
+import mongoosePaginate from 'mongoose-paginate-v2';
+import { mongoose } from '@dracul/common-backend';
 
 const Schema = mongoose.Schema
 
@@ -24,3 +24,4 @@ AuditSchema.plugin(mongoosePaginate)
 AuditSchema.plugin(uniqueValidator, { message: 'validation.unique' })
 
 export const Audit = mongoose.model('Audit', AuditSchema)
+export default Audit

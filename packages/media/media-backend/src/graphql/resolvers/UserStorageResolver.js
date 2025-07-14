@@ -1,6 +1,6 @@
 import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
-import { fetchUserStorage, updateUserStorage, findUserStorageByUser } from "../../services/UserStorageService";
-import { USER_STORAGE_SHOW_ALL, USER_STORAGE_SHOW_OWN, USER_STORAGE_UPDATE } from "../../permissions/UserStorage";
+import { fetchUserStorage, updateUserStorage, findUserStorageByUser } from "../../services/UserStorageService.js";
+import { USER_STORAGE_SHOW_ALL, USER_STORAGE_SHOW_OWN, USER_STORAGE_UPDATE } from "../../permissions/UserStorage.js";
 
 export default {
   Query: {
@@ -13,8 +13,9 @@ export default {
     userStorageFindByUser: (_, { }, { user, rbac }) => {
       if (!user) throw new AuthenticationError("Unauthenticated");
       if (!rbac.isAllowed(user.id, USER_STORAGE_SHOW_OWN)) throw new ForbiddenError("Not Authorized");
-
-      return findUserStorageByUser(user);
+      const result = findUserStorageByUser(user)
+      
+      return result
     },
     fetchMediaVariables: (_, { }) => {
       const mediaVariables = {

@@ -1,5 +1,5 @@
-import { fetchEnabledDomains } from '../services/DomainServices'
 import { DefaultLogger as winston } from '@dracul/logger-backend'
+import { fetchEnabledDomains } from '../services/DomainServices.js'
 
 export const cors = async (req, res, next) => {
     try {

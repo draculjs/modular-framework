@@ -11,7 +11,7 @@
 
                     <v-text-field
                             id="current-password"
-                            prepend-icon="lock"
+                            prepend-icon="mdi-lock"
                             :append-icon="showCurrentPassword ? 'visibility' : 'visibility_off'"
                             :type="showCurrentPassword ? 'text' : 'password'"
                             @click:append="showCurrentPassword = !showCurrentPassword"
@@ -30,7 +30,7 @@
                 <v-col cols="12">
                     <v-text-field
                             id="new-password"
-                            prepend-icon="lock"
+                            prepend-icon="mdi-lock"
                             :append-icon="showNewPassword ? 'visibility' : 'visibility_off'"
                             :type="showNewPassword ? 'text' : 'password'"
                             @click:append="showNewPassword = !showNewPassword"
@@ -49,7 +49,7 @@
 
                 <v-col cols="12">
                     <v-text-field id="password_verify"
-                                  prepend-icon="lock"
+                                  prepend-icon="mdi-lock"
                                   :append-icon="showRepeatPassword ? 'visibility' : 'visibility_off'"
                                   :type="showRepeatPassword ? 'text' : 'password'"
                                   @click:append="showRepeatPassword = !showRepeatPassword"

@@ -1,3 +1,3 @@
-import FileCreate from './FileCreate'
+import FileCreate from './FileCreate.vue'
 export {FileCreate}
 export default FileCreate

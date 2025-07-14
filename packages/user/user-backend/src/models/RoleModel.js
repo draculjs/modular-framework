@@ -1,12 +1,16 @@
 import {mongoose} from '@dracul/common-backend';
 import softDelete from 'mongoose-softdelete'
 import mongoosePaginate from 'mongoose-paginate-v2';
-import uniqueValidator from 'mongoose-unique-validator';
 
 const Schema = mongoose.Schema
 
-const RoleSchema = new Schema({
-    name: {type: String, unique: true, required: true, index: true},
+export const RoleSchema = new Schema({
+    name: {
+        type: String, 
+        required: true, 
+        index: true,
+        unique: true // Índice único para la base de datos
+    },
     permissions: [{type: String, required: true}],
     childRoles: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -16,19 +20,11 @@ const RoleSchema = new Schema({
     readonly: {type: Boolean, required: false, default: false},
 });
 
-RoleSchema.plugin(uniqueValidator, {message: 'validation.unique'});
+// Eliminado: uniqueValidator
 RoleSchema.plugin(softDelete);
 RoleSchema.plugin(mongoosePaginate);
 
 RoleSchema.set('toJSON', {getters: true});
 
-const RoleModel = mongoose.model('Role', RoleSchema);
-
-export {
-    RoleSchema,
-    RoleModel
-}
-
-export default RoleModel
-
-//module.exports = RoleModel
+export const RoleModel = mongoose.model('Role', RoleSchema);
+export default RoleModel;

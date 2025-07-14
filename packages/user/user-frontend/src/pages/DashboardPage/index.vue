@@ -19,12 +19,6 @@
                 <sessions-by-user-card :height="160" :data="sessionsByUser"/>
             </v-col>
 
-
-            <v-col cols="12" md="6" >
-                <user-audits-card :height="160" :data="userAuditsFrom"></user-audits-card>
-            </v-col>
-
-
             <v-col cols="12" md="3">
                 <client-chart :data="sessionsByClient"></client-chart>
             </v-col>
@@ -57,28 +51,24 @@
 </template>
 
 <script>
-    import SessionProvider from "../../providers/SessionProvider";
+    import SessionProvider from "../../providers/SessionProvider.js";
 
-    import SessionsByUserCard from "./SessionsByUserCard/SessionsByUserCard";
+    import SessionsByUserCard from "./SessionsByUserCard/SessionsByUserCard.vue";
     import LoginFailCard from "./LoginFailCard";
-    import AdminUsersCard from "./AdminUsersCard";
-    import AdminGroupsCard from "./AdminGroupsCard";
-    import AdminRolesCard from "./AdminRolesCard";
-    import DeviceChart from "./SessionsByDeviceTypeCard/SessionsByDeviceTypeCard";
-    import CountryMapChart from "./SessionsByCountryCard/SessionsByCountryCard";
-    import OsChart from "./SessionsByOsCard/SessionsByOsCard";
-    import ClientChart from "./SessionsByHttpClientCard/SessionsByHttpClientCard";
-    import CityChart from "./SessionsByCityCard/SessionsByCityCard";
-    import UserAuditsCard from "./UserAuditsCard/UserAuditsCard";
+    import AdminUsersCard from "./AdminUsersCard.vue";
+    import AdminGroupsCard from "./AdminGroupsCard.vue";
+    import AdminRolesCard from "./AdminRolesCard.vue";
+    import DeviceChart from "./SessionsByDeviceTypeCard/SessionsByDeviceTypeCard.vue";
+    import OsChart from "./SessionsByOsCard/SessionsByOsCard.vue";
+    import ClientChart from "./SessionsByHttpClientCard/SessionsByHttpClientCard.vue";
+    import CityChart from "./SessionsByCityCard/SessionsByCityCard.vue";
 
     export default {
         name: "DashboardAdmin",
         components: {
-            UserAuditsCard,
             CityChart,
             ClientChart,
             OsChart,
-            CountryMapChart,
             DeviceChart,
             AdminRolesCard,
             AdminGroupsCard,
@@ -94,7 +84,6 @@
                 sessionsByOs: [],
                 sessionsByClient: [],
                 sessionsByCity: [],
-                userAuditsFrom: [],
                 loginFailByUsername: []
             }
         },
@@ -107,7 +96,6 @@
                 this.sessionsByClient = r.data.sessionsByClient
                 this.sessionsByCity = r.data.sessionsByCity
                 this.loginFailByUsername = r.data.loginFailByUsername
-                this.userAuditsFrom = r.data.userAuditsFrom
             })
         }
     }

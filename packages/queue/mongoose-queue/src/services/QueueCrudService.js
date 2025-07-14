@@ -1,4 +1,4 @@
-const QueueModel = require('../models/QueueModel');
+import QueueModel from '../models/QueueModel';
 import { UserInputError } from 'apollo-server-errors';
 import mongoose from 'mongoose';
 

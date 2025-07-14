@@ -35,7 +35,7 @@
 <script>
 
 import {CrudCreate, CrudShow} from "@dracul/common-frontend";
-import FileView from "../../../components/FileView/FileView";
+import FileView from "../../../components/FileView/FileView.vue";
 import FileForm from "../FileForm";
 import uploadProvider from "../../../providers/UploadProvider";
 

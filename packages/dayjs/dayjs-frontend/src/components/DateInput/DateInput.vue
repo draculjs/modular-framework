@@ -60,7 +60,7 @@ export default {
     errorMessages: {type:Array},
     label: { type: String},
     color: { type: String, default: "secondary"},
-    prependIcon: { type: String, default: "date_range"},
+    prependIcon: { type: String, default: "mdi-date-range"},
     prependInnerIcon: { type: String},
     rules: {type: Array, default: ()=>[]},
     clearable: {type:Boolean, default: true},

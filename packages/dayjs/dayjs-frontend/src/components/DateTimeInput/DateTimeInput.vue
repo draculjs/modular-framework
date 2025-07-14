@@ -30,11 +30,11 @@
 </template>
 
 <script>
-import DateInput from "../DateInput/DateInput";
-import TimeInput from "../TimeInput/TimeInput";
-import DayjsMixin from "../../mixins/DayjsMixin";
-import setDateToDatetimeHelper from "../../helpers/setDateToDatetimeHelper";
-import setTimeToDatetimeHelper from "../../helpers/setTimeToDatetimeHelper";
+import DateInput from "../DateInput/DateInput.vue";
+import TimeInput from "../TimeInput/TimeInput.vue";
+import DayjsMixin from "../../mixins/DayjsMixin.js";
+import setDateToDatetimeHelper from "../../helpers/setDateToDatetimeHelper.js";
+import setTimeToDatetimeHelper from "../../helpers/setTimeToDatetimeHelper.js";
 
 export default {
   name: "DateTimeInput",

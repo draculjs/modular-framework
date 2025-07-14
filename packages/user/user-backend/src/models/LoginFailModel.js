@@ -19,7 +19,6 @@ const deviceSchema = new mongoose.Schema({
     model: {type: String, required: false},
 })
 
-
 const geoSchema = new mongoose.Schema({
     country: {type: String, required: false},
     region: {type: String, required: false},
@@ -27,9 +26,7 @@ const geoSchema = new mongoose.Schema({
     city: {type: String, required: false},
 })
 
-
-// Defining user Mongoose Schema
-const LoginFailSchema = new mongoose.Schema({
+export const LoginFailSchema = new mongoose.Schema({
     username: {type: String, unique: false, required: false, dropDups: true},
     date: {type: Date, required: true, default: Date.now},
     agent: {type: String, unique: false, required: true, dropDups: true},
@@ -42,5 +39,4 @@ const LoginFailSchema = new mongoose.Schema({
 
 LoginFailSchema.set('toJSON', {getters: true});
 
-
-module.exports = mongoose.model('LoginFail', LoginFailSchema)
+export default mongoose.model('LoginFail', LoginFailSchema)

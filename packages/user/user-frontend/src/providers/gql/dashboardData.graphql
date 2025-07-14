@@ -34,14 +34,5 @@ query {
         username
         attempts
     }
-    userAuditsFrom{
-        date
-        actionBy{
-            username
-        }
-        actionFor{
-            username
-        }
-        action
-    }
+
 }

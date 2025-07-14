@@ -1,8 +1,6 @@
 import {mongoose} from '@dracul/common-backend';
 
-const mongoosePaginate = require("mongoose-paginate-v2");
-const uniqueValidator = require("mongoose-unique-validator");
-
+import mongoosePaginate from "mongoose-paginate-v2";
 const { Schema } = mongoose;
 
 const userStorageSchema = new Schema({
@@ -16,8 +14,6 @@ const userStorageSchema = new Schema({
 });
 
 userStorageSchema.plugin(mongoosePaginate);
-userStorageSchema.plugin(uniqueValidator, { message: "validation.unique" });
 
-const userStorage = mongoose.model("userStorage", userStorageSchema);
-
-module.exports = userStorage;
+export const userStorage = mongoose.model("userStorage", userStorageSchema);
+export default userStorage;

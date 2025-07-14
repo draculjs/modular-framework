@@ -10,7 +10,7 @@
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-btn block color="red" :disabled="domain != form.value" @click="deleteDomain">
-                            <v-icon left>delete</v-icon>Eliminar
+                            <v-icon left>mdi-delete</v-icon>Eliminar
                         </v-btn>
                     </v-col>
                     <v-col cols="12" md="6">

@@ -1,4 +1,4 @@
-import SessionsByCityCard from "./SessionsByCityCard";
+import SessionsByCityCard from "./SessionsByCityCard.vue";
 
 export {SessionsByCityCard}
 

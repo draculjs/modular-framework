@@ -1,3 +1,3 @@
-import SettingsList from './SettingsList'
+import SettingsList from './SettingsList.vue'
 export {SettingsList}
 export default SettingsList

@@ -1,12 +1,9 @@
-import { nonPrivilegedRolesReadOnly } from "../services/InitService"
+import { nonPrivilegedRolesReadOnly } from "../services/InitService.js"
 
-function operatorRole(){
+export default function operatorRole(){
     return {
         name: "operator",
         permissions: [],
         readonly: nonPrivilegedRolesReadOnly
     }
 }
-
-
-export default operatorRole

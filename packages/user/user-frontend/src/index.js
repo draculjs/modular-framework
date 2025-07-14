@@ -9,35 +9,36 @@ import GroupCombobox from "./components/GroupCombobox";
 import UserView from "./components/UserView";
 
 //Pages
-import UserManagementPage from './pages/UserManagementPage'
-import RoleManagementPage from './pages/RoleManagementPage'
-import GroupManagementPage from './pages/GroupManagementPage'
-import LoginPage from './pages/LoginPage'
-import RegisterPage from './pages/RegisterPage'
-import ActivationPage from './pages/ActivationPage'
-import RecoveryPage from './pages/RecoveryPage'
-import ProfilePage from './pages/ProfilePage'
-import DashboardPage from './pages/DashboardPage'
+import UserManagementPage from './pages/UserManagementPage/index.vue'
+import RoleManagementPage from './pages/RoleManagementPage/index.vue'
+import GroupManagementPage from './pages/GroupManagementPage/index.vue'
+import LoginPage from './pages/LoginPage/index.vue'
+import RegisterPage from './pages/RegisterPage/index.vue'
+import ActivationPage from './pages/ActivationPage/index.vue'
+import RecoveryPage from './pages/RecoveryPage/index.vue'
+import ProfilePage from './pages/ProfilePage/index.vue'
+import DashboardPage from './pages/DashboardPage/index.vue'
 
 //Resources
-import i18nMessages from './i18n/messages'
-import UserModuleStore from './store/UserModule'
+import i18nMessages from './i18n/messages/index.js'
+import UserModuleStore from './store/UserModule.js'
 
 //Providers
-import authProvider from "./providers/AuthProvider";
-import userProvider from "./providers/UserProvider";
-import roleProvider from "./providers/RoleProvider";
-import groupProvider from "./providers/GroupProvider";
-import profileProvider from "./providers/ProfileProvider";
-import recoveryProvider from "./providers/RecoveryProvider";
-import sessionProvider from "./providers/SessionProvider";
+import authProvider from "./providers/AuthProvider.js";
+import userProvider from "./providers/UserProvider.js";
+import roleProvider from "./providers/RoleProvider.js";
+import groupProvider from "./providers/GroupProvider.js";
+import profileProvider from "./providers/ProfileProvider.js";
+import recoveryProvider from "./providers/RecoveryProvider.js";
+import sessionProvider from "./providers/SessionProvider.js";
 
 //Routes
 import routes from "./routes";
 
 import ClientError from './errors/ClientError'
 
-const setGraphQlClientToProviders = (graphQlClient) => {
+export function setGraphQlClientToProviders(graphQlClient){
+    console.log("graphQlClient: ", graphQlClient)
     authProvider.setGqlc(graphQlClient)
     userProvider.setGqlc(graphQlClient)
     roleProvider.setGqlc(graphQlClient)
@@ -85,7 +86,4 @@ export {
     profileProvider,
     recoveryProvider,
     sessionProvider,
-
-    //Initialice gqlc
-    setGraphQlClientToProviders
 }

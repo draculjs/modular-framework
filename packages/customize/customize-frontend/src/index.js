@@ -1,4 +1,4 @@
-import CustomConfigPage from "./pages/CustomConfigPage/CustomConfigPage";
+import CustomConfigPage from "./pages/CustomConfigPage/CustomConfigPage.vue";
 import LogoToolbar from "./components/LogoToolbar";
 import DarkMode from "./components/DarkMode";
 import TitleToolbar from "./components/TitleToolbar";

@@ -3,13 +3,13 @@
         <v-row>
             <v-col cols="12" sm="6" md="4">
                 <v-list>
-                    <show-field :value="item.name" :label="$t('common.name')" icon="account_box"/>
+                    <show-field :value="item.name" :label="$t('common.name')" icon="mdi-account_box"/>
                 </v-list>
             </v-col>
 
             <v-col cols="12" sm="6" md="4">
                 <v-list>
-                    <show-field :value="item.lastname" :label="$t('common.lastname')" icon="account_circle"/>
+                    <show-field :value="item.lastname" :label="$t('common.lastname')" icon="mdi-account_circle"/>
                 </v-list>
             </v-col>
         </v-row>

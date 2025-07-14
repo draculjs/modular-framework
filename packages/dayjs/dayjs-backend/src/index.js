@@ -1,6 +1,6 @@
 
-const {types, resolvers} =  require('./graphql')
+import {types, resolvers} from './graphql/index.js';
 
-module.exports.dayjsTypes = types
-module.exports.dayjsResolvers = resolvers
+export const dayjsTypes = types
+export const dayjsResolvers = resolvers
 

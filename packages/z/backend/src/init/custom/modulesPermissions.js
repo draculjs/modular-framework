@@ -2,7 +2,7 @@
 
 import {
  BASE_SHOW
-} from '../../modules/base/permissions'
+} from '../../modules/base/permissions/index.js'
 
 
 

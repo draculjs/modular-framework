@@ -1,3 +1,5 @@
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
+
 import {
     findSettings,
     fetchSettings,
@@ -6,15 +8,9 @@ import {
     updateSettingsByKey,
     fetchEntityOptions,
     fetchSettingsGroup
-} from '../../services/SettingsService'
+} from '../../services/SettingsService.js'
 
-import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
-
-import {
-
-    SETTINGS_SHOW,
-    SETTINGS_UPDATE
-} from "../../permissions/Settings";
+import { SETTINGS_SHOW, SETTINGS_UPDATE } from "../../permissions/Settings.js";
 
 export default {
     Query: {
@@ -38,7 +34,6 @@ export default {
         async fetchSettingsGroup(){
             return await fetchSettingsGroup()
         }
-
     },
     Mutation: {
         settingValueUpdateByKey: (_, {key, value, valueList}, {user, rbac}) => {
@@ -47,6 +42,5 @@ export default {
             return updateSettingsByKey(user, {key,value, valueList})
         }
     }
-
 }
 

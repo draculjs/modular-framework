@@ -1,4 +1,4 @@
-import UserCombobox from "./UserCombobox";
+import UserCombobox from "./UserCombobox.vue";
 
 export {UserCombobox}
 export default UserCombobox

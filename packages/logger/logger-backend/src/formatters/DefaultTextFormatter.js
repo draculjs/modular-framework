@@ -1,4 +1,5 @@
-require('dotenv').config()
+import { config } from 'dotenv';
+config()
 import  winston from "winston";
 
 function DefaultTextFormatter(color) {

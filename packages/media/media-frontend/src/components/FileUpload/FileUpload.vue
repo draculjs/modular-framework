@@ -52,7 +52,7 @@
                 inputErrors: {},
                 file: null,
                 color: 'blue-grey',
-                icon: 'cloud_upload',
+                icon: 'mdi-upload',
                 loading: false,
                 result: null,
                 accept: '*'

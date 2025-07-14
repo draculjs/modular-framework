@@ -6,7 +6,6 @@
       </template>
 
       <template v-slot:toolbar-right>
-        <notification-button v-if="me && $store.getters.hasPermission('NOTIFICATION_SHOW')" :user-id="getUserId"/>
         <dashboard-button/>
         <app-bar-user-menu/>
       </template>
@@ -18,12 +17,12 @@
 
 <script>
 import {NotificationButton} from "@dracul/notification-frontend"
-import Layout from "./layout/Layout";
-import menuConfig from './menu-config'
+import Layout from "./layout/Layout.vue";
+import menuConfig from './menu-config/index.js'
 import {DashboardButton, AppBarUserMenu} from '@dracul/user-frontend'
 import {LogoToolbar, TitleToolbar} from '@dracul/customize-frontend'
 import {mapGetters} from "vuex";
-import ErrorSnackbar from "@/modules/base/components/ErrorSnackbar"
+import ErrorSnackbar from "@/modules/base/components/ErrorSnackbar.vue"
 
 export default {
   name: 'App',

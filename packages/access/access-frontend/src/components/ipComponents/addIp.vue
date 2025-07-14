@@ -20,7 +20,7 @@
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-btn block color="primary" :disabled="!formValue" @click="createIp">
-                                <v-icon left>add</v-icon>Añadir
+                                <v-icon left>mdi-plus</v-icon>Añadir
                             </v-btn>
                         </v-col>
                         <v-col cols="12" md="6">

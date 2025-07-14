@@ -1,6 +1,6 @@
-import {fetchPermissions} from '../../services/PermissionService'
 import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
-import {SECURITY_ROLE_SHOW, SECURITY_ROLE_SHOW_CHILD} from "../../permissions";
+import {SECURITY_ROLE_SHOW, SECURITY_ROLE_SHOW_CHILD} from "../../permissions/include/security-permissions.js";
+import {fetchPermissions} from '../../services/PermissionService.js'
 
 export default {
     Query: {

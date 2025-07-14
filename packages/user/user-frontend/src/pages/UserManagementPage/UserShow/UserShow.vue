@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import UserShowData from "./UserShowData";
+    import UserShowData from "./UserShowData.vue";
     import {CrudShow} from '@dracul/common-frontend'
 
     export default {

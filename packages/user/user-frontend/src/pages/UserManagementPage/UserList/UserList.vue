@@ -45,10 +45,10 @@
 
         <template v-slot:item.active="{ item }">
           <div v-if="item.active">
-            <v-icon color="success">check_circle</v-icon>
+            <v-icon color="success">mdi-check-circle</v-icon>
           </div>
           <div v-else>
-            <v-icon color="error">highlight_off</v-icon>
+            <v-icon color="error">mdi-close-circle-outline</v-icon>
           </div>
         </template>
 
@@ -117,7 +117,7 @@
   </v-row>
 </template>
 <script>
-import UserProvider from "../../../providers/UserProvider";
+import UserProvider from "../../../providers/UserProvider.js";
 import {SearchInput} from '@dracul/common-frontend'
 import {mapGetters} from "vuex";
 

@@ -1,4 +1,4 @@
-import Dayjs from '../utils/Dayjs'
+import Dayjs from '../utils/Dayjs.js'
 import {isDayjs} from 'dayjs'
 /**
  *

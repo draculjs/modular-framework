@@ -15,8 +15,8 @@
       <v-divider/>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <close-button @click="$emit('close')"></close-button>
+        <v-spacer/>
+        <close-button @click="$emit('close')"/>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -24,7 +24,7 @@
 
 <script>
 import ToolbarDialog from "../../ToolbarDialog";
-import CloseButton from "../../CloseButton/CloseButton";
+import CloseButton from "../../CloseButton/CloseButton.vue";
 
 export default {
   name: "CrudShow",

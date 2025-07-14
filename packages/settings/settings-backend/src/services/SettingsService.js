@@ -1,6 +1,19 @@
 import {mongoose} from '@dracul/common-backend'
-import Settings from '../models/SettingsModel'
 import {UserInputError} from 'apollo-server-errors'
+import Settings from '../models/SettingsModel.js'
+
+async function keyExists(key, excludeId = null) {
+    try {
+        const query = { key };
+        if (excludeId) {
+            query._id = { $ne: excludeId };
+        }
+        const count = await Settings.countDocuments(query);
+        return count > 0;
+    } catch (error) {
+        throw error;
+    }
+}
 
 export const initializeSettings = async function (settings = []) {
 
@@ -52,7 +65,7 @@ export const findSettingsByKey = async function (key) {
     }
 }
 
-export const getSettingsValueByKey = async function (key) {
+export async function getSettingsValueByKey(key) {
 
     try {
         const settings = await Settings.findOne({key: key}).exec()
@@ -102,8 +115,7 @@ export const fetchSettings = async function () {
     }
 }
 
-export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
-
+export const paginateSettings = async function (pageNumber = 1, itemsPerPage = 5, search = null, orderBy = null, orderDesc = false) {
     function qs(search) {
         let qs = {}
         if (search) {
@@ -130,12 +142,12 @@ export const paginateSettings = function (pageNumber = 1, itemsPerPage = 5, sear
     let sort = getSort(orderBy, orderDesc)
     let params = {page: pageNumber, limit: itemsPerPage, populate, sort}
 
-    return new Promise((resolve, reject) => {
-        Settings.paginate(query, params).then(result => {
-                resolve({items: result.docs, totalItems: result.totalDocs, page: result.page})
-            }
-        ).catch(err => reject(err))
-    })
+    try {
+        const result = await Settings.paginate(query, params)
+        return {items: result.docs, totalItems: result.totalDocs, page: result.page}
+    } catch (err) {
+        throw err
+    }
 }
 
 export const createOrUpdateSettings = async (authUser, {
@@ -159,32 +171,47 @@ export const createOrUpdateSettings = async (authUser, {
         const setting = await Settings.findOne({key})
 
         if (setting) {
-            setting.entityText = entityText
-            setting.entityValue = entityValue
-            setting.label = label
-            setting.group = group
-            setting.type = type
-            setting.options = options
-            setting.regex = regex
-            setting.entity = entity
-            setting.field = field
-            setting.prefix = prefix
-            setting.suffix = suffix
+            // Actualización existente - no necesita verificar clave única
+            let docValue = null
+            if (typeof value === 'boolean') {
+                docValue = value ? "enable" : "disable"
+            } else if (value || value === 0) {
+                docValue = value.toString()
+            }
 
-            return new Promise(async (resolve, rejects) => {
-                try {
-                    await setting.save()
-                    resolve(setting)
-                } catch (error) {
-                    if (error) {
-                        if (error.name == "ValidationError") {
-                            return rejects(new UserInputError(error.message, {inputErrors: error.errors}));
-                        }
-                        return rejects(error)
-                    }
-                }
+            const docValueList = valueList ? valueList.map(i => i.toString()) : []
 
-            })
+            const update = {
+                entityText,
+                entityValue,
+                value: docValue,
+                valueList: docValueList,
+                label,
+                group: group ? group : 'General',
+                type,
+                options,
+                regex,
+                entity,
+                field,
+                prefix,
+                suffix
+            }
+
+            const updatedSetting = await Settings.findOneAndUpdate(
+                { key: key },
+                update,
+                { new: true, runValidators: true, context: 'query' }
+            )
+
+            return updatedSetting
+        }
+
+        // Nueva configuración - verificar clave única
+        const keyAlreadyExists = await keyExists(key);
+        if (keyAlreadyExists) {
+            throw new UserInputError('Setting key must be unique', {
+                inputErrors: { key: 'Setting key must be unique' }
+            });
         }
 
         let docValue = null
@@ -219,14 +246,18 @@ export const createOrUpdateSettings = async (authUser, {
         return newSetting
 
     } catch (error) {
+        if (error.code === 11000) {
+            throw new UserInputError('Setting key must be unique', {
+                inputErrors: { key: 'Setting key must be unique' }
+            });
+        }
         if (error.name == "ValidationError") {
             throw new UserInputError(error.message, {inputErrors: error.errors})
         }
         throw error
     }
-
-
 }
+
 
 
 export const createSettings = async function (authUser, {
@@ -246,6 +277,14 @@ export const createSettings = async function (authUser, {
 }) {
 
     try {
+        // Verificar clave única
+        const keyAlreadyExists = await keyExists(key);
+        if (keyAlreadyExists) {
+            throw new UserInputError('Setting key must be unique', {
+                inputErrors: { key: 'Setting key must be unique' }
+            });
+        }
+
         const docValue = value ? value.toString() : null
 
         const doc = new Settings({
@@ -267,6 +306,11 @@ export const createSettings = async function (authUser, {
         return doc
 
     } catch (error) {
+        if (error.code === 11000) {
+            throw new UserInputError('Setting key must be unique', {
+                inputErrors: { key: 'Setting key must be unique' }
+            });
+        }
         if (error.name == "ValidationError") {
             throw new UserInputError(error.message, {inputErrors: error.errors})
         }
@@ -289,6 +333,16 @@ export const updateSettings = async function (authUser, id, {
 }) {
 
     try{
+        // Si se está actualizando la clave, verificar que sea única
+        if (key) {
+            const keyAlreadyExists = await keyExists(key, id);
+            if (keyAlreadyExists) {
+                throw new UserInputError('Setting key must be unique', {
+                    inputErrors: { key: 'Setting key must be unique' }
+                });
+            }
+        }
+
         const docValue = (value || typeof value === 'boolean' || value === 0) ? value.toString() : null
 
         const settings = await Settings.findOneAndUpdate({_id: id},
@@ -305,6 +359,11 @@ export const updateSettings = async function (authUser, id, {
             {new: true, runValidators: true, context: 'query'}).exec()
         return settings
     }catch (error) {
+        if (error.code === 11000) {
+            throw new UserInputError('Setting key must be unique', {
+                inputErrors: { key: 'Setting key must be unique' }
+            });
+        }
         if (error.name == "ValidationError") {
             throw new UserInputError(error.message, {inputErrors: error.errors})
         }
@@ -315,6 +374,7 @@ export const updateSettings = async function (authUser, id, {
 export const updateSettingsByKey = async function (authUser, {key, value, valueList = []}) {
 
     try{
+        // Actualización por clave - no cambia la clave, no necesita verificación
         let docValue = null
 
         if (typeof value === 'boolean') {
@@ -334,6 +394,11 @@ export const updateSettingsByKey = async function (authUser, {key, value, valueL
 
         return settings
     }catch (error) {
+        if (error.code === 11000) {
+            throw new UserInputError('Setting key must be unique', {
+                inputErrors: { key: 'Setting key must be unique' }
+            });
+        }
         if (error.name == "ValidationError") {
             throw new UserInputError(error.message, {inputErrors: error.errors})
         }

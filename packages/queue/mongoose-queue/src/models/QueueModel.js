@@ -1,6 +1,6 @@
 import {mongoose} from '@dracul/common-backend';
 const Schema = mongoose.Schema;
-const mongoosePaginate = require('mongoose-paginate-v2');
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const QueueSchema = new Schema({
     // time until the job is blocked for processing

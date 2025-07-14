@@ -1,4 +1,4 @@
-import RecoveryInvalidToken from "./RecoveryInvalidToken";
+import RecoveryInvalidToken from "./RecoveryInvalidToken.vue";
 
 export {RecoveryInvalidToken}
 export default RecoveryInvalidToken

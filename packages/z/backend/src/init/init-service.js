@@ -3,9 +3,9 @@ dotenv.config()
 
 import {InitService} from '@dracul/user-backend'
 import {initPermissionsCustomization, initCustomization} from '@dracul/customize-backend'
-import operatorRole from './custom/initOperatorRole'
-import managerRole from './custom/initManagerRole'
-import desarrolloRole from './custom/initDesarrolloRole'
+import operatorRole from './custom/initOperatorRole.js'
+import managerRole from './custom/initManagerRole.js'
+import desarrolloRole from './custom/initDesarrolloRole.js'
 
 import {
     permissions as notiPermissions
@@ -25,12 +25,11 @@ import {
     permissions as AuditPermissions
 } from "@dracul/audit-backend"
 
-import {initSettings} from './custom/initSettings'
-import {testNotification} from './custom/testNotification'
+import {initSettings} from './custom/initSettings.js'
 
-import modulesPermissions from './custom/modulesPermissions'
+import modulesPermissions from './custom/modulesPermissions.js'
 
-const initService = async () => {
+export default async function initService(){
     console.log("INIT SERVICE")
 
     await InitService.initLdapSettings()
@@ -77,11 +76,6 @@ const initService = async () => {
 
     await InitService.initRootUser()
     await InitService.initOperatorUser()
-    await testNotification()
 
     await initCustomization({})
 }
-
-export {initService}
-
-export default initService

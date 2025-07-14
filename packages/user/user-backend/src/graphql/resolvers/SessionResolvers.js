@@ -1,12 +1,10 @@
-import {
-    sessionsByCity, sessionsByClient,
-    sessionsByCountry,
-    sessionsByDeviceType,
-    sessionsByOs,
-    sessionsByUser
-} from '../../services/SessionService'
 import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
-import {SECURITY_USER_SHOW} from "../../permissions";
+
+import {
+    sessionsByCity, sessionsByClient, sessionsByCountry, sessionsByDeviceType, sessionsByOs, sessionsByUser
+} from '../../services/SessionService.js'
+
+import {SECURITY_USER_SHOW} from "../../permissions/include/security-permissions.js";
 
 export default {
     Query: {

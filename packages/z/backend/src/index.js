@@ -1,44 +1,56 @@
-require('dotenv').config();
-import {DefaultLogger} from "@dracul/logger-backend";
-import {userCreateListener} from "@dracul/media-backend";
-import expressApp from './express-app'
-import apolloServer from './apollo-server'
-import initService from "./init/init-service";
-import defaultRoute from "./routes/DefaultRoute";
-import {graphqlUploadExpress} from 'graphql-upload'
+import dotenv from 'dotenv';
+dotenv.config();
 
-const mongoConnect = require('./mongo-db')
+import { DefaultLogger } from "@dracul/logger-backend";
+import { userCreateListener } from "@dracul/media-backend";
+import { expressApp } from './express-app.js';
+import { apolloServer } from './apollo-server.js';
+import initService from "./init/init-service.js";
+import defaultRoute from "./routes/DefaultRoute.js";
+import {mongoConnect} from './mongo-db.js';
+import { expressMiddleware } from '@apollo/server/express4';
 
-DefaultLogger.info("Starting APP")
+DefaultLogger.info("Starting APP");
 
-//Connect to MongoDb
-mongoConnect()
+async function startServer() {
+    try {
+        await mongoConnect();
+        await initService();
+        userCreateListener();
+        
+        await apolloServer.start();
+        
+        const GRAPHQL_PATH = '/graphql';
+        
+        // Middleware de Apollo Server
+        expressApp.use(
+            GRAPHQL_PATH,
+            expressMiddleware(apolloServer, {
+                context: async ({ req }) => {
+                    // Asegúrate de pasar el contexto completo
+                    return { 
+                        req,
+                        user: req.user,    // Asegúrate que esto está poblado
+                        rbac: req.rbac     // Asegúrate que esto está poblado
+                    };
+                }
+            })
+        );
 
-userCreateListener()
+        expressApp.use(defaultRoute);
 
-expressApp.use(graphqlUploadExpress({maxFileSize: 1000000000, maxFiles: 10}))
+        const PORT = process.env.APP_PORT || "5000";
+        const BASE_URL = process.env.APP_API_URL || `http://localhost:${PORT}`;
 
-//Link ApolloServer with ExpressApp
-apolloServer.applyMiddleware({app: expressApp})
+        const server = expressApp.listen(PORT, () => {
+            DefaultLogger.info(`Web Server started: ${BASE_URL}`);
+            DefaultLogger.info(`Graphql Server ready: ${BASE_URL}${GRAPHQL_PATH}`);
+        });
+        server.setTimeout(420000);
+    } catch (err) {
+        DefaultLogger.error(err.message, err);
+        process.exit(1);
+    }
+}
 
-//Default route to frontend web on monorepo strategy
-expressApp.use(defaultRoute)
-
-//initialize permissions, roles, users, customs, seeds
-initService()
-    //After initialize start to listen request
-    .then(() => {
-
-    const PORT = process.env.APP_PORT ? process.env.APP_PORT : "5000"
-    const URL = process.env.APP_API_URL ? process.env.APP_API_URL : "http://localhost" + PORT
-
-    const server = expressApp.listen(PORT, () => {
-        DefaultLogger.info(`Web Server started: ${URL}`)
-        DefaultLogger.info(`Graphql Server ready: ${URL}${apolloServer.graphqlPath}`)
-    })
-    server.setTimeout(420000);
-
-}).catch(err => {
-    DefaultLogger.error(err.message, err)
-})
-
+startServer();

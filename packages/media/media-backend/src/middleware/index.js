@@ -1,4 +1,4 @@
-import updateFileMiddleware from "./updateFileMiddleware";
+import updateFileMiddleware from "./updateFileMiddleware.js";
 
 export {
     updateFileMiddleware

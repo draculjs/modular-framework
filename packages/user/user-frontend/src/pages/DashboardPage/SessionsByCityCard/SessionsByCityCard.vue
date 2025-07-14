@@ -9,7 +9,7 @@
 
 <script>
     import ChartsMixin from "../../../mixins/ChartsMixin";
-    import BarChart from "../../../components/charts/BarChart";
+    import BarChart from "../../../components/charts/BarChart.vue";
 
     export default {
         name: "SessionsByCityCard",

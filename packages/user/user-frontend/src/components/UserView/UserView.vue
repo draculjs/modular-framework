@@ -21,6 +21,7 @@
 <script>
 import userProvider from "../../providers/UserProvider";
 import {Loading} from '@dracul/common-frontend'
+import userImage from "../../assets/user.png"
 export default {
   name: "UserView",
   components: {Loading},
@@ -38,7 +39,7 @@ export default {
       return null
     },
     getDefaultAvatar() {
-      return this.defaultAvatar ? this.defaultAvatar : require("../../assets/user.png")
+      return this.defaultAvatar ? this.defaultAvatar : userImage
     },
   },
   data() {

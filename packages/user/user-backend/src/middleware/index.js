@@ -1,7 +1,7 @@
-import jwtMiddleware from "./jwtMiddleware";
-import corsMiddleware from "./corsMiddleware";
-import rbacMiddleware from "./rbacMiddleware";
-import sessionMiddleware from "./sessionMiddleware";
+import jwtMiddleware from "./jwtMiddleware.js";
+import corsMiddleware from "./corsMiddleware.js";
+import rbacMiddleware from "./rbacMiddleware.js";
+import sessionMiddleware from "./sessionMiddleware.js";
 
 export {
     jwtMiddleware,

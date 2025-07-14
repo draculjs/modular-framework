@@ -1,8 +1,8 @@
 
-const { GraphQLScalarType } = require('graphql');
-const dayjs = require("dayjs");
+import { GraphQLScalarType } from 'graphql';
+import dayjs from "dayjs";
 
-const resolvers = {
+export const resolvers = {
     Date: new GraphQLScalarType({
         name: 'Date',
         description: 'Date custom scalar type',

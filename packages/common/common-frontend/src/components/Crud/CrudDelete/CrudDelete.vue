@@ -27,8 +27,8 @@
 
 <script>
 import ToolbarDialog from "../../ToolbarDialog";
-import CloseButton from "../../CloseButton/CloseButton";
-import SubmitButton from "../../SubmitButton/SubmitButton";
+import CloseButton from "../../CloseButton/CloseButton.vue";
+import SubmitButton from "../../SubmitButton/SubmitButton.vue";
 
 export default {
   name: "CrudDelete",

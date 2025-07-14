@@ -1,4 +1,4 @@
-import GroupCreate from "./GroupCreate";
+import GroupCreate from "./GroupCreate.vue";
 
 export {GroupCreate}
 export default GroupCreate

@@ -5,7 +5,7 @@
         <date-input
             v-model="expirationDate"
             :label="$t('media.file.expirationDate')"
-            prepend-icon="event"
+            prepend-icon="mdi-calendar"
             color="secondary"
             hide-details
             :rules="fileExpirationTimeRules"/>
@@ -13,7 +13,7 @@
 
       <v-col cols="12" sm="6" md="6">
         <v-select
-          prepend-icon="visibility"
+          prepend-icon="mdi-eye"
           v-model="isPublic"
           :items="[{text: 'Público', value: true}, {text: 'Privado', value: false}]"
           :label="$t('media.file.visibility')"
@@ -22,7 +22,7 @@
 
       <v-col cols="12" sm="12" md="12" >
           <v-combobox
-              prepend-icon="loyalty"
+              prepend-icon="mdi-tag"
               v-model="tags"
               :label="$t('media.file.tags')"
               multiple
@@ -34,7 +34,7 @@
 
       <v-col cols="12" sm="12" md="12" >
         <v-text-field
-            prepend-icon="description"
+            prepend-icon="mdi-text"
             name="filename"
             v-model="description"
             :label="$t('media.file.description')"
@@ -123,7 +123,7 @@ export default {
       inputErrors: {},
       file: null,
       color: 'blue-grey',
-      icon: 'cloud_upload',
+      icon: 'mdi-upload',
       type: null,
       uploadedFile: null,
       state: INITIAL,
@@ -134,7 +134,7 @@ export default {
       states: {
         initial: {
           color: 'blue-grey',
-          icon: 'cloud_upload'
+          icon: 'mdi-upload'
         },
         selected: {
           color: 'cyan darken-3',
@@ -200,8 +200,8 @@ export default {
       return null;
     }
   },
-  mounted() {
-    this.findUserStorage();
+  async mounted() {
+    await this.findUserStorage();
   },
   methods: {
     pickFile() {
@@ -222,16 +222,16 @@ export default {
         this.upload(fileSize)
       }
     },
-    findUserStorage() {
-      return UserStorageProvider.findUserStorageByUser().then((res) => {
-        if (res.data.userStorageFindByUser && res.data.userStorageFindByUser.maxFileSize) {
-          this.maxFileSize = res.data.userStorageFindByUser.maxFileSize;
-          this.fileExpirationTime = res.data.userStorageFindByUser.fileExpirationTime;
+    async findUserStorage() {
+      try {
+        const userStorage = await UserStorageProvider.findUserStorageByUser()
+        if(userStorage.data.userStorageFindByUser && userStorage.data.userStorageFindByUser.maxFileSize){
+          this.maxFileSize = userStorage.data.userStorageFindByUser.maxFileSize;
+          this.fileExpirationTime = userStorage.data.userStorageFindByUser.fileExpirationTime;
         }
-
-      }).catch(
-          err => console.error(err)
-      )
+      } catch (error) {
+        console.error(error)
+      }
     },
      async upload(fileSize) {
       if (this.file && this.state !== UPLOADED && fileSize <= this.maxFileSize && this.getDifferenceInDays <= this.fileExpirationTime) {

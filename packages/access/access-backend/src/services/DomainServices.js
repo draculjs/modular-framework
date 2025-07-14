@@ -1,4 +1,4 @@
-import Domain from "../models/DomainModel"
+import Domain from "../models/DomainModel.js"
 
 export const findDomain = async (id) => {
     try {

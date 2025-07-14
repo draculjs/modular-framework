@@ -1,4 +1,4 @@
-import SessionsByUserCard from "./SessionsByUserCard";
+import SessionsByUserCard from "./SessionsByUserCard.vue";
 
 export {SessionsByUserCard}
 export default SessionsByUserCard

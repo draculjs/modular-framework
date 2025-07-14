@@ -1,3 +1,11 @@
+import pingRaw from './gql/ping.graphql?raw';
+import pingTimeoutRaw from './gql/pingTimeout.graphql?raw';
+import { ApolloClient, gql } from '@apollo/client/core';
+
+const pingRawGql = gql(pingRaw);
+const pingTimeoutRawGql = gql(pingTimeoutRaw);
+
+
 import apolloClient from '../../../apollo'
 class BaseProvider {
 
@@ -5,19 +13,23 @@ class BaseProvider {
         this.gqlc = null
     }
 
-    setGqlc(gqlc){
-        this.gqlc = gqlc
+    setGqlc(gqlc) {
+        if (gqlc instanceof ApolloClient) {
+            this.gqlc = gqlc;
+        } else {
+            throw new Error('gqlc must be an ApolloClient instance');
+        }
     }
 
     ping(){
         return this.gqlc.query({
-            query: require('./gql/ping.graphql')
+            query: pingRawGql
         })
     }
 
     pingTimeout(){
         return this.gqlc.query({
-            query: require('./gql/pingTimeout.graphql')
+            query: pingTimeoutRawGql
         })
     }
 }

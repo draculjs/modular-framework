@@ -1,7 +1,7 @@
 <template>
     <v-col cols="12" sm="6">
         <v-select
-                prepend-icon="account_circle"
+                prepend-icon="mdi-account_circle"
                 :items="items"
                 :item-text="'name'"
                 :item-value="'id'"

@@ -1,8 +1,7 @@
 import express from 'express';
-import { getUserStoragesByUsedPercentage } from '../../services/UserStorageService'
-import { DefaultLogger as winston } from '@dracul/logger-backend'
+import { getUserStoragesByUsedPercentage } from '../../services/UserStorageService.js'
 
-const usersStorageRouter = express.Router();
+export const usersStorageRouter = express.Router();
 
 function validatePercentage(percentage) {
     if (!percentage) {
@@ -37,5 +36,4 @@ usersStorageRouter.get('/usedStorage/:percentage', async function (req, res) {
     }
 })
 
-module.exports = usersStorageRouter;
 export default usersStorageRouter;

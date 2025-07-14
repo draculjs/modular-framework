@@ -1,4 +1,4 @@
-import CustomizationMenu from "./CustomizationMenu";
+import CustomizationMenu from "./CustomizationMenu.vue";
 
 export {CustomizationMenu}
 export default CustomizationMenu

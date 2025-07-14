@@ -1,22 +1,25 @@
 import GqlErrorLogger from "../loggers/GqlErrorLogger";
 
 function GqlErrorLog(requestContext) {
-    try{
-        if (process.env.LOG_GQL_ERRORS == "ON") {
-
-            let user = requestContext.context.user ? requestContext.context.user.username ? requestContext.context.user.username : "anonymous" : "anonymous"
-            let operation = requestContext.operation ? requestContext.operation.operation : ""
+    try {
+        if (process.env.LOG_GQL_ERRORS == "ON" && requestContext.errors) {
+            // Manejo seguro del contexto
+            const context = requestContext.contextValue || {};
+            const user = context.user || context.req?.user || {};
+            
+            const username = user.username ? user.username : "anonymous";
+            const operation = requestContext.operation?.operation || "unknown_operation";
+            
             requestContext.errors.forEach(error => {
-                let path = (error.path && Array.isArray(error.path) && error.path[0]) ? error.path[0] : ""
-                let message = `${operation}:${path} by:${user}`
-                GqlErrorLogger.error(message, error)
-            })
+                const path = Array.isArray(error.path) && error.path[0] ? error.path[0] : "";
+                const message = `${operation}:${path} by:${username}`;
+                
+                GqlErrorLogger.error(message, error);
+            });
         }
-    }catch (e){
-        console.error(e)
+    } catch (e) {
+        console.error("Error in GqlErrorLog:", e);
     }
-
-
 }
 
-export default GqlErrorLog
+export default GqlErrorLog;

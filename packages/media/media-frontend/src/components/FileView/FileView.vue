@@ -73,22 +73,22 @@
 
         <v-tab-item><!--metadata-->
           <v-row dense>
-            <show-field :value="file.filename" :label="$t('media.file.filename')" icon="description"/>
-            <show-field :value="file.id" :label="$t('media.file.id')" icon="badge"/>
-            <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="category"/>
-            <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="line_weight"/>
-            <show-chip-field :chips="file.tags" :label="$t('media.file.tags')" icon="tag"/>
-            <show-field :value="hits" :label="$t('media.file.hits')" icon="visibility"/>
+            <show-field :value="file.id" :label="$t('media.file.id')" icon="mdi-badge-account"/>
+            <show-field :value="file.filename" :label="$t('media.file.filename')" icon="mdi-text-short  "/>
+            <show-field :value="file.mimetype" :label="$t('media.file.mimetype')" icon="mdi-shape"/>
+            <show-field :value="getSizeInMegaBytes" :label="$t('media.file.size')" icon="mdi-format-line-weight"/>
+            <show-chip-field :chips="file.tags" :label="$t('media.file.tags')" icon="mdi-tag"/>
+            <show-field :value="hits" :label="$t('media.file.hits')" icon="mdi-eye"/>
 
             <v-list-item v-if="$store.getters.hasPermission('FILE_DOWNLOAD')">
               <v-list-item-icon class="mr-5">
                 <v-btn small icon @click="copyToClipboard">
-                  <v-icon color="black">content_copy</v-icon>
+                  <v-icon color="black">mdi-content-copy</v-icon>
                 </v-btn>
                 <input type="hidden" id="url" :value="file.url">
               </v-list-item-icon>
               <v-list-item-content class="mr-0">
-                <span>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>launch</v-icon></v-btn></span>
+                <span>{{ file.url }} <v-btn x-small icon color="blue" target="_blank" :href="file.url"><v-icon>mdi-launch</v-icon></v-btn></span>
               </v-list-item-content>
             </v-list-item>
 
@@ -115,8 +115,8 @@
                   text
                   v-bind="attrs"
                   @click="copyResult = false"
-              >
-                <v-icon>close</v-icon>
+              >asdasd
+                <v-icon>mdi-close-circle</v-icon>
               </v-btn>
             </template>
           </v-snackbar>

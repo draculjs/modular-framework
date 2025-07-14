@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import PieChart from "../../../components/charts/PieChart";
+    import PieChart from "../../../components/charts/PieChart.vue";
     import ChartsMixin from "../../../mixins/ChartsMixin";
 
     export default {

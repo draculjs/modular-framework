@@ -1,4 +1,4 @@
-const randomString =  function (length = 4) {
+export const randomString =  function (length = 4) {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let charactersLength = characters.length;
@@ -8,5 +8,4 @@ const randomString =  function (length = 4) {
     return result;
 }
 
-module.exports.randomString = randomString
-module.exports =  randomString
+export default randomString

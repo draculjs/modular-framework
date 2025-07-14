@@ -59,6 +59,7 @@ export default {
     update() {
       if (this.$refs.form.validate()) {
         this.loading = true
+        console.log("this.file: ", this.file)
         FileProvider.updateFile(this.form, this.file).then(r => {
               if (r) {
                 this.$emit('itemUpdated', r.data.fileUpdate)

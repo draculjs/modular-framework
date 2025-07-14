@@ -1,4 +1,4 @@
-const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge')
+import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge'
 import { securityResolvers, securityTypes } from '@dracul/user-backend'
 
 import { commonTypes } from '@dracul/common-backend'
@@ -10,9 +10,9 @@ import { types as auditTypes, resolvers as auditResolvers } from '@dracul/audit-
 import {dayjsTypes, dayjsResolvers } from '@dracul/dayjs-backend'
 
 //BASE RESOLVERS
-import { resolvers as baseResolvers } from './modules/base/graphql'
+import { resolvers as baseResolvers } from './modules/base/graphql/index.js'
 //BASE TYPEDEFS
-import { types as baseTypes } from './modules/base/graphql'
+import { types as baseTypes } from './modules/base/graphql/index.js'
 
 
 export const resolvers = mergeResolvers([

@@ -4,7 +4,7 @@
 
         <v-card-text class="pt-4 px-8 my-0 pb-0 text-center">
             <v-btn fab class="onPrimary--text" color="primary">
-                <v-icon>lock</v-icon>
+                <v-icon>mdi-lock</v-icon>
             </v-btn>
             <h2 class="mt-3" v-t="'auth.passwordRecovery'"></h2>
         </v-card-text>
@@ -20,7 +20,7 @@
 
             <v-card-text >
                 <v-form ref="form" autocomplete="off" v-model="valid" @submit.prevent="submit">
-                    <v-text-field prepend-icon="email"
+                    <v-text-field prepend-icon="mdi-email"
                                   name="email"
                                   ref="email"
                                   type="text"

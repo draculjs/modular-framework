@@ -1,20 +1,23 @@
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
+import { DefaultLogger } from '@dracul/logger-backend';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 
-const tempDir = (name) => {
-    let tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), name));
-    return {
-        dir: tmpDir,
-        getDir(){
-            return this.dir
-        },
-        purge(){
-            fs.rmdirSync(this.dir, { recursive: true });
+export default function tempDir(name){
+    try {
+        const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), name))
+        return {
+            dir: tmpDir,
+            getDir(){
+                return this.dir
+            },
+            purge(){
+                fs.rmdirSync(this.dir, { recursive: true })
+            }
         }
+    } catch (error) {
+        DefaultLogger.error(`An error happened at tempDir: ${error}`)
     }
 }
 
-module.exports.tempDir = tempDir
-module.exports = tempDir

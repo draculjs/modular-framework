@@ -1,55 +1,55 @@
 swagger: "2.0"
 info:
-  description: "Dracul Media Storage brinda servicios para gestionar archivos."
+  description: "Storage Hub brinda servicios para gestionar archivos."
   version: "1.0.0"
-  title: "Dracul Media Storage"
+  title: "Storage Hub"
 basePath: "/api"
 tags:
-- name: "file"
-  description: "Servicios de gestion de archivos"
+  - name: "file"
+    description: "Servicios de gestion de archivos"
 schemes:
-- "http"
-- "https"
+  - "http"
+  - "https"
 paths:
   /file:
     get:
       tags:
-      - "file"
+        - "file"
       summary: "Conseguir listado de ficheros"
       description: "Este endpoint obtiene TODOS los archivos a los que se tiene permiso de acceso."
       operationId: "findFile"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "pageNumber"
-        in: "query"
-        description: "Número de página"
-        required: false
-        type: integer
-      - name: "itemsPerPage"
-        in: "query"
-        description: "Cantidad de items (ficheros) por página"
-        required: false
-        type: integer
-      - name: "search"
-        in: "query"
-        description: "Nombre del fichero que se desea encontrar"
-        required: false
-        type: string
-      - name: "orderBy"
-        in: "query"
-        description: "Tipo de orden"
-        required: false
-        type: string
-      - name: "orderDesc"
-        in: "query"
-        description: "Valor booleano que determina si el resultado debe ser ordenado en forma descendente"
-        required: false
-        type: boolean
+        - name: "pageNumber"
+          in: "query"
+          description: "Número de página"
+          required: false
+          type: integer
+        - name: "itemsPerPage"
+          in: "query"
+          description: "Cantidad de items (ficheros) por página"
+          required: false
+          type: integer
+        - name: "search"
+          in: "query"
+          description: "Nombre del fichero que se desea encontrar"
+          required: false
+          type: string
+        - name: "orderBy"
+          in: "query"
+          description: "Tipo de orden"
+          required: false
+          type: string
+        - name: "orderDesc"
+          in: "query"
+          description: "Valor booleano que determina si el resultado debe ser ordenado en forma descendente"
+          required: false
+          type: boolean
       responses:
-        '200':
+        "200":
           description: "successful operation"
           schema:
             type: "object"
@@ -64,164 +64,164 @@ paths:
                 description: "Pagina actual"
               items:
                 type: "array"
-                description: 'Array de ficheros encontrados'
+                description: "Array de ficheros encontrados"
                 items:
                   $ref: "#/definitions/File"
-        '401':
+        "401":
           description: "Unauthenticated. Bearer token is missing or invalid."
-        '403':
+        "403":
           description: "Unauthorized. The authenticated user does not have permission."
-        '404':
+        "404":
           description: "The file was not found."
-        '500':
+        "500":
           description: "There was an error retrieving the file."
       security:
-      - Authorization: []
+        - Authorization: []
     post:
       tags:
-      - "file"
+        - "file"
       description: "Este endpoint permite cargar un fichero"
       summary: "Sube ficheros"
       operationId: "postFile"
       consumes:
-      - "multipart/form-data"
+        - "multipart/form-data"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "file"
-        in: "formData"
-        description: "Archivo a subir"
-        required: true
-        type: "file"
-      - name: "expirationTime"
-        in: "formData"
-        description: "Tiempo de expiración del archivo"
-        required: false
-        type: "string"
-      - name: "isPublic"
-        in: "formData"
-        description: "Indica si el archivo es público"
-        required: false
-        type: "boolean"
-      - name: "description"
-        in: "formData"
-        description: "Descripción del archivo"
-        required: false
-        type: "string"
-      - name: "tags"
-        in: "formData"
-        description: "Etiquetas asociadas al archivo"
-        required: false
-        type: "string"
+        - name: "file"
+          in: "formData"
+          description: "Archivo a subir"
+          required: true
+          type: "file"
+        - name: "expirationTime"
+          in: "formData"
+          description: "Tiempo de expiración del archivo"
+          required: false
+          type: "string"
+        - name: "isPublic"
+          in: "formData"
+          description: "Indica si el archivo es público"
+          required: false
+          type: "boolean"
+        - name: "description"
+          in: "formData"
+          description: "Descripción del archivo"
+          required: false
+          type: "string"
+        - name: "tags"
+          in: "formData"
+          description: "Etiquetas asociadas al archivo"
+          required: false
+          type: "string"
       responses:
-        '201':
+        "201":
           description: "Successful file upload"
           schema:
             type: "object"
             $ref: "#/definitions/File"
-        '400':
+        "400":
           description: "Bad Request - File was not provided"
-        '401':
+        "401":
           description: "Unauthorized - Not authenticated"
-        '403':
+        "403":
           description: "Forbidden - Insufficient permissions"
-        '409':
+        "409":
           description: "Conflict - An error occurred during file upload"
       security:
-      - Authorization: []
+        - Authorization: []
   /file/{id}:
     get:
       tags:
-      - "file"
+        - "file"
       description: "Este endpoint permite encontrar ficheros por ID"
       summary: "Busca archivos por id"
       operationId: "findFileById"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "id"
-        in: "path"
-        description: "Id del archivo que se desea encontrar"
-        required: true
-        type: "string"
+        - name: "id"
+          in: "path"
+          description: "Id del archivo que se desea encontrar"
+          required: true
+          type: "string"
       responses:
-        '200':
+        "200":
           description: "successful operation"
           schema:
             type: "object"
             $ref: "#/definitions/File"
-        '400':
+        "400":
           description: "Invalid status value"
-        '401':
+        "401":
           description: "Unauthorized. Bearer token is missing or invalid."
-        '403':
+        "403":
           description: "Forbidden. The authenticated user does not have permission."
-        '404':
+        "404":
           description: "The file was not found."
-        '500':
+        "500":
           description: "There was an error retrieving the file."
       security:
-      - Authorization: []
+        - Authorization: []
     patch:
       tags:
-      - "file"
+        - "file"
       summary: "Actualiza informacion de ficheros"
       description: "Actualiza la informacion del fichero cuya ID pases como parametro"
       operationId: "updateFileById"
       security:
-      - Authorization: []
+        - Authorization: []
 
       parameters:
-      - name: "id"
-        in: "path"
-        description: "ID del fichero a actualizar"
-        required: true
-        type: string
-      - name: "newFile"
-        in: "body"
-        description: "Nuevos valores a actualizar al fichero"
-        schema:
-          type: object
-          properties: 
-            description:
-              type: "string"
-              description: "Nueva descripcion del fichero"
-            expirationDate:
-              type: "string"
-              description: "Nueva fecha de expiracion del fichero (string con formato DD/MM/YYYY)"
-            tags:
-              type: "string"
-              description: "Nuevos tags del fichero"
-            isPublic:
-              type: boolean
-              description: "Nuevo valor booleano que determinara si el fichero es publico"
+        - name: "id"
+          in: "path"
+          description: "ID del fichero a actualizar"
+          required: true
+          type: string
+        - name: "newFile"
+          in: "body"
+          description: "Nuevos valores a actualizar al fichero"
+          schema:
+            type: object
+            properties:
+              description:
+                type: "string"
+                description: "Nueva descripcion del fichero"
+              expirationDate:
+                type: "string"
+                description: "Nueva fecha de expiracion del fichero (string con formato DD/MM/YYYY)"
+              tags:
+                type: "string"
+                description: "Nuevos tags del fichero"
+              isPublic:
+                type: boolean
+                description: "Nuevo valor booleano que determinara si el fichero es publico"
       responses:
-        '200':
+        "200":
           description: "Successful file update"
           content:
             application/json:
               example:
                 message: "File updated successfully"
                 updatedFile: {}
-        '401':
+        "401":
           description: "Unauthorized - Not authenticated"
           content:
             application/json:
               example:
                 message: "Not Authorized"
-        '403':
+        "403":
           description: "Forbidden - Insufficient permissions"
           content:
             application/json:
               example:
                 message: "Not Authorized"
-        '404':
+        "404":
           description: "Not Found - File not found"
           content:
             application/json:
               example:
                 message: "File not found"
-        'default':
+        "default":
           description: "Error responses for various scenarios"
           content:
             application/json:

@@ -1,4 +1,4 @@
-import DeleteButton from "./DeleteButton";
+import DeleteButton from "./DeleteButton.vue";
 
 export {DeleteButton}
 export default DeleteButton

@@ -73,15 +73,15 @@
 
 <script>
 
-import UserCreate from "./UserCreate"
-import UserUpdate from './UserUpdate'
-import UserChangePassword from './AdminChangePassword'
-import UserChangeAvatar from './AdminChangeAvatar'
-import UserDelete from "./UserDelete";
-import UserShow from "./UserShow";
-import UserList from "./UserList";
+import UserCreate from "./UserCreate/index.js"
+import UserUpdate from './UserUpdate/index.js'
+import UserChangePassword from './AdminChangePassword/index.js'
+import UserChangeAvatar from './AdminChangeAvatar/index.js'
+import UserDelete from "./UserDelete/index.js";
+import UserShow from "./UserShow/index.js";
+import UserList from "./UserList/index.js";
 import {CrudLayout, AddButton, Snackbar} from "@dracul/common-frontend"
-import UserApikey from "./UserApikey/UserApikey";
+import UserApikey from "./UserApikey/UserApikey.vue";
 import {mapGetters} from "vuex";
 
 export default {

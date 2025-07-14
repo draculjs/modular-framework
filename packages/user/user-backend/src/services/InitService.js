@@ -1,16 +1,16 @@
 import { DefaultLogger } from "@dracul/logger-backend";
 
-import {createRole, findRoleByName, fetchRolesInName, updateRole} from './RoleService'
-import {changePasswordAdmin, createUser, findUserByUsername} from './UserService'
-import {createPermission, fetchPermissionsInName} from './PermissionService'
+import RoleService from './RoleService.js'
+import UserService from './UserService.js'
+import {createPermission, fetchPermissionsInName} from './PermissionService.js'
 
-import adminRoleTemplate from '../roles/admin'
-import supervisorRoleTemplate from '../roles/supervisor'
-import operatorRoleTemplate from '../roles/operator'
+import adminRoleTemplate from '../roles/admin.js'
+import supervisorRoleTemplate from '../roles/supervisor.js'
+import operatorRoleTemplate from '../roles/operator.js'
 
-import {rootUser} from '../data/root-user'
-import {supervisorUser} from '../data/supervisor-user'
-import {operatorUser} from "../data/operator-user"
+import {rootUser} from '../data/root-user.js'
+import {supervisorUser} from '../data/supervisor-user.js'
+import {operatorUser} from "../data/operator-user.js"
 
 import {
     SECURITY_DASHBOARD_SHOW,
@@ -28,9 +28,9 @@ import {
     SECURITY_USER_DELETE,
     SECURITY_USER_EDIT,
     SECURITY_USER_SHOW,
-} from "../permissions";
+} from "../permissions/include/security-permissions.js";
 
-import {LDAP_SETTINGS} from "../data/ldap-settings";
+import {LDAP_SETTINGS} from "../data/ldap-settings.js";
 
 import {initializeSettings} from "@dracul/settings-backend";
 
@@ -86,32 +86,32 @@ function loggingEvent(event, entity, name, id) {
 
 const initAdminRole = async () => {
     let adminRoleT = await adminRoleTemplate()
-    let adminRole = await findRoleByName(adminRoleT.name)
+    let adminRole = await RoleService.findRoleByName(adminRoleT.name)
     if (adminRole) {
 
-        let adminRoleUpdated = await updateRole(adminRole.id, {
+        let adminRoleUpdated = await RoleService.updateRole(adminRole.id, {
             name: adminRoleT.name,
             permissions: adminRoleT.permissions,
             readonly: true
         })
         loggingEvent("updated", "role", adminRoleUpdated.name, adminRoleUpdated.id)
     } else {
-        adminRole = await createRole(adminRoleT)
+        adminRole = await RoleService.createRole(adminRoleT)
         loggingEvent("created", "role", adminRole.name, adminRole.id)
     }
 }
 
 const initSupervisorRole = async () => {
     let supervisorRoleT = await supervisorRoleTemplate()
-    let supervisorRole = await findRoleByName(supervisorRoleT.name)
+    let supervisorRole = await RoleService.findRoleByName(supervisorRoleT.name)
 
     if(!supervisorRole){
-        supervisorRole = await createRole(supervisorRoleT)
+        supervisorRole = await RoleService.createRole(supervisorRoleT)
         loggingEvent("created", "role", supervisorRole.name, supervisorRole.id)
     }
 
     if (supervisorRole && supervisorRole.readonly) {
-        let supervisorRoleUpdated = await updateRole(
+        let supervisorRoleUpdated = await RoleService.updateRole(
             supervisorRole.id,
             {
                 name: supervisorRoleT.name,
@@ -130,16 +130,16 @@ const initSupervisorRole = async () => {
 
 const initOperatorRole = async () => {
     const operatorRoleT = operatorRoleTemplate()
-    let operatorRole = await findRoleByName(operatorRoleT.name)
+    let operatorRole = await RoleService.findRoleByName(operatorRoleT.name)
 
     if (!operatorRole) {
-        operatorRole = await createRole(operatorRoleT)
+        operatorRole = await RoleService.createRole(operatorRoleT)
         loggingEvent("created", "role", operatorRole.name, operatorRole.id)
     }
 
     if (operatorRole && operatorRole.readonly) {
 
-        let operatorRoleUpdated = await updateRole(operatorRole.id,
+        let operatorRoleUpdated = await RoleService.updateRole(operatorRole.id,
             {
                 name: operatorRoleT.name,
                 permissions: operatorRoleT.permissions,
@@ -160,7 +160,7 @@ const initRoles = async (roles) => {
     let rolesName = roles.map(r => r.name)
 
     //Fetch roles already created
-    let rolesAlreadyPersistedFound = await fetchRolesInName(rolesName)
+    let rolesAlreadyPersistedFound = await RoleService.fetchRolesInName(rolesName)
 
     //Filter roles created (avoid duplicate)
     let rolesToCreate
@@ -186,14 +186,14 @@ const initRoles = async (roles) => {
         let childRoles = []
         if (role.childRoles && role.childRoles.length > 0) {
             for (const childRoleName of role.childRoles) {
-                let cr = await findRoleByName(childRoleName)
+                let cr = await RoleService.findRoleByName(childRoleName)
                 if (cr) {
                     childRoles.push(cr.id)
                 }
             }
             role.childRoles = childRoles
         }
-        role = await createRole(role)
+        role = await RoleService.createRole(role)
         console.log(`Created ${role.name}`)
         return [...results, role];
     }, []);
@@ -212,6 +212,7 @@ const initRoles = async (roles) => {
 
         const roleAlreadyPersistedNewConfiguration = roles.find((newRoleConfiguration) => newRoleConfiguration.name.toLowerCase() === roleAlreadyPersisted.name.toLowerCase())
 
+        // eslint-disable-next-line no-inner-declarations
         function getRolePermissions(){
             if (roleAlreadyPersistedNewConfiguration.readonly) {
                 return roleAlreadyPersistedNewConfiguration.permissions
@@ -227,13 +228,13 @@ const initRoles = async (roles) => {
 
         if (roleChildRoles && roleChildRoles.length > 0) {
             for (const childRoleName of roleChildRoles) {
-                const cr = await findRoleByName(childRoleName)
+                const cr = await RoleService.findRoleByName(childRoleName)
 
                 if (cr) childRoles.push(cr.id)
             }
         }
 
-        await updateRole(roleAlreadyPersisted.id, {
+        await RoleService.updateRole(roleAlreadyPersisted.id, {
             name: roleAlreadyPersisted.name,
             permissions: rolePermissions,
             childRoles: childRoles,
@@ -255,26 +256,24 @@ const initRoles = async (roles) => {
     return {rolesCreated: rolesCreated, rolesUpdated: updatedRoles}
 }
 
-const initRootUser = async (user) => {
-    if (!user) {
-        user = rootUser
+async function initRootUser(user){
+    try {
+        if (!user) user = rootUser
+    
+        const roleAdmin = await RoleService.findRoleByName("admin")
+        if (!roleAdmin) throw Error('Root user cant be created. Role "admin" not found.')
+    
+        let userFound = await UserService.findUserByUsername(user.username)
+    
+        if (!userFound) {
+            userFound = await UserService.createUser({...user, role: roleAdmin.id})
+            loggingEvent("Admin created", "user", userFound.username, userFound.id)
+        } else {
+            loggingEvent("Admin found", "user", userFound.username, userFound.id)
+        }
+    } catch (error) {
+        DefaultLogger.error(`Error at initRootUser: ${error}`)
     }
-
-    let roleAdmin = await findRoleByName("admin")
-
-    if (!roleAdmin) {
-        throw Error('Root user cant be created. Role "admin" not found. ')
-    }
-
-    let u = await findUserByUsername(user.username)
-
-    if (!u) {
-        u = await createUser({...user, role: roleAdmin.id})
-        loggingEvent("created", "user", u.username, u.id)
-    } else {
-        loggingEvent("found", "user", u.username, u.id)
-    }
-
 }
 
 const initSupervisorUser = async (user) => {
@@ -282,16 +281,16 @@ const initSupervisorUser = async (user) => {
         user = supervisorUser
     }
 
-    let roleSupervisor = await findRoleByName("supervisor")
+    let roleSupervisor = await RoleService.findRoleByName("supervisor")
 
     if (!roleSupervisor) {
         throw Error('Supervisor user cant be created. Role "supervisor" not found. ')
     }
 
-    let u = await findUserByUsername(user.username)
+    let u = await UserService.findUserByUsername(user.username)
 
     if (!u) {
-        u = await createUser({...user, role: roleSupervisor.id})
+        u = await UserService.createUser({...user, role: roleSupervisor.id})
         loggingEvent("created", "user", u.username, u.id)
     } else {
         loggingEvent("found", "user", u.username, u.id)
@@ -304,16 +303,16 @@ const initOperatorUser = async (user) => {
         user = operatorUser
     }
 
-    let roleOperator = await findRoleByName("operator")
+    let roleOperator = await RoleService.findRoleByName("operator")
 
     if (!roleOperator) {
         throw Error('Operator user cant be created. Role "supervisor" not found. ')
     }
 
-    let u = await findUserByUsername(user.username)
+    let u = await UserService.findUserByUsername(user.username)
 
     if (!u) {
-        u = await createUser({...user, role: roleOperator.id})
+        u = await UserService.createUser({...user, role: roleOperator.id})
         loggingEvent("created", "user", u.username, u.id)
     } else {
         loggingEvent("found", "user", u.username, u.id)
@@ -322,8 +321,8 @@ const initOperatorUser = async (user) => {
 }
 
 const rootRecover = async (password = "root.123") => {
-    findUserByUsername("root").then(rootUser => {
-        changePasswordAdmin(rootUser.id, {
+    UserService.findUserByUsername("root").then(rootUser => {
+        UserService.changePasswordAdmin(rootUser.id, {
             password: password,
             passwordVerify: password
         }, rootUser.id).then(result => {

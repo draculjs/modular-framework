@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import UserCrud from './UserCrud'
+    import UserCrud from './UserCrud.vue'
 
     export default {
         name: "UsersAdmin",

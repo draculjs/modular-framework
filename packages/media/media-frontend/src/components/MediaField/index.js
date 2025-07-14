@@ -1,4 +1,4 @@
-import MediaField from "./MediaField";
+import MediaField from "./MediaField.vue";
 
 export {MediaField}
 export default MediaField

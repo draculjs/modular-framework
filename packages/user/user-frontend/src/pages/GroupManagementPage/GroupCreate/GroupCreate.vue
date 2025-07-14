@@ -14,7 +14,7 @@
     import GroupProvider from "../../../providers/GroupProvider";
     import UserValidations from "../../../mixins/UserValidations";
     import {CrudCreate, ClientError} from '@dracul/common-frontend'
-    import GroupForm from "../GroupForm/GroupForm";
+    import GroupForm from "../GroupForm/GroupForm.vue";
 
     export default {
         name: "GroupCreate",

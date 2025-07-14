@@ -1,17 +1,13 @@
-const {
-    findAudit,
-    fetchAudit,
-    createAudit,
-    paginateAudit
-} =  require("../../services/AuditService.js");
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
 
-const {
-    AUDIT_SHOW,
-} =  require("../../permissions/AuditPermissions.js");
+import {
+    findAudit, fetchAudit, createAudit, paginateAudit
+} from "../../services/AuditService.js";
 
-const {AuthenticationError, ForbiddenError} = require("apollo-server-errors");
+import { AUDIT_SHOW } from "../../permissions/AuditPermissions.js";
 
-const resolvers = {
+
+export const resolvers = {
     Query: {
         findAudit: (_, {id}, {user,rbac}) => {
             if (!user) throw new AuthenticationError("Unauthenticated")
@@ -38,4 +34,4 @@ const resolvers = {
       }
 }
 
-module.exports = resolvers;
+export default resolvers;

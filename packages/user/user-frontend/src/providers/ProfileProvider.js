@@ -1,16 +1,27 @@
+import avatarUploadRaw from './gql/avatarUpload.graphql?raw';
+import changePasswordRaw from './gql/changePassword.graphql?raw';
+import { ApolloClient, gql } from '@apollo/client/core';
+
+const sessionsByUserGql = gql(avatarUploadRaw);
+const dashboardDataGql = gql(changePasswordRaw);
+
 class ProfileProvider {
 
     constructor() {
         this.gqlc = null
     }
 
-    setGqlc(gqlc){
-        this.gqlc = gqlc
+    setGqlc(gqlc) {
+        if (gqlc instanceof ApolloClient) {
+            this.gqlc = gqlc;
+        } else {
+            throw new Error('gqlc must be an ApolloClient instance');
+        }
     }
 
     avatarUpload(file) {
         return this.gqlc.mutate({
-            mutation: require('./gql/avatarUpload.graphql'),
+            mutation: sessionsByUserGql,
             variables: {
                 file: file
             },
@@ -19,7 +30,7 @@ class ProfileProvider {
 
     changePassword( currentPassword, newPassword) {
         return this.gqlc.mutate({
-            mutation: require('./gql/changePassword.graphql'),
+            mutation: dashboardDataGql,
             variables: {
                 currentPassword: currentPassword,
                 newPassword: newPassword
@@ -31,6 +42,5 @@ class ProfileProvider {
 }
 
 const profileProvider = new ProfileProvider()
-
 export default profileProvider
 

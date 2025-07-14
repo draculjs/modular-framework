@@ -1,10 +1,10 @@
-import {securityResolvers, securityTypes} from './graphql'
+import {resolvers as securityResolvers, types as securityTypes} from './graphql/index.js'
 
-import {sessionMiddleware, jwtMiddleware, rbacMiddleware, corsMiddleware} from './middleware'
+import {sessionMiddleware, jwtMiddleware, rbacMiddleware, corsMiddleware} from './middleware/index.js'
 
-import {UserModel, UserSchema} from './models/UserModel'
-import {RoleModel,RoleSchema} from './models/RoleModel'
-import {GroupModel, GroupSchema} from './models/GroupModel'
+import {UserModel, UserSchema} from './models/UserModel.js'
+import {RoleModel,RoleSchema} from './models/RoleModel.js'
+import {GroupModel, GroupSchema} from './models/GroupModel.js'
 
 import {
     AuthService,
@@ -13,20 +13,19 @@ import {
     GroupService,
     RoleService,
     UserService,
-    UserAuditService,
     UserEmailManager,
     LoginFailService,
     SessionService,
     InitService,
     ProfileService,
     RbacService
-} from './services'
+} from './services/index.js'
 
-import * as permissions from './permissions'
+import * as permissions from './permissions/include/security-permissions.js'
 
-import rbac from './rbac/index'
+import rbac from './rbac/index.js'
 
-import { nonPrivilegedRolesReadOnly } from './services/InitService'
+import { nonPrivilegedRolesReadOnly } from './services/InitService.js'
 
 export {
     //Models
@@ -59,7 +58,6 @@ export {
     GroupService,
     RoleService,
     UserService,
-    UserAuditService,
     UserEmailManager,
     LoginFailService,
     SessionService,

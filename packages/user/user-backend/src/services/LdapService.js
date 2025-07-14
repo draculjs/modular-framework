@@ -1,11 +1,12 @@
 import {DefaultLogger, DefaultLogger as winston} from '@dracul/logger-backend';
 import {SettingCache} from '@dracul/settings-backend';
-import {createUser, findUserByUsername} from "./UserService";
-import {findRoleByName} from "./RoleService";
+import ldap from 'ldapjs';
 
-const ldap = require('ldapjs')
+import UserService from "./UserService.js";
+import RoleService from "./RoleService.js";
 
-async function isLdapAuthEnabled(){
+
+export async function isLdapAuthEnabled(){
     try {
         const LDAP_AUTH_SETTING = await getLdapVar('LDAP_AUTH')
         const LDAP_IP = await getLdapVar('LDAP_IP')
@@ -21,7 +22,7 @@ async function isLdapAuthEnabled(){
     }
 }
 
-async function determineUserRoleByLdapGroup(groupName = null){
+export async function determineUserRoleByLdapGroup(groupName = null){
     if (!groupName){
         const LDAP_DEFAULT_ROLE = await getLdapVar('LDAP_DEFAULT_ROLE')
         return LDAP_DEFAULT_ROLE ? LDAP_DEFAULT_ROLE : 'operador'
@@ -30,7 +31,7 @@ async function determineUserRoleByLdapGroup(groupName = null){
     return groupName
 }
 
-async function getLdapVar(varName){
+export async function getLdapVar(varName){
 
     try {
         const ldapVariable = await SettingCache(varName)
@@ -53,7 +54,7 @@ async function getLdapVar(varName){
 }
 
 
-function connectToLDAP(ip, port = '389') {
+export function connectToLDAP(ip, port = '389') {
     if (!ip) throw new Error('LDAP IP not found')
 
     return new Promise((resolve, reject) => {
@@ -74,7 +75,7 @@ function connectToLDAP(ip, port = '389') {
     })
 }
 
-function loginInLdap(user, pass, asAdmin = false) {
+export function loginInLdap(user, pass, asAdmin = false) {
     return new Promise(async (resolve, reject) => {
         try {
             const LDAP_IP = await getLdapVar('LDAP_IP')
@@ -103,7 +104,7 @@ function loginInLdap(user, pass, asAdmin = false) {
     })
 }
 
-function mapLdapAttributesToUserObject(entry) {
+export function mapLdapAttributesToUserObject(entry) {
 
     let object = {}
 
@@ -128,7 +129,7 @@ function mapLdapAttributesToUserObject(entry) {
     return object
 }
 
-function searchUserInLdap(username, ldapClient) {
+export function searchUserInLdap(username, ldapClient) {
     return new Promise(async (resolve, reject) => {
         try {
             const LDAP_DN = await getLdapVar('LDAP_DN')
@@ -146,7 +147,7 @@ function searchUserInLdap(username, ldapClient) {
     })
 }
 
-function searchUserGroup(user, pass, groupId) {
+export function searchUserGroup(user, pass, groupId) {
     return new Promise(async (resolve, reject) => {
         const ldapClient = await loginInLdap(user, pass)
         const LDAP_DN = await getLdapVar('LDAP_DN')
@@ -167,15 +168,15 @@ function searchUserGroup(user, pass, groupId) {
 }
 
 
-async function getLocalUserOrCreate(userLdapInfo) {
+export async function getLocalUserOrCreate(userLdapInfo) {
     if (!userLdapInfo.username && !userLdapInfo.password) throw new Error(`UserLdapInfoRequired`)
     if (!userLdapInfo.email) userLdapInfo.email = userLdapInfo.username + '@dracul.int'
 
-    let user = await findUserByUsername(userLdapInfo.username)
+    let user = await UserService.findUserByUsername(userLdapInfo.username)
     if (!user) {
         try {
             const ROLE_NAME = await determineUserRoleByLdapGroup(userLdapInfo.groupName)
-            const role = await findRoleByName(ROLE_NAME)
+            const role = await RoleService.findRoleByName(ROLE_NAME)
 
             if (!role) {
                 winston.error(`ROLE ${ROLE_NAME} not found `)
@@ -186,7 +187,7 @@ async function getLocalUserOrCreate(userLdapInfo) {
             userLdapInfo.active = true
             userLdapInfo.fromLDAP = true
 
-            user = await createUser(userLdapInfo)
+            user = await UserService.createUser(userLdapInfo)
             return (user)
 
         } catch (error) {
@@ -198,7 +199,7 @@ async function getLocalUserOrCreate(userLdapInfo) {
     return user
 }
 
-async function authLdapAndGetUser(username, decodedPassword) {
+export async function authLdapAndGetUser(username, decodedPassword) {
     try{
         const ldapClient = await loginInLdap(username, decodedPassword)
         const entry = await searchUserInLdap(username, ldapClient)
@@ -216,14 +217,4 @@ async function authLdapAndGetUser(username, decodedPassword) {
         throw new Error(message)
     }
 
-}
-
-module.exports = {
-    isLdapAuthEnabled,
-    getLdapVar,
-    authLdapAndGetUser,
-    searchUserInLdap,
-    connectToLDAP,
-    loginInLdap,
-    mapLdapAttributesToUserObject
 }

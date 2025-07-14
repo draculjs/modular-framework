@@ -1,4 +1,4 @@
-import UserForm from "./UserForm";
+import UserForm from "./UserForm.vue";
 
 export {UserForm}
 export default UserForm

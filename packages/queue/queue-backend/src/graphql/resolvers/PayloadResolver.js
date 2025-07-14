@@ -1,5 +1,5 @@
 //JSON SCALAR TYPE
-const GraphQLJSON = require('graphql-type-json');
+import GraphQLJSON from 'graphql-type-json';
 
 export default {
     PAYLOAD: GraphQLJSON

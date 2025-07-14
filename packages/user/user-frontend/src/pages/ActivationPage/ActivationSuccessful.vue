@@ -8,7 +8,7 @@
                 class="subtitle-1 text-center"
                 cols="12"
         >
-            <v-alert :value="true" color="success" class="ma-0" icon="check_circle" outlined>
+            <v-alert :value="true" color="success" class="ma-0" icon="mdi-check-circle" outlined>
                 {{ $t('auth.activationSuccessful') }}
             </v-alert>
 

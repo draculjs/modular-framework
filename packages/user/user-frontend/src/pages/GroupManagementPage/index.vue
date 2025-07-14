@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import GroupCrud from "./GroupCrud";
+    import GroupCrud from "./GroupCrud.vue";
     export default {
         name: "GroupPage",
         components: {GroupCrud}

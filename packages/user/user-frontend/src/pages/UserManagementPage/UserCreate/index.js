@@ -1,4 +1,4 @@
-import UserCreate from "./UserCreate";
+import UserCreate from "./UserCreate.vue";
 
 export {UserCreate}
 export default UserCreate

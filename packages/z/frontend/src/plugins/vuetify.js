@@ -1,8 +1,9 @@
 import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+import Vuetify from 'vuetify';
 import i18n from '../i18n'
 Vue.use(Vuetify);
-import store from '../store'
+import {store} from '../store/index.js'
+import '@mdi/font/css/materialdesignicons.css'
 
 const LIGHT_THEME = {
     primary: '#3F51B5',
@@ -30,7 +31,7 @@ export default new Vuetify({
         t: (key, ...params) => i18n.t(key, params),
     },
     icons:{
-        iconfont: 'md'
+        iconfont: 'mdi'
     },
     theme: {
         dark: store.getters.darkMode,

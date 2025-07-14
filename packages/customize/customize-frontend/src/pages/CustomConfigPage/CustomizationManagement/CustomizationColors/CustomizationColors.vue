@@ -203,11 +203,11 @@
   </v-container>
 </template>
 <script>
-import ColorInput from "./ColorInput"
-import CustomizationProvider from "../../../../providers/CustomizationProvider";
+import ColorInput from "./ColorInput.vue"
+import CustomizationProvider from "../../../../providers/CustomizationProvider.js";
 import {ClientError} from "@dracul/user-frontend";
 import {mapMutations} from "vuex";
-import ColorsPreview from "./ColorsPreview";
+import ColorsPreview from "./ColorsPreview.vue";
 
 export default {
   name: 'customization-colors',

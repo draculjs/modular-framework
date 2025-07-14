@@ -1,6 +1,7 @@
 import {DefaultLogger as winston} from "@dracul/logger-backend";
 import jwt from "jsonwebtoken";
-import {findUser} from "./UserService";
+
+import UserService from "./UserService.js";
 
 /*
     @input token
@@ -15,7 +16,7 @@ export const validateToken = function (token) {
                 resolve({valid: false, operation: 'none', message: "common.operation.fail"})
             }
 
-            if (!findUser(decoded.id)) {
+            if (!UserService.findUser(decoded.id)) {
                 resolve({valid: false, operation: 'none', message: "common.operation.fail"})
             }
 

@@ -1,7 +1,7 @@
 import {
     activationUser,
     registerUser
-} from "../../services/RegisterService";
+} from "../../services/RegisterService.js";
 
 export default {
 

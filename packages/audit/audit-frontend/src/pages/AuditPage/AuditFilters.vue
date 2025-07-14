@@ -8,7 +8,7 @@
             <v-text-field 
               v-model="filters[0].value" 
               :label="$t('audit.action')" 
-              prepend-icon="bolt" 
+              prepend-icon="mdi-list-box" 
               color="secondary"
               hide-details
               clearable 
@@ -19,7 +19,7 @@
             <v-text-field 
               v-model="filters[2].value" 
               :label="$t('audit.labels.entity')" 
-              prepend-icon="article"
+              prepend-icon="mdi-text-short"
               color="secondary"
               hide-details
               clearable

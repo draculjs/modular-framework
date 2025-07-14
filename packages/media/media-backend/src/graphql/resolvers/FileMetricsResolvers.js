@@ -1,11 +1,11 @@
 
-import { fileGlobalMetrics, fileUserMetrics, almacenamientoPorUsuario, cantidadArchivosPorUsuario } from '../../services/FileMetricsService'
+import { fileGlobalMetrics, fileUserMetrics, almacenamientoPorUsuario, cantidadArchivosPorUsuario } from '../../services/FileMetricsService.js'
 
 import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 
 import {
     FILE_SHOW_ALL,
-} from "../../permissions/File";
+} from "../../permissions/File.js";
 
 export default {
 

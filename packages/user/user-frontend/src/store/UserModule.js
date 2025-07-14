@@ -1,6 +1,6 @@
-import AuthProvider from '../providers/AuthProvider'
-import jwt_decode from 'jwt-decode'
-import ClientError from '../errors/ClientError'
+import AuthProvider from '../providers/AuthProvider.js'
+import { jwtDecode } from 'jwt-decode'
+import ClientError from '../errors/ClientError.js'
 
 export default {
     state: {
@@ -51,7 +51,7 @@ export default {
 
                 if (!state.access_token) return true
 
-                let payload = jwt_decode(state.access_token)
+                let payload = jwtDecode(state.access_token)
 
                 if (!payload.exp) return true
 
@@ -62,8 +62,8 @@ export default {
 
                 return false
 
-            } catch (err) {
-                console.error(err)
+            } catch (error) {
+                    console.log(`Errror at UserModule: ${error}`)
                 return true
             }
 
@@ -146,7 +146,7 @@ export default {
 
         verifyToken({commit, dispatch}, token) {
             try {
-                let payload = jwt_decode(token)
+                let payload = jwtDecode(token)
 
                 if (payload.exp) {
                     let dateNow = new Date();

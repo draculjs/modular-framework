@@ -1,4 +1,4 @@
-import UserDelete from "./UserDelete";
+import UserDelete from "./UserDelete.vue";
 
 export {UserDelete}
 export default UserDelete

@@ -1,4 +1,4 @@
-import { nonPrivilegedRolesReadOnly } from "@dracul/user-backend/";
+import { nonPrivilegedRolesReadOnly } from "@dracul/user-backend";
 
 export default {
     name: "operator",

@@ -1,4 +1,4 @@
-const i18nMessages = {
+export const i18nMessages = {
     en: {
         audit: {
             name: 'Audit',
@@ -201,8 +201,4 @@ const i18nMessages = {
         }
     }
     
-}
-
-module.exports = {
-    i18nMessages
 }

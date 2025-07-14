@@ -44,8 +44,8 @@
 
 </template>
 <script>
-    import UserShowDataItem from "./UserShowDataItem"
-    import UserAvatar from "../../../components/UserAvatar";
+    import UserShowDataItem from "./UserShowDataItem.vue"
+    import UserAvatar from "../../../components/UserAvatar/index.js";
 
     export default {
         name: 'user-show-data',

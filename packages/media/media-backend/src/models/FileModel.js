@@ -1,6 +1,6 @@
 import { mongoose } from '@dracul/common-backend'
-const softDelete = require('mongoose-softdelete')
-const mongoosePaginate = require('mongoose-paginate-v2')
+import softDelete from 'mongoose-softdelete';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const Schema = mongoose.Schema
 const fileReplacesInfoSchema = new Schema({
@@ -42,6 +42,6 @@ const FileSchema = new Schema({
 
 FileSchema.plugin(mongoosePaginate)
 
-const File = mongoose.model('File', FileSchema)
+export const File = mongoose.model('File', FileSchema)
 
-module.exports = File
+export default File

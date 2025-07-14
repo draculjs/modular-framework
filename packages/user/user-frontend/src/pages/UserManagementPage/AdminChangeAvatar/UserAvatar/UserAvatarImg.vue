@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import userImage from "../../../../assets/user.png"
 
 
 export default {
@@ -63,7 +64,7 @@ export default {
     avatarSize: 120,
     tile: false,
     hover: false,
-    src: require("../../../../assets/user.png")
+    src: userImage
   }),
 
 }

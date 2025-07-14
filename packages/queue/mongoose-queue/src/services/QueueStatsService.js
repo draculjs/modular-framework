@@ -1,4 +1,4 @@
-const QueueStatsModel = require('../models/QueueStatsModel');
+import QueueStatsModel from '../models/QueueStatsModel';
 
 const fetchQueueStats = async () => {
     try {

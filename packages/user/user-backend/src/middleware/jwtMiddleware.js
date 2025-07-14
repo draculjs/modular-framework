@@ -1,5 +1,6 @@
 import {expressjwt} from 'express-jwt'
-require('dotenv').config()
+import { config } from 'dotenv';
+config()
 
 const jwtMiddleware = expressjwt({
     secret: process.env.JWT_SECRET,

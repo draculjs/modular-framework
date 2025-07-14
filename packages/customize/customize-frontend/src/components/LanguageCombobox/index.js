@@ -1,4 +1,4 @@
-import LanguageCombobox from "./LanguageCombobox";
+import LanguageCombobox from "./LanguageCombobox.vue";
 
 export {LanguageCombobox}
 export default LanguageCombobox

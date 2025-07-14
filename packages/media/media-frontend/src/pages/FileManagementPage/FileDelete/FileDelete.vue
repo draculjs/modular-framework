@@ -25,7 +25,7 @@
     import FileProvider from "../../../providers/FileProvider";
     
     //Show Data
-    import FileShowData from "../FileShow/FileShowData";
+    import FileShowData from "../FileShow/FileShowData.vue";
     
     //Common
     import {CrudDelete, ClientError} from '@dracul/common-frontend'

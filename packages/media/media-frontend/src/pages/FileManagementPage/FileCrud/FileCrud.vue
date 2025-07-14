@@ -49,13 +49,13 @@
 </template>
 
 <script>
-import FileUpdate from "../FileUpdate";
-import FileDelete from "../FileDelete";
-import FileShow from "../FileShow";
-import FileList from "../FileList";
+import FileUpdate from "../FileUpdate/index.js";
+import FileDelete from "../FileDelete/index.js";
+import FileShow from "../FileShow/index.js";
+import FileList from "../FileList/index.js";
 
 import {CrudLayout, AddButton, Snackbar} from "@dracul/common-frontend"
-import FileCreate from "../FileCreate/FileCreate";
+import FileCreate from "../FileCreate/FileCreate.vue";
 
 export default {
   name: "FileCrud",

@@ -4,7 +4,7 @@
         <v-row>
             <v-col cols="12" sm="6">
                 <v-text-field
-                        prepend-icon="account_box"
+                        prepend-icon="mdi-account_box"
                         name="name"
                         type="text"
                         v-model="form.name"
@@ -33,7 +33,7 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-                <v-text-field prepend-icon="person"
+                <v-text-field prepend-icon="mdi-person"
                               name="username"
                               type="text"
                               v-model="form.username"
@@ -63,7 +63,7 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-                <v-text-field prepend-icon="email"
+                <v-text-field prepend-icon="mdi-email"
                               name="email"
                               type="text"
                               class="pa-3"
@@ -92,7 +92,7 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-                <v-text-field prepend-icon="phone"
+                <v-text-field prepend-icon="mdi-phone"
                               name="phone"
                               type="text"
                               class="pa-3"
@@ -110,7 +110,7 @@
 
             <v-col v-if="enablePassword" cols="12" sm="6">
                 <v-text-field id="password"
-                              prepend-icon="lock"
+                              prepend-icon="mdi-lock"
                               name="password"
                               type="password"
                               v-model="form.password"
@@ -143,7 +143,7 @@
             <v-col v-if="enablePassword" cols="12" sm="6">
                 <v-text-field
                         id="password_verify"
-                        prepend-icon="lock"
+                        prepend-icon="mdi-lock"
                         name="password_verify"
                         type="password"
                         v-model="form.password_verify"
@@ -174,7 +174,7 @@
 
             <v-col cols="12" sm="6">
                 <v-select
-                        prepend-icon="account_box"
+                        prepend-icon="mdi-account_box"
                         class="pa-3"
                         :items="roles"
                         :item-text="'name'"

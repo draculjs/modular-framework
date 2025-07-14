@@ -1,4 +1,4 @@
-import AdminChangePassword from "./AdminChangePassword";
+import AdminChangePassword from "./AdminChangePassword.vue";
 
 export {AdminChangePassword}
 export default AdminChangePassword

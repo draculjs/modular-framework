@@ -40,7 +40,7 @@
   </v-row>
 </template>
 <script>
-import GroupShowItem from "./GroupShowDataItem"
+import GroupShowItem from "./GroupShowDataItem.vue"
 
 export default {
   name: 'group-show-data',

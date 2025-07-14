@@ -1,4 +1,4 @@
-import Ip from "../models/IpModel"
+import Ip from "../models/IpModel.js"
 
 export const findIp = async (id) => {
     try {

@@ -46,9 +46,9 @@
   </div>
 </template>
 <script>
-import notificationProvider from "../../../providers/notificationProvider";
-import Snackbar from "@dracul/common-frontend/src/components/Snackbar/Snackbar";
-import notificationShowListContent from "../NotificationshowListContent/NotificationShowListContent";
+import notificationProvider from "../../../providers/notificationProvider.js";
+import Snackbar from "@dracul/common-frontend/src/components/Snackbar/Snackbar.vue";
+import notificationShowListContent from "../NotificationshowListContent/NotificationShowListContent.vue";
 
 export default {
   components: {

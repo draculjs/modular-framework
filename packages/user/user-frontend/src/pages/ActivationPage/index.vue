@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import Activation from "./Activation";
+    import Activation from "./Activation.vue";
 
     export default {
         name: "ActivationPage",

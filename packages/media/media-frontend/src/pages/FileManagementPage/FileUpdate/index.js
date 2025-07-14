@@ -1,4 +1,4 @@
-import FileUpdate from './FileUpdate'
+import FileUpdate from './FileUpdate.vue'
 
 export {FileUpdate}
 export default FileUpdate

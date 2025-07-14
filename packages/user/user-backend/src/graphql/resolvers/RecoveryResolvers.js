@@ -1,9 +1,5 @@
-import {
-    recoveryChangePassword,
-    recoveryPassword,
-    recoveryPasswordByCode,
-    recoveryChangePasswordCode
-} from "../../services/RecoveryService";
+import { recoveryChangePassword, recoveryPassword, recoveryPasswordByCode, recoveryChangePasswordCode }
+from "../../services/RecoveryService.js";
 
 export default {
     Mutation: {

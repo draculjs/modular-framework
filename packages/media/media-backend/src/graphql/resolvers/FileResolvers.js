@@ -1,5 +1,5 @@
 
-import FileService from '../../services/FileService'
+import FileService from '../../services/FileService.js'
 
 import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 
@@ -11,7 +11,7 @@ import {
     FILE_DELETE_ALL,
     FILE_DELETE_OWN,
     FILE_SHOW_PUBLIC
-} from "../../permissions/File";
+} from "../../permissions/File.js";
 
 export default {
     Query: {

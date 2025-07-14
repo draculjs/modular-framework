@@ -1,88 +1,87 @@
-import apolloClient from '../../../apollo'
-
-import {ApolloClient} from 'apollo-client'
-
-import gql from "graphql-tag";
-import {InMemoryCache} from "apollo-cache-inmemory";
-import { createHttpLink } from "apollo-link-http";
-
+import apolloClient from '../../../apollo';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client/core';
+import { HttpLink } from '@apollo/client/link/http';
 
 class ErrorProvider {
-
     constructor() {
-        this.gqlc = null
-        this.gqlcFail = null
-        this.buildGqlcFail()
+        this.gqlc = null;
+        this.gqlcFail = null;
+        this.buildGqlcFail();
     }
 
-    setGqlc(gqlc){
-        this.gqlc = gqlc
+    setGqlc(gqlc) {
+        this.gqlc = gqlc;
     }
 
-    buildGqlcFail(){
+    buildGqlcFail() {
         this.gqlcFail = new ApolloClient({
-            link: createHttpLink({ uri: "http://localhost:666/graphql" }),
-           // link: createHttpLink({ uri: "http://192.168.0.59:666/graphql" }),
+            link: new HttpLink({ 
+                uri: "http://localhost:777/graphql",
+            }),
             cache: new InMemoryCache(),
-        })
+        });
     }
 
-
-    getNotAuthorized(){
+    // Métodos de consulta manteniendo gql template literals
+    async getNotAuthorized() {
         return this.gqlc.query({
-            query: gql`query {getNotAuthorized}`
-        })
+            query: gql`query { getNotAuthorized }`
+        });
     }
 
-    getAuthenticationError(){
+    async getAuthenticationError() {
         return this.gqlc.query({
-            query: gql`query {getAuthenticationError}`
-        })
+            query: gql`query { getAuthenticationError }`
+        });
     }
 
-    getUserInputError(){
+    async getUserInputError() {
         return this.gqlc.query({
-            query: gql`query {getUserInputError}`
-        })
+            query: gql`query { getUserInputError }`
+        });
     }
 
-   getApolloError(){
+    async getApolloError() {
         return this.gqlc.query({
-            query: gql`query {getApolloError}`
-        })
+            query: gql`query { getApolloError }`
+        });
     }
 
-    getUnknownOperation(){
+    async getUnknownOperation() {
         return this.gqlc.query({
-            query: gql`query {getUnknownOperation}`
-        })
+            query: gql`query { getUnknownOperation }`
+        });
     }
 
-
-    getMultipleErrors(){
+    async getMultipleErrors() {
         return this.gqlc.query({
-            query: gql`query {getNotAuthorized getAuthenticationError getApolloError }`
-        })
+            query: gql`query { 
+                getNotAuthorized 
+                getAuthenticationError 
+                getApolloError 
+            }`
+        });
     }
 
-    getCustomError(){
+    async getCustomError() {
         return this.gqlc.query({
-            query: gql`query {getCustomError }`
-        })
+            query: gql`query { getCustomError }`
+        });
     }
 
-    getFail(){
+    async getFail() {
         return this.gqlcFail.query({
-            query: gql`query {getFail }`
-        })
+            query: gql`query { getFail }`
+        });
     }
 
-    getTimeout(){
+    async getTimeout() {
         return this.gqlc.query({
-            query: gql`query {getTimeout }`
-        })
+            query: gql`query { getTimeout }`
+        });
     }
 }
-const errorProvider = new ErrorProvider()
-errorProvider.setGqlc(apolloClient)
-export default errorProvider
+
+const errorProvider = new ErrorProvider();
+errorProvider.setGqlc(apolloClient);
+export default errorProvider;

@@ -5,7 +5,7 @@
       <v-row justify="space-between">
         <v-col cols="12" sm="6" md="2">
           <v-switch
-              prepend-icon="autorenew"
+              prepend-icon="mdi-autorenew"
               v-model="autoRefresh"
               @change="doAutoRefresh"
           ></v-switch>
@@ -58,7 +58,7 @@
 
         <template v-slot:item.done="{ item }">
           <div v-if="item.done">
-            <v-icon color="success">check_circle</v-icon>
+            <v-icon color="success">mdi-check-circle</v-icon>
           </div>
           <div v-else>
             <v-icon color="red">pending</v-icon>

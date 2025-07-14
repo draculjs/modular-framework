@@ -1,12 +1,25 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const rootDeps = require('./back-dependencies.json');
-const commonBackDir = path.join(__dirname, 'packages','common','common-backend','package.json');
+// Obtener rutas de módulo para ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Leer el package.json raíz de forma síncrona
+const rootPackagePath = path.join(__dirname, 'package.json');
+const rootPackageJson = JSON.parse(fs.readFileSync(rootPackagePath, 'utf8'));
+const rootDeps = {
+    devDependencies: rootPackageJson.devDependencies || {},
+    peerDependencies: rootPackageJson.peerDependencies || {}
+};
+
+const commonBackDir = path.join(__dirname, 'common', 'back');
 const packagesDir = [commonBackDir];
+
 packagesDir.forEach(pkgPath => {
-    const pkgJson = require(pkgPath);
+    const packageJsonPath = path.join(pkgPath, 'package.json');
+    const pkgJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
     pkgJson.devDependencies = {
         ...pkgJson.devDependencies,
@@ -18,5 +31,5 @@ packagesDir.forEach(pkgPath => {
         ...rootDeps.peerDependencies,
     };
 
-    fs.writeFileSync(pkgPath, JSON.stringify(pkgJson, null, 2));
+    fs.writeFileSync(packageJsonPath, JSON.stringify(pkgJson, null, 2));
 });

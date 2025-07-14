@@ -29,7 +29,7 @@ import CrudShow from "./components/Crud/CrudShow";
 import InputErrors from "./mixins/InputErrors";
 import InputErrorsByProps from "./mixins/InputErrorsByProps";
 import RequiredRule from "./mixins/RequiredRule";
-import ClientError from './errors/ClientError'
+import ClientError from './errors/ClientError.js'
 
 import i18nMessages from './i18n/messages'
 

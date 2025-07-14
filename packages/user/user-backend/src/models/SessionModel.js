@@ -1,8 +1,5 @@
 import {mongoose} from '@dracul/common-backend';
 
-import uniqueValidator from 'mongoose-unique-validator';
-
-
 const osSchema = new mongoose.Schema({
     family: {type: String, required: false},
     name: {type: String, required: false},
@@ -22,7 +19,6 @@ const deviceSchema = new mongoose.Schema({
     model: {type: String, required: false},
 })
 
-
 const geoSchema = new mongoose.Schema({
     country: {type: String, required: false},
     region: {type: String, required: false},
@@ -31,7 +27,6 @@ const geoSchema = new mongoose.Schema({
 })
 
 
-// Defining user Mongoose Schema
 const SessionSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -53,7 +48,4 @@ const SessionSchema = new mongoose.Schema({
 });
 
 SessionSchema.set('toJSON', {getters: true});
-
-SessionSchema.plugin(uniqueValidator, {message: '{VALUE} ya existe. {PATH} debe ser unico.'});
-
 export default mongoose.model('Session', SessionSchema);

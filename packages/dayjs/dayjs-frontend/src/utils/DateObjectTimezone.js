@@ -1,4 +1,4 @@
-const Datetime = require('../utils/Dayjs')
+import Datetime from '../utils/Dayjs';
 
 const dateObjectTimezone = function (date) {
   let obj = {}

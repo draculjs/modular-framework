@@ -1,8 +1,8 @@
-const {DefaultLogger} = require('@dracul/logger-backend');
+import {DefaultLogger} from '@dracul/logger-backend';
 
-const QueueModel = require('../models/QueueModel');
-const isPlainObject = require('../utils/isPlainObject')
-const {incrementDoneStat, incrementAddedStat, incrementFailedStat, incrementGottenStat} = require('./QueueStatsService')
+import QueueModel from '../models/QueueModel';
+import isPlainObject from '../utils/isPlainObject';
+import {incrementDoneStat, incrementAddedStat, incrementFailedStat, incrementGottenStat} from './QueueStatsService';
 
 const fetchQueues = async function () {
     try {

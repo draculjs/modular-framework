@@ -1,5 +1,5 @@
 <template>
-  <show-chip-field :chips="fileGroups" :label="$t('media.file.groups')" icon="groups"/>
+  <show-chip-field :chips="fileGroups" :label="$t('media.file.groups')" icon="mdi-account-group"/>
 </template>
 
 <script>

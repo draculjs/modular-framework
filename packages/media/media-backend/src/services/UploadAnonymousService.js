@@ -1,9 +1,9 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
 import path from "path";
-import File from '../models/FileModel'
-import storeFile from './helpers/storeFile'
-import randomString from './helpers/randomString'
-import baseUrl from "./helpers/baseUrl";
+import File from '../models/FileModel.js'
+import storeFile from './helpers/storeFile.js'
+import randomString from './helpers/randomString.js'
+import baseUrl from "./helpers/baseUrl.js";
 
 const fileUploadAnonymous = function (inputFile) {
 

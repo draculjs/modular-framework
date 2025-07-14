@@ -1,4 +1,4 @@
-class RBAC {
+export default class RBAC {
 
     constructor(rolesConfig, debug = false) {
         this.debug = debug
@@ -57,10 +57,6 @@ class RBAC {
     removeUserRoles(userId, roles = []) {
         if (typeof userId === 'undefined') {
             throw new Error('userId is not defined, expected 1 arguments');
-        }
-
-        if (typeof roles !== 'Array') {
-            throw new Error('roles must be an Array');
         }
 
         if (this.users[userId]) {
@@ -129,5 +125,3 @@ class RBAC {
         }
     }
 }
-
-export default RBAC;

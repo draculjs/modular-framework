@@ -1,21 +1,13 @@
 
-import {
-    createCustomization,
-    updateCustomization,
-    findCustomization,
-    updateColors,
-    updateLang,
-    updateLogo,
-    uploadLogo
-} from '../../services/CustomizationService'
 import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
+
 import {
-    CUSTOMIZATION_CREATE,
-    CUSTOMIZATION_UPDATE,
-    CUSTOMIZATION_COLORS_UPDATE,
-    CUSTOMIZATION_LANG_UPDATE,
-    CUSTOMIZATION_LOGO_UPDATE
-} from "../../permissions";
+    createCustomization, updateCustomization, findCustomization, updateColors, updateLang, updateLogo, uploadLogo
+} from '../../services/CustomizationService.js'
+
+import {
+    CUSTOMIZATION_CREATE, CUSTOMIZATION_UPDATE, CUSTOMIZATION_COLORS_UPDATE, CUSTOMIZATION_LANG_UPDATE, CUSTOMIZATION_LOGO_UPDATE
+} from "../../permissions/index.js";
 
 export default {
     Query: {

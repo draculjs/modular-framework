@@ -30,8 +30,8 @@
 
 
             <template v-if="item.type === 'boolean'">
-              <v-icon v-if="item.value === 'enable' " color="green">done</v-icon>
-              <v-icon v-else color="red">clear</v-icon>
+              <v-icon v-if="item.value === 'enable' " color="green">mdi-done</v-icon>
+              <v-icon v-else color="red">mdi-clear</v-icon>
             </template>
 
             <template v-else-if="item.type === 'password'">

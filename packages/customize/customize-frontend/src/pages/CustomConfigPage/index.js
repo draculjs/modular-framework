@@ -1,4 +1,4 @@
-import CustomConfigPage from "./CustomConfigPage";
+import CustomConfigPage from "./CustomConfigPage.vue";
 
 export {CustomConfigPage}
 export default CustomConfigPage

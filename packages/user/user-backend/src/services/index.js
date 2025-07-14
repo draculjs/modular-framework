@@ -1,16 +1,15 @@
-import * as GroupService from './GroupService'
-import * as ProfileService from './ProfileService'
-import * as LoginFailService from './LoginFailService'
-import * as RoleService from './RoleService'
-import * as SessionService from './SessionService'
-import * as UserAuditService from './UserAuditService'
-import * as UserEmailManager from './UserEmailManager'
-import * as UserService from './UserService'
-import * as InitService from './InitService'
-import * as AuthService from './AuthService'
-import * as RecoveryService from './RecoveryService'
-import * as RegisterService from './RegisterService'
-import * as RbacService from './RbacService'
+import GroupService from './GroupService.js'
+import * as ProfileService from './ProfileService.js'
+import * as LoginFailService from './LoginFailService.js'
+import RoleService from './RoleService.js'
+import * as SessionService from './SessionService.js'
+import * as UserEmailManager from './UserEmailManager.js'
+import UserService from './UserService.js'
+import * as InitService from './InitService.js'
+import * as AuthService from './AuthService.js'
+import * as RecoveryService from './RecoveryService.js'
+import * as RegisterService from './RegisterService.js'
+import * as RbacService from './RbacService.js'
 
 export {
     AuthService,
@@ -21,7 +20,6 @@ export {
     LoginFailService,
     RoleService,
     SessionService,
-    UserAuditService,
     UserEmailManager,
     UserService,
     InitService,

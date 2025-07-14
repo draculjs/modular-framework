@@ -6,8 +6,8 @@ import {
     ApolloError
 } from "apollo-server-errors";
 
-import CustomError from "../../errors/CustomError";
-import BaseError from './../../model/BaseErrorModel'
+import CustomError from "../../errors/CustomError.js";
+import { BaseError } from './../../model/BaseErrorModel.js'
 
 export default {
     Query: {

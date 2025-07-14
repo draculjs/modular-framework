@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: "Dracul Media Storage es una aplicación que brinda servicios para almacenar archivos."
+  description: "Storage Hub es una aplicación que brinda servicios para almacenar archivos."
   version: "1.0.0"
-  title: "Dracul Media Storage"
+  title: "Storage Hub"
 basePath: "/"
 tags:
 - name: "file"

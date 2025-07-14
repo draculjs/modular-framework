@@ -1,5 +1,5 @@
 <template>
-  <show-chip-field :chips="fileUsers" :label="$t('media.file.users')" icon="person"/>
+  <show-chip-field :chips="fileUsers" :label="$t('media.file.users')" icon="mdi-account"/>
 </template>
 
 <script>

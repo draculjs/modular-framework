@@ -1,4 +1,5 @@
-require('dotenv').config()
+import { config } from 'dotenv';
+config()
 import DefaultTextFormatter from "./DefaultTextFormatter";
 import DefaultJsonFormatter from "./DefaultJsonFormatter";
 

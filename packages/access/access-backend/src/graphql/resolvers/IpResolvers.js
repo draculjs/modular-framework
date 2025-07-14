@@ -1,21 +1,13 @@
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
+
 import {
-    findIp,
-    fetchIp,
-    paginateIp,
-    fetchEnabledIp,
-    createIp,
-    updateIp,
-    deleteIp
-} from '../../services/IpServices'
+    findIp, fetchIp, paginateIp, fetchEnabledIp, createIp, updateIp, deleteIp
+} from '../../services/IpServices.js'
 
-const {
-    IP_CREATE,
-    IP_SHOW,
-    IP_UPDATE,
-    IP_DELETE
-} =  require("../../permissions/IpPermissions");
+import {
+    IP_CREATE, IP_SHOW, IP_UPDATE, IP_DELETE
+} from "../../permissions/IpPermissions.js";
 
-const {AuthenticationError, ForbiddenError} = require("apollo-server-errors");
 
 const resolvers = {
     Query: {
@@ -59,4 +51,4 @@ const resolvers = {
     }
 }
 
-module.exports = resolvers;
+export default resolvers

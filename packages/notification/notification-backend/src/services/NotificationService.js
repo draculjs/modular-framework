@@ -1,8 +1,9 @@
-import Notification from "../models/NotificationModel";
 import {DefaultLogger as winston} from "@dracul/logger-backend";
-import dayjs from "dayjs"
-import {pubsub} from '../PubSub'
 import mongoose from "mongoose";
+import dayjs from "dayjs"
+
+import Notification from "../models/NotificationModel.js";
+import {pubsub} from '../PubSub.js'
 
 /**
  * Create an user notification

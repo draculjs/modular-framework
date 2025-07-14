@@ -4,7 +4,7 @@
       <v-col cols="12">
         <!--string-->
         <v-text-field v-if="!item.type || item.type === 'string' || item.type === 'password'"
-                      prepend-icon="text_snippet"
+                      prepend-icon="mdi-text_snippet"
                       :name="item.key" v-model="form.value"
                       :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]" color="secondary"
                       :rules="validateRegex"
@@ -15,7 +15,7 @@
 
         <!--number-->
         <v-text-field v-if="item.type === 'number'"
-                      prepend-icon="text_snippet" type="number"
+                      prepend-icon="mdi-text_snippet" type="number"
                       v-model.number="form.value" :name="item.key"
                       :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
                       :rules="validateNumber"
@@ -27,7 +27,7 @@
 
         <!--boolean-->
         <v-checkbox v-if="item.type === 'boolean'"
-                    prepend-icon="text_snippet"
+                    prepend-icon="mdi-text_snippet"
                     :name="item.key" value="enable"
                     v-model="form.value" :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
                     color="secondary">
@@ -36,7 +36,7 @@
 
         <!--enum-->
         <v-select v-if="item.type === 'enum'"
-                  prepend-icon="text_snippet"
+                  prepend-icon="mdi-text_snippet"
                   :name="item.key" :items="item.options"
                   v-model="form.value"
                   :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
@@ -44,7 +44,7 @@
         </v-select>
 
         <!--dynamic-->
-        <v-select v-if="item.type === 'dynamic'" prepend-icon="list"
+        <v-select v-if="item.type === 'dynamic'" prepend-icon="mdi-list"
                   :name="item.key" item-text="entityText" item-value="entityValue"
                   :items="this.entityOptions" v-model="form.value"
                   :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
@@ -54,7 +54,7 @@
 
         <!--stringList-->
         <v-combobox v-if="item.type === 'stringList'"
-                    prepend-icon="list" :name="item.key"
+                    prepend-icon="mdi-list" :name="item.key"
                     v-model="form.valueList"
                     chips multiple
                     :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"
@@ -64,7 +64,7 @@
 
         <!--numberList-->
         <v-combobox v-if="item.type === 'numberList'"
-                    prepend-icon="list" :name="item.key"
+                    prepend-icon="mdi-list" :name="item.key"
                     chips multiple
                     v-model="form.valueList"
                     :label="item.label[getLanguage]" :placeholder="item.label[getLanguage]"

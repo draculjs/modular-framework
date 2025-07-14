@@ -1,5 +1,5 @@
+import mongoosePaginate from "mongoose-paginate-v2";
 import {mongoose} from '@dracul/common-backend';
-const mongoosePaginate = require("mongoose-paginate-v2");
 const Schema = mongoose.Schema;
 
 const NotificationSchema = new Schema({
@@ -14,6 +14,6 @@ const NotificationSchema = new Schema({
 });
 
 NotificationSchema.plugin(mongoosePaginate)
-const Notification = mongoose.model("Notification", NotificationSchema);
 
-module.exports = Notification;
+export const Notification = mongoose.model("Notification", NotificationSchema);
+export default Notification;

@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {UserModuleStore} from '@dracul/user-frontend'
-import {CustomizationStore} from '@dracul/customize-frontend'
-import {SettingsModuleStore} from '@dracul/settings-frontend'
-import BaseModuleStore from '../modules/base/storage/BaseModuleStore'
+import {customizationProvider, CustomizationStore} from '@dracul/customize-frontend'
+import {SettingsModuleStore, SettingsProvider} from '@dracul/settings-frontend'
+import BaseModuleStore from '../modules/base/storage/BaseModuleStore.js'
 
 Vue.use(Vuex)
 
 import createPersistedState from "vuex-persistedstate";
 
-export default new Vuex.Store({
+export const store = new Vuex.Store({
     modules:{
         user: UserModuleStore,
         base: BaseModuleStore,
@@ -18,7 +18,7 @@ export default new Vuex.Store({
     },
     plugins: [
         createPersistedState({
-            key: process.env.VUE_APP_KEY,
+            key: 'ajsdjkasd',
             paths: ['user'],
             reducer: state => (
                 {
@@ -37,5 +37,40 @@ export default new Vuex.Store({
                     },
                 })
         })
-    ]
+    ],
+  mutations: {
+    setAppReady(state, ready) {
+      state.appReady = ready
+    },
+    setGlobalError(state, error) {
+      state.globalError = error
+    },
+    setVuetifyInstance(state, instance) {
+      state.vuetify = instance
+    },
+    setCustomization(state, customization) {
+      state.customization = customization
+    },
+    setSettings(state, settings) {
+      state.settings = settings
+    }
+  },
+  actions:{
+    async loadCustomizations({ commit }) {
+      try {
+        const customization = await customizationProvider.getCustomization()
+        commit('setCustomization', customization)
+      } catch (error) {
+        console.error('Error loading customizations:', error)
+      }
+    },
+    async loadSettings({ commit }) {
+      try {
+        const settings = await SettingsProvider.fetchSettings()
+        commit('setSettings', settings)
+      } catch (error) {
+        console.error('Error loading settings:', error)
+      }
+    },
+  }
 })

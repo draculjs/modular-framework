@@ -1,4 +1,4 @@
-import AdminChangeAvatar from "./AdminChangeAvatar";
+import AdminChangeAvatar from "./AdminChangeAvatar.vue";
 
 export {AdminChangeAvatar}
 export default AdminChangeAvatar

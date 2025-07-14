@@ -1,4 +1,4 @@
-import MenuCard from "./MenuCard";
+import MenuCard from "./MenuCard.vue";
 
 export {MenuCard}
 export default MenuCard

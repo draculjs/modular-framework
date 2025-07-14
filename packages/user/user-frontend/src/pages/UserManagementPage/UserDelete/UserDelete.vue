@@ -24,8 +24,8 @@
 </template>
 
 <script>
-    import UserShowData from "../UserShow/UserShowData";
-    import UserProvider from "../../../providers/UserProvider";
+    import UserShowData from "../UserShow/UserShowData.vue";
+    import UserProvider from "../../../providers/UserProvider.js";
     import {CrudDelete, ClientError} from '@dracul/common-frontend'
 
     export default {

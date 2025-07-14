@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import LoginCard from "./LoginCard";
-import LoginForm from "./LoginForm";
+import LoginCard from "./LoginCard/index.js";
+import LoginForm from "./LoginForm/index.js";
 
 export default {
   name: "LoginPage",

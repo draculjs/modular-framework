@@ -1,80 +1,102 @@
+import markAsReadOrNotReadRaw from "./gql/markAsReadOrNotRead.graphql?raw";
+import markAllReadOrNotReadRaw from "./gql/markAllReadOrNotRead.graphql?raw";
+import fetchNotificationsRaw from "./gql/fetchNotifications.graphql?raw";
+import notificationsPaginateRaw from "./gql/notificationsPaginate.graphql?raw";
+import fetchNotificationMethodRaw from "./gql/fetchNotificationMethod.graphql?raw";
+import createNotificationRaw from "./gql/createNotification.graphql?raw";
+import subscriptionNotificationRaw from "./gql/subscriptionNotification.graphql?raw";
+import { ApolloClient, gql } from '@apollo/client/core';
 
-class notificationProvider {
+const markAsReadOrNotReadGql = gql(markAsReadOrNotReadRaw);
+const markAllReadOrNotReadGql = gql(markAllReadOrNotReadRaw);
+const fetchNotificationsGql = gql(fetchNotificationsRaw);
+const notificationsPaginateGql = gql(notificationsPaginateRaw);
+const fetchNotificationMethodGql = gql(fetchNotificationMethodRaw);
+const createNotificationGql = gql(createNotificationRaw);
+const subscriptionNotificationGql = gql(subscriptionNotificationRaw);
 
-  constructor() {
-    this.gqlcWs = null;
-    this.gqlc = null;
-  }
+class NotificationProvider {
+    constructor() {
+        this.gqlcWs = null;
+        this.gqlc = null;
+    }
 
-  setGqlc(gqlc) {
-    this.gqlc = gqlc;
-  }
+    setGqlc(gqlc) {
+        if (gqlc instanceof ApolloClient) {
+            this.gqlc = gqlc;
+        } else {
+            throw new Error('gqlc must be an ApolloClient instance');
+        }
+    }
 
-  setGqlcWs(gqlc) {
-    this.gqlcWs = gqlc;
-  }
+    setGqlcWs(gqlcWs) {
+        if (gqlcWs instanceof ApolloClient) {
+            this.gqlcWs = gqlcWs;
+        } else {
+            throw new Error('gqlcWs must be an ApolloClient instance');
+        }
+    }
 
-  markAsReadOrNotRead(id, isRead) {
-    return this.gqlc.mutate({
-      mutation: require("./gql/markAsReadOrNotRead.graphql"),
-      variables: {
-        id,
-        isRead,
-      },
-    });
-  }
+    getGqlClient() {
+        if (!this.gqlc) throw new Error('gqlc must be initialized');
+        return this.gqlc;
+    }
 
-  markAllReadOrNotRead(isRead) {
-    return this.gqlc.mutate({
-      mutation: require("./gql/markAllReadOrNotRead.graphql"),
-      variables: {
-        isRead,
-      },
-    });
-  }
+    getGqlWsClient() {
+        if (!this.gqlcWs) throw new Error('gqlcWs must be initialized');
+        return this.gqlcWs;
+    }
 
-  fetchNotifications(limit, isRead, type) {
-    return this.gqlc.query({
-      query: require("./gql/fetchNotifications.graphql"),
-      variables: { limit, isRead, type },
-      fetchPolicy: "network-only",
-    });
-  }
+    markAsReadOrNotRead(id, isRead) {
+        return this.getGqlClient().mutate({
+            mutation: markAsReadOrNotReadGql,
+            variables: { id, isRead }
+        });
+    }
 
-  notificationsPaginateFilter(limit, pageNumber, isRead, type) {
-    return this.gqlc.query({
-      query: require("./gql/notificationsPaginate.graphql"),
-      variables: { limit, pageNumber, isRead, type },
-      fetchPolicy: "network-only",
-    });
-  }
+    markAllReadOrNotRead(isRead) {
+        return this.getGqlClient().mutate({
+            mutation: markAllReadOrNotReadGql,
+            variables: { isRead }
+        });
+    }
 
-  fetchNotificationMethod(){
-    return this.gqlc.query({
-      query: require("./gql/fetchNotificationMethod.graphql"),
-      variables: {},
-      fetchPolicy: "network-only",
-    });
-  }
+    fetchNotifications(limit, isRead, type) {
+        return this.getGqlClient().query({
+            query: fetchNotificationsGql,
+            variables: { limit, isRead, type },
+            fetchPolicy: "network-only"
+        });
+    }
 
-  createNotification(title, content, type, icon) {
-    return this.gqlc.mutate({
-      mutation: require("./gql/createNotification.graphql"),
-      variables: {
-        title,
-        content,
-        type,
-        icon,
-      },
-    });
-  }
+    notificationsPaginateFilter(limit, pageNumber, isRead, type) {
+        return this.getGqlClient().query({
+            query: notificationsPaginateGql,
+            variables: { limit, pageNumber, isRead, type },
+            fetchPolicy: "network-only"
+        });
+    }
 
-  subscriptionNotification(user) {
-    return this.gqlcWs.subscribe({
-      query: require("./gql/subscriptionNotification.graphql"),
-      variables: { user },
-    });
-  }
+    fetchNotificationMethod() {
+        return this.getGqlClient().query({
+            query: fetchNotificationMethodGql,
+            fetchPolicy: "network-only"
+        });
+    }
+
+    createNotification(title, content, type, icon) {
+        return this.getGqlClient().mutate({
+            mutation: createNotificationGql,
+            variables: { title, content, type, icon }
+        });
+    }
+
+    subscriptionNotification(user) {
+        return this.getGqlWsClient().subscribe({
+            query: subscriptionNotificationGql,
+            variables: { user }
+        });
+    }
 }
 
-export default new notificationProvider();
+export default new NotificationProvider();

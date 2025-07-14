@@ -1,4 +1,4 @@
-const validatePasswordLength = function (password) {
+export default function validatePasswordLength(password) {
     const minimunLength = process.env.PASSWORD_MINIMUN_LENGTH ? process.env.PASSWORD_MINIMUN_LENGTH : 1
     if (password.length >= minimunLength) {
         return true
@@ -6,5 +6,3 @@ const validatePasswordLength = function (password) {
         return false
     }
 }
-
-export default validatePasswordLength

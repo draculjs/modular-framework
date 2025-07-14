@@ -1,14 +1,28 @@
-import PermissionModel from '../models/PermissionModel'
+import PermissionModel from '../models/PermissionModel.js'
 import {UserInputError} from 'apollo-server-errors'
 import {DefaultLogger as winston} from "@dracul/logger-backend";
 
-export const fetchPermissions = async function () {
+// Función auxiliar para verificar si un nombre de permiso ya existe
+async function permissionNameExists(name, excludeId = null) {
+    try {
+        const query = { name };
+        if (excludeId) {
+            query._id = { $ne: excludeId };
+        }
+        const count = await PermissionModel.countDocuments(query);
+        return count > 0;
+    } catch (error) {
+        winston(`An error happened at permissionNameExists: ${error}`)
+        throw error;
+    }
+}
 
+export const fetchPermissions = async function () {
     try {
         return await PermissionModel.find({}).exec()
     } catch (e) {
         winston.error("PermissionService.fetchPermissions ", e)
-        reject(e)
+        throw(e)
     }
 }
 
@@ -17,81 +31,93 @@ export const fetchPermissionsInName = async function (permissions) {
         return await PermissionModel.find({name: {$in: permissions}}).exec()
     } catch (e) {
         winston.error("PermissionService.fetchPermissionsInName ", e)
-        reject(e)
+        throw(e)
     }
-
 }
 
 export const findPermission = async function (id) {
-
     try {
         return await PermissionModel.findOne({_id: id}).exec()
     } catch (e) {
         winston.error("PermissionService.findPermission ", e)
-        reject(e)
+        throw(e)
     }
 }
 
 export const findPermissionByName = async function (name) {
-
     try {
         return await PermissionModel.findOne({name: name}).exec()
     } catch (e) {
         winston.error("PermissionService.findPermission ", e)
-        reject(e)
+        throw(e)
     }
 }
 
 export const createPermission = async function (name) {
-    const newPermission = new PermissionModel({name})
-    newPermission.id = newPermission._id;
-
     try {
+        // Verificar si el nombre ya existe
+        const nameExists = await permissionNameExists(name);
+        if (nameExists) {
+            throw new UserInputError('Permission name must be unique', {
+                inputErrors: { name: 'Permission name must be unique' }
+            });
+        }
+
+        const newPermission = new PermissionModel({name})
+        newPermission.id = newPermission._id;
+
         await newPermission.save()
         return newPermission
     } catch (e) {
+        if (e.code === 11000) {
+            throw new UserInputError('Permission name must be unique', {
+                inputErrors: { name: 'Permission name must be unique' }
+            });
+        }
         winston.error("PermissionService.createPermission ", e)
-        reject(e)
+        throw(e)
     }
 }
-
 
 export const updatePermission = async function (id, name) {
-
     try {
-        const r = PermissionModel.findOneAndUpdate(
-            {_id: id},
-            {name, permissions},
-            {new: true, runValidators: true, context: 'query'})
-            .exec()
-        return r
-    } catch (error) {
-        if (error.name == "ValidationError") {
-            winston.warn("PermissionService.updatePermission.ValidationError ", err)
-            rejects(new UserInputError(error.message, {inputErrors: error.errors}));
+        // Verificar si el nuevo nombre ya existe
+        const nameExists = await permissionNameExists(name, id);
+        if (nameExists) {
+            throw new UserInputError('Permission name must be unique', {
+                inputErrors: { name: 'Permission name must be unique' }
+            });
         }
-        winston.error("PermissionService.updatePermission ", err)
-        reject(error)
-    }
 
+        const updatedPermission = await PermissionModel.findOneAndUpdate(
+            {_id: id},
+            {name},
+            {new: true, runValidators: true, context: 'query'}
+        ).exec()
+        
+        return updatedPermission
+    } catch (error) {
+        if (error.code === 11000) {
+            throw new UserInputError('Permission name must be unique', {
+                inputErrors: { name: 'Permission name must be unique' }
+            });
+        }
+        if (error.name == "ValidationError") {
+            winston.warn("PermissionService.updatePermission.ValidationError ", error)
+            throw(new UserInputError(error.message, {inputErrors: error.errors}));
+        }
+        winston.error("PermissionService.updatePermission ", error)
+        throw(error)
+    }
 }
 
-export const deletePermission = function (id) {
-
-    return new Promise((resolve, reject) => {
-        findPermission(id).then((doc) => {
-            doc.softdelete(
-                function (err) {
-
-                    if (err) {
-                        winston.error("PermissionService.deletePermission ", err)
-                        reject(err)
-                    }
-
-                    resolve({id: id, success: true})
-
-                }
-            )
-        })
-    })
+export const deletePermission = async function (id) {
+    try {
+        const doc = await findPermission(id);
+        await doc.softdelete();
+        return {id: id, success: true};
+    } catch (err) {
+        winston.error("PermissionService.deletePermission ", err);
+        throw err;
+    }
 }

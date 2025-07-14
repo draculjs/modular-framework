@@ -1,9 +1,9 @@
 /**
  * Dependencies
  */
-const isFunction = require('../utils/isFunction')
-const Consumer = require('./Consumer')
-const Worker = require('./Worker')
+import isFunction from '../utils/isFunction';
+import Consumer from './Consumer';
+import Worker from './Worker';
 
 /**
  * Implements a WorkerManager.

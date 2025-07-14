@@ -1,4 +1,4 @@
-import LogoToolbar from "./LogoToolbar";
+import LogoToolbar from "./LogoToolbar.vue";
 
 export {LogoToolbar}
 export default LogoToolbar

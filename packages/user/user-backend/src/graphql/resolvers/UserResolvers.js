@@ -1,27 +1,15 @@
-import {
-    createUser,
-    updateUser,
-    deleteUser,
-    findUsers,
-    findUsersByRole,
-    findUser,
-    changePasswordAdmin,
-    paginateUsers, findUsersByRoles
-} from '../../services/UserService'
+import { AuthenticationError, ForbiddenError } from "apollo-server-errors";
 
-import {
-    AuthenticationError,
-    ForbiddenError
-} from "apollo-server-errors";
+import UserService from '../../services/UserService.js'
 
 import {
     SECURITY_USER_CREATE,
     SECURITY_USER_DELETE,
     SECURITY_USER_EDIT,
     SECURITY_USER_SHOW
-} from "../../permissions";
+} from "../../permissions/include/security-permissions.js";
 
-import {avatarUpload} from "../../services/ProfileService";
+import {avatarUpload} from "../../services/ProfileService.js";
 
 export default {
     Query: {
@@ -29,29 +17,29 @@ export default {
         users: (_, {}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
-            return findUsers(user.role.childRoles, user.id)
+            return UserService.findUsers(user.role.childRoles, user.id)
         },
         usersByRole: (_, {roleName}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
-            return findUsersByRole(roleName)
+            return UserService.findUsersByRole(roleName)
         },
         usersByRoles: (_, {roleNames}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
-            return findUsersByRoles(roleNames)
+            return UserService.findUsersByRoles(roleNames)
         },
         user: (_, {id}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
-            return findUser(id)
+            return UserService.findUser(id)
         },
 
         paginateUsers: async (_, {limit, pageNumber, search, orderBy, orderDesc, activeUsers}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_SHOW)) throw new ForbiddenError("Not Authorized")
-            user = await findUser(user.id)
-            return paginateUsers(limit, pageNumber, search, orderBy, orderDesc, user.role.childRoles, activeUsers)
+            user = await UserService.findUser(user.id)
+            return UserService.paginateUsers(limit, pageNumber, search, orderBy, orderDesc, user.role.childRoles, activeUsers)
         },
 
     },
@@ -59,26 +47,26 @@ export default {
         adminAvatarUpload: async (_, {id, file}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
-            let userDst = await findUser(id)
+            let userDst = await UserService.findUser(id)
             return avatarUpload(userDst, file)
         },
         createUser: async (_, {input}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_CREATE)) throw new ForbiddenError("Not Authorized")
 
-            user = await findUser(user.id)
+            user = await UserService.findUser(user.id)
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
                 //Check if role is include as a childRole
                 if (user.role.childRoles.includes(input.role)) {
-                    return createUser(input, user)
+                    return UserService.createUser(input, user)
                 } else {
                     throw new ForbiddenError("Not Authorized")
                 }
 
                 //Without childRoles
             } else {
-                return createUser(input, user)
+                return UserService.createUser(input, user)
             }
 
 
@@ -88,20 +76,20 @@ export default {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
 
-            user = await findUser(user.id)
+            user = await UserService.findUser(user.id)
 
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
                 //Check if role is include as a childRole
                 if (user.role.childRoles.includes(input.role)) {
-                    return updateUser(id, input, user)
+                    return UserService.updateUser(id, input, user)
                 } else {
                     throw new ForbiddenError("Not Authorized")
                 }
 
                 //Without childRoles
             } else {
-                return updateUser(id, input, user)
+                return UserService.updateUser(id, input, user)
             }
 
 
@@ -111,23 +99,23 @@ export default {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_DELETE)) throw new ForbiddenError("Not Authorized")
 
-            user = await findUser(user.id)
+            user = await UserService.findUser(user.id)
 
             //With childRoles
             if (user.role.childRoles && user.role.childRoles.length) {
                 //Check if role is include as a childRole
 
-                let userToDelete = await findUser(id)
+                let userToDelete = await UserService.findUser(id)
 
                 if (user.role.childRoles.includes(userToDelete.role.id)) {
-                    return deleteUser(id, user)
+                    return UserService.deleteUser(id, user)
                 } else {
                     throw new ForbiddenError("Not Authorized")
                 }
 
                 //Without childRoles
             } else {
-                return deleteUser(id, user)
+                return UserService.deleteUser(id, user)
             }
 
         },
@@ -135,7 +123,7 @@ export default {
         changePasswordAdmin: (_, {id, password, passwordVerify}, {user, rbac}) => {
             if (!user) throw new AuthenticationError("UNAUTHENTICATED")
             if (!user || !rbac.isAllowed(user.id, SECURITY_USER_EDIT)) throw new ForbiddenError("Not Authorized")
-            return changePasswordAdmin(id, {password, passwordVerify}, user)
+            return UserService.changePasswordAdmin(id, {password, passwordVerify}, user)
         }
     }
 

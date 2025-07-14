@@ -27,7 +27,7 @@ export default {
     label: {type: String, default: 'customization.darkMode'},
     color: {type: String, default: 'green'},
     dense: {type: Boolean, default: true},
-    icon: {type: String, default: 'dark_mode'},
+    icon: {type: String, default: 'mdi-dark_mode'},
     showIcon:  {type: Boolean, default: true},
     showLabel:  {type: Boolean, default: false},
   },

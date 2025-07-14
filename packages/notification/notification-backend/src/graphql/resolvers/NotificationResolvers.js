@@ -1,16 +1,17 @@
-import {markAsReadOrNotReadService, markAllReadOrNotReadService, fetchNotificationsService,createNotificationService,notificationsPaginateFilterService,fetchNotificationMethodService} from '../../services/NotificationService'
-
 import {AuthenticationError, ForbiddenError} from 'apollo-server-errors';
+import { withFilter } from 'graphql-subscriptions';
+
+import {
+    markAsReadOrNotReadService, markAllReadOrNotReadService, fetchNotificationsService,createNotificationService,
+    notificationsPaginateFilterService,fetchNotificationMethodService
+} from '../../services/NotificationService.js'
+
 
 import{
-    NOTIFICATION_SHOW,
-    NOTIFICATION_CREATE,
-    NOTIFICATION_UPDATE
-} from '../../permissions'
+    NOTIFICATION_SHOW, NOTIFICATION_CREATE, NOTIFICATION_UPDATE
+} from '../../permissions/index.js'
 
-
-const { withFilter } = require('graphql-subscriptions');
-import {pubsub} from '../../PubSub'
+import { pubsub } from '../../PubSub.js'
 
 export default{
     Query:{

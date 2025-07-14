@@ -25,8 +25,8 @@
 </template>
 
 <script>
-    import GroupShowData from "../GroupShow/GroupShowData";
-    import GroupProvider from "../../../providers/GroupProvider";
+    import GroupShowData from "../GroupShow/GroupShowData.vue";
+    import GroupProvider from "../../../providers/GroupProvider.js";
     import {CrudDelete, ClientError} from '@dracul/common-frontend'
 
     export default {

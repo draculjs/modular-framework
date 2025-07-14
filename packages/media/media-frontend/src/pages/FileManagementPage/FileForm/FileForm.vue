@@ -6,7 +6,7 @@
         <date-input
             v-model="form.expirationDate"
             :label="$t('media.file.expirationDate')"
-            prepend-icon="event"
+            prepend-icon="mdi-calendar"
             persistent-hint
             color="secondary"
             :rules="fileExpirationTimeRules"
@@ -15,7 +15,7 @@
 
       <v-col cols="12" md="6" sm="6">
         <v-select
-            prepend-icon="visibility"
+            prepend-icon="mdi-eye"
             v-model="form.isPublic"
             :items="[{text: 'Público', value: true}, {text: 'Privado', value: false}]"
             :label="$t('media.file.visibility')"
@@ -24,7 +24,7 @@
 
       <v-col cols="12" sm="12" md="12">
         <v-combobox
-            prepend-icon="loyalty"
+            prepend-icon="mdi-tag"
             v-model="form.tags"
             :label="$t('media.file.tags')"
             chips
@@ -36,7 +36,7 @@
 
       <v-col cols="12" sm="12">
         <v-text-field
-            prepend-icon="description"
+            prepend-icon="mdi-text"
             name="filename"
             v-model="form.description"
             :label="$t('media.file.description')"

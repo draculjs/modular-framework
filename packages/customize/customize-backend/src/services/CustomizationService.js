@@ -1,15 +1,16 @@
-import Customization from '../models/CustomizationModel'
-import {UserInputError} from 'apollo-server-errors'
+import createDirIfNotExist from "./helpers/createDirIfNotExist.js";
+import Customization from '../models/CustomizationModel.js'
 
-const path = require('path');
-import fs from "fs";
-import createDirIfNotExist from "./helpers/createDirIfNotExist";
+
 import {DefaultLogger as winston} from "@dracul/logger-backend";
 import {randomString} from "@dracul/common-backend";
+
+import {UserInputError} from 'apollo-server-errors'
 import {Transform} from "stream";
+import path from 'path';
+import fs from "fs";
 
 export const findCustomization = async function () {
-
     try {
         const customization = await Customization.findOne().exec()
         return customization
@@ -20,7 +21,6 @@ export const findCustomization = async function () {
 
 
 export const createCustomization = async function ({lightTheme, darkTheme, logo, language}) {
-
     try {
         const customization = new Customization({
             lightTheme, darkTheme, logo, language
@@ -34,7 +34,6 @@ export const createCustomization = async function ({lightTheme, darkTheme, logo,
         }
         throw error
     }
-
 }
 
 export const updateCustomization = async function ({lightTheme, darkTheme, logo, language}) {
@@ -49,7 +48,6 @@ export const updateCustomization = async function ({lightTheme, darkTheme, logo,
 }
 
 export const updateColors = async function ({lightTheme, darkTheme}) {
-
     try {
         const customization = await Customization.findOneAndUpdate({},
             {lightTheme, darkTheme},
@@ -58,11 +56,9 @@ export const updateColors = async function ({lightTheme, darkTheme}) {
     } catch (e) {
         throw e
     }
-
 }
 
 export const updateLogo = async function ({mode, title}) {
-
     try {
         const customization = await Customization.findOneAndUpdate({},
             {$set: {'logo.mode': mode, 'logo.title': title}},
@@ -71,11 +67,9 @@ export const updateLogo = async function ({mode, title}) {
     } catch (e) {
         throw e
     }
-
 }
 
 export const updateLang = async function ({language}) {
-
     try {
         const customization = await Customization.findOneAndUpdate({},
             {language},
@@ -84,11 +78,9 @@ export const updateLang = async function ({language}) {
     } catch (e) {
         throw e
     }
-
 }
 
 class StreamSizeValidator extends Transform {
-
     maxFileSize = process.env.LOGO_MAX_SIZE ? process.env.LOGO_MAX_SIZE : 2000000
     length = 0
 
@@ -106,9 +98,7 @@ class StreamSizeValidator extends Transform {
 }
 
 const storeFS = (sourceStream, dst) => {
-
     return new Promise((resolve, reject) => {
-
             const sizeValidator = new StreamSizeValidator()
             const fileWriteStream = fs.createWriteStream(dst)
 
@@ -159,9 +149,7 @@ const storeFS = (sourceStream, dst) => {
 
 
 export const uploadLogo = function (file) {
-
     return new Promise(async (resolve, reject) => {
-
         const mimetypesAllowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg']
 
         try {
@@ -210,9 +198,7 @@ export const uploadLogo = function (file) {
             console.log("ERRRR", e.message);
             reject(new Error(e.message))
         }
-
     })
-
 }
 
 

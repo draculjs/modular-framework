@@ -1,4 +1,4 @@
-import UserApikey from "./UserApikey";
+import UserApikey from "./UserApikey.vue";
 
 export {UserApikey}
 export default UserApikey

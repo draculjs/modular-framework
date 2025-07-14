@@ -15,7 +15,7 @@ export default {
   props: {
     color: {type: String, default: 'red white--text'},
     small: {type: Boolean, default: true},
-    icon: {type: String, default: 'delete'}
+    icon: {type: String, default: 'mdi-delete'}
   }
 }
 </script>

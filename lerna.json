@@ -1,6 +1,15 @@
 {
-  "packages": [
-    "packages/**"
-  ],
-  "version": "1.35.8"
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
+  "npmClient": "npm",
+  "useWorkspaces": true,
+  "command": {
+    "bootstrap": {
+      "hoist": false,
+      "npmClientArgs": ["--legacy-peer-deps"]
+    },
+    "run": {
+      "npmClient": "npm"
+    }
+  }
 }

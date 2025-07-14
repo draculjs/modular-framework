@@ -1,34 +1,34 @@
 //Resources
-import i18nMessages from './i18n'
-import routes from './routes'
+import i18nMessages from './i18n/index.js'
+import routes from './routes/index.js'
 
 //Providers
-import FileProvider from './providers/FileProvider'
-import UploadProvider from './providers/UploadProvider'
-import FileMetricsProvider from './providers/FileMetricsProvider'
-import UserStorageProvider from './providers/UserStorageProvider'
+import FileProvider from './providers/FileProvider.js'
+import UploadProvider from './providers/UploadProvider.js'
+import FileMetricsProvider from './providers/FileMetricsProvider.js'
+import UserStorageProvider from './providers/UserStorageProvider.js'
 
 //Components
-import FileUploadExpiration from './components/FileUploadExpiration'
-import FileUploadExpress from './components/FileUploadExpress'
-import FileUpload from './components/FileUpload'
-import FileUploadButton from './components/FileUploadButton'
-import FileView from './components/FileView'
-import MediaField from './components/MediaField'
+import FileUploadExpiration from './components/FileUploadExpiration/FileUploadExpiration.vue'
+import FileUploadExpress from './components/FileUploadExpress/FileUploadExpress.vue'
+import FileUpload from './components/FileUpload/FileUpload.vue'
+import FileUploadButton from './components/FileUploadButton/FileUploadButton.vue'
+import FileView from './components/FileView/FileView.vue'
+import MediaField from './components/MediaField/MediaField.vue'
 
 //Pages
-import FileManagementPage from './pages/FileManagementPage/index'
-import FileCreate from './pages/FileManagementPage/FileCreate'
-import FileCrud from './pages/FileManagementPage/FileCrud'
-import FileDelete from './pages/FileManagementPage/FileDelete'
-import FileForm from './pages/FileManagementPage/FileForm'
-import FileList from './pages/FileManagementPage/FileList'
-import FileShow from './pages/FileManagementPage/FileShow'
-import FileUpdate from './pages/FileManagementPage/FileUpdate'
+import FileManagementPage from './pages/FileManagementPage/index.vue'
+import FileCreate from './pages/FileManagementPage/FileCreate/FileCreate.vue'
+import FileCrud from './pages/FileManagementPage/FileCrud/FileCrud.vue'
+import FileDelete from './pages/FileManagementPage/FileDelete/FileDelete.vue'
+import FileForm from './pages/FileManagementPage/FileForm/FileForm.vue'
+import FileList from './pages/FileManagementPage/FileList/FileList.vue'
+import FileShow from './pages/FileManagementPage/FileShow/FileShow.vue'
+import FileUpdate from './pages/FileManagementPage/FileUpdate/FileUpdate.vue'
 
 
 //Mixins
-import readableBytesMixin from "./mixins/readableBytesMixin";
+import readableBytesMixin from "./mixins/readableBytesMixin.js";
 
 export {
     //i18n

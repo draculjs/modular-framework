@@ -1,8 +1,8 @@
 /**
  * Dependencies
  */
-const _ = require('underscore');
-const {addJob} = require('../services/QueueService')
+import _ from 'underscore';
+import {addJob} from '../services/QueueService';
 
 /**
  * Implements a Producer

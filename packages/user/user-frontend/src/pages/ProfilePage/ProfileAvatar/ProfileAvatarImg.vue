@@ -52,6 +52,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import userImage from "../../../assets/user.png"
 
     export default {
         name: "ProfileAvatarImg",
@@ -62,7 +63,7 @@ import {mapGetters} from 'vuex'
             avatarSize: 120,
             tile: false,
             hover: false,
-            src: require("../../../assets/user.png")
+            src: userImage
         }),
         computed: {
           ...mapGetters(['getAvatarUrl']),

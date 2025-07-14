@@ -1,22 +1,16 @@
-const searchQuery = (searchFields, searchString) => {
+import { DefaultLogger } from "@dracul/logger-backend"
 
-    let qs = {}
-
-    if (searchFields && searchFields.length > 0 && searchString) {
-
-        let or = searchFields.map(field => {
-            return {
-                [field]: {$regex: searchString, $options: 'i'}
-            }
-
-        })
-
-        qs = { $or: or}
+export default function searchQuery(searchFields, searchString){
+    try {
+        let qs = {}
+    
+        if (searchFields && searchFields.length > 0 && searchString) {
+            const or = searchFields.map(field => ({[field]: {$regex: searchString, $options: 'i'}}))
+            qs = { $or: or}
+        }
+    
+        return qs
+    } catch (error) {
+        DefaultLogger.error(`An error happened at searchQuery: ${error}`)
     }
-
-    return qs
 }
-
-module.exports = searchQuery
-module.exports.searchQuery = searchQuery
-

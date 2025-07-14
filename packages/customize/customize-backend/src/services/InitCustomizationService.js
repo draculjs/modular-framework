@@ -1,21 +1,14 @@
 import {DefaultLogger} from "@dracul/logger-backend";
+import {InitService} from "@dracul/user-backend";
 
 import {
-    CUSTOMIZATION_COLORS_UPDATE,
-    CUSTOMIZATION_CREATE,
-    CUSTOMIZATION_LANG_UPDATE,
-    CUSTOMIZATION_LOGO_UPDATE,
-    CUSTOMIZATION_SHOW,
-    CUSTOMIZATION_UPDATE
-} from "../permissions";
+    CUSTOMIZATION_COLORS_UPDATE, CUSTOMIZATION_CREATE, CUSTOMIZATION_LANG_UPDATE, CUSTOMIZATION_LOGO_UPDATE, CUSTOMIZATION_SHOW, CUSTOMIZATION_UPDATE
+} from "../permissions/index.js";
 
-import {LIGHT_DEFAULT_THEME, DARK_DEFAULT_THEME} from '../constants/themes'
-import {InitService} from "@dracul/user-backend";
-import {createCustomization, findCustomization, updateColors} from "./CustomizationService";
+import { LIGHT_DEFAULT_THEME, DARK_DEFAULT_THEME } from '../constants/themes.js'
+import { createCustomization, findCustomization, updateColors } from "./CustomizationService.js";
 
 export const initCustomization = async function ({lightTheme, darkTheme, logo, language}) {
-
-
     let data = {}
 
     data.lightTheme = lightTheme ? lightTheme : LIGHT_DEFAULT_THEME
@@ -65,8 +58,8 @@ export const initCustomization = async function ({lightTheme, darkTheme, logo, l
     else {
         DefaultLogger.debug("Customization found. ID: ", customDoc._id)
     }
-
 }
+
 export const initPermissionsCustomization = async function () {
     let permissions = [
         CUSTOMIZATION_SHOW,

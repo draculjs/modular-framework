@@ -1,28 +1,20 @@
-import { resolvers, types } from './graphql'
+import { resolvers, types } from './graphql/index.js'
 
-import FileService from './services/FileService'
-import * as UserStorageService from './services/UserStorageService'
+import FileService from './services/FileService.js'
+import * as UserStorageService from './services/UserStorageService.js'
 
-import { userStorageCheckAndCreate } from './services/UserStorageService'
-import fileUpload from './services/UploadService'
-import fileUploadAnonymous from './services/UploadAnonymousService'
-import InitMediaPermissions from './services/InitMediaPermissions'
-import * as filePermissions from './permissions/File'
-import * as userStoragePermissions from './permissions/UserStorage'
-import { userCreateListener } from './listeners/UserCreateListener'
-import { updateFileMiddleware } from "./middleware"
-import FileRouter from "./rest/routers/FileRouter"
+import { userStorageCheckAndCreate } from './services/UserStorageService.js'
+import fileUpload from './services/UploadService.js'
+import fileUploadAnonymous from './services/UploadAnonymousService.js'
+import InitMediaPermissions from './services/InitMediaPermissions.js'
+import * as filePermissions from './permissions/File.js'
+import * as userStoragePermissions from './permissions/UserStorage.js'
+import userCreateListener from './listeners/UserCreateListener.js'
+import { updateFileMiddleware } from "./middleware/index.js"
+import FileRouter from "./rest/routers/FileRouter.js"
 import usersStorageRouter from "./rest/routers/UsersStorageRouter.js"
 
 import { swaggerUiMiddleware, swaggerUiOptions } from './rest/swagger.js'
-
-import {
-    findFile,
-    fetchFiles,
-    deleteFile,
-    paginateFiles,
-    updateFile
-} from './services/FileService'
 
 export {
     types,
@@ -45,13 +37,6 @@ export {
     //Permissions
     filePermissions,
     userStoragePermissions,
-
-    //Services
-    findFile,
-    fetchFiles,
-    deleteFile,
-    paginateFiles,
-    updateFile,
 
     //Swagger docs middleware
     swaggerUiMiddleware,

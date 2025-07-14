@@ -15,7 +15,7 @@ export default {
   props: {
     color: {type: String, default: 'primary onPrimary--text'},
     small: {type: Boolean, default: true},
-    icon: {type:String, default: 'edit'}
+    icon: {type:String, default: 'mdi-pencil'}
   }
 }
 </script>

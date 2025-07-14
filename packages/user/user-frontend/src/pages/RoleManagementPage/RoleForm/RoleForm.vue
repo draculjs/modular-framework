@@ -2,7 +2,7 @@
     <v-form ref="form" autocomplete="off" @submit.prevent="$emit('save')">
         <v-col cols="12" sm="6">
             <v-text-field
-                    prepend-icon="account_box"
+                    prepend-icon="mdi-account_box"
                     name="name"
                     type="text"
                     v-model="form.name"

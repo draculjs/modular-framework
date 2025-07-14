@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import GroupShowData from "./GroupShowData";
+    import GroupShowData from "./GroupShowData.vue";
     import {CrudShow} from '@dracul/common-frontend'
 
     export default {

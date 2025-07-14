@@ -17,7 +17,7 @@
         <v-row>
           <v-col cols="12" sm="6" md="3" lg="3">
             <v-select
-                prepend-icon="account_box"
+                prepend-icon="mdi-account_box"
                 class="pa-3"
                 :items="modes"
                 :item-text="'name'"
@@ -33,7 +33,7 @@
           <v-col cols="12" sm="6" md="3" lg="3">
             <v-text-field
                 id="title"
-                prepend-icon="title"
+                prepend-icon="mdi-title"
                 name="title"
                 :label="$t('customization.logo.form.title')"
                 :placeholder="$t('customization.logo.form.title')"
@@ -46,7 +46,7 @@
 
           <v-col cols="12" sm="6" md="4" lg="4" class="text-center">
             <v-btn v-on:click="pickFile" :loading="loadingLogo" outlined color="secondary" class="mt-3">
-              <v-icon class="mr-2">cloud_upload</v-icon>
+              <v-icon class="mr-2">mdi-upload</v-icon>
               {{ $t('customization.logo.form.upload') }}
             </v-btn>
             <input type="file" style="display: none" ref="img" accept="image/*" @change="onFilePicked"/>
@@ -91,7 +91,7 @@
   </v-card>
 </template>
 <script>
-import LogoPreview from "../../../../components/LogoPreview/LogoPreview"
+import LogoPreview from "../../../../components/LogoPreview/LogoPreview.vue"
 import {mapMutations, mapState} from 'vuex'
 import {
   LOGO_MODE_ONLYTITLE,
@@ -99,8 +99,8 @@ import {
   LOGO_MODE_ROUND,
   LOGO_MODE_SQUARE
 } from "../../../../constants";
-import CustomizationProvider from "../../../../providers/CustomizationProvider";
-import {ClientError} from "../../../../errors/ClientError";
+import CustomizationProvider from "../../../../providers/CustomizationProvider.js";
+import {ClientError} from "../../../../errors/ClientError.js";
 
 export default {
   name: 'customization-logo',

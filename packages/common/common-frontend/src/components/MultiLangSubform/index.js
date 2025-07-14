@@ -1,4 +1,4 @@
-import MultiLangSubform from "./MultiLangSubform";
+import MultiLangSubform from "./MultiLangSubform.vue";
 
 export {MultiLangSubform}
 export default MultiLangSubform

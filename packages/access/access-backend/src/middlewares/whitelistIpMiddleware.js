@@ -1,5 +1,5 @@
-import { fetchEnabledIp } from '../services/IpServices'
 import { DefaultLogger as winston } from '@dracul/logger-backend'
+import { fetchEnabledIp } from '../services/IpServices.js'
 
 export const whitelistIp = async (req, res, next) => {
     try {

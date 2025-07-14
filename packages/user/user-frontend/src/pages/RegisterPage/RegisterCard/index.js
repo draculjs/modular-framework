@@ -1,4 +1,4 @@
-import RegisterCard from "./RegisterCard";
+import RegisterCard from "./RegisterCard.vue";
 
 export {RegisterCard}
 export default RegisterCard

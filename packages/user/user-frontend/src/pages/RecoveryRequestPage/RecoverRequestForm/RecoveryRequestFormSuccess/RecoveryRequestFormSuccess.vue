@@ -2,7 +2,7 @@
     <v-alert
             :value="true"
             color="success"
-            icon="check_circle"
+            icon="mdi-check-circle"
             outlined
     >
         <i18n path="auth.recoverySent" tag="p">

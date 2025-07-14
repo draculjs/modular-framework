@@ -4,7 +4,7 @@
 
       <v-card-text class="pt-4 px-8 my-0 pb-0 text-center">
         <v-btn fab  color="primary onPrimary--text">
-          <v-icon>lock</v-icon>
+          <v-icon>mdi-lock</v-icon>
         </v-btn>
         <h2 class="mt-2">{{ $t('auth.signIn') }}</h2>
       </v-card-text>
@@ -38,10 +38,10 @@
 export default {
   name: "LoginCard",
   computed: {
-    isRegisterEnable() {
-      return process.env.VUE_APP_REGISTER === 'enable'
-    }
-  },
+  isRegisterEnable() {
+    return import.meta.env.VITE_APP_REGISTER === 'enable';
+  }
+}
 
 }
 </script>

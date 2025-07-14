@@ -1,4 +1,4 @@
-import LogoPreview from "./LogoPreview";
+import LogoPreview from "./LogoPreview.vue";
 
 export {LogoPreview}
 export default LogoPreview

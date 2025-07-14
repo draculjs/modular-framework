@@ -1,24 +1,21 @@
 import {DefaultLogger as winston} from "@dracul/logger-backend";
-import RBAC from "../rbac";
-import RoleModel from "../models/RoleModel";
+import RBAC from "../rbac/rbac.js";
+import RoleModel from "../models/RoleModel.js";
 
-const rbacFactory = function () {
+export function rbacFactory() {
     return new Promise((resolve, reject) => {
-
         RoleModel.find({}).then(roles => {
             resolve(new RBAC(roles))
         }).catch(err => {
             winston.error("RbacService.RbacFactory ", err)
             reject(err)
         })
-
     })
 }
 
 
-const UserRbacFactory = async function (user) {
+export async function UserRbacFactory(user) {
     return new Promise((resolve, reject) => {
-
         rbacFactory()
             .then(rbac => {
 
@@ -35,10 +32,5 @@ const UserRbacFactory = async function (user) {
                 winston.error("RbacService.UserRbacFactory ", err)
                 reject(err)
             })
-
-
     })
-
 }
-
-export {rbacFactory, UserRbacFactory}

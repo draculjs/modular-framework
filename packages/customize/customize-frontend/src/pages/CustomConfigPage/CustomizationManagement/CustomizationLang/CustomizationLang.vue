@@ -11,7 +11,7 @@
         <v-row>
           <v-col cols="12" md="3" lg="3">
             <v-select
-                prepend-icon="language"
+                prepend-icon="mdi-language"
                 class="pa-3"
                 :items="langs"
                 :item-text="'text'"
@@ -36,7 +36,7 @@
   </v-card>
 </template>
 <script>
-import CustomizationProvider from "../../../../providers/CustomizationProvider";
+import CustomizationProvider from "../../../../providers/CustomizationProvider.js";
 import {ClientError} from "@dracul/user-frontend";
 import {mapMutations} from "vuex";
 

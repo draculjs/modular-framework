@@ -1,3 +1,5 @@
+import {AuthenticationError, ForbiddenError} from "apollo-server-errors";
+
 import {
     findDomain,
     fetchDomain,
@@ -6,16 +8,15 @@ import {
     createDomain,
     updateDomain,
     deleteDomain
-} from '../../services/DomainServices'
+} from '../../services/DomainServices.js'
 
-const {
+import {
     DOMAIN_CREATE,
     DOMAIN_SHOW,
     DOMAIN_UPDATE,
     DOMAIN_DELETE
-} =  require("../../permissions/DomainPermissions");
+} from "../../permissions/DomainPermissions.js";
 
-const {AuthenticationError, ForbiddenError} = require("apollo-server-errors");
 
 const resolvers = {
     Query: {
@@ -59,4 +60,4 @@ const resolvers = {
     }
 }
 
-module.exports = resolvers;
+export default resolvers

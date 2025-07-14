@@ -5,7 +5,7 @@ import QueueStatsTable from "./components/QueueStatsTable";
 import routes from './routes'
 import i18nMessages from './i18n'
 import queueStatsProvider from "./providers/QueueStatsProvider";
-import QueueProvider from "./providers/QueueProvider";
+import QueueProvider from "./providers/QueueProvider.vue";
 
 export {
     //Pages

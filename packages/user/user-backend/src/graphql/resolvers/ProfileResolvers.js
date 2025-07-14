@@ -1,5 +1,5 @@
 import {AuthenticationError} from "apollo-server-errors";
-import {avatarUpload, changePassword} from "../../services/ProfileService";
+import {avatarUpload, changePassword} from "../../services/ProfileService.js";
 
 export default {
     Mutation: {

@@ -1,4 +1,4 @@
-import { getSettingsValueByKey} from "../services/SettingsService";
+import { getSettingsValueByKey} from "../services/SettingsService.js";
 
 class SettingCacheManager{
 

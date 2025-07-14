@@ -1,3 +1,3 @@
-import FileDelete from './FileDelete'
+import FileDelete from './FileDelete.vue'
 export {FileDelete}
 export default FileDelete

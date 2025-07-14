@@ -1,9 +1,20 @@
-const cors = function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-    next();
-}
+import cors from 'cors';
 
-export default cors
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+  allowedHeaders: ['Authorization', 'Origin', 'X-Requested-With', 'Content-Type',
+    'Accept', 'Access-Control-Allow-Request-Method', 'apollo-require-preflight'
+  ],
+  exposedHeaders: ['apollo-require-preflight']
+};
+
+const corsMiddleware = cors(corsOptions);
+
+const combinedCors = (req, res, next) => {
+  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+  
+  corsMiddleware(req, res, next);
+};
+
+export default combinedCors;

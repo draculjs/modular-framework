@@ -4,7 +4,7 @@
          :color="color"
          :to="{name:'userDashboard'}"
   >
-    <v-icon>security</v-icon>
+    <v-icon>mdi-security</v-icon>
   </v-btn>
 </template>
 

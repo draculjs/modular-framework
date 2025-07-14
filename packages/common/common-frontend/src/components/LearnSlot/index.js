@@ -1,4 +1,4 @@
-import LearnSlot from "./Sloty";
+import LearnSlot from "./Sloty.vue";
 
 export {LearnSlot}
 export default LearnSlot

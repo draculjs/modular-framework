@@ -2,13 +2,16 @@
   "name": "@dracul/customize-frontend",
   "version": "1.35.6",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
-  "main": "./src/index.js",
+  "main": "/src/index.js",
   "publishConfig": {
     "access": "public"
   },
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build-storybook": "build-storybook"
+    "prepare": "node --experimental-vm-modules ../../scripts/vite-build-safe.js"
   },
   "keywords": [
     "vue",

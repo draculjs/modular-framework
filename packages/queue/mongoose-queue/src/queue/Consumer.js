@@ -1,8 +1,8 @@
 /**
  * Dependencies
  */
-const _ = require('underscore');
-const {getJob, ackJob, errorJob} = require('../services/QueueService')
+import _ from 'underscore';
+import {getJob, ackJob, errorJob} from '../services/QueueService';
 
 /**
  * Implements a Consumer.

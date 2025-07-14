@@ -21,7 +21,7 @@
 
     </v-col>
     <v-btn v-if="!readonly" icon @click="addItem">
-      <v-icon>add</v-icon>
+      <v-icon>mdi-plus</v-icon>
     </v-btn>
 
     <snackbar v-model="snackbarMessage"  color="error"></snackbar>

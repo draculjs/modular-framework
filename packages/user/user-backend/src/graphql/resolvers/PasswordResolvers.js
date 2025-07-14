@@ -1,4 +1,4 @@
-import {passwordRules} from "../../services/PasswordService";
+import {passwordRules} from "../../services/PasswordService.js";
 
 export default {
     Query: {

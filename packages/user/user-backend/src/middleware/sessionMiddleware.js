@@ -1,4 +1,4 @@
-import {updateSession} from "../services/SessionService";
+import {updateSession} from "../services/SessionService.js";
 
 const sessionMiddleware = (req, res, next) => {
     try {

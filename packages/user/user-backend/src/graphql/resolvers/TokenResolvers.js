@@ -1,4 +1,4 @@
-import {validateToken} from "../../services/TokenService";
+import {validateToken} from "../../services/TokenService.js";
 
 export default {
     Query: {
@@ -6,6 +6,4 @@ export default {
             return validateToken(token)
         }
     },
-
-
 }

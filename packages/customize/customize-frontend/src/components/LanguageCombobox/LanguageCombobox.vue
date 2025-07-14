@@ -1,6 +1,6 @@
 <template>
   <v-select
-      prepend-icon="language"
+      prepend-icon="mdi-language"
       class="pa-3"
       :items="langs"
       :item-text="'text'"

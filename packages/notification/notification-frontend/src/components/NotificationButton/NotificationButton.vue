@@ -18,7 +18,7 @@
                icon text
                :color="color"
         >
-          <v-icon>notifications</v-icon>
+          <v-icon>mdi-bell</v-icon>
         </v-btn>
       </v-badge>
     </template>

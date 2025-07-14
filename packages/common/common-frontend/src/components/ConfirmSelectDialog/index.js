@@ -1,4 +1,4 @@
-import ConfirmSelectDialog from "./ConfirmSelectDialog";
+import ConfirmSelectDialog from "./ConfirmSelectDialog.vue";
 
 export {ConfirmSelectDialog}
 export default ConfirmSelectDialog

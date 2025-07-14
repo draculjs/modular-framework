@@ -2,13 +2,7 @@ import {mongoose} from '@dracul/common-backend';
 import softDelete from 'mongoose-softdelete'
 import mongoosePaginate from 'mongoose-paginate-v2';
 
-import uniqueValidator from 'mongoose-unique-validator';
-import {passwordRules} from "../services/PasswordService";
-
-
-
-// Defining user Mongoose Schema
-const UserSchema = new mongoose.Schema({
+export const UserSchema = new mongoose.Schema({
     username: {type: String, unique: true, required: true, index: true},
     email: {
         type: String,
@@ -71,17 +65,9 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.set('toJSON', {getters: true});
 
-UserSchema.plugin(uniqueValidator, {message: 'validation.unique'});
-
 UserSchema.plugin(softDelete);
 UserSchema.plugin(mongoosePaginate);
 
-const UserModel = mongoose.model('User', UserSchema);
-
-export {
-    UserSchema,
-    UserModel
-}
-
+export const UserModel = mongoose.model('User', UserSchema);
 export default UserModel
 

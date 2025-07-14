@@ -1,5 +1,5 @@
-import FileManagementPage from '../pages/FileManagementPage'
-import UserStoragePage from '../pages/UserStoragePage'
+import FileManagementPage from '../pages/FileManagementPage/index.vue'
+import UserStoragePage from '../pages/UserStoragePage/index.vue'
 
 
 const routes = [

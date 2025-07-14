@@ -1,14 +1,15 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
-import bcryptjs from "bcryptjs";
-import {createSession} from "./SessionService";
 import jsonwebtoken from "jsonwebtoken";
-import {createLoginFail} from "./LoginFailService";
-import {findUser, findUserByRefreshToken, findUserByUsername} from "./UserService";
-import {decodePassword} from "./PasswordService"
+import bcryptjs from "bcryptjs";
 import dayjs from 'dayjs'
-import {authLdapAndGetUser, isLdapAuthEnabled} from './LdapService';
 
-const {v4: uuidv4} = require('uuid');
+import UserService from "./UserService.js";
+import {authLdapAndGetUser, isLdapAuthEnabled} from './LdapService.js';
+import {createLoginFail} from "./LoginFailService.js";
+import {decodePassword} from "./PasswordService.js"
+import {createSession} from "./SessionService.js";
+
+import {v4 as uuidv4 } from 'uuid';
 
 export const auth = function ({username, password}, req) {
 
@@ -26,7 +27,7 @@ export const auth = function ({username, password}, req) {
 
         if (!user) {
 
-            user = await findUserByUsername(username)
+            user = await UserService.findUserByUsername(username)
 
             //Si obtuve usuario chequeo la password
             if (user && !checkPassword(decodedPassword, user.password)) {
@@ -107,7 +108,7 @@ function checkPassword(decodedPassword, userPassword) {
 
 export const apiKey = function (userId, req) {
     return new Promise(async (resolve, reject) => {
-        findUser(userId).then(user => {
+        UserService.findUser(userId).then(user => {
 
             const payload = {
                 id: user.id,
@@ -139,7 +140,7 @@ export const refreshAuth = function (refreshTokenId) {
 
     return new Promise(async (resolve, reject) => {
         try {
-            const user = await findUserByRefreshToken(refreshTokenId)
+            const user = await UserService.findUserByRefreshToken(refreshTokenId)
             if (user) {
                 let sessionId
                 for (let refreshToken of user.refreshToken) {

@@ -6,11 +6,14 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "test:unit": "vue-cli-service test:unit",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
   },
-  "main": "./src/index.js",
+  "scripts": {
+    "prepare": "node --experimental-vm-modules ../../scripts/vite-build-safe.js"
+  },
+  "main": "/src/index.js",
   "dependencies": {
     "@dracul/common-frontend": "^1.35.1",
     "@dracul/dayjs-frontend": "^1.34.0"
@@ -21,8 +24,8 @@
     "vue-template-compiler": "^2.7.15"
   },
   "peerDependencies": {
-    "apollo-client": "^2.6.10",
-    "graphql": "^15.8.0",
+    "@apollo/client": "^3.13.8",
+    "graphql": "^16.11.0",
     "material-design-icons-iconfont": "^6.1.0",
     "vue": "^2.7.15",
     "vue-i18n": "^8.18.1",

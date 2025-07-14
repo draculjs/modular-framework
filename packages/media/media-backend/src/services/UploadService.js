@@ -1,14 +1,14 @@
-import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
-import randomString from './helpers/randomString';
-import storeFile from './helpers/storeFile';
-import baseUrl from "./helpers/baseUrl";
-import File from '../models/FileModel';
+import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService.js';
+import randomString from './helpers/randomString.js';
+import storeFile from './helpers/storeFile.js';
+import baseUrl from "./helpers/baseUrl.js";
+import File from '../models/FileModel.js';
 
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import path from "path";
 
 
-const fileUpload = async function (user, inputFile, expirationDate, isPublic = false, description, tags, groups, users) {
+export const fileUpload = async function (user, inputFile, expirationDate, isPublic = false, description, tags, groups, users) {
   try {
     if (!user) throw new Error("user is required")
 
@@ -94,5 +94,4 @@ function validateExpirationDate(expirationTime) {
 }
 
 
-export { fileUpload };
 export default fileUpload;

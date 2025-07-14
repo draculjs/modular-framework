@@ -1,51 +1,54 @@
+import paginateIpGql from './gql/paginateIp.graphql';
+import createIpGql from './gql/createIp.graphql';
+import updateIpGql from './gql/updateIp.graphql';
+import deleteIpGql from './gql/deleteIp.graphql';
+import findIpGql from './gql/findIp.graphql';
+
 class IpProviders {
     constructor() {
-        this.gqlc = null
+        this.gqlc = null;
     }
 
     setGqlc(gqlc) {
-        this.gqlc = gqlc
+        this.gqlc = gqlc;
     }
 
     findIp(id) {
         return this.gqlc.query({
-            query: require('./gql/findIp.graphql'),
+            query: findIpGql,
             fetchPolicy: "network-only",
-            variables: {id:id}
-        })
+            variables: { id }
+        });
     }
 
-    createIp({value, enable}) {
+    createIp({ value, enable }) {
         return this.gqlc.mutate({
-            mutation: require('./gql/createIp.graphql'),
-            variables: {input: {value, enable}}
-        })
+            mutation: createIpGql,
+            variables: { input: { value, enable } }
+        });
     }
 
-    paginateIp({pageNumber, itemsPerPage, search, orderBy, orderDesc}){
+    paginateIp({ pageNumber, itemsPerPage, search, orderBy, orderDesc }) {
         return this.gqlc.query({
-            query: require('./gql/paginateIp.graphql'),
+            query: paginateIpGql,
             fetchPolicy: "network-only",
-            variables: {pageNumber, itemsPerPage, search, orderBy, orderDesc}
-        })
+            variables: { pageNumber, itemsPerPage, search, orderBy, orderDesc }
+        });
     }
 
-    updateIp({id, value, enable}){
+    updateIp({ id, value, enable }) {
         return this.gqlc.mutate({
-            mutation: require('./gql/updateIp.graphql'),
-            variables: {id, input: {value, enable}}
-        })
+            mutation: updateIpGql,
+            variables: { id, input: { value, enable } }
+        });
     }
 
-    deleteIp({id}){
+    deleteIp({ id }) {
         return this.gqlc.mutate({
-            mutation: require('./gql/deleteIp.graphql'),
-            variables: {id}
-        })
+            mutation: deleteIpGql,
+            variables: { id }
+        });
     }
-    
 }
 
-export default new IpProviders()
-
-
+export default new IpProviders();

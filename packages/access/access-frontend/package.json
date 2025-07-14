@@ -2,8 +2,14 @@
   "name": "@dracul/access-frontend",
   "version": "1.34.0",
   "description": "vue access-control",
-  "main": "./src/index.js",
-  "scripts": {},
+  "main": "/src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "prepare": "node --experimental-vm-modules ../../scripts/vite-build-safe.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
@@ -21,7 +27,7 @@
   "author": "Dracul team",
   "license": "MIT",
   "peerDependencies": {
-    "graphql": "^15.8.0",
+    "graphql": "^16.11.0",
     "vue": "^2.7.15",
     "vue-i18n": "^8.18.1",
     "vue-router": "^3.5.3",

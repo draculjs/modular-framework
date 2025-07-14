@@ -1,4 +1,4 @@
-import GroupColorInput from "./GroupColorInput";
+import GroupColorInput from "./GroupColorInput.vue";
 
 export {GroupColorInput}
 export default GroupColorInput

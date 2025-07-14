@@ -2,11 +2,9 @@ import {mongoose} from '@dracul/common-backend';
 import softDelete from 'mongoose-softdelete'
 import mongoosePaginate from 'mongoose-paginate-v2';
 import uniqueValidator from 'mongoose-unique-validator';
-import {findGroupByName} from "../services/GroupService";
 
 const Schema = mongoose.Schema;
-
-const GroupSchema = new Schema({
+export const GroupSchema = new Schema({
 
     name: {
         type: String,
@@ -46,12 +44,5 @@ GroupSchema.set('toJSON', {
 });
 
 
-const GroupModel = mongoose.model('Group', GroupSchema);
-
-export {
-    GroupSchema,
-    GroupModel
-}
+export const GroupModel = mongoose.model('Group', GroupSchema);
 export default GroupModel
-
-//module.exports = Group;

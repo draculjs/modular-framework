@@ -13,7 +13,7 @@
 
         <v-col cols="12">
           <v-text-field readonly disabled
-                        prepend-icon="person"
+                        prepend-icon="mdi-person"
                         :value="user.username"
                         :label="$t('user.label.username')"
                         :placeholder="$t('user.label.username')"
@@ -22,7 +22,7 @@
 
         <v-col cols="12">
           <v-text-field id="password"
-                        prepend-icon="lock"
+                        prepend-icon="mdi-lock"
                         name="password"
                         :append-icon="showNewPassword ? 'visibility' : 'visibility_off'"
                         :type="showNewPassword ? 'text' : 'password'"
@@ -39,7 +39,7 @@
         </v-col>
         <v-col cols="12">
           <v-text-field id="password_verify"
-                        prepend-icon="lock"
+                        prepend-icon="mdi-lock"
                         name="password_verify"
                         :append-icon="showRepeatPassword ? 'visibility' : 'visibility_off'"
                         :type="showRepeatPassword ? 'text' : 'password'"
@@ -63,7 +63,7 @@
 
 <script>
 
-import UserProvider from "../../../providers/UserProvider";
+import UserProvider from "../../../providers/UserProvider.js";
 import {CrudUpdate, ClientError, InputErrors, RequiredRule} from '@dracul/common-frontend'
 
 export default {

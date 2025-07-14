@@ -45,6 +45,5 @@ const BaseErrorSchema = new Schema({
 });
 
 
-const BaseError = mongoose.model('BaseError', BaseErrorSchema);
+export const BaseError = mongoose.model('BaseError', BaseErrorSchema);
 
-module.exports = BaseError;

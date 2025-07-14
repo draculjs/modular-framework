@@ -1,4 +1,4 @@
-import GroupAutocomplete from "./GroupAutocomplete";
+import GroupAutocomplete from "./GroupAutocomplete.vue";
 
 export {GroupAutocomplete}
 export default GroupAutocomplete

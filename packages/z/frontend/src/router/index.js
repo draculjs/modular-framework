@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './routes'
 Vue.use(VueRouter)
-import store from '../store'
+import {store} from '../store'
 import dayjs from "dayjs";
 
 const router = new VueRouter({
@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
         store.dispatch('checkAuth')
 
         if (!store.getters.isAuth) {
-
+            console.log("AAA")
             next({
                 path: '/login',
                 query: {redirect: to.fullPath}

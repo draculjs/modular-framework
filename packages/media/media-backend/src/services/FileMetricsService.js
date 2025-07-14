@@ -1,5 +1,5 @@
-import File from '../models/FileModel'
-import generateColors from '../util/generateColors'
+import File from '../models/FileModel.js'
+import generateColors from '../util/generateColors.js'
 
 export const fileGlobalMetrics = async function () {
     try {

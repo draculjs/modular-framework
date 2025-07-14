@@ -30,10 +30,10 @@
 
         <template v-slot:item.isPublic="{ item }">
           <div v-if="item.isPublic">
-            <v-icon color="success">check_circle</v-icon>
+            <v-icon color="success">mdi-check-circle</v-icon>
           </div>
           <div v-else>
-            <v-icon color="error">highlight_off</v-icon>
+            <v-icon color="error">mdi-close-circle-outline</v-icon>
           </div>
         </template>
 
@@ -85,7 +85,7 @@ import FileProvider from "../../../providers/FileProvider";
 
 import {DeleteButton, EditButton, ShowButton} from "@dracul/common-frontend"
 import redeableBytesMixin from "../../../mixins/readableBytesMixin";
-import FileFilters from "../FileFilters/FileFilters"
+import FileFilters from "../FileFilters/FileFilters.vue"
 import {DayjsMixin} from "@dracul/dayjs-frontend"
 
 export default {

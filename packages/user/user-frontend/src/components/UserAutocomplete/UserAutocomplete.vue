@@ -29,6 +29,7 @@
 
 <script>
 import UserProvider from "../../providers/UserProvider";
+import defaultUserImage from "../../assets/user.png";
 
 export default {
   name: "UserAutocomplete",
@@ -66,7 +67,7 @@ export default {
       return []
     },
     getDefaultAvatar() {
-      return this.defaultAvatar ? this.defaultAvatar : require("../../assets/user.png")
+      return this.defaultAvatar ? this.defaultAvatar : defaultUserImage
     },
     userValue: {
       get() {

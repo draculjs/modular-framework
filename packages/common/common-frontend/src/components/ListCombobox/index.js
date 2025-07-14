@@ -1,4 +1,4 @@
-import ListCombobox from "./ListCombobox";
+import ListCombobox from "./ListCombobox.vue";
 
 export {ListCombobox}
 export default ListCombobox

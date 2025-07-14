@@ -4,8 +4,8 @@
 </template>
 
 <script>
-    import PasswordForm from './ProfilePasswordForm'
-    import PasswordSuccess from './ProfilePasswordSuccess'
+    import PasswordForm from './ProfilePasswordForm.vue'
+    import PasswordSuccess from './ProfilePasswordSuccess.vue'
 
     export default {
         name: "ProfilePassword",

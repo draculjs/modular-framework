@@ -1,572 +1,418 @@
-import {DefaultLogger as winston} from '@dracul/logger-backend';
-import {mongoose} from '@dracul/common-backend';
+import { DefaultLogger, DefaultLogger as winston } from '@dracul/logger-backend';
+import { UserInputError } from 'apollo-server-errors';
+import bcryptjs from 'bcryptjs';
+import EventEmitter from 'events';
 
-import User from '../models/UserModel'
-import '../models/GroupModel'
-import {createUserAudit} from './UserAuditService'
-import bcryptjs from 'bcryptjs'
-import {UserInputError} from 'apollo-server-errors'
-import {addUserToGroup, fetchMyGroups, removeUserToGroup} from "./GroupService";
-import { findRoleByName, findRoleByNames} from "./RoleService";
-import {passwordRules, validateRegexPassword} from "./PasswordService";
+import { passwordRules, validateRegexPassword } from './PasswordService.js';
+import GroupService from './GroupService.js';
+import RoleService from './RoleService.js';
+import User from '../models/UserModel.js';
 
-const EventEmitter = require('events');
-
-export let UserEventEmitter = new EventEmitter()
-
-
-export const hashPassword = function (password) {
-    if (!password) {
-        throw new Error("password must be provided")
+class UserService {
+    constructor() {
+        this._UserEventEmitter = new EventEmitter();
     }
 
-    let salt = bcryptjs.genSaltSync(10);
-    let hashPassword = bcryptjs.hashSync(password, salt);
-    return hashPassword;
-}
+    set UserEventEmitter(eventEmitter) {
+        this._UserEventEmitter = eventEmitter;
+    }
 
-export const restoreDeletedUser = async function (id, {
-    username,
-    password,
-    name,
-    email,
-    phone,
-    role,
-    groups,
-    active,
-    refreshToken
-}, actionBy = null) {
+    get UserEventEmitter() {
+        return this._UserEventEmitter;
+    }
 
-    try {
-        winston.info('UserService.restoreDeletedUser restoring id: ' + id + ' username: ' + username)
-
-        let updatedAt = Date.now()
-
-        //Prepare group push and pull
-        let toRemoveGroups = []
-        let toAddGroups = []
-        let oldGroups = await fetchMyGroups(id)
-        if (oldGroups && oldGroups.length) {
-            toRemoveGroups = oldGroups.filter(group => !groups.some(ngroup => ngroup.id === group.id))
+    hashPassword(password) {
+        if (!password) {
+            throw new Error("Password must be provided");
         }
-        if (groups && groups.length) {
-            toAddGroups = groups.filter(group => !oldGroups.some(ngroup => ngroup.id === group.id))
+        const salt = bcryptjs.genSaltSync(10);
+        return bcryptjs.hashSync(password, salt);
+    }
+
+    async _populateUser(user) {
+        return user.populate(['role', 'groups']);
+    }
+
+    async _handleGroupUpdates(userId, newGroups) {
+        const user = await User.findById(userId).populate('groups');
+        const currentGroups = user.groups.map(g => g._id.toString());
+        
+        // Convertir a strings para comparación segura
+        const newGroupIds = newGroups.map(g => g.id ? g.id.toString() : g.toString());
+        
+        const toRemove = currentGroups.filter(
+            groupId => !newGroupIds.includes(groupId)
+        );
+        
+        const toAdd = newGroupIds.filter(
+            groupId => !currentGroups.includes(groupId)
+        );
+
+        for (const groupId of toAdd) {
+            await GroupService.addUserToGroup(groupId, userId);
         }
 
-        const user = User.findOneAndUpdate(
-            {_id: id},
-            {
-                name: name.trim(),
-                username: username.trim(),
-                email: email.trim(),
-                password: hashPassword(password),
-                phone, role, groups, active, updatedAt, refreshToken,
-                deleted: false, deletedAt: null
-            }, {
-                new: true,
-                runValidators: true,
-                context: 'query'
-            }).exec()
+        for (const groupId of toRemove) {
+            await GroupService.removeUserToGroup(groupId, userId);
+        }
+    }
 
-        //Add user to groups
-        //console.log("toAddGroups", toAddGroups)
-        if (toAddGroups && toAddGroups.length) {
-            for (let groupId of toAddGroups) {
-                await addUserToGroup(groupId, user._id)
+    async restoreDeletedUser(id, userData) {
+        try {
+            winston.info(`Restoring deleted user ID: ${id}, Username: ${userData.username}`);
+            
+            // Actualizar grupos primero
+            if (userData.groups) {
+                await this._handleGroupUpdates(id, userData.groups);
             }
-        }
+            
+            const user = await User.findById(id);
+            if (!user) throw new Error('User not found');
+            
+            // Actualizar campos
+            user.name = userData.name.trim();
+            user.username = userData.username.trim();
+            user.email = userData.email.trim();
+            user.password = this.hashPassword(userData.password);
+            user.updatedAt = Date.now();
+            user.deleted = false;
+            user.deletedAt = null;
+            
+            // Campos adicionales
+            if (userData.role) user.role = userData.role;
+            if (userData.active !== undefined) user.active = userData.active;
+            if (userData.phone) user.phone = userData.phone;
+            if (userData.address) user.address = userData.address;
+            if (userData.avatar) user.avatar = userData.avatar;
 
-        //Remove user to groups
-        //console.log("toRemoveGroups", toRemoveGroups)
-        if (toRemoveGroups && toRemoveGroups.length) {
-            for (let group of toRemoveGroups) {
-                await removeUserToGroup(group.id, user._id)
+            await user.save();
+            
+            winston.info(`User restored: ${user.username}`);
+            await this._populateUser(user);
+            this._UserEventEmitter.emit('updated', user);
+            return user;
+        } catch (error) {
+            if (error.name === "ValidationError") {
+                winston.warn("Validation error on restore", error);
+                throw new UserInputError(error.message, { inputErrors: error.errors });
             }
-        }
-
-        winston.info('UserService.restoreDeletedUser successful for ' + user.username)
-        await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userRestored')
-
-        if(/^5/.test(mongoose.version)){
-            await user.populate(['role','groups']).execPopulate()
-        }else{
-            await user.populate(['role','groups'])
-        }
-
-        UserEventEmitter.emit('updated', user)
-        return user
-
-    } catch (error) {
-        if (error.name == "ValidationError") {
-            winston.warn("updateUser ValidationError ", error)
-            throw new UserInputError(error.message, {inputErrors: error.errors})
-        }
-        winston.error("UserService.updateUser ", error)
-        throw error
-    }
-
-}
-
-
-export const createUser = async function ({
-                                              username,
-                                              password,
-                                              name,
-                                              email,
-                                              phone,
-                                              role,
-                                              groups,
-                                              active,
-                                              fromLDAP = false
-                                          }, actionBy = null) {
-    const existingUser = await findUserByUsernameOrEmailDeleted(username, email)
-
-    if (existingUser) {
-        return restoreDeletedUser(existingUser._id, {
-            username,
-            password,
-            name,
-            email,
-            phone,
-            role,
-            groups,
-            active,
-            fromLDAP
-        }, actionBy = null)
-    }
-
-    if (validateRegexPassword(password) === false) {
-        return Promise.reject(new UserInputError('auth.invalidPassword', {
-            inputErrors: {
-                password: {properties: {message: passwordRules.requirements}}
-            }
-        }))
-    }
-
-    const newUser = new User({
-        name: name.trim(),
-        username: username.trim(),
-        email: email.trim(),
-        password: hashPassword(password),
-        phone,
-        active,
-        role,
-        groups,
-        createdAt: Date.now(),
-        lastPasswordChange: new Date(),
-        refreshToken: [],
-        fromLDAP
-    })
-
-    try {
-        await newUser.save()
-
-        if (groups && groups.length) {
-            for (let group of groups) {
-                await addUserToGroup(group, newUser._id)
-            }
-        }
-
-        winston.info('UserService.createUser successful for ' + newUser.username)
-        await createUserAudit(actionBy ? actionBy.id : null, newUser._id, 'userCreated')
-
-
-        if(/^5/.test(mongoose.version)){
-            await newUser.populate(['role','groups']).execPopulate()
-        }else{
-            await newUser.populate(['role','groups'])
-        }
-
-        UserEventEmitter.emit('created', newUser)
-        return newUser
-
-    } catch (error) {
-        if (error.name == "ValidationError") {
-            winston.warn("createUser ValidationError ", error)
-            throw new UserInputError(error.message, {inputErrors: error.errors})
-        } else {
-            winston.error("UserService.createUser ", error)
-        }
-        throw e
-    }
-
-}
-
-
-export const updateUser = async function (id, {
-    username,
-    name,
-    email,
-    phone,
-    role,
-    groups,
-    active,
-    refreshToken
-}, actionBy = null) {
-
-    try {
-        let updatedAt = Date.now()
-
-        //Prepare group push and pull
-        let toRemoveGroups = []
-        let toAddGroups = []
-        let oldGroups = await fetchMyGroups(id)
-        if (oldGroups && oldGroups.length) {
-            toRemoveGroups = oldGroups.filter(group => !groups.some(ngroup => ngroup.id === group.id))
-        }
-        if (groups && groups.length) {
-            toAddGroups = groups.filter(group => !oldGroups.some(ngroup => ngroup.id === group.id))
-        }
-
-        const user = await User.findOneAndUpdate(
-            {_id: id},
-            {
-                name: name.trim(),
-                username: username.trim(),
-                email: email.trim(),
-                phone, role, groups, active, updatedAt, refreshToken
-            }, {
-                new: true,
-                runValidators: true,
-                context: 'query'
-            }).exec()
-
-        //Add user to groups
-        //console.log("toAddGroups", toAddGroups)
-        if (toAddGroups && toAddGroups.length) {
-            for (let groupId of toAddGroups) {
-                await addUserToGroup(groupId, user._id)
-            }
-        }
-
-        //Remove user to groups
-        //console.log("toRemoveGroups", toRemoveGroups)
-        if (toRemoveGroups && toRemoveGroups.length) {
-            for (let group of toRemoveGroups) {
-                await removeUserToGroup(group.id, user._id)
-            }
-        }
-
-
-        winston.info('UserService.updateUser successful for ' + user.username)
-        await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userModified')
-
-        if(/^5/.test(mongoose.version)){
-            await user.populate(['role','groups']).execPopulate()
-        }else{
-            await user.populate(['role','groups'])
-        }
-
-        UserEventEmitter.emit('updated', user)
-        return user
-
-
-    } catch (error) {
-        if (error.name == "ValidationError") {
-            winston.warn("updateUser ValidationError ", error)
-            throw new UserInputError(error.message, {inputErrors: error.errors});
-        } else {
-            winston.error("UserService.updateUser ", error)
-        }
-
-        throw error
-    }
-
-
-}
-
-export const deleteUser = async function (id, actionBy = null) {
-    try{
-        const user = await findUser(id)
-        await user.softdelete()
-        await createUserAudit(actionBy ? actionBy.id : null, user._id, 'userDeleted')
-        UserEventEmitter.emit('deleted', user)
-        return {success: true, id: id}
-    }catch (e) {
-        winston.error("UserService.deleteUser ", e)
-        throw e
-    }
-}
-
-
-export const findUsers = async function (roles = [], userId = null) {
-
-    try {
-        let qs = {}
-
-        if (roles && roles.length) {
-            qs = {
-                $or: [
-                    {role: {$in: roles}},
-                    {_id: userId}
-                ]
-            }
-        }
-
-        const users = await User.find(qs).populate(['role','groups']).exec()
-        return users
-    } catch (e) {
-        winston.error("UserService.findUsers ", e)
-        throw e
-    }
-
-}
-
-
-export const findUsersByRole = async function (roleName) {
-
-    try {
-        let role = await findRoleByName(roleName)
-
-        if (!role) return resolve([])
-
-        const users = await User.find({role: role.id}).populate(['role','groups']).exec()
-        return users
-    } catch (e) {
-        winston.error("UserService.findUsersByRole ", e)
-        throw e
-    }
-
-
-}
-
-export const findUsersByRoles = async function (roleNames) {
-    try {
-        const roles = await findRoleByNames(roleNames)
-        if (!roles && roles.length === 0) return resolve([])
-        const users = await User.find({role: {$in: roles.map(r => r._id)}}).populate(['role','groups']).exec()
-        return users
-    } catch (e) {
-        winston.error("UserService.findUsersByRole ", e)
-        throw e
-    }
-}
-
-
-export const paginateUsers = function (limit, pageNumber = 1, search = null, orderBy = null, orderDesc = false, roles = [], activeUsers = false) {
-
-    function getQuery(search) {
-        let qs = {}
-
-        if (search) {
-            qs = {
-                $or: [
-                    {name: {$regex: search, $options: 'i'}},
-                    {username: {$regex: search, $options: 'i'}},
-                    {email: {$regex: search, $options: 'i'}},
-                    {phone: {$regex: search, $options: 'i'}}
-                ]
-            }
-        }
-        if (roles && roles.length) {
-            qs.role = {$in: roles}
-        }
-
-        if (activeUsers) {
-            qs.active = true
-        }
-
-
-        return qs
-    }
-
-    function getSort(orderBy, orderDesc) {
-        if (orderBy) {
-            return (orderDesc ? '-' : '') + orderBy
-        } else {
-            return null
+            winston.error("User restore error", error);
+            throw error;
         }
     }
 
+    async createUser(userData) {
+        const { username, email, password } = userData;
+        const existingUser = await this.findUserByUsernameOrEmailDeleted(username, email);
 
-    let query = {deleted: false, ...getQuery(search)}
-    let populate = ['role', 'groups']
-    let sort = getSort(orderBy, orderDesc)
+        if (existingUser) {
+            return this.restoreDeletedUser(existingUser._id, userData);
+        }
 
-    let params = {page: pageNumber, limit: limit, populate: populate, sort}
-    return new Promise((resolve, reject) => {
-        User.paginate(query, params).then(result => {
-                winston.debug('UserService.paginateUsers successful')
-                resolve({users: result.docs, totalItems: result.totalDocs, page: result.page})
-            }
-        ).catch(err => {
-            winston.error("UserService.paginateUsers ", err)
-            reject(err)
-        })
-    })
-}
-
-export const findUser = async function (id) {
-    try {
-        const user = await User.findOne({_id: id}).populate(['role','groups']).exec()
-        return user
-    } catch (e) {
-        winston.error("UserService.findUser ", e)
-        throw e
-    }
-}
-
-export const findUserByUsername = async function (username) {
-    try {
-        const user = await User.findOne({username: username}).populate(['role','groups']).exec()
-        return user
-    } catch (e) {
-        winston.error("UserService.findUserByUsername ", e)
-        throw e
-    }
-}
-
-export const findUserByEmail = async function (email) {
-
-    try {
-        const user = await User.findOne({email: email}).populate(['role','groups']).exec()
-        return user
-    } catch (e) {
-        winston.error("UserService.findUserByEmail ", e)
-        throw e
-    }
-
-
-}
-
-export const findUserByUsernameOrEmail = async function (username, email) {
-    try {
-        const user = await User.findOne({$or: [{username: username}, {email: email}]}).populate(['role','groups']).exec()
-        return user
-    } catch (e) {
-        winston.error("UserService.findUserByEmail ", e)
-        throw e
-    }
-}
-
-export const findUserByUsernameOrEmailDeleted = async function (username, email) {
-
-    try {
-        const user = await User.findOne({
-            $or: [{username: username}, {email: email}],
-            deleted: true
-        }).populate(['role','groups']).exec()
-
-        return user
-    } catch (e) {
-        winston.error("UserService.findUserByUsernameOrEmailDeleted ", e)
-        throw e
-    }
-}
-
-
-export const changePasswordAdmin = async function (id, {password, passwordVerify}, actionBy = null) {
-
-    if (password !== passwordVerify) {
-        throw new Error("Passwords do not match")
-    }
-
-    try {
-        if (validateRegexPassword(password) === false) {
+        if (!validateRegexPassword(password)) {
             throw new UserInputError('auth.invalidPassword', {
-                inputErrors: {
-                    password: {properties: {message: passwordRules.requirements}}
-                }
-            })
+                inputErrors: { password: { message: passwordRules.requirements } }
+            });
         }
 
-        const user = await User.findOneAndUpdate({_id: id}, {
-            password: hashPassword(password),
-            lastPasswordChange: new Date()
-        }, {new: true})
-        await createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'changePasswordAdmin')
-        return {success: true, message: "PasswordChange", operation: "changePasswordAdmin"}
-
-
-    } catch (e) {
-        winston.error("UserService.changePasswordAdmin ", e)
-        throw e
-    }
-
-}
-
-
-export const findUsersGroup = async function (group, showDeletedUsers) {
-    try {
-        return (await User.find({groups: group.id, deleted: showDeletedUsers}))
-    } catch (error) {
-        winston.error("UserService.findUsersGroup ", error)
-    }
-}
-
-
-export const setUsersGroups = async function (group, users) {
-
-    function getDeletePromises(oldUsers) {
-        return oldUsers.map((oldUser) => {
-            let index = users.indexOf(oldUser.id)
-            if (index !== -1) {
-                users.splice(index, 1)
-            } else {
-                // console.log("Deleting user " + oldUser.username + ' for ' + group.id)
-                return User.findOneAndUpdate(
-                    {_id: oldUser.id},
-                    {$pullAll: {groups: [group.id]}},
-                    {new: true, runValidators: true, context: 'query'}
-                ).exec()
-
-            }
+        const newUser = new User({
+            ...userData,
+            name: userData.name.trim(),
+            username: userData.username.trim(),
+            email: userData.email.trim(),
+            password: this.hashPassword(password),
+            createdAt: Date.now(),
+            lastPasswordChange: new Date(),
+            refreshToken: []
         });
-    }
 
-    function getPushPromises() {
-        return users.map( (user) => {
-            return User.findOneAndUpdate(
-                {_id: user},
-                {$push: {groups: group.id}},
-                {new: true, runValidators: true, context: 'query'},
-            ).exec()
-        });
-    }
-
-    return new Promise(async (resolve, reject) => {
-
-
-        findUsersGroup(group).then(oldUsers => {
-
-            Promise.all(getDeletePromises(oldUsers)).then(() => {
-
-                //2. Push group in new users
-                let pushPromises = getPushPromises()
-
-                Promise.all(pushPromises).then(() => {
-                    winston.debug('UserService.setUsersGroups successful')
-                    resolve(true)
-                }).catch(err => reject(err))
-
-            }).catch(err => {
-                    winston.error("UserService.setUsersGroups ", err)
-                    reject(err)
+        try {
+            await newUser.save();
+            
+            if (userData.groups?.length) {
+                for (const groupId of userData.groups) {
+                    await GroupService.addUserToGroup(groupId, newUser._id);
                 }
-            )
+            }
 
-        }).catch(e => {
-
-            winston.error("UserService.setUsersGroups.findUsersGroup ", e)
-            reject(e)
-        })
-
-    })
-}
-
-export const findUserByRefreshToken = async function (id) {
-
-    try {
-        let now = new Date()
-        const user = await User.findOne({
-            active: true,
-            'refreshToken.id': id,
-            'refreshToken.expiryDate': {$gte: now}
-        }).populate(['role','groups']).exec()
-        return user
-    } catch (e) {
-        winston.error("UserService.findUserByRefreshToken ", e)
-        throw e
+            winston.info(`User created: ${newUser.username}`);
+            await this._populateUser(newUser);
+            this._UserEventEmitter.emit('created', newUser);
+            return newUser;
+        } catch (error) {
+            if (error.name === "ValidationError") {
+                winston.warn("Create user validation error", error);
+                throw new UserInputError(error.message, { inputErrors: error.errors });
+            }
+            winston.error("User creation error", error);
+            throw error;
+        }
     }
 
+    async updateUser(id, userData) {
+        try {
+            const user = await User.findById(id);
+            if (!user) throw new Error('User not found');
+            
+            // Actualizar grupos primero
+            if (userData.groups) {
+                await this._handleGroupUpdates(id, userData.groups);
+            }
+            
+            // Actualizar campos
+            user.name = userData.name.trim();
+            user.username = userData.username.trim();
+            user.email = userData.email.trim();
+            user.updatedAt = Date.now();
+            
+            // Campos opcionales
+            if (userData.role) user.role = userData.role;
+            if (userData.active !== undefined) user.active = userData.active;
+            if (userData.phone) user.phone = userData.phone;
+            if (userData.address) user.address = userData.address;
+            if (userData.avatar) user.avatar = userData.avatar;
+
+            await user.save();
+            
+            winston.info(`User updated: ${user.username}`);
+            await this._populateUser(user);
+            this._UserEventEmitter.emit('updated', user);
+            return user;
+        } catch (error) {
+            if (error.name === "ValidationError") {
+                winston.warn("Update user validation error", error);
+                throw new UserInputError(error.message, { inputErrors: error.errors });
+            }
+            winston.error("User update error", error);
+            throw error;
+        }
+    }
+
+    async deleteUser(id) {
+        try {
+            const user = await this.findUser(id);
+            await user.softdelete();
+            this._UserEventEmitter.emit('deleted', user);
+            return { success: true, id };
+        } catch (error) {
+            winston.error("User deletion error", error);
+            throw error;
+        }
+    }
+
+    async findUsers(roles = [], userId = null) {
+        DefaultLogger.info(`at findUsers!`)
+        try {
+            const query = roles.length 
+                ? { $or: [{ role: { $in: roles } }, { _id: userId }] } 
+                : {};
+            return await User.find(query).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find users error", error);
+            throw error;
+        }
+    }
+
+    async findUsersByRole(roleName) {
+        try {
+            const role = await RoleService.findRoleByName(roleName);
+            if (!role) return [];
+            return await User.find({ role: role.id }).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find users by role error", error);
+            throw error;
+        }
+    }
+
+    async findUsersByRoles(roleNames) {
+        try {
+            const roles = await RoleService.findRoleByNames(roleNames);
+            if (!roles?.length) return [];
+            return await User.find({ 
+                role: { $in: roles.map(r => r._id) } 
+            }).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find users by roles error", error);
+            throw error;
+        }
+    }
+
+    async paginateUsers(limit, page = 1, search = null, orderBy = null, orderDesc = false, roles = [], activeUsers = false) {
+        try {
+            const query = { deleted: false };
+            
+            if (search) {
+                query.$or = [
+                    { name: { $regex: search, $options: 'i' } },
+                    { username: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } },
+                    { phone: { $regex: search, $options: 'i' } }
+                ];
+            }
+            
+            if (roles.length) query.role = { $in: roles };
+            if (activeUsers) query.active = true;
+            
+            const options = {
+                page,
+                limit,
+                populate: ['role', 'groups'],
+                sort: orderBy ? `${orderDesc ? '-' : ''}${orderBy}` : null
+            };
+
+            const result = await User.paginate(query, options);
+            return {
+                users: result.docs,
+                totalItems: result.totalDocs,
+                page: result.page
+            };
+        } catch (error) {
+            winston.error("Paginate users error", error);
+            throw error;
+        }
+    }
+
+    async findUser(id) {
+        try {
+            return await User.findById(id).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find user error", error);
+            throw error;
+        }
+    }
+
+    async findUserByUsername(username) {
+        try {
+            return await User.findOne({ username }).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find user by username error", error);
+            throw error;
+        }
+    }
+
+    async findUserByEmail(email) {
+        try {
+            return await User.findOne({ email }).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find user by email error", error);
+            throw error;
+        }
+    }
+
+    async findUserByUsernameOrEmail(username, email) {
+        try {
+            return await User.findOne({
+                $or: [{ username }, { email }]
+            }).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find user by username/email error", error);
+            throw error;
+        }
+    }
+
+    async findUserByUsernameOrEmailDeleted(username, email) {
+        try {
+            return await User.findOne({
+                $or: [{ username }, { email }],
+                deleted: true
+            }).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find deleted user error", error);
+            throw error;
+        }
+    }
+
+    async changePasswordAdmin(id, passwords) {
+        const { password, passwordVerify } = passwords;
+        
+        if (password !== passwordVerify) {
+            throw new Error("Passwords do not match");
+        }
+
+        if (!validateRegexPassword(password)) {
+            throw new UserInputError('auth.invalidPassword', {
+                inputErrors: { password: { message: passwordRules.requirements } }
+            });
+        }
+
+        try {
+            const user = await User.findById(id);
+            if (!user) throw new Error('User not found');
+            
+            user.password = this.hashPassword(password);
+            user.lastPasswordChange = new Date();
+            await user.save();
+            
+            return { 
+                success: true, 
+                message: "Password changed",
+                operation: "changePasswordAdmin" 
+            };
+        } catch (error) {
+            winston.error("Password change error", error);
+            throw error;
+        }
+    }
+
+    async findUsersGroup(group, showDeleted = false) {
+        try {
+            return await User.find({
+                groups: group.id,
+                deleted: showDeleted
+            });
+        } catch (error) {
+            winston.error("Find group users error", error);
+            throw error;
+        }
+    }
+
+    async setUsersGroups(group, userIds) {
+        try {
+            const groupId = group.id.toString();
+            const currentUsers = await this.findUsersGroup(group);
+            const currentUserIds = currentUsers.map(u => u._id.toString());
+            
+            // Convertir a strings para comparación segura
+            const newUserIds = userIds.map(id => id.toString());
+            
+            // Usuarios a remover
+            const toRemove = currentUserIds.filter(id => !newUserIds.includes(id));
+            for (const userId of toRemove) {
+                await User.findByIdAndUpdate(
+                    userId, 
+                    { $pull: { groups: groupId } }
+                );
+            }
+            
+            // Usuarios a agregar
+            const toAdd = newUserIds.filter(id => !currentUserIds.includes(id));
+            for (const userId of toAdd) {
+                await User.findByIdAndUpdate(
+                    userId, 
+                    { $addToSet: { groups: groupId } }
+                );
+            }
+            
+            return true;
+        } catch (error) {
+            winston.error("Set users groups error", error);
+            throw error;
+        }
+    }
+
+    async findUserByRefreshToken(tokenId) {
+        try {
+            return await User.findOne({
+                active: true,
+                'refreshToken.id': tokenId,
+                'refreshToken.expiryDate': { $gte: new Date() }
+            }).populate(['role', 'groups']).exec();
+        } catch (error) {
+            winston.error("Find user by token error", error);
+            throw error;
+        }
+    }
 }
+
+const userService = new UserService();
+export default userService;

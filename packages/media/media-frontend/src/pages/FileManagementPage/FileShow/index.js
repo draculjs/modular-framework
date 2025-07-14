@@ -1,3 +1,3 @@
-import FileShow from './FileShow'
+import FileShow from './FileShow.vue'
 export {FileShow}
 export default FileShow

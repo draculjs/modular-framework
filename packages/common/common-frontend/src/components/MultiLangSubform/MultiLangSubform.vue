@@ -3,7 +3,7 @@
         <v-row>
             <v-col v-if="en" cols="12">
                 <v-text-field
-                        prepend-icon="language"
+                        prepend-icon="mdi-language"
                         name="en"
                         v-model="form.en"
                         :label="label + ' - ' + $t('common.multiLang.en')"
@@ -16,7 +16,7 @@
 
             <v-col v-if="es" cols="12">
                 <v-text-field
-                        prepend-icon="language"
+                        prepend-icon="mdi-language"
                         name="es"
                         v-model="form.es"
                         :label="label + ' - ' + $t('common.multiLang.es')"
@@ -29,7 +29,7 @@
 
             <v-col v-if="pt" cols="12">
                 <v-text-field
-                        prepend-icon="language"
+                        prepend-icon="mdi-language"
                         name="pt"
                         v-model="form.pt"
                         :label="label + ' - ' + $t('common.multiLang.pt')"

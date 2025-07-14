@@ -23,7 +23,7 @@ a   >
 </template>
 
 <script>
-import ToolbarDialog from "../ToolbarDialog/ToolbarDialog";
+import ToolbarDialog from "../ToolbarDialog/ToolbarDialog.vue";
 
 export default {
   name: "SimpleDialog",

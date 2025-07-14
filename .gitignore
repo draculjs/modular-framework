@@ -4,3 +4,6 @@ node_modules
 packages/*/*/lib
 packages/z/backend/media/files/*
 openai
+packages/**/lib/
+packages/*/*/lib/
+*/lib/

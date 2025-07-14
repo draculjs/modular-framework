@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import RoleCrud from "./RoleCrud";
+    import RoleCrud from "./RoleCrud.vue";
 
     export default {
         name: "RolePage",

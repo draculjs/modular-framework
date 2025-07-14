@@ -2,13 +2,13 @@
     <v-row align="center">
         <v-col cols="12" md="3" v-if="$vuetify.breakpoint.mdAndUp">
             <v-btn color="primary" block @click="$emit('addNewDomain')">
-                <v-icon left>add</v-icon>Añadir dominio
+                <v-icon left>mdi-plus</v-icon>Añadir dominio
             </v-btn>
         </v-col>
         <v-col cols="12" :offset-md="$vuetify.breakpoint.mdAndUp ? 6 : 9" md="3">
             <v-text-field 
                 clearable
-                prepend-inner-icon="search" 
+                prepend-inner-icon="mdi-magnify" 
                 label="Buscar" 
                 v-model="search"
                 @input="fetch"
@@ -46,10 +46,10 @@
                 <template v-slot:item.actions="{ item }">
                     <v-row justify="center">
                         <v-btn color="blue" @click="editDomain(item)" class="mx-2">
-                            <v-icon>edit</v-icon>
+                            <v-icon>mdi-pencil</v-icon>
                         </v-btn>
                         <v-btn color="red" @click="deleteDomain(item)" class="mx-2">
-                            <v-icon>delete</v-icon>
+                            <v-icon>mdi-delete</v-icon>
                         </v-btn>
                     </v-row>
                 </template>

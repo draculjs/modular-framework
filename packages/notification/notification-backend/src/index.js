@@ -1,30 +1,22 @@
 import {
-    createNotificationService,
-    deleteNotificationsService,
-    fetchNotificationsService,
-    markAllReadOrNotReadService,
-    markAsReadOrNotReadService,
-    notificationsPaginateFilterService
-} from "./services/NotificationService"
+    createNotificationService, deleteNotificationsService, fetchNotificationsService, markAllReadOrNotReadService,
+    markAsReadOrNotReadService, notificationsPaginateFilterService,
+} from "./services/NotificationService.js"
 
-import {types, resolvers} from "./graphql"
-import * as permissions from "./permissions"
-import NotificationModel from "./models/NotificationModel"
+import {types, resolvers} from "./graphql/index.js"
+import * as permissions from "./permissions/index.js"
+import NotificationModel from "./models/NotificationModel.js"
 
 export{
-    //Services
     createNotificationService,
     deleteNotificationsService,
     fetchNotificationsService,
     markAsReadOrNotReadService,
     markAllReadOrNotReadService,
     notificationsPaginateFilterService,
-    //Types and resolvers
     types,
     resolvers,
-    //Permissions
     permissions,
-    //Model
     NotificationModel
 }
 

@@ -1,5 +1,5 @@
 
-import {UserRbacFactory} from "../services/RbacService";
+import {UserRbacFactory} from "../services/RbacService.js";
 
 
 export default async function (req, res, next) {

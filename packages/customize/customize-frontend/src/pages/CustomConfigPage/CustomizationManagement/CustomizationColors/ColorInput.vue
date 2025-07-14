@@ -9,7 +9,7 @@
                 <template v-slot:activator="{ on }">
                     <v-text-field
                             v-on="on"
-                            prepend-icon="palette"
+                            prepend-icon="mdi-palette"
                             type="text"
                             v-model="colorValue"
                             :label="label"

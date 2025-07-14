@@ -1,114 +1,137 @@
-class UserProvider {
+import userAdminChangePasswordRaw from './gql/userAdminChangePassword.graphql?raw';
+import userAdminChangeAvatarRaw from './gql/userAdminChangeAvatar.graphql?raw';
+import fetchPasswordRulesRaw from './gql/fetchPasswordRules.graphql?raw';
+import userPaginateRaw from './gql/userPaginate.graphql?raw';
+import usersByRolesRaw from './gql/usersByRoles.graphql?raw';
+import usersByRoleRaw from './gql/usersByRole.graphql?raw';
+import userCreateRaw from './gql/userCreate.graphql?raw';
+import userUpdateRaw from './gql/userUpdate.graphql?raw';
+import userDeleteRaw from './gql/userDelete.graphql?raw';
+import groupsRaw from './gql/groups.graphql?raw';
+import usersRaw from './gql/users.graphql?raw';
+import rolesRaw from './gql/roles.graphql?raw';
+import userRaw from './gql/user.graphql?raw';
+import { gql } from '@apollo/client/core'
 
+// Convertir todos los imports a DocumentNodes usando gql
+const userAdminChangePasswordGql = gql(userAdminChangePasswordRaw);
+const userAdminChangeAvatarGql = gql(userAdminChangeAvatarRaw);
+const fetchPasswordRulesGql = gql(fetchPasswordRulesRaw);
+const userPaginateGql = gql(userPaginateRaw);
+const usersByRolesGql = gql(usersByRolesRaw);
+const usersByRoleGql = gql(usersByRoleRaw);
+const userCreateGql = gql(userCreateRaw);
+const userUpdateGql = gql(userUpdateRaw);
+const userDeleteGql = gql(userDeleteRaw);
+const groupsGql = gql(groupsRaw);
+const usersGql = gql(usersRaw);
+const rolesGql = gql(rolesRaw);
+const userGql = gql(userRaw);
+
+class UserProvider {
     constructor() {
-        this.gqlc = null
+        this.gqlc = null;
     }
 
     setGqlc(gqlc) {
-        this.gqlc = gqlc
+        this.gqlc = gqlc;
     }
 
     paginateUsers(limit, pageNumber, search = null, orderBy = null, orderDesc = false, activeUsers = false) {
         return this.gqlc.query({
-            query: require('./gql/userPaginate.graphql'),
-            variables: {limit, pageNumber, search, orderBy, orderDesc, activeUsers},
+            query: userPaginateGql,
+            variables: { limit, pageNumber, search, orderBy, orderDesc, activeUsers },
             fetchPolicy: "network-only"
-        })
+        });
     }
 
     user(id) {
         return this.gqlc.query({
-            query: require('./gql/user.graphql'),
+            query: userGql,
             fetchPolicy: "network-only",
-            variables: {id: id}
-        })
+            variables: { id }
+        });
     }
 
     users() {
         return this.gqlc.query({
-            query: require('./gql/users.graphql'),
+            query: usersGql,
             fetchPolicy: "network-only"
-        })
+        });
     }
 
     usersByRole(roleName) {
         return this.gqlc.query({
-            query: require('./gql/usersByRole.graphql'),
+            query: usersByRoleGql,
             fetchPolicy: "network-only",
-            variables: {roleName}
-        })
+            variables: { roleName }
+        });
     }
 
     usersByRoles(roleNames) {
         return this.gqlc.query({
-            query: require('./gql/usersByRoles.graphql'),
+            query: usersByRolesGql,
             fetchPolicy: "network-only",
-            variables: {roleNames}
-        })
+            variables: { roleNames }
+        });
     }
 
     roles() {
         return this.gqlc.query({
-            query: require('./gql/roles.graphql'),
+            query: rolesGql,
             fetchPolicy: "network-only"
-        })
+        });
     }
 
     groups() {
         return this.gqlc.query({
-                query: require('./gql/groups.graphql'),
-                fetchPolicy: "network-only"
-            }
-        )
+            query: groupsGql,
+            fetchPolicy: "network-only"
+        });
     }
 
-    createUser({username, password, name, email, phone, role, groups, active}) {
+    createUser({ username, password, name, email, phone, role, groups, active }) {
         return this.gqlc.mutate({
-            mutation: require('./gql/userCreate.graphql'),
-            variables: {username, password, name, email, phone, role, groups, active}
-        })
-
+            mutation: userCreateGql,
+            variables: { username, password, name, email, phone, role, groups, active }
+        });
     }
 
-
-    updateUser({id, name, username, email, phone, role, groups, active}) {
+    updateUser({ id, name, username, email, phone, role, groups, active }) {
         return this.gqlc.mutate({
-            mutation: require('./gql/userUpdate.graphql'),
-            variables: {id, name, username, email, phone, role, groups, active}
-        })
+            mutation: userUpdateGql,
+            variables: { id, name, username, email, phone, role, groups, active }
+        });
     }
 
     deleteUser(id) {
         return this.gqlc.mutate({
-            mutation: require('./gql/userDelete.graphql'),
-            variables: {id}
-        })
+            mutation: userDeleteGql,
+            variables: { id }
+        });
     }
 
     adminChangePassword(id, password, passwordVerify) {
         return this.gqlc.mutate({
-            mutation: require('./gql/userAdminChangePassword.graphql'),
-            variables: {id: id, password: password, passwordVerify: passwordVerify}
-        })
+            mutation: userAdminChangePasswordGql,
+            variables: { id, password, passwordVerify }
+        });
     }
 
-    adminAvatarUpload(id,file) {
+    adminAvatarUpload(id, file) {
         return this.gqlc.mutate({
-            mutation: require('./gql/userAdminChangeAvatar.graphql'),
-            variables: {
-                id: id,
-                file: file
-            },
-        })
+            mutation: userAdminChangeAvatarGql,
+            variables: { id, file }
+        });
     }
 
-    fetchPasswordRules(){
+    fetchPasswordRules() {
         return this.gqlc.query({
-            query: require('./gql/fetchPasswordRules.graphql'),
+            query: fetchPasswordRulesGql,
             fetchPolicy: "network-only"
-        })
+        });
     }
 }
 
-const userProvider = new UserProvider()
-export default userProvider
+const userProvider = new UserProvider();
+export default userProvider;

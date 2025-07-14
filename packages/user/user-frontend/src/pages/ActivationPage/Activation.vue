@@ -15,12 +15,12 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import ClientError from '../../errors/ClientError'
-    import AuthProvider from '../../providers/AuthProvider';
-    import jwt_decode from 'jwt-decode'
-    import ActivationError from "./ActivationError";
-    import ActivationInProgress from "./ActivationInProgress";
-    import ActivationSuccessful from "./ActivationSuccessful";
+    import ClientError from '../../errors/ClientError.js'
+    import AuthProvider from '../../providers/AuthProvider.js';
+    import {jwtDecode} from 'jwt-decode'
+    import ActivationError from "./ActivationError.vue";
+    import ActivationInProgress from "./ActivationInProgress.vue";
+    import ActivationSuccessful from "./ActivationSuccessful.vue";
 
     export default {
         name: "ActivationManager",
@@ -38,8 +38,9 @@
             checkToken() {
                 let payload
                 try{
-                    payload = jwt_decode(this.$route.params.token)
-                }catch (e) {
+                    payload = jwtDecode(this.$route.params.token)
+                }catch (error) {
+                    console.log(`Error at activation.vue: ${error}`)
                     return false
                 }
 

@@ -1,55 +1,29 @@
-import CustomJsonFormatter from "./formatters/CustomJsonFormatter";
-import DefaultFormatter from "./formatters/DefaultFormatter";
-import DefaultJsonFormatter from "./formatters/DefaultJsonFormatter";
-import DefaultTextFormatter from "./formatters/DefaultTextFormatter";
-import GqlErrorLog from "./helpers/GqlErrorLog";
-import GqlResponseLog from "./helpers/GqlResponseLog";
-import DefaultLogger from "./loggers/DefaultLogger";
-import GqlErrorLogger from "./loggers/GqlErrorLogger";
-import GqlResponseLogger from "./loggers/GqlResponseLogger";
-import RequestLogger from "./loggers/RequestLogger";
-import RequestMiddleware from "./middlewares/RequestMiddleware";
-import ConsoleTransport from "./transports/ConsoleTransport";
-import FileAccessTransport from "./transports/FileAccessTransport";
-import FileCombinedTransport from "./transports/FileCombinedTransport";
-import FileErrorTransport from "./transports/FileErrorTransport";
-import FileGqlErrorTransport from "./transports/FileGqlErrorTransport";
-import FileGqlResponseTransport from "./transports/FileGqlResponseTransport";
-import ResponseTimeMiddleware from "./middlewares/ResponseTimeMiddleware";
-import QueueLogger from "./loggers/QueueLogger";
-import FileQueueTransport from "./transports/FileQueueTransport";
+// Formatters
+export { default as CustomJsonFormatter } from "./formatters/CustomJsonFormatter.js";
+export { default as DefaultFormatter } from "./formatters/DefaultFormatter.js";
+export { default as DefaultJsonFormatter } from "./formatters/DefaultJsonFormatter.js";
+export { default as DefaultTextFormatter } from "./formatters/DefaultTextFormatter.js";
 
+// Helpers
+export { default as GqlErrorLog } from "./helpers/GqlErrorLog.js";
+export { default as GqlResponseLog } from "./helpers/GqlResponseLog.js";
 
-module.exports = {
+// Loggers
+export { default as DefaultLogger } from "./loggers/DefaultLogger.js";
+export { default as GqlErrorLogger } from "./loggers/GqlErrorLogger.js";
+export { default as GqlResponseLogger } from "./loggers/GqlResponseLogger.js";
+export { default as RequestLogger } from "./loggers/RequestLogger.js";
+export { default as QueueLogger } from "./loggers/QueueLogger.js";
 
-    //Formatters
-    CustomJsonFormatter,
-    DefaultFormatter,
-    DefaultJsonFormatter,
-    DefaultTextFormatter,
+// Middlewares
+export { default as ResponseTimeMiddleware } from "./middlewares/ResponseTimeMiddleware.js";
+export { default as RequestMiddleware } from "./middlewares/RequestMiddleware.js";
 
-    //Helpers
-    GqlErrorLog,
-    GqlResponseLog,
-
-    //Loggers
-    DefaultLogger,
-    GqlErrorLogger,
-    GqlResponseLogger,
-    RequestLogger,
-    QueueLogger,
-
-    //Middlewares
-    ResponseTimeMiddleware,
-    RequestMiddleware,
-
-    //Transports
-    ConsoleTransport,
-    FileAccessTransport,
-    FileCombinedTransport,
-    FileErrorTransport,
-    FileGqlErrorTransport,
-    FileGqlResponseTransport,
-    FileQueueTransport
-
-}
+// Transports
+export { default as ConsoleTransport } from "./transports/ConsoleTransport.js";
+export { default as FileAccessTransport } from "./transports/FileAccessTransport.js";
+export { default as FileCombinedTransport } from "./transports/FileCombinedTransport.js";
+export { default as FileErrorTransport } from "./transports/FileErrorTransport.js";
+export { default as FileGqlErrorTransport } from "./transports/FileGqlErrorTransport.js";
+export { default as FileGqlResponseTransport } from "./transports/FileGqlResponseTransport.js";
+export { default as FileQueueTransport } from "./transports/FileQueueTransport.js";

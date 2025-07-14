@@ -1,17 +1,17 @@
-import {passwordRules, validateRegexPassword} from "./PasswordService";
-
-require('dotenv').config()
-import path from "path";
-import createDirIfNotExist from "./utils/createDirIfNotExist";
-import User from "../models/UserModel";
 import {DefaultLogger as winston} from "@dracul/logger-backend";
-import {createUserAudit} from "./UserAuditService";
-import fs from "fs";
-import bcryptjs from "bcryptjs";
 import {UserInputError} from "apollo-server-errors";
-import {hashPassword} from "./UserService";
 import {Transform} from 'stream'
+import bcryptjs from "bcryptjs";
+import path from "path";
+import fs from "fs";
 
+import {passwordRules, validateRegexPassword} from "./PasswordService.js";
+import createDirIfNotExist from "./utils/createDirIfNotExist.js";
+import UserService from "./UserService.js";
+import User from "../models/UserModel.js";
+
+import { config } from 'dotenv';
+config()
 class StreamSizeValidator extends Transform {
 
     maxFileSize = process.env.AVATAR_MAX_SIZE ? process.env.AVATAR_MAX_SIZE : 2000000
@@ -175,10 +175,9 @@ export const changePassword = async function (id, {currentPassword, newPassword}
 
             await User.findOneAndUpdate(
                 {_id: id},
-                {password: hashPassword(newPassword), lastPasswordChange: new Date()}, {new: true})
+                {password: UserService.hashPassword(newPassword), lastPasswordChange: new Date()}, {new: true})
                 .exec()
 
-            await createUserAudit(actionBy.id, id, (actionBy.id === id) ? 'userPasswordChange' : 'adminPasswordChange')
 
             return {status: true, message: "Password Changed"}
 

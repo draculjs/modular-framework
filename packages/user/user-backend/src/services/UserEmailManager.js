@@ -1,9 +1,9 @@
-require('dotenv').config()
 import {DefaultLogger as winston} from '@dracul/logger-backend';
-import nodemailer from "nodemailer"
-
+import nodemailer from "nodemailer";
 import Email from 'email-templates';
 
+import { config } from 'dotenv';
+config()
 class UserEmailManager {
 
     constructor() {
@@ -119,7 +119,7 @@ class UserEmailManager {
                     btnText: "Activar cuenta",
                     copyright: "Copyright @ " + process.env.APP_NAME + " " + new Date().getFullYear()
                 },
-            }).then((response) => {
+            }).then(() => {
                 resolve(true)
             }).catch((error) => {
 
@@ -145,4 +145,4 @@ class UserEmailManager {
 
 }
 
-module.exports = new UserEmailManager();
+export default new UserEmailManager();

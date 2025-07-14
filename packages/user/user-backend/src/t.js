@@ -1,5 +1,5 @@
-import {securityResolvers, securityTypes} from './graphql'
-import {sessionMiddleware, jwtMiddleware, rbacMiddleware, corsMiddleware} from './middleware'
+import {resolvers as securityResolvers, types as securityTypes} from './graphql/index.js'
+import {sessionMiddleware, jwtMiddleware, rbacMiddleware, corsMiddleware} from './middleware/index.js'
 import {
     AuthService,
     RecoveryService,
@@ -7,13 +7,12 @@ import {
     GroupService,
     RoleService,
     UserService,
-    UserAuditService,
     UserEmailManager,
     LoginFailService,
     SessionService,
     InitService
-} from './services'
-import * as permissions from './permissions'
+} from './services/index.js'
+import * as permissions from './permissions/include/security-permissions.js'
 
 
 export {
@@ -34,7 +33,6 @@ export {
     GroupService,
     RoleService,
     UserService,
-    UserAuditService,
     UserEmailManager,
     LoginFailService,
     SessionService,

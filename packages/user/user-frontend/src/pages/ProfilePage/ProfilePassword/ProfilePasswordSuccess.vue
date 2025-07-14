@@ -5,7 +5,7 @@
         <v-card-text >
             <v-alert
                     color="success"
-                    icon="check_circle"
+                    icon="mdi-check-circle"
                     outlined
                     v-t="'auth.changePasswordSuccessfully'"
             >

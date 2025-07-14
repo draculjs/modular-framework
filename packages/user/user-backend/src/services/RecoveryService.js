@@ -1,14 +1,14 @@
 import {DefaultLogger as winston} from '@dracul/logger-backend';
-import User from "../models/UserModel";
-import {createUserAudit} from "./UserAuditService";
-import jwt from "jsonwebtoken";
-import UserEmailManager from "./UserEmailManager";
-import {hashPassword} from "./UserService";
-import validatePasswordLength from "./utils/validatePasswordLength";
-import {tokenSignPayload} from "./AuthService";
-import {createSession} from "./SessionService";
-import jsonwebtoken from "jsonwebtoken";
 import {randomString} from '@dracul/common-backend'
+
+import validatePasswordLength from "./utils/validatePasswordLength.js";
+import UserEmailManager from "./UserEmailManager.js";
+import {tokenSignPayload} from "./AuthService.js";
+import {createSession} from "./SessionService.js";
+import UserService from "./UserService.js";
+import User from "../models/UserModel.js";
+
+import jsonwebtoken from "jsonwebtoken";
 
 
 /*
@@ -20,7 +20,7 @@ export const recoveryPassword = function (email) {
     return new Promise((resolve, rejects) => {
         User.findOne({email: email}).populate('role').then((user) => {
             if (user) {
-                let token = jwt.sign(
+                let token = jsonwebtoken.sign(
                     {
                         id: user.id,
                         role: {name: user.role.name},
@@ -34,7 +34,6 @@ export const recoveryPassword = function (email) {
                 UserEmailManager.recovery(email, url, user).then(result => {
 
                     winston.info('RecoveryService.recoveryPassword successful for ' + user.username)
-                    createUserAudit(user.id, user.id, 'passwordRecovery')
                     resolve({status: result, message: 'common.operation.success'})
                 }).catch(err => {
                     winston.error("RecoveryService.recoveryPassword ", err)
@@ -69,11 +68,8 @@ export const recoveryPasswordByCode = function (email) {
                         resolve({status: false, message: "common.operation.fail"})
                     }
 
-                    createUserAudit(userDecoded.id, userDecoded.id, 'userRecoveryPasswordCodeCreated')
-
                     UserEmailManager.recoveryCode(email, code, user).then(result => {
                         winston.info('RecoveryService.recoveryPassword successful for ' + user.username)
-                        createUserAudit(user.id, user.id, 'passwordRecovery')
                         resolve({status: result, message: 'common.operation.success'})
                     }).catch(err => {
                         winston.error("RecoveryService.recoveryPassword ", err)
@@ -88,7 +84,7 @@ export const recoveryPasswordByCode = function (email) {
 }
 
 export const recoveryChangePasswordCode = function (code, newPassword) {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve) => {
         User.findOneAndUpdate(
             {code: code},
             {password: newPassword, lastPasswordChange: new Date()})
@@ -115,21 +111,19 @@ export const recoveryChangePassword = function (token, newPassword, req) {
 
     return new Promise((resolve, rejects) => {
 
-        let userDecoded = jwt.verify(token, process.env.JWT_SECRET)
+        let userDecoded = jsonwebtoken.verify(token, process.env.JWT_SECRET)
 
-        //Todo specific message
         if (!userDecoded) {
             resolve({status: false, message: "common.operation.fail"})
         }
 
-        //Todo specific message
         if (!validatePasswordLength(newPassword)) {
             resolve({status: false, message: "common.operation.fail"})
         }
 
         User.findOneAndUpdate(
             {_id: userDecoded.id},
-            {password: hashPassword(newPassword), lastPasswordChange: new Date()},
+            {password:UserService.hashPassword(newPassword), lastPasswordChange: new Date()},
             {new: true})
             .populate(['role','groups'])
             .exec(
@@ -140,7 +134,6 @@ export const recoveryChangePassword = function (token, newPassword, req) {
                         resolve({status: false, message: "common.operation.fail"})
                     }
 
-                    createUserAudit(userDecoded.id, userDecoded.id, 'userRecoveryPasswordChange')
 
                     createSession(user, req).then(session => {
 
@@ -162,7 +155,7 @@ export const recoveryChangePassword = function (token, newPassword, req) {
 
                     }).catch(err => {
                         winston.error("RecoveryService.recoveryChangePassword ", err)
-                        reject(err)
+                        rejects(err)
                     })
 
 

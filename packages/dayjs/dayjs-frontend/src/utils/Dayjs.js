@@ -1,11 +1,13 @@
-var dayjs = require('dayjs')
-var utc = require('dayjs/plugin/utc') // dependent on utc plugin
-var timezone = require('dayjs/plugin/timezone')
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-var objectSupport = require("dayjs/plugin/objectSupport");
+import dayjsImported from 'dayjs'
+import utc from'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import objectSupport from "dayjs/plugin/objectSupport"
+export const dayjs = dayjsImported
+
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(customParseFormat)
 dayjs.extend(objectSupport);
 
-module.exports = dayjs
+export default dayjs

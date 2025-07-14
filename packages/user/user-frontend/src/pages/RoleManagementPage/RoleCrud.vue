@@ -57,12 +57,12 @@
 </template>
 
 <script>
-    import RoleCreate from "./RoleCreate/RoleCreate";
-    import RoleCopy from "./RoleCopy/RoleCopy";
-    import RoleDelete from "./RoleDelete/RoleDelete";
-    import RoleUpdate from "./RoleUpdate/RoleUpdate";
-    import RoleProvider from "../../providers/RoleProvider";
-    import RoleList from "./RoleList";
+    import RoleCreate from "./RoleCreate/RoleCreate.vue";
+    import RoleCopy from "./RoleCopy/RoleCopy.vue";
+    import RoleDelete from "./RoleDelete/RoleDelete.vue";
+    import RoleUpdate from "./RoleUpdate/RoleUpdate.vue";
+    import RoleProvider from "../../providers/RoleProvider.js";
+    import RoleList from "./RoleList/index.js";
     import Vue from "vue";
     import {CrudLayout, AddButton, Snackbar, Loading} from "@dracul/common-frontend"
 

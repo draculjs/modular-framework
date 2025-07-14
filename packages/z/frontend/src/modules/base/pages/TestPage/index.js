@@ -1,4 +1,4 @@
-import TestPage from "./TestPage";
+import TestPage from "./TestPage.vue";
 
 export {TestPage}
 export default TestPage

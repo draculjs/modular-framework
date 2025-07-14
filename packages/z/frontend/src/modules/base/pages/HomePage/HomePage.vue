@@ -6,7 +6,7 @@
 
 <script>
 import menuConfig from "@/menu-config/menu-config"
-import GalleryMenu from "@/layout/GalleryMenu/GalleryMenu";
+import GalleryMenu from "@/layout/GalleryMenu/GalleryMenu.vue"; 
 
 export default {
   name: 'HomePage',

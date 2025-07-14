@@ -1,9 +1,9 @@
 /**
  * Dependencies
  */
-const isFunction = require('../utils/isFunction')
-const Consumer = require('./Consumer')
-const EventEmitter = require('events');
+import isFunction from '../utils/isFunction';
+import Consumer from './Consumer';
+import EventEmitter from 'events';
 
 /**
  * Implements a Worker.

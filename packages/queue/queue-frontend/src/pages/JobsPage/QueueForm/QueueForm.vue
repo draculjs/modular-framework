@@ -18,7 +18,7 @@
 
                                         :value="getDateFormat(form.blockedUntil)"
                                         :label="$t('queue.queue.labels.blockedUntil')"
-                                        prepend-icon="event"
+                                        prepend-icon="mdi-calendar"
                                         readonly
                                         v-on="on"
 
@@ -45,7 +45,7 @@
                                 <v-text-field
                                         :value="getTimeFormat(form.blockedUntil)"
                                         :label="$t('queue.queue.labels.blockedUntil')"
-                                        prepend-icon="query_builder"
+                                        prepend-icon="mdi-query_builder"
                                         readonly
                                         v-on="on"
 
@@ -67,7 +67,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="badge"
+                                prepend-icon="mdi-badge"
                                 name="workerId"
                                 v-model="form.workerId"
                                 :label="$t('queue.queue.labels.workerId')"
@@ -83,7 +83,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="last_page"
+                                prepend-icon="mdi-last_page"
                                 name="maxRetries"
                                 v-model.number="form.maxRetries"
                                 type="number"
@@ -100,7 +100,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="double_arrow"
+                                prepend-icon="mdi-double_arrow"
                                 name="retries"
                                 v-model.number="form.retries"
                                 type="number"
@@ -117,7 +117,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="pending"
+                                prepend-icon="mdi-pending"
                                 name="progress"
                                 v-model.number="form.progress"
                                 type="number"
@@ -134,7 +134,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="info"
+                                prepend-icon="mdi-info"
                                 name="info"
                                 v-model="form.info"
                                 :label="$t('queue.queue.labels.info')"
@@ -150,7 +150,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="fact_check"
+                                prepend-icon="mdi-fact_check"
                                 name="state"
                                 v-model="form.state"
                                 :label="$t('queue.queue.labels.state')"
@@ -166,7 +166,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="topic"
+                                prepend-icon="mdi-topic"
                                 name="topic"
                                 v-model="form.topic"
                                 :label="$t('queue.queue.labels.topic')"
@@ -182,7 +182,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="note_add"
+                                prepend-icon="mdi-note_add"
                                 name="payload"
                                 v-model="form.payload"
                                 :label="$t('queue.queue.labels.payload')"
@@ -197,7 +197,7 @@
 
                     <v-col cols="12" sm="6">
                         <v-checkbox
-                                prepend-icon="done"
+                                prepend-icon="mdi-done"
                                 name="done"
                                 v-model="form.done"
                                 :label="$t('queue.queue.labels.done')"
@@ -212,7 +212,7 @@
                     <v-col cols="12" sm="6">
                         <v-text-field
 
-                                prepend-icon="error"
+                                prepend-icon="mdi-error"
                                 name="error"
                                 v-model="form.error"
                                 :label="$t('queue.queue.labels.error')"

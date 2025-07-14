@@ -7,6 +7,7 @@
   },
   "description": "dayjs backend module for Dracul",
   "main": "./lib/index.js",
+  "type": "module",
   "scripts": {
     "prepublish": "babel src -d lib --copy-files",
     "test": "jest"
@@ -27,7 +28,7 @@
     "@graphql-tools/merge": "^9.0.0",
     "apollo-server-errors": "^3.3.1",
     "dayjs": "^1.11.11",
-    "graphql": "^15.8.0 || ^16.0.0"
+    "graphql": "^16.6.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.5"

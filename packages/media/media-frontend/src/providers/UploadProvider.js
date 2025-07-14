@@ -1,29 +1,53 @@
+import fileUploadRaw from './gql/fileUpload.graphql?raw';
+import fileUploadAnonymousRaw from './gql/fileUploadAnonymous.graphql?raw';
+import { ApolloClient, gql } from '@apollo/client/core';
+
+const fileUploadGql = gql(fileUploadRaw);
+const fileUploadAnonymousGql = gql(fileUploadAnonymousRaw);
+
 class UploadProvider {
-
-
     constructor() {
-        this.gqlc = null
+        this.gqlc = null;
     }
 
     setGqlc(gqlc) {
-        this.gqlc = gqlc
+        if (gqlc instanceof ApolloClient) {
+            this.gqlc = gqlc;
+        } else {
+            throw new Error('gqlc must be an ApolloClient instance');
+        }
+    }
+
+    getGqlClient() {
+        if (!this.gqlc) {
+            throw new Error('gqlc must be initialized');
+        }
+        return this.gqlc;
     }
 
     uploadFile(file, expirationDate, isPublic, description, tags, groups, users) {
-        return this.gqlc.mutate({
-            mutation: require('./gql/fileUpload.graphql'),
-            variables: { file: file, expirationDate: expirationDate, isPublic: isPublic, description: description, tags: tags, groups: groups, users: users }
-        })
+        console.log("file: ", file)
+        return this.getGqlClient().mutate({
+            mutation: fileUploadGql,
+            variables: { 
+                file, 
+                expirationDate, 
+                isPublic, 
+                description, 
+                tags, 
+                groups, 
+                users 
+            }
+        });
     }
 
     uploadFileAnonymous(file) {
-        return this.gqlc.mutate({
-            mutation: require('./gql/fileUploadAnonymous.graphql'),
-            variables: { file: file }
-        })
+        return this.getGqlClient().mutate({
+            mutation: fileUploadAnonymousGql,
+            variables: { file }
+        });
     }
 }
 
-const uploadProvider = new UploadProvider()
-
-export default uploadProvider
+const uploadProvider = new UploadProvider();
+export default uploadProvider;

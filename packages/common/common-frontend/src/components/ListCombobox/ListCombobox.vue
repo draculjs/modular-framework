@@ -20,7 +20,7 @@ export default {
   name: "ListCombobox",
   props: {
     value: {type: Array},
-    icon: {type: String, default: 'loyalty'},
+    icon: {type: String, default: 'mdi-tag'},
     label: {type: String, default: ''},
     error: {type:Boolean, default: false},
     errorMessages: {type:Array, default: () => []},

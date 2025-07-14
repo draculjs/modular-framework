@@ -86,11 +86,11 @@ export default {
       return {
         initial: {
           color: 'blue-grey',
-          icon: 'cloud_upload'
+          icon: 'mdi-upload'
         },
         selected: {
           color: 'cyan darken-3',
-          icon: 'download_done'
+          icon: 'mdi-cloud-check-outline'
         },
         loading: {
           color: 'amber darken-3',

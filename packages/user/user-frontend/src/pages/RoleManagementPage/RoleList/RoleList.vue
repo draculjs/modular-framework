@@ -12,7 +12,7 @@
                         <v-icon color="blue">edit</v-icon>
                     </v-btn>
                     <v-btn v-if="canDelete" :disabled="role.readonly" @click="openDelete(role)" icon x-small>
-                        <v-icon color="orange">delete</v-icon>
+                        <v-icon color="orange">mdi-delete</v-icon>
                     </v-btn>
                     <v-btn v-if="canCreate" @click="openCopy(role)" icon x-small>
                         <v-icon color="purple">mdi-content-copy</v-icon>

@@ -1,4 +1,4 @@
-import SettingsPage from '../pages/SettingsPage'
+import SettingsPage from '../pages/SettingsPage/index.vue'
 
 const routes = [
      {name: 'SettingsPage', path: '/settings', component: SettingsPage}

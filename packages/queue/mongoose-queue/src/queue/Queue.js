@@ -1,9 +1,9 @@
 /**
  * Dependencies
  */
-const _ = require('underscore');
-const {addJob, getJob, ackJob, errorJob, cleanQueue, resetQueue} = require('../services/QueueService')
-const {fetchQueueStats} = require('../services/QueueStatsService')
+import _ from 'underscore';
+import {addJob, getJob, ackJob, errorJob, cleanQueue, resetQueue} from '../services/QueueService';
+import {fetchQueueStats} from '../services/QueueStatsService';
 
 /**
  * Implements a queue based on mongoose.

@@ -2,10 +2,17 @@
   "name": "@dracul/media-frontend",
   "version": "1.35.6",
   "author": "Cristian Incarnato",
-  "main": "./src/index.js",
+  "main": "/src/index.js",
   "license": "ISC",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "prepare": "node --experimental-vm-modules ../../scripts/vite-build-safe.js"
   },
   "keywords": [
     "media",
@@ -13,19 +20,20 @@
     "vuejs",
     "file"
   ],
-  "scripts": {
-    "front": "vue-cli-service serve",
-    "lint": "vue-cli-service lint",
-    "build": "vue-cli-service build --dest dist --mode production"
-  },
   "dependencies": {
     "@dracul/common-frontend": "^1.35.1",
     "@dracul/dayjs-frontend": "^1.34.0",
     "@dracul/user-frontend": "^1.35.6"
   },
+  "devDependencies": {
+    "@vitejs/plugin-vue2": "^2.3.3",
+    "vite": "^5.4.19",
+    "unplugin-vue-components": "^0.26.0",
+    "unplugin-auto-import": "^0.17.4"
+  },
   "peerDependencies": {
     "deepmerge": "^4.2.2",
-    "graphql": "^15.8.0",
+    "graphql": "^16.11.0",
     "graphql-tag": "^2.12.6",
     "vue": "^2.7.15",
     "vue-i18n": "^8.18.1",

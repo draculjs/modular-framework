@@ -7,7 +7,7 @@
             :disabled="disabled"
             fab fixed bottom right
     >
-        <v-icon>add</v-icon>
+        <v-icon>mdi-plus</v-icon>
     </v-btn>
 </template>
 

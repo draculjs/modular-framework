@@ -1,7 +1,7 @@
-const AUDIT_SHOW = "AUDIT_SHOW"
-const AUDIT_MENU = "AUDIT_MENU"
+export const AUDIT_SHOW = "AUDIT_SHOW"
+export const AUDIT_MENU = "AUDIT_MENU"
 
-module.exports = {
+export default {
     AUDIT_SHOW, AUDIT_MENU
 }
     

@@ -14,7 +14,7 @@
 
 <script>
     import GroupProvider from "../../../providers/GroupProvider";
-    import GroupForm from "../GroupForm/GroupForm";
+    import GroupForm from "../GroupForm/GroupForm.vue";
 
     import {CrudUpdate, ClientError} from '@dracul/common-frontend'
 

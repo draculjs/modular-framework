@@ -1,13 +1,13 @@
 <template>
     <v-toolbar flat class="mb-2" :color="danger?'red':(info?'info':'primary')">
-        <v-toolbar-title :class="(danger || info)?'white--text':'onPrimary--text'" v-t="title"></v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-toolbar-title :class="(danger || info)?'white--text':'onPrimary--text'" v-t="title"/>
+        <v-spacer/>
         <v-toolbar-items>
             <v-btn icon text
-                   :class="(danger || info)?'white--text':'onPrimary--text'"
-                   @click="$emit('close')"
+                :class="(danger || info)?'white--text':'onPrimary--text'"
+                @click="$emit('close')"
             >
-                <v-icon>close</v-icon>
+                <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-toolbar-items>
     </v-toolbar>
@@ -24,6 +24,3 @@
     }
 </script>
 
-<style scoped>
-
-</style>

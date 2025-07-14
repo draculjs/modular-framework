@@ -1,4 +1,4 @@
-import UserUpdate from "./UserUpdate";
+import UserUpdate from "./UserUpdate.vue";
 
 export {UserUpdate}
 export default UserUpdate

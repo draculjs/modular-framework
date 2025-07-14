@@ -1,4 +1,4 @@
-import UserShow from "./UserShow";
+import UserShow from "./UserShow.vue";
 
 export {UserShow}
 export default UserShow

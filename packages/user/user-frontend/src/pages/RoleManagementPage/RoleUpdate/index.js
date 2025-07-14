@@ -1,4 +1,4 @@
-import RoleUpdate from "./RoleUpdate";
+import RoleUpdate from "./RoleUpdate.vue";
 
 export {RoleUpdate}
 export default RoleUpdate

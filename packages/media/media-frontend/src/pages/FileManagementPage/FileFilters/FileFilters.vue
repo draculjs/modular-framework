@@ -10,7 +10,7 @@
                 v-if="filters[0].field == 'dateFrom'"
                 v-model="filters[0].value"
                 :label="$t('media.file.from')"
-                prepend-icon="event"
+                prepend-icon="mdi-calendar"
                 color="secondary"
                 hide-details
               />
@@ -19,7 +19,7 @@
               <date-input
                 v-model="filters[1].value"
                 :label="$t('media.file.until')"
-                prepend-icon="event"
+                prepend-icon="mdi-calendar"
                 color="secondary"
                 hide-details
               />
@@ -28,7 +28,7 @@
               <v-text-field
                 v-model="filters[2].value"
                 :label="$t('media.file.filename')"
-                prepend-icon="article"
+                prepend-icon="mdi-text-short"
                 color="secondary"
                 hide-details
               />
@@ -38,14 +38,14 @@
                 v-model="filters[4].value"
                 :label="$t('media.file.type')"
                 :items="selectType"
-                prepend-icon="extension"
+                prepend-icon="mdi-file"
                 color="secondary"
                 hide-details
               />
             </v-col>
              <v-col v-if="isUserAuthorized('FILE_SHOW_OWN')" cols="12" sm="6" md="2">
               <v-select
-                  prepend-icon="visibility"
+                  prepend-icon="mdi-eye"
                   v-model="filters[7].value"
                   :items="[{text: 'Público', value: 'true'}, {text: 'Privado', value: 'false'}]"
                   :label="$t('media.file.visibility')"
@@ -55,7 +55,7 @@
               <v-text-field
                 v-model="filters[5].value"
                 :label="$t('media.file.sizeGt')"
-                prepend-icon="album"
+                prepend-icon="mdi-album"
                 color="secondary"
                 hide-details
               />
@@ -64,7 +64,7 @@
               <v-text-field
                 v-model="filters[6].value"
                 :label="$t('media.file.sizeLt')"
-                prepend-icon="album"
+                prepend-icon="mdi-album"
                 color="secondary"
                 hide-details
               />
