@@ -4,89 +4,94 @@ info:
   version: "1.0.0"
   title: "Storage Hub"
 basePath: "/api"
-tags:
-  - name: "file"
-    description: "Servicios de gestion de archivos"
 schemes:
   - "http"
   - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+tags:
+  - name: "file"
+    description: "Servicios de gestión de archivos"
+securityDefinitions:
+  Authorization:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: "Bearer JWT token. Formato: 'Authorization: Bearer <token>'"
+security:
+  - Authorization: []
 paths:
   /file:
     get:
       tags:
         - "file"
-      summary: "Conseguir listado de ficheros"
-      description: "Este endpoint obtiene TODOS los archivos a los que se tiene permiso de acceso."
-      operationId: "findFile"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
+      summary: "Listar archivos paginados"
+      description: "Obtiene TODOS los archivos a los que el usuario tiene permiso."
+      operationId: "paginateFiles"
       parameters:
         - name: "pageNumber"
           in: "query"
-          description: "Número de página"
+          description: "Número de página (por defecto 1)"
           required: false
-          type: integer
+          type: "integer"
+          format: "int32"
         - name: "itemsPerPage"
           in: "query"
-          description: "Cantidad de items (ficheros) por página"
+          description: "Elementos por página (por defecto 5)"
           required: false
-          type: integer
+          type: "integer"
+          format: "int32"
         - name: "search"
           in: "query"
-          description: "Nombre del fichero que se desea encontrar"
+          description: "Búsqueda por nombre de fichero (regex, case‑insensitive)"
           required: false
-          type: string
+          type: "string"
         - name: "orderBy"
           in: "query"
-          description: "Tipo de orden"
+          description: "Campo por el que ordenar (ej. createdAt, filename)"
           required: false
-          type: string
+          type: "string"
         - name: "orderDesc"
           in: "query"
-          description: "Valor booleano que determina si el resultado debe ser ordenado en forma descendente"
+          description: "true para orden descendente"
           required: false
-          type: boolean
+          type: "boolean"
       responses:
         "200":
-          description: "successful operation"
+          description: "Operación exitosa"
           schema:
             type: "object"
             properties:
               totalItems:
                 type: integer
-                example: 10
-                description: "Numero de ficheros encontrados"
+                example: 42
+                description: "Total de archivos encontrados"
               page:
                 type: integer
                 example: 1
-                description: "Pagina actual"
+                description: "Página actual"
               items:
                 type: "array"
-                description: "Array de ficheros encontrados"
                 items:
                   $ref: "#/definitions/File"
         "401":
-          description: "Unauthenticated. Bearer token is missing or invalid."
+          description: "No autenticado (falta o es inválido el Bearer token)"
         "403":
-          description: "Unauthorized. The authenticated user does not have permission."
-        "404":
-          description: "The file was not found."
+          description: "No autorizado (sin permisos para listar)"
         "500":
-          description: "There was an error retrieving the file."
+          description: "Error interno al obtener los archivos"
       security:
         - Authorization: []
     post:
       tags:
         - "file"
-      description: "Este endpoint permite cargar un fichero"
-      summary: "Sube ficheros"
-      operationId: "postFile"
+      summary: "Subir un fichero"
+      description: "Permite cargar un fichero."
+      operationId: "uploadFile"
       consumes:
         - "multipart/form-data"
-      produces:
-        - "application/json"
       parameters:
         - name: "file"
           in: "formData"
@@ -95,198 +100,225 @@ paths:
           type: "file"
         - name: "expirationTime"
           in: "formData"
-          description: "Tiempo de expiración del archivo"
+          description: "Tiempo de expiración (días o fecha en string)"
           required: false
           type: "string"
         - name: "isPublic"
           in: "formData"
-          description: "Indica si el archivo es público"
+          description: "true si será público"
           required: false
           type: "boolean"
         - name: "description"
           in: "formData"
-          description: "Descripción del archivo"
+          description: "Descripción del fichero"
           required: false
           type: "string"
         - name: "tags"
           in: "formData"
-          description: "Etiquetas asociadas al archivo"
+          description: "Etiquetas (separadas por comas)"
           required: false
           type: "string"
       responses:
         "201":
-          description: "Successful file upload"
+          description: "Fichero subido con éxito"
           schema:
-            type: "object"
             $ref: "#/definitions/File"
         "400":
-          description: "Bad Request - File was not provided"
+          description: "Petición inválida (no se proveyó archivo)"
         "401":
-          description: "Unauthorized - Not authenticated"
+          description: "No autenticado"
         "403":
-          description: "Forbidden - Insufficient permissions"
+          description: "Sin permisos para crear"
         "409":
-          description: "Conflict - An error occurred during file upload"
+          description: "Error al subir el fichero"
+        "413":
+          description: "Límite de tamaño excedido o capacidad de almacenamiento"
       security:
         - Authorization: []
   /file/{id}:
     get:
       tags:
         - "file"
-      description: "Este endpoint permite encontrar ficheros por ID"
-      summary: "Busca archivos por id"
+      summary: "Obtener fichero por ID"
+      description: "Busca un fichero por su identificador."
       operationId: "findFileById"
-      produces:
-        - "application/json"
       parameters:
         - name: "id"
           in: "path"
-          description: "Id del archivo que se desea encontrar"
+          description: "ID del fichero (MongoID 24 hex dígitos)"
           required: true
           type: "string"
       responses:
         "200":
-          description: "successful operation"
+          description: "Operación exitosa"
           schema:
-            type: "object"
             $ref: "#/definitions/File"
-        "400":
-          description: "Invalid status value"
         "401":
-          description: "Unauthorized. Bearer token is missing or invalid."
+          description: "No autenticado"
         "403":
-          description: "Forbidden. The authenticated user does not have permission."
+          description: "Sin permisos para ver este fichero"
         "404":
-          description: "The file was not found."
+          description: "Fichero no encontrado"
         "500":
-          description: "There was an error retrieving the file."
+          description: "Error interno al buscar el fichero"
+      security:
+        - Authorization: []
+    put:
+      tags:
+        - "file"
+      summary: "Reemplazar contenido de un fichero"
+      description: "Actualiza el contenido de un fichero existente."
+      operationId: "replaceFileContent"
+      consumes:
+        - "multipart/form-data"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID del fichero a reemplazar"
+          required: true
+          type: "string"
+        - name: "file"
+          in: "formData"
+          description: "Nuevo archivo"
+          required: true
+          type: "file"
+      responses:
+        "200":
+          description: "Contenido reemplazado correctamente"
+        "400":
+          description: "Petición inválida (no se proveyó archivo o ID inválido)"
+        "401":
+          description: "No autenticado"
+        "403":
+          description: "Sin permisos para actualizar"
+        "409":
+          description: "Error: extensión no coincide"
+        "500":
+          description: "Error interno al reemplazar contenido"
       security:
         - Authorization: []
     patch:
       tags:
         - "file"
-      summary: "Actualiza informacion de ficheros"
-      description: "Actualiza la informacion del fichero cuya ID pases como parametro"
-      operationId: "updateFileById"
-      security:
-        - Authorization: []
-
+      summary: "Actualizar metadatos de fichero"
+      description: "Cambia descripción, fecha de expiración, etiquetas o visibilidad."
+      operationId: "updateFileMetadata"
+      consumes:
+        - "application/json"
       parameters:
         - name: "id"
           in: "path"
           description: "ID del fichero a actualizar"
           required: true
-          type: string
-        - name: "newFile"
+          type: "string"
+        - name: "metadata"
           in: "body"
-          description: "Nuevos valores a actualizar al fichero"
+          description: "Campos a actualizar"
+          required: true
           schema:
             type: object
             properties:
               description:
-                type: "string"
-                description: "Nueva descripcion del fichero"
+                type: string
               expirationDate:
-                type: "string"
-                description: "Nueva fecha de expiracion del fichero (string con formato DD/MM/YYYY)"
+                type: string
               tags:
-                type: "string"
-                description: "Nuevos tags del fichero"
+                type: array
+                items:
+                  type: string
               isPublic:
                 type: boolean
-                description: "Nuevo valor booleano que determinara si el fichero es publico"
       responses:
         "200":
-          description: "Successful file update"
-          content:
-            application/json:
-              example:
-                message: "File updated successfully"
-                updatedFile: {}
+          description: "Metadatos actualizados"
+          schema:
+            $ref: "#/definitions/File"
+        "400":
+          description: "Petición inválida (faltan campos)"
         "401":
-          description: "Unauthorized - Not authenticated"
-          content:
-            application/json:
-              example:
-                message: "Not Authorized"
+          description: "No autenticado"
         "403":
-          description: "Forbidden - Insufficient permissions"
-          content:
-            application/json:
-              example:
-                message: "Not Authorized"
+          description: "Sin permisos para actualizar"
         "404":
-          description: "Not Found - File not found"
-          content:
-            application/json:
-              example:
-                message: "File not found"
-        "default":
-          description: "Error responses for various scenarios"
-          content:
-            application/json:
-              example:
-                message: "An error occurred during file update"
-securityDefinitions:
-  Authorization:
-    type: "apiKey"
-    scheme: "bearer"
-    name: "Authorization"
-    in: "header"
-    bearerFormat: JWT
+          description: "Fichero no encontrado"
+        "500":
+          description: "Error interno al actualizar metadatos"
+      security:
+        - Authorization: []
+    delete:
+      tags:
+        - "file"
+      summary: "Eliminar fichero"
+      description: "Borra un fichero, su contenido y actualiza el almacenamiento del usuario."
+      operationId: "deleteFile"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID del fichero a eliminar"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "Fichero eliminado correctamente"
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+              message:
+                type: string
+                example: "El archivo fue eliminado correctamente."
+        "400":
+          description: "ID inválido o faltante"
+        "401":
+          description: "No autenticado"
+        "403":
+          description: "Sin permisos para eliminar"
+        "404":
+          description: "Fichero no encontrado"
+        "500":
+          description: "Error interno al eliminar fichero"
+      security:
+        - Authorization: []
 definitions:
   File:
-    type: "object"
+    type: object
     properties:
       id:
         type: string
-        example: "5fec8b0f1c8e22001b2e2452"
-        description: "Unique identifier for the file."
       filename:
         type: string
-        example: "foto.jpg"
-        description: "Name of the file."
       description:
         type: string
-        example: "A beautiful photo"
-        description: "Description of the file."
       tags:
         type: array
         items:
           type: string
-        example: ["nature", "photography"]
-        description: "Tags associated with the file."
       mimetype:
         type: string
-        example: "image/png"
       encoding:
         type: string
-        example: "7bit"
       extension:
-        type: String
-        example: ".png"
+        type: string
       type:
         type: string
       relativePath:
         type: string
-        example: "media/file/root/2021/9/foto.png"
       absolutePath:
         type: string
-        example: "/home/user/Projects/modular-framework/packages/media/media-backend/media/file/root/2021/9/foto.png"
       size:
         type: integer
-        example: 20097
       url:
         type: string
-        example: "http://localhost:7000/media/file/root/2021/9/foto.png"
       lastAccess:
         type: string
       createdAt:
         type: string
-        example: "2021-09-30T14:51:58.968Z"
       createdBy:
-        type: string
-        example: "username"
+        type: object
+        properties:
+          user:
+            type: string
       expirationDate:
         type: string
       isPublic:
@@ -304,4 +336,11 @@ definitions:
       fileReplaces:
         type: array
         items:
-          type: string
+          type: object
+          properties:
+            user:
+              type: string
+            date:
+              type: string
+            username:
+              type: string
