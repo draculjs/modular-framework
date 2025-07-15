@@ -141,27 +141,30 @@ router.patch('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPD
     }
 })
 
+router.delete('/file', (req, res) => {
+    return res.status(400).json({ message: "You must provide a valid file ID." })
+})
+
 router.delete('/file/:id', [requireAuthentication, requireAuthorization([FILE_DELETE_ALL, FILE_DELETE_OWN])], async function (req, res) {
     try {        
-        const fileToDeleteId = req.params.id
+        const fileToDeleteId = req.params.id || ''
         const isValidMongoId = /^[a-fA-F0-9]{24}$/.test(fileToDeleteId);
-
         if (!fileToDeleteId || !isValidMongoId) {
-            return res.status(400).json({ error: "You must provide a valid file ID." });
+            res.status(400).json({ message: "You must provide a valid file ID." });
+        }else{
+            const userCanDeleteAllFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_ALL)
+            const userCanDeleteItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN)
+            const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
+
+            await FileService.deleteFile(fileToDeleteId, req.user.id, userCanDeleteAllFiles, userCanDeleteItsOwnFiles, userCanSeePublicFiles)
+            res.status(200).json({message: 'The file was deleted', id: fileToDeleteId})
         }
-
-        const userCanDeleteAllFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_ALL)
-        const userCanDeleteItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN)
-        const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
-
-        await FileService.deleteFile(fileToDeleteId, req.user.id, userCanDeleteAllFiles, userCanDeleteItsOwnFiles, userCanSeePublicFiles)
-        res.status(200).json({message: 'The file was deleted', id: fileToDeleteId})
     } catch (error) {
         if (error && error.message.includes('File not found')){
             res.status(404).json({message: error.message})
         }else{
             winston.error(`An error happened at the DELETE /file/:id endpoint: '${error}'`)
-            res.status(500).json({ error: "Internal Server Error" })
+            res.status(500).json({ message: "Internal Server Error" })
         }
 
     }
