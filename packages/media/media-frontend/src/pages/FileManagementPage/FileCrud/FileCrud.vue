@@ -1,46 +1,50 @@
 <template>
-  <crud-layout :title="title" :subtitle="subtitle">
+  <crud-layout
+    :title="title"
+    :subtitle="subtitle"
+    :addButton="topAddButton && $store.getters.hasPermission('FILE_CREATE')"
+    @add="create"
+    >
 
     <template v-slot:list>
       <file-list
-          ref="list"
-          @update="update"
-          @delete="remove"
-          @show="show"
-          v-on:itemUpdated="onItemUpdated"
+        ref="list"
+        @update="update"
+        @delete="remove"
+        @show="show"
+        v-on:itemUpdated="onItemUpdated"
       />
     </template>
 
     <add-button
-        v-if="$store.getters.hasPermission('FILE_CREATE')"
+        v-if="!topAddButton && $store.getters.hasPermission('FILE_CREATE')"
         @click="create"
-
-    ></add-button>
+    />
 
     <file-create v-if="creating"
-                 :open="creating"
-                 v-on:itemCreated="onItemCreated"
-                 v-on:close="creating=false"
+      :open="creating"
+      v-on:itemCreated="onItemCreated"
+      v-on:close="creating=false"
     />
 
     <file-update v-if="updating"
-                 :open="updating"
-                 :item="itemToEdit"
-                 v-on:itemUpdated="onItemUpdated"
-                 v-on:close="updating=false"
+      :open="updating"
+      :item="itemToEdit"
+      v-on:itemUpdated="onItemUpdated"
+      v-on:close="updating=false"
     />
 
     <file-show v-if="showing"
-               :open="showing"
-               :item="itemToShow"
-               v-on:close="showing=false"
+      :open="showing"
+      :item="itemToShow"
+      v-on:close="showing=false"
     />
 
     <file-delete v-if="deleting"
-                 :open="deleting"
-                 :item="itemToDelete"
-                 v-on:itemDeleted="onItemDeleted"
-                 v-on:close="deleting=false"
+      :open="deleting"
+      :item="itemToDelete"
+      v-on:itemDeleted="onItemDeleted"
+      v-on:close="deleting=false"
     />
 
     <snackbar v-model="flash"/>
@@ -59,9 +63,14 @@ import FileCreate from "../FileCreate/FileCreate";
 
 export default {
   name: "FileCrud",
+  props: {
+    topAddButton: Boolean
+  },
   components: {
     FileCreate,
-    CrudLayout, AddButton, Snackbar,
+    CrudLayout,
+    AddButton,
+    Snackbar,
     FileUpdate,
     FileDelete,
     FileShow,
