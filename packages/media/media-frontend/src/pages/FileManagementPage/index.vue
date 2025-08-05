@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12" class="pa-3">
-        <file-crud/>
+        <file-crud :topAddButton="true"/>
       </v-col>
     </v-row>
   </v-container>

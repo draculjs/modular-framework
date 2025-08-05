@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class=" mx-2">
+  <v-card flat class="mx-2">
     <v-card-title class="pb-0">{{$t('media.file.filters')}}</v-card-title>
     <v-card-text class="pt-0 mt-0">
       <v-row>

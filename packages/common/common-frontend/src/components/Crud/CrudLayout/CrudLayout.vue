@@ -5,7 +5,7 @@
         <span v-t="title"></span>
         <v-btn
           v-if="addButton"
-          icon
+          fab
           small
           color="primary"
           @click="$emit('add')"
