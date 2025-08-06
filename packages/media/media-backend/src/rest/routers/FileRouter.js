@@ -15,11 +15,18 @@ const router = express.Router()
 
 router.get('/file/:id', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL, FILE_SHOW_PUBLIC, FILE_SHOW_OWN])], async function (req, res) {
     try {
+        const fileId = req.params.id || ''
+        const isValidMongoId = /^[a-fA-F0-9]{24}$/.test(fileId)
+        
+        if (!isValidMongoId) {
+            return res.status(400).json({ message: "You must provide a valid file ID." });
+        }
+
         const userCanSeeAllFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
         const userCanSeeItsOwnFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_OWN)
         const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
-        const file = await FileService.findFile(req.params.id, req.user.id, userCanSeeAllFiles, userCanSeeItsOwnFiles, userCanSeePublicFiles)
+        const file = await FileService.findFile(fileId, req.user.id, userCanSeeAllFiles, userCanSeeItsOwnFiles, userCanSeePublicFiles)
 
         if (!file) {
             res.status(404).send('File not found')
@@ -27,10 +34,11 @@ router.get('/file/:id', [requireAuthentication, requireAuthorization([FILE_SHOW_
             res.status(200).json(new FileDTO(file))
         }
     } catch (error) {
-        winston.error(`An error happened at the file by id router: '${error}'`)
+        winston.error(`An error happened at the GET /file/:id endpoint: '${error}'`)
         res.status(500).send(error)
     }
 })
+
 
 router.get('/file', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL, FILE_SHOW_PUBLIC, FILE_SHOW_OWN])], async function (req, res) {
     try {

@@ -1,28 +1,39 @@
 <template>
-    <div>
-        <v-card class="elevation-6">
-            <v-card-title class="title" v-t="title"></v-card-title>
-            <v-card-subtitle class="" v-t="subtitle"></v-card-subtitle>
-            <v-card-text>
-                <slot name="list"></slot>
-            </v-card-text>
-        </v-card>
+  <div>
+    <v-card class="elevation-6">
+      <v-card-title class="d-flex justify-space-between align-center">
+        <span v-t="title"></span>
+        <v-btn
+          v-if="addButton"
+          fab
+          small
+          color="primary"
+          @click="$emit('add')"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-card-title>
 
-        <slot></slot>
+      <v-card-subtitle v-t="subtitle" />
+      <v-card-text>
+        <slot name="list"></slot>
+      </v-card-text>
+    </v-card>
 
-    </div>
+    <slot></slot>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "CrudLayout",
-        props: {
-            title: String,
-            subtitle: String,
-        }
-    }
+export default {
+  name: "CrudLayout",
+  props: {
+    title: String,
+    subtitle: String,
+    addButton: Boolean
+  }
+}
 </script>
 
 <style scoped>
-
 </style>
