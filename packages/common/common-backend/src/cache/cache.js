@@ -15,7 +15,7 @@ class Cache {
     /**
      * @param {number} [timeToLive=60000] - El tiempo de vida (TTL) por defecto en milisegundos.
      */
-    constructor(timeToLive = 10000) {
+    constructor(timeToLive = 60000) {
         this._data = new Map()
         this._timers = new Map()
         this._ttl = timeToLive
