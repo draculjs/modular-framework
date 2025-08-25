@@ -2,7 +2,7 @@ import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageServi
 import { FILE_SHOW_ALL, FILE_SHOW_OWN } from '../permissions/File'
 import { DefaultLogger as winston } from '@dracul/logger-backend'
 import { GroupService } from '@dracul/user-backend'
-import { storeFile } from '@dracul/common-backend'
+import { storeFile, cache } from '@dracul/common-backend'
 import File from '../models/FileModel'
 import FileDTO from '../DTOs/FileDTO'
 import dayjs from 'dayjs'
@@ -24,6 +24,20 @@ class FileService {
             return file
         } catch (error) {
             winston.error(`FileService.findFile error: ${error}`)
+            throw error
+        }
+    }
+
+    async getFilePrivacyByRelativePath(relativePath){
+        if (!relativePath) throw new Error('relativePath field is required')
+
+        try {
+            const file = await File.findOne({ relativePath }).select('isPublic').lean()
+
+            console.log("file: ", file)
+            return file
+        } catch (error) {
+            winston.error(`FileService.getFilePrivacyByRelativePath error: ${error}`)
             throw error
         }
     }
@@ -80,6 +94,12 @@ class FileService {
                 ownFilesAllowed,
                 publicAllowed
             )
+
+            if (updatedFile && updatedFile.relativePath) {
+                const cacheKey = `permission_${updatedFile.relativePath}`
+                cache.delete(cacheKey)
+            }
+
             if (newFile) {
                 await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
             }
@@ -117,6 +137,12 @@ class FileService {
                 { new: true }
             )
             if (!updatedFile) throw new Error(`File not found with id ${id}`)
+
+            if (updatedFile && updatedFile.relativePath) {
+                const cacheKey = `permission_${updatedFile.relativePath}`
+                cache.delete(cacheKey)
+            }
+
             return updatedFile
         } catch (error) {
             winston.error(`FileService.updateFileMetadata error: ${error}`)
@@ -141,6 +167,12 @@ class FileService {
         try {
             const file = await this.findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
             if (!file) throw new Error('File not found')
+
+            if (file && file.relativePath) {
+                const cacheKey = `permission_${file.relativePath}`
+                cache.delete(cacheKey)
+            }
+
             await fs.promises.unlink(file.relativePath)
             await File.deleteOne({ _id: id })
             await updateUserUsedStorage(userId, -file.size)
@@ -327,6 +359,14 @@ class FileService {
     async _deleteFilesBatch(files) {
         try {
             if (!files || !files.length) return
+
+            for (const file of files) {
+                if (file && file.relativePath) {
+                    const cacheKey = `permission_${file.relativePath}`
+                    cache.delete(cacheKey)
+                }
+            }
+
             const deletePromises = files.map(async file => {
                 try {
                     await fs.promises.unlink(file.relativePath)
