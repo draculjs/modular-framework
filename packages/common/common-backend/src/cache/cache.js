@@ -1,3 +1,4 @@
+require('dotenv').config()
 import { DefaultLogger } from '@dracul/logger-backend'
 
 /**
@@ -12,13 +13,13 @@ class Cache {
     _ttl
 
     /**
-     * @param {number} [timeToLive=10000] - El tiempo de vida (TTL) por defecto en milisegundos.
+     * @param {number} [timeToLive=60000] - El tiempo de vida (TTL) por defecto en milisegundos.
      */
     constructor(timeToLive = 10000) {
         this._data = new Map()
         this._timers = new Map()
         this._ttl = timeToLive
-        DefaultLogger.info(`[Cache] Instancia creada con TTL por defecto: ${this._ttl}ms`)
+        DefaultLogger.info(`[Cache] Instancia creada con TTL: ${this._ttl}ms`)
     }
 
     /**
@@ -121,4 +122,4 @@ class Cache {
     }
 }
 
-module.exports = new Cache(3600000)
+module.exports = Cache

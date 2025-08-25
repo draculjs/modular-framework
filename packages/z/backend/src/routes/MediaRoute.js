@@ -1,6 +1,6 @@
     import express from 'express';
     export let mediaRoute = express.Router();
-    import { checkFilePrivacy } from '../middlewares/privateFilesMiddleware'
+    import { checkFilePrivacy } from "@dracul/media-backend"
 
     const cacheConfigObject = {
     maxAge: '1d',

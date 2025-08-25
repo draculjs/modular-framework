@@ -16,6 +16,10 @@ import usersStorageRouter from "./rest/routers/UsersStorageRouter.js"
 
 import { swaggerUiMiddleware, swaggerUiOptions } from './rest/swagger.js'
 
+import { checkFilePrivacy } from "./middleware/privateFilesMiddleware.js"
+import { Cache } from "@dracul/common-backend"
+const mediaCache = new Cache(process.env.CACHE_TTL)
+
 import {
     findFile,
     fetchFiles,
@@ -37,6 +41,7 @@ export {
 
     //Middleware
     updateFileMiddleware,
+    checkFilePrivacy,
 
     //API ROUTES
     FileRouter,
@@ -56,4 +61,6 @@ export {
     //Swagger docs middleware
     swaggerUiMiddleware,
     swaggerUiOptions,
+
+    mediaCache,
 }

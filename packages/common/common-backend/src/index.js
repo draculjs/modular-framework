@@ -12,7 +12,7 @@ const CustomApolloError = require('./errors/CustomApolloError')
 const {types, resolvers} =  require('./graphql')
 const mongoose = require('mongoose')
 
-const cache = require('./cache/cache')
+const Cache = require('./cache/cache')
 
 module.exports.tempDir = tempDir
 module.exports.storeFile = storeFile
@@ -28,4 +28,4 @@ module.exports.commonTypes = types
 module.exports.commonResolvers = resolvers
 module.exports.mongoose = mongoose
 module.exports.CustomApolloError = CustomApolloError
-module.exports.cache = cache
+module.exports.Cache = Cache

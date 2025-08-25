@@ -1,6 +1,6 @@
 import { requireAuthentication } from "@dracul/access-backend"
 import { FileService } from "@dracul/media-backend"
-import { cache } from "@dracul/common-backend"
+import { mediaCache } from "../index"
 import path from "path"
 
 export async function checkFilePrivacy(req, res, next) {
@@ -9,7 +9,7 @@ export async function checkFilePrivacy(req, res, next) {
         const cacheKey = `permission_${relativePath}`
 
         const loader = () => FileService.getFilePrivacyByRelativePath(relativePath)
-        const file = await cache.getOrLoad(cacheKey, loader)
+        const file = await mediaCache.getOrLoad(cacheKey, loader)
 
         if (!file || !file.isPublic) {
             return requireAuthentication(req, res, next)
