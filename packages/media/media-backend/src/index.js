@@ -18,7 +18,7 @@ import { swaggerUiMiddleware, swaggerUiOptions } from './rest/swagger.js'
 
 import { checkFilePrivacy } from "./middleware/privateFilesMiddleware.js"
 import { Cache } from "@dracul/common-backend"
-const mediaCache = new Cache(process.env.CACHE_TTL)
+const mediaCache = new Cache(process.env.MEDIA_CACHE_TTL)
 
 import {
     findFile,
