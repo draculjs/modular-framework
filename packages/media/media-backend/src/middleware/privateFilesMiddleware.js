@@ -6,17 +6,11 @@ import path from "path"
 export async function checkFilePrivacy(req, res, next) {
     try {
         const relativePath = path.join('media/files', req.path)
-        const cacheKey = `permission_${relativePath}`
 
-        const loader = (key) => {
-            const pathFromKey = key.replace('permission_', '');
-            return FileService.getFilePrivacyByRelativePath(pathFromKey);
-        }
-        const file = await mediaCache.getOrLoad(cacheKey, loader)
+        const loader = (key) => FileService.getFilePrivacyByRelativePath(key)
+        const file = await mediaCache.getOrLoad(relativePath, loader)
 
-        if (!file || !file.isPublic) {
-            return requireAuthentication(req, res, next)
-        }
+        if (!file || !file.isPublic) return requireAuthentication(req, res, next)
 
         return next()
     } catch (error) {

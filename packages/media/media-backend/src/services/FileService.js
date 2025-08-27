@@ -96,14 +96,9 @@ class FileService {
                 publicAllowed
             )
 
-            if (updatedFile && updatedFile.relativePath) {
-                const cacheKey = `permission_${updatedFile.relativePath}`
-                cache.delete(cacheKey)
-            }
+            if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
+            if (newFile) await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
 
-            if (newFile) {
-                await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
-            }
             return updatedFile
         } catch (error) {
             winston.error(`FileService.updateFile error: ${error}`)
@@ -126,23 +121,23 @@ class FileService {
         try {
             const { description, expirationDate, tags, isPublic } = metadata
             if (!description && !expirationDate && !tags && !isPublic) throw new Error('File fields to update were not provided')
+
             const userProvidedDate = expirationDate ? dayjs(expirationDate, 'DD/MM/YYYY') : null
             if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format')
+
             const userStorage = await findUserStorageByUser(user)
             const formattedExpirationDate = userProvidedDate ? userProvidedDate.format('YYYY/MM/DD') : null
             const timeDiff = this._validateExpirationDate(formattedExpirationDate)
             if (timeDiff > userStorage.fileExpirationTime) throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
+            
             const updatedFile = await File.findOneAndUpdate(
                 { _id: id, ...this._getPermissionFilter(permissionType, user.id) },
                 { $set: { description, expirationDate: formattedExpirationDate, tags, isPublic } },
                 { new: true }
             )
-            if (!updatedFile) throw new Error(`File not found with id ${id}`)
 
-            if (updatedFile && updatedFile.relativePath) {
-                const cacheKey = `permission_${updatedFile.relativePath}`
-                cache.delete(cacheKey)
-            }
+            if (!updatedFile) throw new Error(`File not found with id ${id}`)
+            if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
 
             return updatedFile
         } catch (error) {
@@ -169,10 +164,7 @@ class FileService {
             const file = await this.findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
             if (!file) throw new Error('File not found')
 
-            if (file && file.relativePath) {
-                const cacheKey = `permission_${file.relativePath}`
-                cache.delete(cacheKey)
-            }
+            if (file && file.relativePath) cache.delete(file.relativePath)
 
             await fs.promises.unlink(file.relativePath)
             await File.deleteOne({ _id: id })
@@ -362,10 +354,7 @@ class FileService {
             if (!files || !files.length) return
 
             for (const file of files) {
-                if (file && file.relativePath) {
-                    const cacheKey = `permission_${file.relativePath}`
-                    cache.delete(cacheKey)
-                }
+                if (file && file.relativePath) cache.delete(file.relativePath)
             }
 
             const deletePromises = files.map(async file => {
