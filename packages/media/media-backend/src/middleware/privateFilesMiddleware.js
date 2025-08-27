@@ -8,7 +8,10 @@ export async function checkFilePrivacy(req, res, next) {
         const relativePath = path.join('media/files', req.path)
         const cacheKey = `permission_${relativePath}`
 
-        const loader = () => FileService.getFilePrivacyByRelativePath(relativePath)
+        const loader = (key) => {
+            const pathFromKey = key.replace('permission_', '');
+            return FileService.getFilePrivacyByRelativePath(pathFromKey);
+        }
         const file = await mediaCache.getOrLoad(cacheKey, loader)
 
         if (!file || !file.isPublic) {
