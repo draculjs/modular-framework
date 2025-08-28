@@ -9,10 +9,7 @@ const fileReplacesInfoSchema = new Schema({
     date: { type: Date },
 })
 
-
-
 const FileSchema = new Schema({
-
     filename: { type: String, required: true },
     description: { type: String, required: false },
     tags: [{ type: String, required: false }],
@@ -41,7 +38,6 @@ const FileSchema = new Schema({
 });
 
 FileSchema.plugin(mongoosePaginate)
-
 const File = mongoose.model('File', FileSchema)
 
 module.exports = File

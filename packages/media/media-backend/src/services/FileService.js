@@ -3,6 +3,7 @@ import { FILE_SHOW_ALL, FILE_SHOW_OWN } from '../permissions/File'
 import { DefaultLogger as winston } from '@dracul/logger-backend'
 import { GroupService } from '@dracul/user-backend'
 import { storeFile } from '@dracul/common-backend'
+import { mediaCache as cache } from '../index'
 import File from '../models/FileModel'
 import FileDTO from '../DTOs/FileDTO'
 import dayjs from 'dayjs'
@@ -24,6 +25,20 @@ class FileService {
             return file
         } catch (error) {
             winston.error(`FileService.findFile error: ${error}`)
+            throw error
+        }
+    }
+
+    async getFilePrivacyByRelativePath(relativePath){
+        if (!relativePath) throw new Error('relativePath field is required')
+
+        try {
+            const file = await File.findOne({ relativePath }).select('isPublic').lean()
+
+            console.log("file: ", file)
+            return file
+        } catch (error) {
+            winston.error(`FileService.getFilePrivacyByRelativePath error: ${error}`)
             throw error
         }
     }
@@ -80,9 +95,10 @@ class FileService {
                 ownFilesAllowed,
                 publicAllowed
             )
-            if (newFile) {
-                await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
-            }
+
+            if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
+            if (newFile) await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
+
             return updatedFile
         } catch (error) {
             winston.error(`FileService.updateFile error: ${error}`)
@@ -105,18 +121,24 @@ class FileService {
         try {
             const { description, expirationDate, tags, isPublic } = metadata
             if (!description && !expirationDate && !tags && !isPublic) throw new Error('File fields to update were not provided')
+
             const userProvidedDate = expirationDate ? dayjs(expirationDate, 'DD/MM/YYYY') : null
             if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format')
+
             const userStorage = await findUserStorageByUser(user)
             const formattedExpirationDate = userProvidedDate ? userProvidedDate.format('YYYY/MM/DD') : null
             const timeDiff = this._validateExpirationDate(formattedExpirationDate)
             if (timeDiff > userStorage.fileExpirationTime) throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
+            
             const updatedFile = await File.findOneAndUpdate(
                 { _id: id, ...this._getPermissionFilter(permissionType, user.id) },
                 { $set: { description, expirationDate: formattedExpirationDate, tags, isPublic } },
                 { new: true }
             )
+
             if (!updatedFile) throw new Error(`File not found with id ${id}`)
+            if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
+
             return updatedFile
         } catch (error) {
             winston.error(`FileService.updateFileMetadata error: ${error}`)
@@ -141,6 +163,9 @@ class FileService {
         try {
             const file = await this.findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
             if (!file) throw new Error('File not found')
+
+            if (file && file.relativePath) cache.delete(file.relativePath)
+
             await fs.promises.unlink(file.relativePath)
             await File.deleteOne({ _id: id })
             await updateUserUsedStorage(userId, -file.size)
@@ -327,6 +352,11 @@ class FileService {
     async _deleteFilesBatch(files) {
         try {
             if (!files || !files.length) return
+
+            for (const file of files) {
+                if (file && file.relativePath) cache.delete(file.relativePath)
+            }
+
             const deletePromises = files.map(async file => {
                 try {
                     await fs.promises.unlink(file.relativePath)

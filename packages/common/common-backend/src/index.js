@@ -12,6 +12,8 @@ const CustomApolloError = require('./errors/CustomApolloError')
 const {types, resolvers} =  require('./graphql')
 const mongoose = require('mongoose')
 
+const Cache = require('./cache/cache')
+
 module.exports.tempDir = tempDir
 module.exports.storeFile = storeFile
 module.exports.randomString = randomString
@@ -26,3 +28,4 @@ module.exports.commonTypes = types
 module.exports.commonResolvers = resolvers
 module.exports.mongoose = mongoose
 module.exports.CustomApolloError = CustomApolloError
+module.exports.Cache = Cache
