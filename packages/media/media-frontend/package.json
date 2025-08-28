@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.39.2",
+  "version": "1.40.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.39.2",
-    "@dracul/dayjs-frontend": "^1.34.0",
-    "@dracul/user-frontend": "^1.39.2"
+    "@dracul/dayjs-frontend": "^1.40.0",
+    "@dracul/user-frontend": "^1.40.0"
   },
   "peerDependencies": {
     "deepmerge": "^4.2.2",

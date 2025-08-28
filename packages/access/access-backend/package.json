@@ -1,6 +1,6 @@
 {
   "name": "@dracul/access-backend",
-  "version": "1.39.0",
+  "version": "1.40.0",
   "description": "Access Backend",
   "author": "Dracul Team",
   "homepage": "https://github.com/draculjs/modular-framework#readme",
@@ -28,8 +28,8 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
-    "@dracul/common-backend": "^1.39.0",
-    "@dracul/logger-backend": "^1.35.0"
+    "@dracul/common-backend": "^1.40.0",
+    "@dracul/logger-backend": "^1.40.0"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
