@@ -57,7 +57,7 @@ export default {
         try {
           this.loading = true
           const { type } = this.item
-          if(type === 'file'){
+          if(type === 'file' && !!this.form.value){
             const { data: {fileUpload} } = await SettingsProvider.uploadProvider.uploadFile(this.form.value)
             this.form.value = fileUpload.url
           }
