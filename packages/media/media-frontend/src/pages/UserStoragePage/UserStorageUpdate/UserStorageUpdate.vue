@@ -45,7 +45,8 @@ export default {
         maxFileSize: this.userStorageForm.maxFileSize,
         fileExpirationTime: this.userStorageForm.fileExpirationTime,
         deleteByLastAccess: this.userStorageForm.deleteByLastAccess,
-        deleteByCreatedAt: this.userStorageForm.deleteByCreatedAt
+        deleteByCreatedAt: this.userStorageForm.deleteByCreatedAt,
+        filesPrivacy: this.userStorageForm.filesPrivacy,
       },
       fileSizeLimit: 0,
       fileExpirationLimit: 0,

@@ -7,6 +7,7 @@ type userStorage{
     fileExpirationTime: Int
     deleteByLastAccess: Boolean
     deleteByCreatedAt: Boolean
+    filesPrivacy: userStorageFilesPrivacyValues
 }
 
 input userStorageInput{
@@ -17,6 +18,12 @@ input userStorageInput{
     fileExpirationTime: Int
     deleteByLastAccess: Boolean
     deleteByCreatedAt: Boolean
+    filesPrivacy: userStorageFilesPrivacyValues
+}
+
+enum userStorageFilesPrivacyValues{
+    private
+    public
 }
 
 type userStorageUpdate{
@@ -28,6 +35,7 @@ type userStorageUpdate{
     fileExpirationTime: Int
     deleteByLastAccess: Boolean
     deleteByCreatedAt: Boolean
+    filesPrivacy: userStorageFilesPrivacyValues
 }
 
 type MediaVariables {

@@ -1,5 +1,24 @@
-mutation userStorageUpdate($id: ID!, $name:String!, $capacity:Float!, $usedSpace:Float, $maxFileSize: Float, $fileExpirationTime: Int, $deleteByLastAccess: Boolean, $deleteByCreatedAt: Boolean){
-    userStorageUpdate(id: $id, input: { name: $name, capacity: $capacity, usedSpace: $usedSpace, maxFileSize: $maxFileSize, fileExpirationTime: $fileExpirationTime, deleteByLastAccess: $deleteByLastAccess, deleteByCreatedAt: $deleteByCreatedAt }){
+mutation userStorageUpdate(
+    $id: ID!,
+    $name:String!,
+    $capacity:Float!,
+    $usedSpace:Float,
+    $maxFileSize: Float,
+    $fileExpirationTime: Int,
+    $deleteByLastAccess: Boolean,
+    $deleteByCreatedAt: Boolean
+    $filesPrivacy: userStorageFilesPrivacyValues
+    ){
+    userStorageUpdate(id: $id, input: {
+        name: $name,
+        capacity: $capacity,
+        usedSpace: $usedSpace,
+        maxFileSize: $maxFileSize,
+        fileExpirationTime: $fileExpirationTime,
+        deleteByLastAccess: $deleteByLastAccess,
+        deleteByCreatedAt: $deleteByCreatedAt,
+        filesPrivacy: $filesPrivacy
+         }){
         id
         name
         capacity
@@ -7,5 +26,6 @@ mutation userStorageUpdate($id: ID!, $name:String!, $capacity:Float!, $usedSpace
         fileExpirationTime
         deleteByLastAccess
         deleteByCreatedAt
+        filesPrivacy
     }
 }

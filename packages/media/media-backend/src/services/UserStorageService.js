@@ -61,18 +61,29 @@ export const userStorageCheckAndCreate = async function () {
 }
 
 export const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt) {
-    const doc = new userStorage({
-        user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt
-    });
+    const doc = new userStorage(
+        {
+            user,
+            capacity,
+            usedSpace,
+            maxFileSize,
+            fileExpirationTime,
+            deleteByLastAccess,
+            deleteByCreatedAt,
+            filesPrivacy
+        }
+    )
+
     try {
-        await doc.save();
-        winston.info("Media UserStorage createUserStorage for: " + user.username);
-        return doc;
+        await doc.save()
+        winston.info("Media UserStorage createUserStorage for: " + user.username)
+        return doc
     } catch (error) {
         if (error.name == "ValidationError") {
-            throw new UserInputError(error.message, { inputErrors: error.errors });
+            throw new UserInputError(error.message, { inputErrors: error.errors })
         }
-        throw error;
+        
+        throw error
     }
 }
 
@@ -91,11 +102,22 @@ export const updateUserUsedStorage = async function (userId, size) {
     }
 }
 
-export const updateUserStorage = async function (authUser, id, { name, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt }) {
+export const updateUserStorage = async function (authUser, id,
+    {
+        name,
+        capacity,
+        usedSpace,
+        maxFileSize,
+        fileExpirationTime,
+        deleteByLastAccess,
+        deleteByCreatedAt,
+        filesPrivacy
+    }
+) {
     try {
         return await userStorage.findOneAndUpdate(
             { _id: id },
-            { capacity, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt },
+            { capacity, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt, filesPrivacy },
             { runValidators: true, context: "query" }
         );
     } catch (error) {
