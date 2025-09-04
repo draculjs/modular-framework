@@ -8,7 +8,7 @@ import { DefaultLogger as winston } from '@dracul/logger-backend';
 import path from "path";
 
 
-const fileUpload = async function (user, inputFile, expirationDate, isPublic = false, description, tags, groups, users) {
+const fileUpload = async function (user, inputFile, expirationDate, isPublic, description, tags, groups, users) {
   try {
     if (!user) throw new Error("user is required")
 
@@ -29,6 +29,8 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
     const storeResult = await storeFile(createReadStream(), relativePath, user)
     winston.info("fileUpload: " + storeResult)
 
+    const userStorage = await findUserStorageByUser(user)
+
     if (expirationDate) {
       let timeDiffExpirationDate = validateExpirationDate(expirationDate)
 
@@ -37,7 +39,6 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
         throw new Error("Expiration date must be older than current date")
       }
 
-      let userStorage = await findUserStorageByUser(user)
 
       if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
         winston.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
@@ -65,7 +66,7 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic = f
         url: url,
         createdBy: { user: user.id, username: user.username },
         expirationDate: expirationDate,
-        isPublic: isPublic,
+        isPublic: isPublic ?? (userStorage.filesPrivacy === 'public'),
         description: description,
         tags: tags,
         groups: groups,

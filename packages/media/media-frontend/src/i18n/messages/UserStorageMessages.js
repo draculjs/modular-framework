@@ -25,7 +25,13 @@ const messages = {
                 fileExpirationTimeExceeded: "Expiration time not allowed",
                 fileExpirationLimitExceeded: "File expiration time cannot be longer than ",
                 deleteByLastAccess: "Delete files by last access",
-                deleteByDateCreated: "Delete files by created date"
+                deleteByDateCreated: "Delete files by created date",
+                filesPrivacyLabel: 'Privacidad de los ficheros subidos',
+                filesPrivacy: 'Visibilidad',
+                privacy:{
+                    public: 'Publico',
+                    private: 'Privado',
+                }
             }
         },
     },
@@ -55,7 +61,13 @@ const messages = {
                 fileExpirationTimeOlderThanToday: "Tiempo de expiración debe ser mayor a la fecha actual",
                 fileExpirationLimitExceeded: "El límite de expiración del archivo no puede ser mayor a  ",
                 deleteByLastAccess: "Eliminar archivos por último acceso",
-                deleteByDateCreated: "Eliminar archivos por fecha de creación"
+                deleteByDateCreated: "Eliminar archivos por fecha de creación",
+                filesPrivacyLabel: 'Visibilidad de los ficheros subidos',
+                filesPrivacy: 'Visibilidad',
+                privacy:{
+                    public: 'Publico',
+                    private: 'Privado',
+                }
             }
         }
     },
@@ -85,7 +97,13 @@ const messages = {
                 fileExpirationTimeOlderThanToday: "O tempo de expiração deve ser maior que a data atual",
                 fileExpirationLimitExceeded: "O tempo de expiração do arquivo não pode ser maior que ",
                 deleteByLastAccess: "Excluir o último acesso de arquivos",
-                deleteByDateCreated: "Excluir arquivos por data de criação"
+                deleteByDateCreated: "Excluir arquivos por data de criação",
+                filesPrivacyLabel: 'Privacidad de los ficheros subidos',
+                filesPrivacy: 'Visibilidad',
+                privacy:{
+                    public: 'Publico',
+                    private: 'Privado',
+                }
             }
         }
     }

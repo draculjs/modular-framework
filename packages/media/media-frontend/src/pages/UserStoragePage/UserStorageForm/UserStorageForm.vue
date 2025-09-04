@@ -58,6 +58,22 @@
           <span class="headline">{{ $t('media.userStorage.fileExpirationLimit') }}</span>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="4">
+          <v-select
+              v-model="form.filesPrivacy"
+              :items="privacyOptions"
+              item-text="text"
+              item-value="value"
+              :label="$t('media.userStorage.filesPrivacy')"
+              dense
+              required
+          ></v-select>
+        </v-col>
+        <v-col cols="6" class="ml-12">
+          <span class="headline">{{ $t('media.userStorage.filesPrivacyLabel') }}</span>
+        </v-col>
+      </v-row>
       <v-row align="center">
         <v-col cols="4" class="pa-0 pl-2">
           <v-col cols="12" sm="12" class="pa-0">
@@ -144,6 +160,12 @@ export default {
       set(val) {
         this.$emit('input', val)
       }
+    },
+    privacyOptions() {
+      return [
+        { text: this.$t('media.userStorage.privacy.public'), value: 'public' },
+        { text: this.$t('media.userStorage.privacy.private'), value: 'private' },
+      ]
     }
   },
   watch: {

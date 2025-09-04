@@ -12,5 +12,6 @@ query userStorageFetch{
         fileExpirationTime
         deleteByLastAccess
         deleteByCreatedAt
+        filesPrivacy
     }
 }
