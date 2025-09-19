@@ -9,6 +9,10 @@ import express from 'express';
 import multer from 'multer';
 import fileUpload from "../../services/UploadService.js";
 
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 const upload = multer()
 const router = express.Router()
 
@@ -68,8 +72,17 @@ router.get('/file', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL,
 router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE]), upload.single('file')], async function (req, res) {
     try {
         if (!req.file) res.status(400).json({ message: 'File was not provided' })
+        const expirationTime = dayjs(req.body.expirationTime, 'DD/MM/YYYY').toDate()
+        
+        if (expirationTime && isNaN(expirationTime.getTime())){
+            return res.status(400).json(
+                {
+                    message: 'The provided file expiration time must be on a DD/MM/YYYY format.'
+                }
+            )
+        }
 
-        let { expirationTime, isPublic, description, tags } = req.body
+        const { isPublic, description, tags } = req.body
         if (tags && typeof tags === 'string' && tags.length > 0) tags = tags.split(',').map(tag => tag.trim())
 
         const file = {
@@ -84,8 +97,11 @@ router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE])
     } catch (error) {
         console.error(`An error happened at the file uploading endpoint: '${error}'`)
         if (error.code === 'MAX_FILE_SIZE_EXCEEDED' || error.code === 'STORAGE_CAPACITY_EXCEEDED'){
-            res.status(413).send(error.message)
-        }else{
+            res.status(413).send({message: error.message})
+        }else if (error.code === 'EXPIRATION_DATE_MUST_BE_OLDER'){
+            res.status(400).send({message: error.message})
+        }
+        else{
             res.status(409).send("An error happened when we tried to upload the file")
         }
     }
