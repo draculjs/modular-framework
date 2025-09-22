@@ -1,6 +1,6 @@
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService';
 import randomString from './helpers/randomString';
-import storeFile from './helpers/storeFile';
+import storeFile, { expirationDateMustBeOlderError } from './helpers/storeFile';
 import baseUrl from "./helpers/baseUrl";
 import File from '../models/FileModel';
 
@@ -36,7 +36,7 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic, de
 
       if (!timeDiffExpirationDate) {
         winston.error("Expiration date must be older than current date")
-        throw new Error("Expiration date must be older than current date")
+        throw new expirationDateMustBeOlderError("Expiration date must be older than current date")
       }
 
 

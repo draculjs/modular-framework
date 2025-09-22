@@ -1,7 +1,8 @@
 require('dotenv').config();
 import express from 'express';
 
-import { jwtMiddleware, corsMiddleware, rbacMiddleware, sessionMiddleware } from '@dracul/user-backend';
+import { jwtMiddleware, rbacMiddleware, sessionMiddleware } from '@dracul/user-backend';
+import { corsMiddleware } from '@dracul/access-backend'
 import { ResponseTimeMiddleware, RequestMiddleware } from '@dracul/logger-backend';
 import { FileRouter, usersStorageRouter } from '@dracul/media-backend';
 import { updateFileMiddleware } from '@dracul/media-backend';

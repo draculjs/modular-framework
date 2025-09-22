@@ -39,6 +39,19 @@ class storageCapacityExceededError extends Error {
 }
 
 /**
+ * Custom error class for when the maximum storage capacity is exceeded.
+ * @class
+ * @extends Error
+ * @param {string} message - The error message.
+ */
+export class expirationDateMustBeOlderError extends Error {
+    constructor(message) {
+        super(message)
+        this.code = 'EXPIRATION_DATE_MUST_BE_OLDER'
+    }
+}
+
+/**
  * A Transform stream to validate the size of the incoming data chunk.
  * @class
  * @extends Transform
