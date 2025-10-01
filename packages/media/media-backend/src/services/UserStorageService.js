@@ -60,7 +60,7 @@ export const userStorageCheckAndCreate = async function () {
     return true;
 }
 
-export const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt) {
+export const createUserStorage = async function (user, capacity, usedSpace, maxFileSize, fileExpirationTime, deleteByLastAccess, deleteByCreatedAt, filesPrivacy) {
     const doc = new userStorage(
         {
             user,
