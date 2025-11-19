@@ -23,7 +23,7 @@ router.get('/file/:id', [requireAuthentication, requireAuthorization([FILE_SHOW_
         const isValidMongoId = /^[a-fA-F0-9]{24}$/.test(fileId)
         
         if (!isValidMongoId) {
-            return res.status(400).json({ message: "You must provide a valid file ID." });
+            return res.status(400).json({ message: "You must provide a valid file ID." })
         }
 
         const userCanSeeAllFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_ALL)
@@ -71,18 +71,21 @@ router.get('/file', [requireAuthentication, requireAuthorization([FILE_SHOW_ALL,
 
 router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE]), upload.single('file')], async function (req, res) {
     try {
-        if (!req.file) res.status(400).json({ message: 'File was not provided' })
-        const expirationTime = dayjs(req.body.expirationTime, 'DD/MM/YYYY').toDate()
-        
-        if (expirationTime && isNaN(expirationTime.getTime())){
-            return res.status(400).json(
-                {
+        if (!req.file) return res.status(400).json({ message: 'File was not provided' })
+
+        let expirationTime = null
+
+        if (req.body.expirationTime) {
+            const parsedDate = dayjs(req.body.expirationTime, 'DD/MM/YYYY').toDate()
+            if (isNaN(parsedDate.getTime())) {
+                return res.status(400).json({
                     message: 'The provided file expiration time must be on a DD/MM/YYYY format.'
-                }
-            )
+                })
+            }
+            expirationTime = parsedDate
         }
 
-        const { isPublic, description, tags } = req.body
+        let { isPublic, description, tags } = req.body
         if (tags && typeof tags === 'string' && tags.length > 0) tags = tags.split(',').map(tag => tag.trim())
 
         const file = {
@@ -100,8 +103,7 @@ router.post('/file', [requireAuthentication, requireAuthorization([FILE_CREATE])
             res.status(413).send({message: error.message})
         }else if (error.code === 'EXPIRATION_DATE_MUST_BE_OLDER'){
             res.status(400).send({message: error.message})
-        }
-        else{
+        }else{
             res.status(409).send("An error happened when we tried to upload the file")
         }
     }
@@ -172,9 +174,9 @@ router.delete('/file', (req, res) => {
 router.delete('/file/:id', [requireAuthentication, requireAuthorization([FILE_DELETE_ALL, FILE_DELETE_OWN])], async function (req, res) {
     try {        
         const fileToDeleteId = req.params.id || ''
-        const isValidMongoId = /^[a-fA-F0-9]{24}$/.test(fileToDeleteId);
+        const isValidMongoId = /^[a-fA-F0-9]{24}$/.test(fileToDeleteId)
         if (!fileToDeleteId || !isValidMongoId) {
-            res.status(400).json({ message: "You must provide a valid file ID." });
+            res.status(400).json({ message: "You must provide a valid file ID." })
         }else{
             const userCanDeleteAllFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_ALL)
             const userCanDeleteItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN)
@@ -192,8 +194,8 @@ router.delete('/file/:id', [requireAuthentication, requireAuthorization([FILE_DE
         }
 
     }
-});
+})
 
 
-export { router };
-export default router;
+export { router }
+export default router
