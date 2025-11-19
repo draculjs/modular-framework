@@ -318,37 +318,12 @@ class FileService {
         }
     }
 
-    async _replaceFileContent(file, newFilePromise, userId, username) {
+    async _replaceFileContent(file, newFile, userId, username) {
         try {
-            const newFile = await newFilePromise
-    
-            const name = path.parse(newFile.filename).name
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-zA-Z0-9_.-]/g, '')
-    
-            const hash = '-' + randomString(6)
-            const finalFileName = name + hash + newFile.filename.substring(newFile.filename.lastIndexOf('.'))
-    
-            const year = new Date().getFullYear().toString()
-            const month = (new Date().getMonth() + 1).toString()
-    
-            const newRelativePath = path.join("media", "files", username, year, month, finalFileName)
-            const newAbsolutePath = path.resolve(newRelativePath)
-            const newUrl = baseUrl() + newRelativePath
-    
-            await storeFile(newFile.createReadStream(), newRelativePath)
-            const stats = await fs.stat(newRelativePath)
-    
-            file.filename = finalFileName
-            file.mimetype = newFile.mimetype
-            file.encoding = newFile.encoding
-            file.size = stats.size
-            file.relativePath = newRelativePath
-            file.absolutePath = newAbsolutePath
-            file.url = newUrl
+            const newExtension = '.' + (await newFile).filename.split('.').pop()
+            if (file.extension !== newExtension) throw new Error('File extension mismatch during update')
+            await storeFile((await newFile).createReadStream(), file.relativePath)
             file.fileReplaces.push({ user: userId, date: dayjs(), username })
-    
             await file.save()
         } catch (error) {
             winston.error(`FileService._replaceFileContent error: ${error}`)

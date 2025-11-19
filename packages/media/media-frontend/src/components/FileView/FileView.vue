@@ -170,7 +170,8 @@ export default {
 
       const response = await fetch(this.file.url, {
         method: 'GET',
-        headers: { 'Authorization': `Bearer ${authToken}` }
+        headers: { 'Authorization': `Bearer ${authToken}` },
+        cache: 'no-store'
       })
 
       if (!response.ok) throw new Error(`Error fetching file: ${response.status} ${response.statusText}`)
