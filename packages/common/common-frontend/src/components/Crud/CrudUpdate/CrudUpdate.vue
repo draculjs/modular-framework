@@ -21,7 +21,19 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <close-button @click="$emit('close')"></close-button>
-        <submit-button :loading="loading" @click="$emit('update')" text="common.update"></submit-button>
+        <v-tooltip bottom attach="body">
+            <template v-slot:activator="{ on, attrs }">
+                <span v-bind="attrs" v-on="on" style="display: inline-block;">
+                    <submit-button
+                        :loading="loading"
+                        :disabled="disableSubmit"
+                        @click="$emit('update')"
+                        text="common.update"
+                    ></submit-button>
+                </span>
+            </template>
+            <span>No hay cambios para actualizar</span>
+        </v-tooltip>
       </v-card-actions>
 
     </v-card>
@@ -42,12 +54,12 @@ export default {
     open: {type: Boolean, default: false},
     loading: {type: Boolean, default: false},
     errorMessage: {type: String, default: null},
-    fullscreen: {type: Boolean, default: false}
+    fullscreen: {type: Boolean, default: false},
+    disableSubmit: {type: Boolean, default: false}
+
+  },
+  methods: {
 
   }
 }
 </script>
-
-<style scoped>
-
-</style>
