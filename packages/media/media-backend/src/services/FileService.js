@@ -1,13 +1,16 @@
+import path from 'path'
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService'
 import { FILE_SHOW_ALL, FILE_SHOW_OWN } from '../permissions/File'
 import { DefaultLogger as winston } from '@dracul/logger-backend'
 import { GroupService } from '@dracul/user-backend'
 import { storeFile } from '@dracul/common-backend'
 import { mediaCache as cache } from '../index'
+import randomString from './helpers/randomString'
+import baseUrl from "./helpers/baseUrl"
 import File from '../models/FileModel'
 import FileDTO from '../DTOs/FileDTO'
 import dayjs from 'dayjs'
-import fs from 'fs'
+import fs from 'fs/promises'
 
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)

@@ -4,6 +4,7 @@
     :loading="loading"
     :title="title"
     :errorMessage="errorMessage"
+    :disableSubmit="!hasChanges"
     @update="update"
     @close="$emit('close')"
   >
@@ -53,6 +54,19 @@ export default {
       },
       file: null,
       oldFileExtension: this.item.extension,
+      initialForm: null,
+      hasFileSelected: false,
+    }
+  },
+  created() {
+    this.initialForm = JSON.parse(JSON.stringify(this.form))
+  },
+  computed: {
+    hasFormChanges() {
+      return JSON.stringify(this.form) !== JSON.stringify(this.initialForm)
+    },
+    hasChanges() {
+      return this.hasFormChanges || this.hasFileSelected
     }
   },
   methods: {
@@ -77,7 +91,13 @@ export default {
         await file
         const newFileExtension = '.' + file.name.split('.').pop()
 
-        if (newFileExtension == this.oldFileExtension) this.file = file
+        if (newFileExtension == this.oldFileExtension) {
+          this.file = file
+          this.hasFileSelected = true
+        }
+      } else {
+        this.file = null
+        this.hasFileSelected = false
       }
     }
   },

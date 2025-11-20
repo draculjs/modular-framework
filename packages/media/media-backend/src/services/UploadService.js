@@ -18,7 +18,11 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic, de
 
     const parseFileName = path.parse(filename);
     const extension = parseFileName.ext
-    const name = parseFileName.name.replace(/#/g, "")
+    const name = parseFileName.name
+      .normalize('NFD') // Descompone acentos: "canción" -> "cancio´n"
+      .replace(/[\u0300-\u036f]/g, '') // Elimina los diacríticos (acentos): "cancio´n" -> "cancion"
+      .replace(/[^a-zA-Z0-9_.-]/g, '')
+      
     const hash = '-' + randomString(6)
     const finalFileName = name + hash + extension
     const year = new Date().getFullYear().toString()
