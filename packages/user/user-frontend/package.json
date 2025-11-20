@@ -1,6 +1,6 @@
 {
   "name": "@dracul/user-frontend",
-  "version": "1.35.6",
+  "version": "1.40.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "publishConfig": {
@@ -21,8 +21,8 @@
     "*.js"
   ],
   "dependencies": {
-    "@dracul/common-frontend": "^1.35.1",
-    "@dracul/dayjs-frontend": "^1.34.0"
+    "@dracul/common-frontend": "^1.39.2",
+    "@dracul/dayjs-frontend": "^1.40.0"
   },
   "peerDependencies": {
     "chartjs-plugin-labels": "^1.1.0",
