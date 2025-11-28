@@ -1,6 +1,6 @@
 {
   "name": "integration-backend",
-  "version": "1.43.0",
+  "version": "1.43.1",
   "description": "",
   "private": true,
   "main": "src/index.js",
@@ -34,7 +34,7 @@
     "@dracul/customize-backend": "^1.40.0",
     "@dracul/dayjs-backend": "^1.34.0",
     "@dracul/logger-backend": "^1.40.0",
-    "@dracul/media-backend": "^1.43.0",
+    "@dracul/media-backend": "^1.43.1",
     "@dracul/notification-backend": "^1.40.0",
     "@dracul/settings-backend": "^1.40.0",
     "@dracul/user-backend": "^1.40.0",
