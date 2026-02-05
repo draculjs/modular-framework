@@ -32,7 +32,7 @@
                     ></submit-button>
                 </span>
             </template>
-            <span>No hay cambios para actualizar</span>
+            <span v-if="disableSubmit">No hay cambios para actualizar</span>
         </v-tooltip>
       </v-card-actions>
 

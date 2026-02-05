@@ -77,16 +77,16 @@
           </div>
 
           <div
-            ref="editor"
-            class="json-editor"
-            :class="{ 'json-editor-error': hasErrors }"
-            contenteditable
-            spellcheck="false"
-            autocorrect="off"
-            autocomplete="off"
-            autocapitalize="off"
-            @input="onEdit"
-            @blur="onBlur"
+              ref="editor"
+              class="json-editor"
+              :class="{ 'json-editor-error': hasErrors }"
+              contenteditable
+              spellcheck="false"
+              autocorrect="off"
+              autocomplete="off"
+              autocapitalize="off"
+              @input="onEdit"
+              @blur="onBlur"
           ></div>
 
           <div v-if="hasErrors" class="error-message">
@@ -107,7 +107,6 @@
     </v-dialog>
   </v-btn>
 </template>
-
 
 <script>
 import { FileProvider } from '@dracul/media-frontend'
@@ -134,14 +133,35 @@ export default {
       return this.file.extension === '.json' && this.noteContent.trim() !== ''
     }
   },
-  async beforeMount() {
-    await this.loadFileText()
-  },
+  // async beforeMount() {
+  //   await this.loadFileText()
+  // },
   methods: {
+    // === MÉTODO MODIFICADO ===
     async loadFileText() {
       try {
-        const response = await fetch(this.file.url)
+        // 1. Obtener el token igual que en FileView.vue
+        const authToken = this.$store.state.user.access_token
+
+        if (!this.file.url) throw new Error("File URL is missing")
+
+        // 2. Configurar headers y cache
+        const requestOptions = {
+          method: 'GET',
+          cache: 'no-store',
+          headers: {}
+        }
+
+        // 3. Inyectar Authorization si existe el token
+        if (authToken) {
+          requestOptions.headers['Authorization'] = `Bearer ${authToken}`
+        }
+
+        // 4. Realizar el fetch
+        const response = await fetch(this.file.url, requestOptions)
+
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
+
         this.noteContent = await response.text()
         this.originalContent = this.noteContent
         this.isFormatted = false
@@ -152,7 +172,8 @@ export default {
       } catch (error) {
         console.error('Failed to load content:', error)
         this.noteContent = ''
-        this.errorMessages = ['Error cargando el contenido del archivo']
+        // Mostramos el mensaje de error real para saber si es 401, 404, etc.
+        this.errorMessages = [`Error cargando el contenido: ${error.message}`]
       }
     },
     validateJson() {
@@ -221,12 +242,12 @@ export default {
       if (!this.$refs.editor) return
       const text = this.noteContent
       let html = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"\s*?)(?=:)/g, '<span class="json-key">$1</span>')
-        .replace(/(:\s*)("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")/g, '$1<span class="json-string">$2</span>')
-        .replace(/\b(\d+\.?\d*)\b/g, '<span class="json-number">$1</span>')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"\s*?)(?=:)/g, '<span class="json-key">$1</span>')
+          .replace(/(:\s*)("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")/g, '$1<span class="json-string">$2</span>')
+          .replace(/\b(\d+\.?\d*)\b/g, '<span class="json-number">$1</span>')
       this.$refs.editor.innerHTML = html
     },
     async saveNote() {
@@ -260,7 +281,10 @@ export default {
   },
   watch: {
     dialog: async function (open) {
-      if (open) await this.loadFileText()
+      if (open) {
+        this.errorMessages = []
+        await this.loadFileText()
+      }
     }
   }
 }
