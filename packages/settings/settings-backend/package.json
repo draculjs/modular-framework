@@ -1,6 +1,6 @@
 {
   "name": "@dracul/settings-backend",
-  "version": "1.43.3",
+  "version": "1.44.0",
   "description": "Settings",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -20,7 +20,7 @@
     "dracul"
   ],
   "dependencies": {
-    "@dracul/common-backend": "^1.43.3"
+    "@dracul/common-backend": "^1.44.0"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
@@ -38,5 +38,5 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
 }

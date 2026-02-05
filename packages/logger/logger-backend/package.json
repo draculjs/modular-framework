@@ -1,6 +1,6 @@
 {
   "name": "@dracul/logger-backend",
-  "version": "1.43.3",
+  "version": "1.44.0",
   "description": "",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -15,5 +15,5 @@
   },
   "author": "Cristian Incarnato",
   "license": "ISC",
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
 }

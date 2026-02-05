@@ -1,6 +1,6 @@
 {
   "name": "@dracul/dayjs-frontend",
-  "version": "1.43.3",
+  "version": "1.44.0",
   "description": "vue dayjs utils",
   "main": "./src/index.js",
   "publishConfig": {
@@ -28,5 +28,5 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
 }

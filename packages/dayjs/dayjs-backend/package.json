@@ -1,6 +1,6 @@
 {
   "name": "@dracul/dayjs-backend",
-  "version": "1.43.3",
+  "version": "1.44.0",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -32,5 +32,5 @@
   "devDependencies": {
     "@babel/cli": "^7.24.5"
   },
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
 }

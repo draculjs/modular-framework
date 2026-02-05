@@ -1,6 +1,6 @@
 {
   "name": "@dracul/notification-backend",
-  "version": "1.43.3",
+  "version": "1.44.0",
   "description": "Modulo de notificaciones de usuario",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -21,8 +21,8 @@
     "pubsub"
   ],
   "dependencies": {
-    "@dracul/common-backend": "^1.43.3",
-    "@dracul/logger-backend": "^1.43.3"
+    "@dracul/common-backend": "^1.44.0",
+    "@dracul/logger-backend": "^1.44.0"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
@@ -43,5 +43,5 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "homepage": "https://github.com/draculjs/modular-framework#readme",
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
 }

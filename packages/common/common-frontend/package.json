@@ -1,6 +1,6 @@
 {
   "name": "@dracul/common-frontend",
-  "version": "1.43.3",
+  "version": "1.44.0",
   "description": "vue common",
   "main": "./src/index.js",
   "publishConfig": {
@@ -28,5 +28,5 @@
     "sass": "1.32.13",
     "sass-loader": "^8.0.2"
   },
-  "gitHead": "89b28b02b78b6be1c6a498936f942065900ae587"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/mongoose-queue",
-  "version": "1.43.3",
+  "version": "1.44.0",
   "description": "",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -14,8 +14,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dracul/common-backend": "^1.43.3",
-    "@dracul/logger-backend": "^1.43.3",
+    "@dracul/common-backend": "^1.44.0",
+    "@dracul/logger-backend": "^1.44.0",
     "underscore": "^1.11.0"
   },
   "peerDependencies": {
@@ -30,5 +30,5 @@
     "istanbul": "^0.4.5",
     "sinon": "^9.2.1"
   },
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
 }
