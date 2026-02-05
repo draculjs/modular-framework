@@ -1,6 +1,6 @@
 {
   "name": "@dracul/access-backend",
-  "version": "1.43.2",
+  "version": "1.43.3",
   "description": "Access Backend",
   "author": "Dracul Team",
   "homepage": "https://github.com/draculjs/modular-framework#readme",
@@ -28,8 +28,8 @@
     "url": "https://github.com/draculjs/modular-framework/issues"
   },
   "dependencies": {
-    "@dracul/common-backend": "^1.40.0",
-    "@dracul/logger-backend": "^1.40.0"
+    "@dracul/common-backend": "^1.43.3",
+    "@dracul/logger-backend": "^1.43.3"
   },
   "peerDependencies": {
     "@graphql-tools/load-files": "^7.0.0",
@@ -41,5 +41,5 @@
     "mongoose-softdelete": "1.1.0",
     "mongoose-unique-validator": "^2.0.3 || ^5.0.0"
   },
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "89b28b02b78b6be1c6a498936f942065900ae587"
 }

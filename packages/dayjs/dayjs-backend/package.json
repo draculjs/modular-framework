@@ -1,6 +1,6 @@
 {
   "name": "@dracul/dayjs-backend",
-  "version": "1.34.0",
+  "version": "1.43.3",
   "private": false,
   "publishConfig": {
     "access": "public"

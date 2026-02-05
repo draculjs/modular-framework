@@ -1,6 +1,6 @@
 {
   "name": "@dracul/audit-frontend",
-  "version": "1.43.2",
+  "version": "1.43.3",
   "description": "Audit frontend",
   "author": "Cristian Incarnato <cristian.cdi@gmail.com>",
   "publishConfig": {
@@ -12,8 +12,8 @@
   },
   "main": "./src/index.js",
   "dependencies": {
-    "@dracul/common-frontend": "^1.43.2",
-    "@dracul/dayjs-frontend": "^1.40.0"
+    "@dracul/common-frontend": "^1.43.3",
+    "@dracul/dayjs-frontend": "^1.43.3"
   },
   "devDependencies": {
     "jest": "^29.7.0",
@@ -38,5 +38,5 @@
     "type": "git",
     "url": "git+https://github.com/draculjs/modular-framework.git"
   },
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e"
+  "gitHead": "89b28b02b78b6be1c6a498936f942065900ae587"
 }

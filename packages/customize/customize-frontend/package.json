@@ -1,6 +1,6 @@
 {
   "name": "@dracul/customize-frontend",
-  "version": "1.43.2",
+  "version": "1.43.3",
   "description": "vue custom logo, custom theme, custom colors, i18n configuration}",
   "main": "./src/index.js",
   "publishConfig": {
@@ -20,10 +20,10 @@
   ],
   "author": "Cristian Incarnato",
   "license": "MIT",
-  "gitHead": "2dfd79da0c2abca07962c730a0a4f9a67035c89e",
+  "gitHead": "89b28b02b78b6be1c6a498936f942065900ae587",
   "dependencies": {
-    "@dracul/common-frontend": "^1.43.2",
-    "@dracul/user-frontend": "^1.43.2"
+    "@dracul/common-frontend": "^1.43.3",
+    "@dracul/user-frontend": "^1.43.3"
   },
   "peerDependencies": {
     "material-design-icons-iconfont": "^6.1.0",
