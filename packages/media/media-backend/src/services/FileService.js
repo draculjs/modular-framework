@@ -168,7 +168,7 @@ class FileService {
 
             await fs.unlink(file.relativePath)
             await File.deleteOne({ _id: id })
-            await updateUserUsedStorage(userId, -file.size)
+            await updateUserUsedStorage(file.createdBy.user, -file.size)
             winston.info(`Deleted file: ${file.relativePath}`)
             return { id, success: true }
         } catch (error) {
