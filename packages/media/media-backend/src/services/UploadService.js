@@ -57,8 +57,6 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic, de
 
       let fileSizeMB = storeResult.bytesWritten / (1024 * 1024)
 
-      updateUserUsedStorage(user.id, fileSizeMB)
-
       const doc = new File({
         filename: finalFileName,
         mimetype: mimetype,
@@ -79,6 +77,8 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic, de
       })
 
       await doc.save()
+
+      await updateUserUsedStorage(user.id, fileSizeMB)
       
       if (expirationDate) {
         FileService.emit('expirationChanged')
