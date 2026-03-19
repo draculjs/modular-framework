@@ -21,7 +21,10 @@
   "dependencies": {
     "@dracul/common-frontend": "^1.44.0",
     "@dracul/dayjs-frontend": "^1.44.0",
-    "@dracul/user-frontend": "^1.44.0"
+    "@dracul/user-frontend": "^1.44.0",
+    "papaparse": "^5.5.3",
+    "vue-pdf-embed": "^1.2.1",
+    "xlsx": "^0.18.5"
   },
   "peerDependencies": {
     "deepmerge": "^4.2.2",

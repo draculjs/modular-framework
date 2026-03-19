@@ -33,12 +33,16 @@ const i18nMessages = {
                 update: 'Modify',
                 delete: 'Delete',
                 restart: 'Reiniciar',
+                file_deleted: 'Delete file',
+                file_deleted_by_expiration: 'Delete file by expiration',
                 detailMessages: {
-                    create: 'The resource “{resourceID}” has been created',
-                    read: 'The resource “{resourceID}” has been readed',
-                    update: 'The resource “{resourceID}” has been updated',
-                    delete: 'The resource “{resourceID}” has been deleted',
-                    restart: 'The resource “{resourceID}” has been restarted',
+                    create: 'The resource "{resourceID}" has been created',
+                    read: 'The resource "{resourceID}" has been readed',
+                    update: 'The resource "{resourceID}" has been updated',
+                    delete: 'The resource "{resourceID}" has been deleted',
+                    restart: 'The resource "{resourceID}" has been restarted',
+                    file_deleted: 'The file "{resourceID}" has been deleted',
+                    file_deleted_by_expiration: 'The file "{resourceID}" was automatically deleted due to expiration',
                 },
 
                 changes: {
@@ -100,12 +104,16 @@ const i18nMessages = {
                 update: 'Modificar',
                 delete: 'Eliminar',
                 restart: 'Reiniciar',
+                file_deleted: 'Eliminar archivo',
+                file_deleted_by_expiration: 'Eliminar archivo por expiración',
                 detailMessages: {
                     create: 'Se ha creado el recurso "{resourceID}"',
                     read: 'Se ha visualizado el recurso "{resourceID}"',
                     update: 'Se ha modificado el recurso "{resourceID}"',
                     delete: 'Se ha eliminado el recurso "{resourceID}"',
                     restart: 'Se ha reiniciado el recurso "{resourceID}"',
+                    file_deleted: 'El archivo "{resourceID}" ha sido eliminado',
+                    file_deleted_by_expiration: 'El archivo "{resourceID}" fue eliminado automáticamente por expiración',
                 },
 
                 changes: {
@@ -163,16 +171,20 @@ const i18nMessages = {
 
             ações: {
                 create: 'Criar',
-                read: 'Display',
+                read: 'Exibir',
                 update: 'Modificar',
                 delete: 'Excluir',
                 restart: 'Reiniciar',
+                file_deleted: 'Excluir arquivo',
+                file_deleted_by_expiration: 'Excluir arquivo por expiração',
                 detailMessages: {
-                    create: 'O recurso “{resourceID}” foi criado',
-                    read: 'O recurso “{resourceID}” foi exibido',
-                    update: 'O recurso “{resourceID}” foi modificado',
-                    delete: 'O recurso “{resourceID}” foi excluído',
-                    restart: 'O recurso “{resourceID}” foi reiniciado',
+                    create: 'O recurso "{resourceID}" foi criado',
+                    read: 'O recurso "{resourceID}" foi exibido',
+                    update: 'O recurso "{resourceID}" foi modificado',
+                    delete: 'O recurso "{resourceID}" foi excluído',
+                    restart: 'O recurso "{resourceID}" foi reiniciado',
+                    file_deleted: 'O arquivo "{resourceID}" foi excluído',
+                    file_deleted_by_expiration: 'O arquivo "{resourceID}" foi excluído automaticamente por expiração',
                 },
 
                 changes: {

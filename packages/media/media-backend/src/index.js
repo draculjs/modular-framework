@@ -13,12 +13,12 @@ import { userCreateListener } from './listeners/UserCreateListener'
 import { updateFileMiddleware } from "./middleware"
 import FileRouter from "./rest/routers/FileRouter"
 import usersStorageRouter from "./rest/routers/UsersStorageRouter.js"
+import { startFileCleanupJob, stopFileCleanupJob } from './services/FileCleanupJob'
 
 import { swaggerUiMiddleware, swaggerUiOptions } from './rest/swagger.js'
 
 import { checkFilePrivacy } from "./middleware/privateFilesMiddleware.js"
-import { Cache } from "@dracul/common-backend"
-const mediaCache = new Cache(process.env.MEDIA_CACHE_TTL)
+import { mediaCache } from "./cache"
 
 import {
     findFile,
@@ -38,6 +38,8 @@ export {
     fileUploadAnonymous,
     InitMediaPermissions,
     userCreateListener,
+    startFileCleanupJob,
+    stopFileCleanupJob,
 
     //Middleware
     updateFileMiddleware,

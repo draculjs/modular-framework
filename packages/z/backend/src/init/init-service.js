@@ -18,7 +18,8 @@ import {
 
 import {
     InitMediaPermissions,
-    userStorageCheckAndCreate
+    userStorageCheckAndCreate,
+    startFileCleanupJob
 } from '@dracul/media-backend'
 
 
@@ -41,6 +42,7 @@ const initService = async () => {
     //Dracul Media Permissions
     await InitMediaPermissions()
     await userStorageCheckAndCreate()
+    startFileCleanupJob()
 
     //Notification permissions
     await InitService.initPermissions([

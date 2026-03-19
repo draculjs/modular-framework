@@ -1,18 +1,20 @@
 import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService'
 import { FILE_SHOW_ALL, FILE_SHOW_OWN } from '../permissions/File'
 import { DefaultLogger as winston } from '@dracul/logger-backend'
-import { GroupService } from '@dracul/user-backend'
+import { GroupService, UserService } from '@dracul/user-backend'
 import { storeFile } from '@dracul/common-backend'
-import { mediaCache as cache } from '../index'
+import { createAudit } from '@dracul/audit-backend'
+import { mediaCache as cache } from '../cache'
 import File from '../models/FileModel'
 import FileDTO from '../DTOs/FileDTO'
 import dayjs from 'dayjs'
 import fs from 'fs/promises'
+import EventEmitter from 'events'
 
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
-class FileService {
+class FileService extends EventEmitter {
 
     async findFile(id, userId = null, allFilesAllowed, ownFilesAllowed, publicAllowed) {
         try {
@@ -87,9 +89,27 @@ class FileService {
     async updateFile(authUser, newFile, data, userId, allFilesAllowed, ownFilesAllowed, publicAllowed) {
         try {
             const { id, description, tags, expirationDate, isPublic, groups, users } = data
+
+            let formattedExpirationDate = expirationDate
+            if (expirationDate) {
+                const userProvidedDate = dayjs(expirationDate)
+                if (userProvidedDate.isValid()) {
+                     formattedExpirationDate = userProvidedDate.toDate()
+                }
+                
+                // Validate against user storage limits
+                const userStorage = await findUserStorageByUser(authUser)
+                if (userStorage) {
+                     const timeDiff = this._validateExpirationDate(formattedExpirationDate)
+                     if (timeDiff > userStorage.fileExpirationTime) {
+                         throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
+                     }
+                }
+            }
+
             const updatedFile = await this._updateFileDocument(
                 id,
-                { description, tags, expirationDate, isPublic, groups, users },
+                { description, tags, expirationDate: formattedExpirationDate, isPublic, groups, users },
                 userId,
                 allFilesAllowed,
                 ownFilesAllowed,
@@ -98,6 +118,10 @@ class FileService {
 
             if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
             if (newFile) await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
+
+            if (updatedFile && expirationDate) {
+                this.emit('expirationChanged')
+            }
 
             return updatedFile
         } catch (error) {
@@ -122,13 +146,16 @@ class FileService {
             const { description, expirationDate, tags, isPublic } = metadata
             if (!description && !expirationDate && !tags && !isPublic) throw new Error('File fields to update were not provided')
 
-            const userProvidedDate = expirationDate ? dayjs(expirationDate, 'DD/MM/YYYY') : null
+            const userProvidedDate = expirationDate ? dayjs(expirationDate) : null
             if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format')
 
             const userStorage = await findUserStorageByUser(user)
-            const formattedExpirationDate = userProvidedDate ? userProvidedDate.format('YYYY/MM/DD') : null
-            const timeDiff = this._validateExpirationDate(formattedExpirationDate)
-            if (timeDiff > userStorage.fileExpirationTime) throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
+            const formattedExpirationDate = userProvidedDate ? userProvidedDate.toDate() : null
+            
+            if (formattedExpirationDate) {
+                const timeDiff = this._validateExpirationDate(formattedExpirationDate)
+                if (timeDiff > userStorage.fileExpirationTime) throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
+            }
             
             const updatedFile = await File.findOneAndUpdate(
                 { _id: id, ...this._getPermissionFilter(permissionType, user.id) },
@@ -138,6 +165,8 @@ class FileService {
 
             if (!updatedFile) throw new Error(`File not found with id ${id}`)
             if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
+
+            this.emit('expirationChanged')
 
             return updatedFile
         } catch (error) {
@@ -164,46 +193,122 @@ class FileService {
             const file = await this.findFile(id, userId, allFilesAllowed, ownFilesAllowed, publicAllowed)
             if (!file) throw new Error('File not found')
 
-            if (file && file.relativePath) cache.delete(file.relativePath)
-
-            await fs.unlink(file.relativePath)
-            await File.deleteOne({ _id: id })
-            await updateUserUsedStorage(file.createdBy.user, -file.size)
-            winston.info(`Deleted file: ${file.relativePath}`)
-            return { id, success: true }
+            const authUser = await UserService.findUser(userId)
+            const success = await this._robustDelete(file, 'FILE_DELETED', `File ${file.relativePath} deleted by user ${userId}`, authUser)
+            return { id, success }
         } catch (error) {
             winston.error(`FileService.deleteFile error: ${error}`)
             throw error
         }
     }
 
-    async findAndDeleteExpiredFiles() {
+    /**
+     * Finds and deletes all expired files.
+     * @returns The number of deleted files.
+     */
+    async executeCleanup() {
+        winston.info("FileService.executeCleanup started")
+        let deletedCount = 0
+        let errorCount = 0
+
         try {
-            const docs = await File.aggregate([
+            const now = new Date()
+            winston.info(`FileService.executeCleanup: checking expirations at ${now.toISOString()}`)
+
+            // 1. Delete by explicit expirationDate
+            const explicitCursor = File.find({
+                expirationDate: { $ne: null, $lte: now }
+            }).cursor()
+
+            for await (const doc of explicitCursor) {
+                winston.info(`FileService.executeCleanup: deleting explicit expired file ${doc.filename}`)
+                const success = await this._robustDelete(doc, 'FILE_DELETED_BY_EXPIRATION', `File ${doc.relativePath} automatically deleted by expiration job`)
+                success ? deletedCount++ : errorCount++
+            }
+
+            // 2. Delete by UserStorage policy
+            winston.info("FileService.executeCleanup: running policy aggregation...")
+            
+            // Debug: Check how many files have expirationDate: null
+            const totalFilesWithoutExp = await File.countDocuments({ expirationDate: { $eq: null } })
+            winston.info(`FileService.executeCleanup: total files without explicit expiration: ${totalFilesWithoutExp}`)
+
+            const policyCursor = File.aggregate([
                 { $match: { expirationDate: { $eq: null } } },
-                { $lookup: { from: 'userstorages', localField: 'createdBy.user', foreignField: 'user', as: 'userStorage' } },
-                { $unwind: '$userStorage' },
-                { $addFields: { timeDiffInMillis: { $cond: [ { $eq: ['$userStorage.deleteByLastAccess', true] }, { $subtract: ['$$NOW', '$lastAccess'] }, { $subtract: ['$$NOW', '$createdAt'] } ] } } },
-                { $addFields: { timeDiffInDays: { $divide: ['$timeDiffInMillis', 24 * 60 * 60 * 1000] } } },
-                { $match: { $expr: { $lte: ['$userStorage.fileExpirationTime', '$timeDiffInDays'] } } }
-            ])
-            return await this._deleteFilesBatch(docs)
+                { $lookup: { from: 'userstorages', localField: 'createdBy.user', foreignField: 'user', as: 'storage' } },
+                { $unwind: '$storage' },
+                { $addFields: {
+                    expireAt: {
+                        $add: [
+                            '$createdAt',
+                            { $multiply: ['$storage.fileExpirationTime', 24 * 60 * 60 * 1000] }
+                        ]
+                    }
+                }},
+                { $match: { expireAt: { $lte: now } } }
+            ]).cursor()
+
+            let policyCount = 0
+            for await (const doc of policyCursor) {
+                policyCount++
+                winston.info(`FileService.executeCleanup: deleting policy expired file ${doc.filename}`)
+                const success = await this._robustDelete(doc, 'FILE_DELETED_BY_EXPIRATION', `File ${doc.relativePath} automatically deleted by expiration job (policy)`)
+                success ? deletedCount++ : errorCount++
+            }
+            winston.info(`FileService.executeCleanup: policy aggregation found ${policyCount} files to delete`)
+
+            return { deletedCount, errorCount }
         } catch (error) {
-            winston.error(`FileService.findAndDeleteExpiredFiles error: ${error}`)
+            winston.error(`FileService.executeCleanup error: ${error}`)
             throw error
         }
     }
 
-    async findAndDeleteByExpirationDate() {
+    /**
+     * Calculates when the next file will expire.
+     */
+    async getNextExpirationTimestamp() {
         try {
-            const expirationDate = new Date()
-            const docs = await this.fetchFiles(expirationDate)
-            return await this._deleteFilesBatch(docs)
+            const now = new Date()
+
+            // Next explicit expiration
+            const nextExplicit = await File.findOne({
+                expirationDate: { $gt: now }
+            }).sort({ expirationDate: 1 }).select('expirationDate').lean()
+
+            // Next policy-based expiration
+            const nextPolicy = await File.aggregate([
+                { $match: { expirationDate: { $eq: null } } },
+                { $lookup: { from: 'userstorages', localField: 'createdBy.user', foreignField: 'user', as: 'storage' } },
+                { $unwind: '$storage' },
+                { $project: {
+                    expireAt: {
+                        $add: [
+                            '$createdAt',
+                            { $multiply: ['$storage.fileExpirationTime', 24 * 60 * 60 * 1000] }
+                        ]
+                    }
+                }},
+                { $match: { expireAt: { $gt: now } } },
+                { $sort: { expireAt: 1 } },
+                { $limit: 1 }
+            ])
+
+            const explicitTs = nextExplicit?.expirationDate ? new Date(nextExplicit.expirationDate).getTime() : Infinity
+            const policyTs = nextPolicy[0]?.expireAt ? new Date(nextPolicy[0].expireAt).getTime() : Infinity
+
+            const soonest = Math.min(explicitTs, policyTs)
+            return soonest === Infinity ? null : soonest
         } catch (error) {
-            winston.error(`FileService.findAndDeleteByExpirationDate error: ${error}`)
-            throw error
+            winston.error(`FileService.getNextExpirationTimestamp error: ${error}`)
+            return null
         }
     }
+
+    // Compatibility methods
+    async findAndDeleteExpiredFiles() { return this.executeCleanup() }
+    async findAndDeleteByExpirationDate() { return this.executeCleanup() }
+
 
     _filterByPermissions(userId, allFilesAllowed, ownFilesAllowed, publicAllowed, userGroups = []) {
         try {
@@ -371,6 +476,86 @@ class FileService {
         } catch (error) {
             winston.error(`FileService._deleteFilesBatch error: ${error}`)
             throw error
+        }
+    }
+
+    async _robustDelete(file, action = 'FILE_DELETED', description = '', authUser = null) {
+        try {
+            if (file.relativePath) cache.delete(file.relativePath)
+
+            try {
+                await fs.unlink(file.relativePath)
+            } catch (err) {
+                if (err.code !== 'ENOENT') {
+                    winston.error(`FileService._robustDelete: Error unlinking file ${file.relativePath}: ${err.message}`)
+                    throw err
+                }
+            }
+
+            await File.deleteOne({ _id: file._id })
+            
+            let creatorId = null
+            if (file.createdBy && file.createdBy.user) {
+                creatorId = file.createdBy.user._id || file.createdBy.user.id || file.createdBy.user
+            }
+
+            if (creatorId && typeof creatorId.toString === 'function') {
+                const creatorIdString = creatorId.toString()
+                if (creatorIdString.length === 24) {
+                    await updateUserUsedStorage(creatorIdString, -file.size)
+                }
+            }
+
+            // AUDIT
+            try {
+                let auditor = authUser
+                if (!auditor) {
+                    winston.info(`FileService._robustDelete: No authUser, trying to find file owner. File: ${file.filename}, createdBy: ${JSON.stringify(file.createdBy)}`)
+                    
+                    // Try to use the file owner as auditor
+                    if (creatorId) {
+                        winston.info(`FileService._robustDelete: Trying to find user by creatorId: ${creatorId}`)
+                        auditor = await UserService.findUser(creatorId)
+                        if (auditor) {
+                            winston.info(`FileService._robustDelete: Found file owner: ${auditor.username}`)
+                        } else {
+                            winston.warn(`FileService._robustDelete: Could not find user with creatorId: ${creatorId}`)
+                        }
+                    } else {
+                        winston.warn(`FileService._robustDelete: No creatorId found in file`)
+                    }
+                }
+
+                if (!auditor) {
+                    // Last resort: try root user
+                    winston.info(`FileService._robustDelete: Trying root user as fallback`)
+                    auditor = await UserService.findUserByUsername('root')
+                    if (auditor) {
+                        winston.info(`FileService._robustDelete: Using root user as auditor`)
+                    }
+                }
+
+                if (auditor) {
+                    await createAudit(auditor, {
+                        action: action,
+                        entity: 'File',
+                        details: description || `File ${file.filename} deleted`,
+                        resourceData: file,
+                        resourceName: file.filename
+                    })
+                    winston.info(`FileService._robustDelete: Audit created successfully for file ${file.filename} by user ${auditor.username}`)
+                } else {
+                    winston.warn(`FileService._robustDelete: No auditor available, skipping audit for file ${file.filename}`)
+                }
+            } catch (auditError) {
+                winston.error(`FileService._robustDelete Audit Error: ${auditError.message}`)
+            }
+
+            winston.info(`FileService._robustDelete: Deleted file ${file.relativePath}`)
+            return true
+        } catch (error) {
+            winston.error(`FileService._robustDelete error for file ${file._id}: ${error}`)
+            return false
         }
     }
 

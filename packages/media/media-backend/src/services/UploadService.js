@@ -3,6 +3,7 @@ import randomString from './helpers/randomString';
 import storeFile, { expirationDateMustBeOlderError } from './helpers/storeFile';
 import baseUrl from "./helpers/baseUrl";
 import File from '../models/FileModel';
+import FileService from './FileService';
 
 import { DefaultLogger as winston } from '@dracul/logger-backend';
 import path from "path";
@@ -78,6 +79,11 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic, de
       })
 
       await doc.save()
+      
+      if (expirationDate) {
+        FileService.emit('expirationChanged')
+      }
+
       winston.info("fileUpload file saved: " + doc._id)
       return doc
     }

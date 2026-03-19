@@ -9,6 +9,7 @@
                   :readonly="readonly"
                   :hide-details="hideDetails"
                   :dense="dense"
+                  :label="dateLabel || label"
       ></date-input>
     </v-col>
 
@@ -22,6 +23,7 @@
                   :readonly="readonly"
                   :hide-details="hideDetails"
                   :dense="dense"
+                  :label="timeLabel || label"
       ></time-input>
     </v-col>
 
@@ -45,6 +47,8 @@ export default {
     error: {type: Boolean},
     errorMessages: {type: Array},
     label: {type: String},
+    dateLabel: {type: String},
+    timeLabel: {type: String},
     dateRules: {type: Array, default: () => []},
     timeRules: {type: Array, default: () => []},
     clearable: {type: Boolean, default: true},
