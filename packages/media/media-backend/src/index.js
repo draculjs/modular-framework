@@ -3,7 +3,7 @@ import { resolvers, types } from './graphql'
 import FileService from './services/FileService'
 import * as UserStorageService from './services/UserStorageService'
 
-import { userStorageCheckAndCreate } from './services/UserStorageService'
+import { userStorageCheckAndCreate, fixUsedSpaceInconsistencies } from './services/UserStorageService'
 import fileUpload from './services/UploadService'
 import fileUploadAnonymous from './services/UploadAnonymousService'
 import InitMediaPermissions from './services/InitMediaPermissions'
@@ -34,6 +34,7 @@ export {
     FileService,
     UserStorageService,
     userStorageCheckAndCreate,
+    fixUsedSpaceInconsistencies,
     fileUpload,
     fileUploadAnonymous,
     InitMediaPermissions,
