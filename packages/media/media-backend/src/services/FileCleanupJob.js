@@ -1,18 +1,18 @@
 import { DefaultLogger as winston } from "@dracul/logger-backend"
 import FileService from "./FileService"
 
-console.log("CleanupJob file loaded")
+winston.info("CleanupJob: Module loaded")
 
 class CleanupScheduler {
     constructor() {
-        console.log("CleanupScheduler constructor started")
+        winston.info("CleanupScheduler: Constructor started")
         this.timer = null
         this.isRunning = false
         this.isEnabled = true
         this.MAX_NODE_TIMEOUT = 2147483647 // 32-bit signed int limit (~24.8 days)
 
         if (FileService && typeof FileService.on === 'function') {
-             console.log("CleanupScheduler: FileService event listener attached")
+             winston.info("CleanupScheduler: Subscribed to expirationChanged events")
              FileService.on('expirationChanged', () => {
                 if (this.isEnabled) {
                     winston.info("CleanupJob: Expiration changed, rescheduling...")
@@ -20,12 +20,12 @@ class CleanupScheduler {
                 }
             })
         } else {
-            console.error("CleanupScheduler: FileService is NOT an EventEmitter or is undefined!", FileService)
+            winston.error("CleanupScheduler: FileService is NOT an EventEmitter or is undefined!")
         }
     }
 
     async schedule(options = {}) {
-        console.log("CleanupJob.schedule called", options)
+        winston.info("CleanupJob: Scheduling cleanup, enabled=" + options.enabled)
         if (options.enabled !== undefined) this.isEnabled = options.enabled
         
         if (!this.isEnabled) {
@@ -36,7 +36,7 @@ class CleanupScheduler {
 
         if (this.timer) clearTimeout(this.timer)
         if (this.isRunning) {
-            console.log("CleanupJob.schedule: already running, skipping")
+            winston.info("CleanupJob: Already running, skipping")
             return
         }
 
@@ -45,7 +45,7 @@ class CleanupScheduler {
             await this.execute(false)
 
             const nextTs = await FileService.getNextExpirationTimestamp()
-            console.log("CleanupJob.schedule: next expiration at", nextTs)
+            winston.info("CleanupJob: Next expiration: " + (nextTs ? new Date(nextTs).toISOString() : "none"))
             if (!nextTs) {
                 winston.info("CleanupJob: No pending expirations. Sentinel in standby.")
                 return
@@ -72,8 +72,7 @@ class CleanupScheduler {
         this.isRunning = true
 
         try {
-            winston.info("CleanupJob: Running reactive cleanup...")
-            console.log("CleanupJob.execute: starting FileService.executeCleanup")
+            winston.info("CleanupJob: Starting file expiration cleanup...")
             const stats = await FileService.executeCleanup()
             winston.info(`CleanupJob: Cleanup finished. Deleted: ${stats.deletedCount}, Errors: ${stats.errorCount}`)
         } catch (error) {
@@ -96,9 +95,8 @@ class CleanupScheduler {
 const scheduler = new CleanupScheduler()
 
 export const startFileCleanupJob = function (options = {}) {
-    console.log("startFileCleanupJob function called")
-    const enabled = options.enabled ?? process.env.MEDIA_FILE_CLEANUP_ENABLED !== 'false'
-    scheduler.schedule({ enabled })
+    winston.info("CleanupJob: startFileCleanupJob called, enabled=" + (options.enabled ?? process.env.MEDIA_FILE_CLEANUP_ENABLED !== 'false'))
+    scheduler.schedule(options)
 }
 
 export const stopFileCleanupJob = function () {
