@@ -21,13 +21,13 @@ const FileSchema = new Schema({
     absolutePath: { type: String, required: true },
     size: { type: Number, required: true },
     url: { type: String, required: true },
-    lastAccess: { type: Date, required: true, default: Date.now },
-    createdAt: { type: Date, required: true, default: Date.now },
+    lastAccess: { type: Date, required: true, default: Date.now, index: true },
+    createdAt: { type: Date, required: true, default: Date.now, index: true },
     createdBy: {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, index: true },
         username: { type: String, required: true }
     },
-    expirationDate: { type: Date, required: false },
+    expirationDate: { type: Date, required: false, index: true },
     isPublic: { type: Boolean, required: false },
     hits: { type: Number, require: false, default: 0 },
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group", required: false }],
@@ -38,6 +38,12 @@ const FileSchema = new Schema({
 });
 
 FileSchema.plugin(mongoosePaginate)
+
+FileSchema.index({ expirationDate: 1, createdAt: 1 })
+FileSchema.index({ "createdBy.user": 1, expirationDate: 1 })
+FileSchema.index({ expirationDate: 1, "createdBy.user": 1, lastAccess: 1 })
+FileSchema.index({ expirationDate: 1, "createdBy.user": 1, createdAt: 1 })
+
 const File = mongoose.model('File', FileSchema)
 
 module.exports = File

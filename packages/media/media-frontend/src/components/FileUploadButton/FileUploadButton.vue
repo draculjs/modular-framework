@@ -107,14 +107,23 @@ export default {
       }
     }
   },
+  watch: {
+    maxFileSize(val) {
+      if (val && this.file) {
+        this.validateSize()
+      }
+    }
+  },
   methods: {
     pickFile() {
         this.$refs.file.click()
     },
     validateSize() {
       const fileSize = (this.file && this.file.size) ? this.file.size / (1024 * 1024) : null;
-      if (fileSize > this.maxFileSize) {
+      if (this.maxFileSize && fileSize > this.maxFileSize) {
         this.invalidSize = true
+      } else {
+        this.invalidSize = false
       }
     },
     async validateExtension() {
@@ -127,6 +136,8 @@ export default {
       }
     },
     onFilePicked: function (e) {
+      this.invalidSize = false;
+      this.invalidExtension = false;
       this.file = e.target.files[0]
 
       this.validateSize()

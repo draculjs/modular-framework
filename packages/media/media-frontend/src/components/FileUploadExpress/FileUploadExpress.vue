@@ -140,9 +140,9 @@ export default {
     onFilePicked: function (e) {
       this.file = e.target.files[0]
       this.state = SELECTED
-      const fileSize = e.target.files[0].size ? e.target.files[0].size / (1024 * 1024) : null;
+      this.fileSize = e.target.files[0].size ? e.target.files[0].size / (1024 * 1024) : null;
       if (this.autoSubmit) {
-        this.upload(fileSize)
+        this.upload()
       }
     },
     findUserStorage() {
@@ -155,8 +155,8 @@ export default {
           err => console.error(err)
       )
     },
-    upload(fileSize) {
-      if (this.file && this.state != UPLOADED && fileSize <= this.maxFileSize) {
+    upload() {
+      if (this.file && this.state != UPLOADED && this.fileSize <= this.maxFileSize) {
         this.loading = true
         uploadProvider.uploadFile(this.file)
             .then(result => {

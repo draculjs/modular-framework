@@ -3,7 +3,7 @@ import { resolvers, types } from './graphql'
 import FileService from './services/FileService'
 import * as UserStorageService from './services/UserStorageService'
 
-import { userStorageCheckAndCreate } from './services/UserStorageService'
+import { userStorageCheckAndCreate, fixUsedSpaceInconsistencies } from './services/UserStorageService'
 import fileUpload from './services/UploadService'
 import fileUploadAnonymous from './services/UploadAnonymousService'
 import InitMediaPermissions from './services/InitMediaPermissions'
@@ -13,12 +13,12 @@ import { userCreateListener } from './listeners/UserCreateListener'
 import { updateFileMiddleware } from "./middleware"
 import FileRouter from "./rest/routers/FileRouter"
 import usersStorageRouter from "./rest/routers/UsersStorageRouter.js"
+import { startFileCleanupJob, stopFileCleanupJob } from './services/FileCleanupJob'
 
 import { swaggerUiMiddleware, swaggerUiOptions } from './rest/swagger.js'
 
 import { checkFilePrivacy } from "./middleware/privateFilesMiddleware.js"
-import { Cache } from "@dracul/common-backend"
-const mediaCache = new Cache(process.env.MEDIA_CACHE_TTL)
+import { mediaCache } from "./cache"
 
 import {
     findFile,
@@ -34,10 +34,13 @@ export {
     FileService,
     UserStorageService,
     userStorageCheckAndCreate,
+    fixUsedSpaceInconsistencies,
     fileUpload,
     fileUploadAnonymous,
     InitMediaPermissions,
     userCreateListener,
+    startFileCleanupJob,
+    stopFileCleanupJob,
 
     //Middleware
     updateFileMiddleware,

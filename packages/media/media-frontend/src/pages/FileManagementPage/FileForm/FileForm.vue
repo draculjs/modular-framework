@@ -2,14 +2,15 @@
   <v-form ref="form" autocomplete="off" @submit.prevent="save">
     <v-row>
 
-      <v-col cols="12" md="6" sm="6">
-        <date-input
+      <v-col cols="12" md="12" sm="12">
+        <date-time-input
             v-model="form.expirationDate"
-            :label="$t('media.file.expirationDate')"
-            prepend-icon="event"
+            :label="$t('media.file.expirationDateTime')"
+            :dateLabel="$t('media.file.expirationDate')"
+            :timeLabel="$t('media.file.expirationTime')"
             persistent-hint
             color="secondary"
-            :rules="fileExpirationTimeRules"
+            :dateRules="fileExpirationTimeRules"
         />
       </v-col>
 
@@ -17,12 +18,12 @@
         <v-select
             prepend-icon="visibility"
             v-model="form.isPublic"
-            :items="[{text: 'Público', value: true}, {text: 'Privado', value: false}]"
+            :items="visibilityOptions"
             :label="$t('media.file.visibility')"
         ></v-select>
       </v-col>
 
-      <v-col cols="12" sm="12" md="12">
+      <v-col cols="12" sm="6" md="6">
         <v-combobox
             prepend-icon="loyalty"
             v-model="form.tags"
@@ -79,7 +80,7 @@
 
 import {InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
 
-import {DateInput} from '@dracul/dayjs-frontend';
+import {DateTimeInput} from '@dracul/dayjs-frontend';
 
 import UserStorageProvider from "../../../providers/UserStorageProvider"
 import FileUploadButton from "../../../components/FileUploadButton";
@@ -88,7 +89,7 @@ import { GroupAutocomplete, UserAutocomplete } from '@dracul/user-frontend'
 export default {
   name: "FileForm",
   mixins: [InputErrorsByProps, RequiredRule],
-  components: {FileUploadButton, DateInput, GroupAutocomplete, UserAutocomplete},
+  components: {FileUploadButton, DateTimeInput, GroupAutocomplete, UserAutocomplete},
   props: {
     value: {type: Object, required: true},
     creating: {type: Boolean, default: false},
@@ -102,7 +103,7 @@ export default {
       fileExpirationTime: null,
       fileExpirationTimeRules: [
         () => {
-          if (this.differenceInDays < 0) {
+          if (this.differenceInDays < -1){
             return this.$t("media.userStorage.fileExpirationTimeOlderThanToday")
           } else if (this.fileExpirationTime && this.differenceInDays) {
             return (this.differenceInDays < this.fileExpirationTime)
@@ -134,6 +135,12 @@ export default {
         return Math.floor((expirationDate - today) / (1000 * 3600 * 24))
       }
       return null
+    },
+    visibilityOptions() {
+      return [
+        { text: this.$t('media.file.public'), value: true },
+        { text: this.$t('media.file.private'), value: false }
+      ]
     }
   },
   watch: {
@@ -168,4 +175,3 @@ export default {
 <style scoped>
 
 </style>
-

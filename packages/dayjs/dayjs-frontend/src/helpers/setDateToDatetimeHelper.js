@@ -8,6 +8,10 @@ import {isDayjs} from 'dayjs'
  */
 const setDateToDatetimeHelper = (sourceDate, newDate) => {
 
+    if (newDate === null || newDate === '') {
+        return null
+    }
+
     if(sourceDate === null || sourceDate === ''){
         sourceDate = Dayjs()
     }else if(!(isDayjs(sourceDate))){

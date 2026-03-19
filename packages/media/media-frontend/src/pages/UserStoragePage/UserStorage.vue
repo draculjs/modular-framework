@@ -1,7 +1,7 @@
 <template>
   <crud-layout :title="this.$t('media.userStorage.title')" :subtitle="this.$t('media.userStorage.subtitle')">
     <template v-slot:list>
-      <loading v-if="loadingPermissions"></loading>
+      <loading v-if="loadingPermissions"/>
       <v-data-table
           v-else
           :headers="headers"
@@ -11,26 +11,24 @@
           class="elevation-0"
       >
         <template v-slot:top>
-          <v-toolbar
-              flat
-          >
-            <v-toolbar-title>{{ $t("media.userStorage.title2") }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                :label="$t('base.search')"
-                single-line
-                hide-details
-            ></v-text-field>
-            <user-storage-update v-if="!!userToUpdate"
-                                 :open="!!userToUpdate"
-                                 :userStorageForm="userToUpdate"
-                                 v-on:close="userToUpdate=null"
-                                 v-on:roleUpdated="onRoleUpdated"
+          <v-card>
+            <v-card-text>
+                          <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              :label="$t('common.search')"
+              single-line
+              hide-details
             />
 
-          </v-toolbar>
+            <user-storage-update v-if="!!userToUpdate"
+              :open="!!userToUpdate"
+              :userStorageForm="userToUpdate"
+              v-on:close="userToUpdate=null"
+              v-on:roleUpdated="onRoleUpdated"
+            />
+            </v-card-text>
+          </v-card>
         </template>
         <template v-slot:item.fileExpirationTime="{ item }">
           {{ item.fileExpirationTime }} {{ $t("media.userStorage.days") }}

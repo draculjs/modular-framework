@@ -1,26 +1,27 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="6" md="6">
-        <date-input
+      <v-col cols="12" sm="12" md="12">
+        <date-time-input
             v-model="expirationDate"
-            :label="$t('media.file.expirationDate')"
-            prepend-icon="event"
+            :label="$t('media.file.expirationDateTime')"
+            :dateLabel="$t('media.file.expirationDate')"
+            :timeLabel="$t('media.file.expirationTime')"
             color="secondary"
             hide-details
-            :rules="fileExpirationTimeRules"/>
+            :dateRules="fileExpirationTimeRules"/>
       </v-col>
 
       <v-col cols="12" sm="6" md="6">
         <v-select
           prepend-icon="visibility"
           v-model="isPublic"
-          :items="[{text: 'Público', value: true}, {text: 'Privado', value: false}]"
+          :items="visibilityOptions"
           :label="$t('media.file.visibility')"
         ></v-select>
       </v-col>
 
-      <v-col cols="12" sm="12" md="12" >
+      <v-col cols="12" sm="6" md="6" >
           <v-combobox
               prepend-icon="loyalty"
               v-model="tags"
@@ -98,7 +99,7 @@
 <script>
 import uploadProvider from "../../providers/UploadProvider";
 import UserStorageProvider from "../../providers/UserStorageProvider"
-import {DateInput} from '@dracul/dayjs-frontend';
+import {DateTimeInput} from '@dracul/dayjs-frontend';
 
 const INITIAL = 'initial'
 const SELECTED = 'selected'
@@ -107,7 +108,7 @@ const ERROR = 'error'
 
 export default {
   name: "FileUploadExpiration",
-  components: {DateInput},
+  components: {DateTimeInput},
   props: {
     autoSubmit: {type: Boolean, default: false},
     accept: {type: String, default: '*'},
@@ -159,7 +160,7 @@ export default {
       fileExpirationTimeRules: [
         () => {
           this.disableUploadButton = true;
-          if (this.getDifferenceInDays < 0) {
+          if (this.getDifferenceInDays < -1){ 
             return this.$t("media.userStorage.fileExpirationTimeOlderThanToday")
           } else if (this.fileExpirationTime && this.getDifferenceInDays && this.getDifferenceInDays >= this.fileExpirationTime) {
             return `${this.$t("media.userStorage.fileExpirationLimitExceeded")} ${this.fileExpirationTime} ${this.$t("media.file.days")}`
@@ -198,6 +199,12 @@ export default {
         return Math.floor((expirationDate - today) / (1000 * 3600 * 24));
       }
       return null;
+    },
+    visibilityOptions() {
+      return [
+        { text: this.$t('media.file.public'), value: true },
+        { text: this.$t('media.file.private'), value: false }
+      ]
     }
   },
   mounted() {
@@ -214,12 +221,16 @@ export default {
       }
     },
     onFilePicked: function (e) {
+      this.showErrorMessage = false;
+      this.errorMessage = null;
+      if (this.state === ERROR) {
+        this.state = SELECTED;
+      }
       this.file = e.target.files[0]
-      this.state = SELECTED
-      const fileSize = e.target.files[0].size ? e.target.files[0].size / (1024 * 1024) : null;
-      this.$emit('filePicked', fileSize);
+      this.fileSize = e.target.files[0].size ? e.target.files[0].size / (1024 * 1024) : null;
+      this.$emit('filePicked', this.fileSize);
       if (this.autoSubmit) {
-        this.upload(fileSize)
+        this.upload()
       }
     },
     findUserStorage() {
@@ -233,12 +244,12 @@ export default {
           err => console.error(err)
       )
     },
-     async upload(fileSize) {
-      if (this.file && this.state !== UPLOADED && fileSize <= this.maxFileSize && this.getDifferenceInDays <= this.fileExpirationTime) {
+     async upload() {
+      if (this.file && this.state !== UPLOADED && this.fileSize <= this.maxFileSize && this.getDifferenceInDays <= this.fileExpirationTime) {
         this.loading = true;
-        let expirationDateWithMinutes = this.expirationDate ? this.addHoursMinutesSecondsToDate(this.expirationDate) : null;
+        let expirationDate = this.expirationDate ? new Date(this.expirationDate).toISOString() : null;
 
-        await uploadProvider.uploadFile(this.file, expirationDateWithMinutes, this.isPublic, this.description, this.tags).then(result => {
+        await uploadProvider.uploadFile(this.file, expirationDate, this.isPublic, this.description, this.tags).then(result => {
           this.uploadedFile = result.data.fileUpload;
           this.setState(UPLOADED);
 
@@ -254,14 +265,6 @@ export default {
       } else {
         this.setErrorFileExceeded();
       }
-    },
-    addHoursMinutesSecondsToDate(date) {
-      let today = new Date();
-      let expirationDate = new Date(date)
-      expirationDate.setHours(today.getHours());
-      expirationDate.setMinutes(today.getMinutes());
-      expirationDate.setSeconds(today.getSeconds());
-      return expirationDate.toString();
     },
     resetUpload() {
       this.showErrorMessage = false;
@@ -285,3 +288,4 @@ export default {
 <style scoped>
 
 </style>
+
