@@ -425,13 +425,19 @@ class FileService extends EventEmitter {
         for (const chunk of chunks) {
             const promises = chunk.map(file =>
                 this._robustDelete(file, action, description)
-                    .then(success => success ? deletedCount++ : errorCount++)
+                    // _robustDelete returns true on success, false on failure
+                    .then(success => success ? 1 : 0)
                     .catch(error => {
                         winston.error(`FileService._parallelDelete: Error deleting file ${file.filename} (${file._id}): ${error.message}`)
-                        errorCount++
+                        return -1 // Marker: -1 means promise rejected (exception), 0 means resolved false (intentional failure)
                     })
             )
-            await Promise.all(promises)
+            const results = await Promise.all(promises)
+            // Count results: 1=success, 0 or -1=failure
+            for (const res of results) {
+                if (res === 1) deletedCount++
+                else if (res === 0 || res === -1) errorCount++
+            }
         }
 
         return { deletedCount, errorCount }
@@ -603,8 +609,9 @@ class FileService extends EventEmitter {
             const newExtension = '.' + (await newFile).filename.split('.').pop()
             if (file.extension !== newExtension) throw new Error('File extension mismatch during update')
             
-            const storeResult = await storeFile((await newFile).createReadStream(), file.relativePath)
-            const newSizeMB = storeResult.bytesWritten / (1024 * 1024)
+            await storeFile((await newFile).createReadStream(), file.relativePath)
+            const stats = await fs.stat(file.relativePath)
+            const newSizeMB = stats.size / (1024 * 1024)
             
             if (oldSize > 0) {
                 await updateUserUsedStorage(userId, -oldSize)
