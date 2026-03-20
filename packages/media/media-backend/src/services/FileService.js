@@ -707,7 +707,7 @@ class FileService extends EventEmitter {
 
             const existingFile = await File.findOne({ _id: file._id }).lean();
             if (!existingFile) {
-                winston.info(`FileService._robustDelete: File ${file._id} already deleted or not found, skipping`);
+                winston.info(`FileService Delete: File ${file._id} already deleted or not found, skipping`);
                 return true;
             }
 
@@ -715,7 +715,7 @@ class FileService extends EventEmitter {
                 await fs.unlink(file.relativePath)
             } catch (err) {
                 if (err.code !== 'ENOENT') {
-                    winston.error(`FileService._robustDelete: Error unlinking file ${file.relativePath}: ${err.message}`)
+                    winston.error(`FileService Delete: Error unlinking file ${file.relativePath}: ${err.message}`)
                     throw err
                 }
             }
@@ -738,28 +738,28 @@ class FileService extends EventEmitter {
             try {
                 let auditor = authUser
                 if (!auditor) {
-                    winston.info(`FileService._robustDelete: No authUser, trying to find file owner. File: ${file.filename}, createdBy: ${JSON.stringify(file.createdBy)}`)
+                    winston.info(`FileService Delete: No authUser, trying to find file owner. File: ${file.filename}, createdBy: ${JSON.stringify(file.createdBy)}`)
                     
                     // Try to use the file owner as auditor
                     if (creatorId) {
-                        winston.info(`FileService._robustDelete: Trying to find user by creatorId: ${creatorId}`)
+                        winston.info(`FileService Delete: Trying to find user by creatorId: ${creatorId}`)
                         auditor = await UserService.findUser(creatorId)
                         if (auditor) {
-                            winston.info(`FileService._robustDelete: Found file owner: ${auditor.username}`)
+                            winston.info(`FileService Delete: Found file owner: ${auditor.username}`)
                         } else {
-                            winston.warn(`FileService._robustDelete: Could not find user with creatorId: ${creatorId}`)
+                            winston.warn(`FileService Delete: Could not find user with creatorId: ${creatorId}`)
                         }
                     } else {
-                        winston.warn(`FileService._robustDelete: No creatorId found in file`)
+                        winston.warn(`FileService Delete: No creatorId found in file`)
                     }
                 }
 
                 if (!auditor) {
                     // Last resort: try root user
-                    winston.info(`FileService._robustDelete: Trying root user as fallback`)
+                    winston.info(`FileService Delete: Trying root user as fallback`)
                     auditor = await UserService.findUserByUsername('root')
                     if (auditor) {
-                        winston.info(`FileService._robustDelete: Using root user as auditor`)
+                        winston.info(`FileService Delete: Using root user as auditor`)
                     }
                 }
 
@@ -771,18 +771,17 @@ class FileService extends EventEmitter {
                         resourceData: file,
                         resourceName: file.filename
                     })
-                    winston.info(`FileService._robustDelete: Audit created successfully for file ${file.filename} by user ${auditor.username}`)
                 } else {
-                    winston.warn(`FileService._robustDelete: No auditor available, skipping audit for file ${file.filename}`)
+                    winston.warn(`FileService Delete: No auditor available, skipping audit for file ${file.filename}`)
                 }
             } catch (auditError) {
-                winston.error(`FileService._robustDelete Audit Error: ${auditError.message}`)
+                winston.error(`FileService Delete Audit Error: ${auditError.message}`)
             }
 
-            winston.info(`FileService._robustDelete: Deleted file ${file.relativePath}`)
+            winston.info(`FileService Delete: Deleted file ${file.relativePath}`)
             return true
         } catch (error) {
-            winston.error(`FileService._robustDelete error for file ${file._id}: ${error}`)
+            winston.error(`FileService Delete error for file ${file._id}: ${error}`)
             return false
         }
     }

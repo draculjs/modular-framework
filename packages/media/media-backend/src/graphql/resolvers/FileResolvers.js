@@ -47,15 +47,13 @@ export default {
             return result;
         },
         filePaginate: (_, { input }, { user, rbac }) => {
-            const startTime = Date.now();
             const userId = user?.id || 'unknown';
-            
-            winston.debug(`FileResolvers.filePaginate: userId='${userId}', input=${JSON.stringify(input)}`);
             
             if (!user) {
                 winston.warn(`FileResolvers.filePaginate: unauthenticated access attempt`);
                 throw new AuthenticationError("Unauthenticated");
             }
+
             if (!rbac.isAllowed(user.id, FILE_SHOW_ALL) && !rbac.isAllowed(user.id, FILE_SHOW_OWN) && !rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)) {
                 winston.warn(`FileResolvers.filePaginate: forbidden access - userId='${userId}'`);
                 throw new ForbiddenError("Not Authorized");
@@ -65,15 +63,12 @@ export default {
             let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN);
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC);
             
-            winston.debug(`FileResolvers.filePaginate: permissions - all=${allFilesAllowed}, own=${ownFilesAllowed}, public=${publicAllowed}`);
 
             const result = FileService.paginateFiles(input, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed);
             
-            result.then((paginated) => {
-                winston.info(`FileResolvers.filePaginate: success - userId='${userId}', totalItems=${paginated.totalItems}, duration=${Date.now() - startTime}ms`);
-            }).catch((error) => {
+            result.then().catch((error) => {
                 winston.error(`FileResolvers.filePaginate: error - userId='${userId}', error='${error.message}'`);
-            });
+            })
 
             return result;
         },

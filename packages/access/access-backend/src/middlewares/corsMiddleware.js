@@ -4,8 +4,6 @@ import { DefaultLogger as winston } from '@dracul/logger-backend'
 export const cors = async (req, res, next) => {
     try {
         winston.debug(`[CORS] req.headers.origin: '${req.headers.origin}'`)
-        winston.debug(`[CORS] process.env.APP_WEB_URL: '${process.env.APP_WEB_URL}'`)
-        winston.debug(`[CORS] process.env.APP_API_URL: '${process.env.APP_API_URL}'`)
         winston.debug(`[CORS] req.headers.origin === process.env.APP_WEB_URL: ${req.headers.origin === process.env.APP_WEB_URL}`)
         winston.debug(`[CORS] req.headers.origin === process.env.APP_API_URL: ${req.headers.origin === process.env.APP_API_URL}`)
         
