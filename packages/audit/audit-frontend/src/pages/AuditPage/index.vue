@@ -280,10 +280,6 @@ export default {
             return actionColors[action]
         },
         getDetailsText(audit){
-
-            console.log(`audit: ${JSON.stringify(audit, null, 2)}`)
-            console.log(`typeof resource data: ${typeof audit.resourceData}`)
-
             if (audit && audit.resourceData && audit.resourceData !== '' && typeof audit.resourceData === 'string' && audit.resourceData !== null && audit.resourceData !== undefined) {
                 try {
                     audit.resourceData = JSON.parse(audit.resourceData)
