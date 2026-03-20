@@ -70,7 +70,8 @@
             @click="$emit('update', item)"
           />
 
-          <FileEditButton v-if="editTextButtonMustBeRender(item.extension)" 
+          <FileEditButton 
+            v-if="editTextButtonMustBeRender(item.extension) && ($store.getters.hasPermission('FILE_UPDATE_ALL') || ($store.getters.hasPermission('FILE_UPDATE_OWN') && item.createdBy.user === $store.getters.me.id))"
             :file="item"
             v-on:itemUpdated="$emit('itemUpdated')"
           />

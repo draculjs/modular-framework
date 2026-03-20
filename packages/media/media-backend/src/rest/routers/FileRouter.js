@@ -115,7 +115,7 @@ router.put('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPDAT
         if (!req.file) res.status(400).json({ message: 'File was not provided' })
         
         const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
-        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
+        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN) || req.rbac?.isAllowed(req.user.id, FILE_UPDATE_OWN)
         const permissionType = (userCanSeeAllFiles) ? FILE_SHOW_ALL : (userCanSeeItsOwnFiles) ? FILE_SHOW_OWN : null
     
         const file = {
@@ -151,7 +151,7 @@ router.patch('/file/:id', [requireAuthentication, requireAuthorization([FILE_UPD
         }
 
         const userCanSeeAllFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_ALL)
-        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN)
+        const userCanSeeItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_SHOW_OWN) || req.rbac?.isAllowed(req.user.id, FILE_UPDATE_OWN)
         const permissionType = (userCanSeeAllFiles) ? FILE_SHOW_ALL : (userCanSeeItsOwnFiles) ? FILE_SHOW_OWN : null
 
         const updateFileResult = await FileService.updateFileMetadata(req.params.id, req.user, permissionType, { description, expirationDate, tags, isPublic })
@@ -179,7 +179,7 @@ router.delete('/file/:id', [requireAuthentication, requireAuthorization([FILE_DE
             res.status(400).json({ message: "You must provide a valid file ID." })
         }else{
             const userCanDeleteAllFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_ALL)
-            const userCanDeleteItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN)
+            const userCanDeleteItsOwnFiles = req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN) || req.rbac?.isAllowed(req.user.id, FILE_DELETE_OWN)
             const userCanSeePublicFiles = req.rbac.isAllowed(req.user.id, FILE_SHOW_PUBLIC)
 
             await FileService.deleteFile(fileToDeleteId, req.user.id, userCanDeleteAllFiles, userCanDeleteItsOwnFiles, userCanSeePublicFiles)

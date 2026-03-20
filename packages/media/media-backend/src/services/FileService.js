@@ -151,7 +151,8 @@ class FileService extends EventEmitter {
     async updateFileRest(id, user, permissionType, newFile) {
         try {
             const fileDocument = await this._getFileForUpdate(id, user, permissionType)
-            if (fileDocument) await this._replaceFileContent(fileDocument, newFile, user.id, user.username)
+            if (!fileDocument) return false
+            await this._replaceFileContent(fileDocument, newFile, user.id, user.username)
             return true
         } catch (error) {
             winston.error(`FileService.updateFileRest error: ${error}`)
@@ -162,7 +163,9 @@ class FileService extends EventEmitter {
     async updateFileMetadata(id, user, permissionType, metadata) {
         try {
             const { description, expirationDate, tags, isPublic } = metadata
-            if (!description && !expirationDate && !tags && !isPublic) throw new Error('File fields to update were not provided')
+            if (description === undefined && expirationDate === undefined && tags === undefined && isPublic === undefined) {
+                throw new Error('File fields to update were not provided')
+            }
 
             const userProvidedDate = expirationDate ? dayjs(expirationDate) : null
             if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format')
@@ -175,9 +178,16 @@ class FileService extends EventEmitter {
                 if (timeDiff > userStorage.fileExpirationTime) throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
             }
             
+            const userGroups = await GroupService.fetchMyGroups(user.id)
+            const updateFields = {};
+            if (description !== undefined) updateFields.description = description;
+            if (expirationDate !== undefined) updateFields.expirationDate = formattedExpirationDate;
+            if (tags !== undefined) updateFields.tags = tags;
+            if (isPublic !== undefined) updateFields.isPublic = isPublic;
+            
             const updatedFile = await File.findOneAndUpdate(
-                { _id: id, ...this._getPermissionFilter(permissionType, user.id) },
-                { $set: { description, expirationDate: formattedExpirationDate, tags, isPublic } },
+                { _id: id, ...this._getPermissionFilter(permissionType, user.id, userGroups) },
+                { $set: updateFields },
                 { new: true }
             )
 
@@ -631,7 +641,7 @@ class FileService extends EventEmitter {
         try {
             const showAll = permissionType === FILE_SHOW_ALL
             const showOwn = permissionType === FILE_SHOW_OWN
-            return await File.findOne({ _id: id, ...this._filterByPermissions(user, showAll, showOwn, false) })
+            return await File.findOne({ _id: id, ...this._filterByPermissions(user.id, showAll, showOwn, false) })
                 .populate('createdBy.user.username')
         } catch (error) {
             winston.error(`FileService._getFileForUpdate error: ${error}`)
@@ -639,9 +649,16 @@ class FileService extends EventEmitter {
         }
     }
 
-    _getPermissionFilter(permissionType, userId) {
+    _getPermissionFilter(permissionType, userId, userGroups = []) {
         try {
-            return permissionType === FILE_SHOW_ALL ? {} : { 'createdBy.user': userId }
+            if (permissionType === FILE_SHOW_ALL) return {}
+            return {
+                $or: [
+                    { 'createdBy.user': userId },
+                    { users: { $in: [userId] } },
+                    { groups: { $in: userGroups } }
+                ]
+            }
         } catch (error) {
             winston.error(`FileService._getPermissionFilter error: ${error}`)
             throw error

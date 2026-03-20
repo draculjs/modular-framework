@@ -41,7 +41,7 @@ export default {
             if (!rbac.isAllowed(user.id, FILE_UPDATE_ALL) && !rbac.isAllowed(user.id, FILE_UPDATE_OWN)) throw new ForbiddenError("Not Authorized")
 
             let allFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_ALL)
-            let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
+            let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN) || rbac.isAllowed(user.id, FILE_UPDATE_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
 
@@ -53,7 +53,7 @@ export default {
             if (!rbac.isAllowed(user.id, FILE_DELETE_ALL) && !rbac.isAllowed(user.id, FILE_DELETE_OWN)) throw new ForbiddenError("Not Authorized")
 
             let allFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_ALL)
-            let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN)
+            let ownFilesAllowed = rbac.isAllowed(user.id, FILE_SHOW_OWN) || rbac.isAllowed(user.id, FILE_DELETE_OWN)
             let publicAllowed = rbac.isAllowed(user.id, FILE_SHOW_PUBLIC)
 
             return FileService.deleteFile(id, user.id, allFilesAllowed, ownFilesAllowed, publicAllowed)
