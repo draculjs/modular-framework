@@ -55,7 +55,7 @@ class FileService extends EventEmitter {
         try {
             const file = await File.findOne({ relativePath }).select('isPublic').lean()
 
-            console.log("file: ", file)
+            winston.debug(`FileService.getFilePrivacyByRelativePath: relativePath='${relativePath}', found=${!!file}, isPublic=${file?.isPublic}`)
             return file
         } catch (error) {
             winston.error(`FileService.getFilePrivacyByRelativePath error: ${error}`)

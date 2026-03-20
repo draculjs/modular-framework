@@ -167,6 +167,102 @@ describe("DistributedLock - TDD Tests", () => {
         });
     });
 
+    describe("DEFENSIVE CLEANUP - acquireLock cleans expired locks", () => {
+        
+        test('DEAD PROCESS: nueva instancia puede adquirir lock de proceso muerto (sin release)', async () => {
+            const db = mongoose.connection.db;
+            await db.collection(LOCK_COLLECTION).insertOne({
+                _id: 'dead_process_lock',
+                instanceId: 'dead-process-123',
+                acquiredAt: Date.now() - (LOCK_TIMEOUT_MS + 10000)
+            });
+            
+            DistributedLock.setInstanceId('new-instance');
+            const acquired = await DistributedLock.acquireLock('dead_process');
+            
+            expect(acquired).toBe(true);
+            
+            const holder = await db.collection(LOCK_COLLECTION).findOne({ _id: 'dead_process_lock' });
+            expect(holder.instanceId).toBe('new-instance');
+        });
+
+        test('EXPIRED LOCK: lock expirado de 6 minutos es limpiado antes de adquirir', async () => {
+            const db = mongoose.connection.db;
+            await db.collection(LOCK_COLLECTION).insertOne({
+                _id: 'expired_lock',
+                instanceId: 'old-instance',
+                acquiredAt: Date.now() - (6 * 60 * 1000)
+            });
+            
+            DistributedLock.setInstanceId('new-instance');
+            const acquired = await DistributedLock.acquireLock('expired');
+            
+            expect(acquired).toBe(true);
+            
+            const holder = await db.collection(LOCK_COLLECTION).findOne({ _id: 'expired_lock' });
+            expect(holder.instanceId).toBe('new-instance');
+        });
+
+        test('PRODUCCION REAL: lock de 9 minutos (escenario real de proceso caido)', async () => {
+            const db = mongoose.connection.db;
+            await db.collection(LOCK_COLLECTION).insertOne({
+                _id: 'cleanup_lock',
+                instanceId: 'instance-521462-1774027970149',
+                acquiredAt: Date.now() - (9 * 60 * 1000)
+            });
+            
+            DistributedLock.setInstanceId('new-instance-xyz');
+            const acquired = await DistributedLock.acquireLock('cleanup');
+            
+            expect(acquired).toBe(true);
+            
+            const holder = await db.collection(LOCK_COLLECTION).findOne({ _id: 'cleanup_lock' });
+            expect(holder.instanceId).toBe('new-instance-xyz');
+        });
+
+        test('VALID LOCK: lock no expirado NO es limpiado (otra instancia no puede tomarlo)', async () => {
+            const db = mongoose.connection.db;
+            await db.collection(LOCK_COLLECTION).insertOne({
+                _id: 'valid_lock',
+                instanceId: 'instance-A',
+                acquiredAt: Date.now() - 1000
+            });
+            
+            DistributedLock.setInstanceId('instance-B');
+            const acquired = await DistributedLock.acquireLock('valid');
+            
+            expect(acquired).toBe(false);
+            
+            const holder = await db.collection(LOCK_COLLECTION).findOne({ _id: 'valid_lock' });
+            expect(holder.instanceId).toBe('instance-A');
+        });
+
+        test('MIXED: multiples locks expirados y validos - solo expirados se limpian', async () => {
+            const db = mongoose.connection.db;
+            await db.collection(LOCK_COLLECTION).insertMany([
+                { _id: 'lock_a_lock', instanceId: 'expired-A', acquiredAt: Date.now() - (LOCK_TIMEOUT_MS + 1000) },
+                { _id: 'lock_b_lock', instanceId: 'valid-B', acquiredAt: Date.now() - 1000 },
+                { _id: 'lock_c_lock', instanceId: 'expired-C', acquiredAt: Date.now() - (LOCK_TIMEOUT_MS + 5000) }
+            ]);
+            
+            DistributedLock.setInstanceId('instance-D');
+            await DistributedLock.acquireLock('lock_a');
+            await DistributedLock.acquireLock('lock_b');
+            await DistributedLock.acquireLock('lock_c');
+            
+            const remaining = await db.collection(LOCK_COLLECTION).find({}).toArray();
+            expect(remaining.length).toBe(3);
+            
+            const lockA = remaining.find(l => l._id === 'lock_a_lock');
+            const lockB = remaining.find(l => l._id === 'lock_b_lock');
+            const lockC = remaining.find(l => l._id === 'lock_c_lock');
+            
+            expect(lockA.instanceId).toBe('instance-D');
+            expect(lockB.instanceId).toBe('valid-B');
+            expect(lockC.instanceId).toBe('instance-D');
+        });
+    });
+
     describe("instanceId", () => {
         test('should return same instanceId for same identifier', async () => {
             DistributedLock.setInstanceId('my-instance');

@@ -126,14 +126,17 @@ class CleanupScheduler {
                 return
             }
 
-            winston.info("CleanupJob: Starting file expiration cleanup...")
+            const myInstanceId = DistributedLock.getInstanceId();
+            winston.info(`CleanupJob: instance '${myInstanceId}' acquired lock, starting cleanup...`)
             const stats = await FileService.executeCleanup()
             winston.info(`CleanupJob: Cleanup finished. Deleted: ${stats.deletedCount}, Errors: ${stats.errorCount}`)
         } catch (error) {
             winston.error(`CleanupJob.execute error: ${error}`)
         } finally {
             if (lockAcquired) {
+                const myInstanceId = DistributedLock.getInstanceId();
                 await DistributedLock.releaseLock(CLEANUP_LOCK_NAME)
+                winston.info(`CleanupJob: instance '${myInstanceId}' released lock after cleanup`)
             }
             this.isRunning = false
             if (reSchedule) await this.schedule()
