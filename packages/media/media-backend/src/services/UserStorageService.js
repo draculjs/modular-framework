@@ -105,20 +105,31 @@ export const updateUserUsedStorage = async function (userId, size) {
             return null;
         }
 
-        if (size < 0 && current.usedSpace + size < 0) {
-            winston.warn(`updateUserUsedStorage: Would result in negative usedSpace (${current.usedSpace + size}), clamping to 0`);
-            return await userStorage.findOneAndUpdate(
-                { user: userId },
-                { $set: { usedSpace: 0 } },
-                { runValidators: true, context: "query" }
-            );
+        if (typeof size !== 'number' || isNaN(size)) {
+            winston.warn(`updateUserUsedStorage: Invalid size provided: ${size}`);
+            return null;
         }
 
-        return await userStorage.findOneAndUpdate(
+        // aggregation pipeline to "clamp" to 0 usedSpace
+        const result = await userStorage.findOneAndUpdate(
             { user: userId },
-            { $inc: { usedSpace: size } },
-            { runValidators: true, context: "query" }
+            [
+                {
+                    $set: {
+                        usedSpace: {
+                            $max: [0, { $add: ["$usedSpace", size] }]
+                        }
+                    }
+                }
+            ],
+            { runValidators: true, context: "query", new: true }
         );
+
+        if (!result) {
+            winston.warn(`updateUserUsedStorage: User storage not found for user ${userId}`);
+        }
+
+        return result
     } catch (error) {
         if (error.name == "ValidationError") {
             throw new UserInputError(error.message, { inputErrors: error.errors });

@@ -55,7 +55,7 @@ class FileService extends EventEmitter {
         try {
             const file = await File.findOne({ relativePath }).select('isPublic').lean()
 
-            console.log("file: ", file)
+            winston.debug(`FileService.getFilePrivacyByRelativePath: relativePath='${relativePath}', found=${!!file}, isPublic=${file?.isPublic}`)
             return file
         } catch (error) {
             winston.error(`FileService.getFilePrivacyByRelativePath error: ${error}`)
@@ -151,7 +151,8 @@ class FileService extends EventEmitter {
     async updateFileRest(id, user, permissionType, newFile) {
         try {
             const fileDocument = await this._getFileForUpdate(id, user, permissionType)
-            if (fileDocument) await this._replaceFileContent(fileDocument, newFile, user.id, user.username)
+            if (!fileDocument) return false
+            await this._replaceFileContent(fileDocument, newFile, user.id, user.username)
             return true
         } catch (error) {
             winston.error(`FileService.updateFileRest error: ${error}`)
@@ -162,7 +163,9 @@ class FileService extends EventEmitter {
     async updateFileMetadata(id, user, permissionType, metadata) {
         try {
             const { description, expirationDate, tags, isPublic } = metadata
-            if (!description && !expirationDate && !tags && !isPublic) throw new Error('File fields to update were not provided')
+            if (description === undefined && expirationDate === undefined && tags === undefined && isPublic === undefined) {
+                throw new Error('File fields to update were not provided')
+            }
 
             const userProvidedDate = expirationDate ? dayjs(expirationDate) : null
             if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format')
@@ -175,9 +178,16 @@ class FileService extends EventEmitter {
                 if (timeDiff > userStorage.fileExpirationTime) throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
             }
             
+            const userGroups = await GroupService.fetchMyGroups(user.id)
+            const updateFields = {};
+            if (description !== undefined) updateFields.description = description;
+            if (expirationDate !== undefined) updateFields.expirationDate = formattedExpirationDate;
+            if (tags !== undefined) updateFields.tags = tags;
+            if (isPublic !== undefined) updateFields.isPublic = isPublic;
+            
             const updatedFile = await File.findOneAndUpdate(
-                { _id: id, ...this._getPermissionFilter(permissionType, user.id) },
-                { $set: { description, expirationDate: formattedExpirationDate, tags, isPublic } },
+                { _id: id, ...this._getPermissionFilter(permissionType, user.id, userGroups) },
+                { $set: updateFields },
                 { new: true }
             )
 
@@ -425,13 +435,19 @@ class FileService extends EventEmitter {
         for (const chunk of chunks) {
             const promises = chunk.map(file =>
                 this._robustDelete(file, action, description)
-                    .then(success => success ? deletedCount++ : errorCount++)
+                    // _robustDelete returns true on success, false on failure
+                    .then(success => success ? 1 : 0)
                     .catch(error => {
                         winston.error(`FileService._parallelDelete: Error deleting file ${file.filename} (${file._id}): ${error.message}`)
-                        errorCount++
+                        return -1 // Marker: -1 means promise rejected (exception), 0 means resolved false (intentional failure)
                     })
             )
-            await Promise.all(promises)
+            const results = await Promise.all(promises)
+            // Count results: 1=success, 0 or -1=failure
+            for (const res of results) {
+                if (res === 1) deletedCount++
+                else if (res === 0 || res === -1) errorCount++
+            }
         }
 
         return { deletedCount, errorCount }
@@ -603,8 +619,9 @@ class FileService extends EventEmitter {
             const newExtension = '.' + (await newFile).filename.split('.').pop()
             if (file.extension !== newExtension) throw new Error('File extension mismatch during update')
             
-            const storeResult = await storeFile((await newFile).createReadStream(), file.relativePath)
-            const newSizeMB = storeResult.bytesWritten / (1024 * 1024)
+            await storeFile((await newFile).createReadStream(), file.relativePath)
+            const stats = await fs.stat(file.relativePath)
+            const newSizeMB = stats.size / (1024 * 1024)
             
             if (oldSize > 0) {
                 await updateUserUsedStorage(userId, -oldSize)
@@ -624,7 +641,7 @@ class FileService extends EventEmitter {
         try {
             const showAll = permissionType === FILE_SHOW_ALL
             const showOwn = permissionType === FILE_SHOW_OWN
-            return await File.findOne({ _id: id, ...this._filterByPermissions(user, showAll, showOwn, false) })
+            return await File.findOne({ _id: id, ...this._filterByPermissions(user.id, showAll, showOwn, false) })
                 .populate('createdBy.user.username')
         } catch (error) {
             winston.error(`FileService._getFileForUpdate error: ${error}`)
@@ -632,9 +649,16 @@ class FileService extends EventEmitter {
         }
     }
 
-    _getPermissionFilter(permissionType, userId) {
+    _getPermissionFilter(permissionType, userId, userGroups = []) {
         try {
-            return permissionType === FILE_SHOW_ALL ? {} : { 'createdBy.user': userId }
+            if (permissionType === FILE_SHOW_ALL) return {}
+            return {
+                $or: [
+                    { 'createdBy.user': userId },
+                    { users: { $in: [userId] } },
+                    { groups: { $in: userGroups } }
+                ]
+            }
         } catch (error) {
             winston.error(`FileService._getPermissionFilter error: ${error}`)
             throw error
@@ -683,7 +707,7 @@ class FileService extends EventEmitter {
 
             const existingFile = await File.findOne({ _id: file._id }).lean();
             if (!existingFile) {
-                winston.info(`FileService._robustDelete: File ${file._id} already deleted or not found, skipping`);
+                winston.info(`FileService Delete: File ${file._id} already deleted or not found, skipping`);
                 return true;
             }
 
@@ -691,7 +715,7 @@ class FileService extends EventEmitter {
                 await fs.unlink(file.relativePath)
             } catch (err) {
                 if (err.code !== 'ENOENT') {
-                    winston.error(`FileService._robustDelete: Error unlinking file ${file.relativePath}: ${err.message}`)
+                    winston.error(`FileService Delete: Error unlinking file ${file.relativePath}: ${err.message}`)
                     throw err
                 }
             }
@@ -714,28 +738,28 @@ class FileService extends EventEmitter {
             try {
                 let auditor = authUser
                 if (!auditor) {
-                    winston.info(`FileService._robustDelete: No authUser, trying to find file owner. File: ${file.filename}, createdBy: ${JSON.stringify(file.createdBy)}`)
+                    winston.info(`FileService Delete: No authUser, trying to find file owner. File: ${file.filename}, createdBy: ${JSON.stringify(file.createdBy)}`)
                     
                     // Try to use the file owner as auditor
                     if (creatorId) {
-                        winston.info(`FileService._robustDelete: Trying to find user by creatorId: ${creatorId}`)
+                        winston.info(`FileService Delete: Trying to find user by creatorId: ${creatorId}`)
                         auditor = await UserService.findUser(creatorId)
                         if (auditor) {
-                            winston.info(`FileService._robustDelete: Found file owner: ${auditor.username}`)
+                            winston.info(`FileService Delete: Found file owner: ${auditor.username}`)
                         } else {
-                            winston.warn(`FileService._robustDelete: Could not find user with creatorId: ${creatorId}`)
+                            winston.warn(`FileService Delete: Could not find user with creatorId: ${creatorId}`)
                         }
                     } else {
-                        winston.warn(`FileService._robustDelete: No creatorId found in file`)
+                        winston.warn(`FileService Delete: No creatorId found in file`)
                     }
                 }
 
                 if (!auditor) {
                     // Last resort: try root user
-                    winston.info(`FileService._robustDelete: Trying root user as fallback`)
+                    winston.info(`FileService Delete: Trying root user as fallback`)
                     auditor = await UserService.findUserByUsername('root')
                     if (auditor) {
-                        winston.info(`FileService._robustDelete: Using root user as auditor`)
+                        winston.info(`FileService Delete: Using root user as auditor`)
                     }
                 }
 
@@ -747,18 +771,17 @@ class FileService extends EventEmitter {
                         resourceData: file,
                         resourceName: file.filename
                     })
-                    winston.info(`FileService._robustDelete: Audit created successfully for file ${file.filename} by user ${auditor.username}`)
                 } else {
-                    winston.warn(`FileService._robustDelete: No auditor available, skipping audit for file ${file.filename}`)
+                    winston.warn(`FileService Delete: No auditor available, skipping audit for file ${file.filename}`)
                 }
             } catch (auditError) {
-                winston.error(`FileService._robustDelete Audit Error: ${auditError.message}`)
+                winston.error(`FileService Delete Audit Error: ${auditError.message}`)
             }
 
-            winston.info(`FileService._robustDelete: Deleted file ${file.relativePath}`)
+            winston.info(`FileService Delete: Deleted file ${file.relativePath}`)
             return true
         } catch (error) {
-            winston.error(`FileService._robustDelete error for file ${file._id}: ${error}`)
+            winston.error(`FileService Delete error for file ${file._id}: ${error}`)
             return false
         }
     }

@@ -4,8 +4,6 @@ const UserStorage = require('../../src/models/UserStorageModel');
 const mongoHandler = require('../utils/mongo-handler');
 const FileCleanupJob = require('../../src/services/FileCleanupJob');
 const FileService = require('../../src/services/FileService').default;
-const DistributedLock = require('../../src/services/helpers/DistributedLock').default;
-const { LOCK_COLLECTION, LOCK_TIMEOUT_MS } = require('../../src/services/helpers/DistributedLock');
 const {
     TEST_USER_ID,
     OTHER_USER_ID,
@@ -63,44 +61,6 @@ describe("FileCleanupJob - Integration Tests", () => {
 
             const afterCount = await File.countDocuments({ filename: 'scheduler-enabled-test.json' });
             expect(afterCount).toBe(0);
-        });
-
-        test('should maintain consistent state on multiple starts', async () => {
-            FileCleanupJob.startFileCleanupJob({ enabled: true });
-            FileCleanupJob.startFileCleanupJob({ enabled: true });
-            FileCleanupJob.startFileCleanupJob({ enabled: true });
-
-            await File.create(createTestFile({
-                expirationDate: daysAgo(1),
-                filename: 'multiple-starts.json'
-            }));
-
-            await FileService.executeCleanup();
-
-            expect(await File.countDocuments({ filename: 'multiple-starts.json' })).toBe(0);
-
-            FileCleanupJob.stopFileCleanupJob();
-        });
-    });
-
-    describe("stopFileCleanupJob", () => {
-        test('should stop scheduler and allow restart', async () => {
-            FileCleanupJob.startFileCleanupJob({ enabled: true });
-            FileCleanupJob.stopFileCleanupJob();
-            FileCleanupJob.stopFileCleanupJob();
-
-            expect(() => FileCleanupJob.startFileCleanupJob({ enabled: true })).not.toThrow();
-
-            await File.create(createTestFile({
-                expirationDate: daysAgo(1),
-                filename: 'restart-test.json'
-            }));
-
-            await FileService.executeCleanup();
-
-            expect(await File.countDocuments({ filename: 'restart-test.json' })).toBe(0);
-
-            FileCleanupJob.stopFileCleanupJob();
         });
     });
 
@@ -752,128 +712,9 @@ describe("FileCleanupJob - Distributed Lock Integration", () => {
 
     beforeEach(async () => {
         await mongoHandler.clearDatabase();
-        const db = mongoose.connection.db;
-        await db.collection(LOCK_COLLECTION).deleteMany({});
     });
 
     const executeCleanup = () => (FileCleanupJob.default?.execute || FileCleanupJob.execute);
-
-    describe("Multiple instances behavior", () => {
-        test('should skip cleanup when another instance holds lock', async () => {
-            await File.create(createTestFile({
-                expirationDate: daysAgo(5),
-                filename: 'locked-test.json'
-            }));
-
-            DistributedLock.setInstanceId('instance-A');
-            await DistributedLock.acquireLock('cleanup');
-
-            DistributedLock.setInstanceId('instance-B');
-            const initialCount = await File.countDocuments({ filename: 'locked-test.json' });
-            expect(initialCount).toBe(1);
-
-            await executeCleanup()(false);
-
-            const afterCount = await File.countDocuments({ filename: 'locked-test.json' });
-            expect(afterCount).toBe(1);
-        });
-
-        test('should run cleanup when lock is available', async () => {
-            await File.create(createTestFile({
-                expirationDate: daysAgo(5),
-                filename: 'unlocked-test.json'
-            }));
-
-            DistributedLock.setInstanceId('instance-C');
-
-            const initialCount = await File.countDocuments({ filename: 'unlocked-test.json' });
-            expect(initialCount).toBe(1);
-
-            await executeCleanup()(false);
-
-            const afterCount = await File.countDocuments({ filename: 'unlocked-test.json' });
-            expect(afterCount).toBe(0);
-        });
-
-        test('should run cleanup when previous lock expired', async () => {
-            const db = mongoose.connection.db;
-            await db.collection(LOCK_COLLECTION).insertOne({
-                _id: 'cleanup_lock',
-                instanceId: 'old-instance',
-                acquiredAt: Date.now() - (LOCK_TIMEOUT_MS + 1000)
-            });
-
-            await File.create(createTestFile({
-                expirationDate: daysAgo(5),
-                filename: 'expired-lock-test.json'
-            }));
-
-            DistributedLock.setInstanceId('new-instance');
-
-            await executeCleanup()(false);
-
-            const afterCount = await File.countDocuments({ filename: 'expired-lock-test.json' });
-            expect(afterCount).toBe(0);
-        });
-
-        test('should release lock after successful cleanup', async () => {
-            DistributedLock.setInstanceId('instance-release');
-
-            await executeCleanup()(false);
-
-            const holder = await DistributedLock.getLockHolder('cleanup');
-            expect(holder).toBeNull();
-        });
-
-        test('should handle same instance calling execute multiple times', async () => {
-            await File.create(createTestFile({
-                expirationDate: daysAgo(5),
-                filename: 'multi-exec.json'
-            }));
-
-            DistributedLock.setInstanceId('instance-multi');
-
-            await executeCleanup()(false);
-            await executeCleanup()(false);
-
-            const afterCount = await File.countDocuments({ filename: 'multi-exec.json' });
-            expect(afterCount).toBe(0);
-        });
-    });
-
-    describe("Lock holder logging", () => {
-        test('should log lock holder when skipping', async () => {
-            await File.create(createTestFile({
-                expirationDate: daysAgo(5),
-                filename: 'log-holder-test.json'
-            }));
-
-            DistributedLock.setInstanceId('holder-instance');
-            await DistributedLock.acquireLock('cleanup');
-
-            DistributedLock.setInstanceId('requestor-instance');
-
-            const holder = await DistributedLock.getLockHolder('cleanup');
-            expect(holder).toBe('holder-instance');
-        });
-    });
-
-    describe("Invalid inputs", () => {
-        test('should handle null lock name gracefully', async () => {
-            const result = await DistributedLock.acquireLock(null);
-            expect(typeof result).toBe('boolean');
-        });
-
-        test('should handle empty string lock name gracefully', async () => {
-            const result = await DistributedLock.acquireLock('');
-            expect(typeof result).toBe('boolean');
-        });
-
-        test('should handle undefined lock name gracefully', async () => {
-            const result = await DistributedLock.acquireLock(undefined);
-            expect(typeof result).toBe('boolean');
-        });
-    });
 
     describe("Scheduler enabled/disabled", () => {
         test('should skip cleanup when scheduler is disabled via startFileCleanupJob', async () => {

@@ -1,6 +1,6 @@
 {
   "name": "@dracul/media-frontend",
-  "version": "1.45.0",
+  "version": "1.44.0",
   "author": "Cristian Incarnato",
   "main": "./src/index.js",
   "license": "ISC",
@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@dracul/common-frontend": "^1.44.0",
-    "@dracul/dayjs-frontend": "^1.45.0",
-    "@dracul/user-frontend": "^1.45.0",
+    "@dracul/dayjs-frontend": "^1.44.0",
+    "@dracul/user-frontend": "^1.44.0",
     "papaparse": "^5.5.3",
     "vue-pdf-embed": "^1.2.1",
     "xlsx": "^0.18.5"

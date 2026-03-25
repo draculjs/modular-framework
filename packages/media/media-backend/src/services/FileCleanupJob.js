@@ -1,10 +1,7 @@
 import { DefaultLogger as winston } from "@dracul/logger-backend"
 import FileService from "./FileService"
-import DistributedLock from "./helpers/DistributedLock"
 
 winston.info("CleanupJob: Module loaded")
-
-const CLEANUP_LOCK_NAME = 'cleanup'
 
 /**
  * @class CleanupScheduler
@@ -108,7 +105,6 @@ class CleanupScheduler {
 
     /**
      * @description Ejecuta el cleanup y reagenda para la siguiente ejecución.
-     *              Usa distributed lock para prevenir ejecuciones concurrentes entre instancias.
      * @async
      * @param {boolean} [reSchedule=true] - Si true, reagenda después de ejecutar
      */
@@ -117,24 +113,13 @@ class CleanupScheduler {
         if (!this.isEnabled) return
         this.isRunning = true
 
-        let lockAcquired = false
         try {
-            lockAcquired = await DistributedLock.acquireLock(CLEANUP_LOCK_NAME)
-            if (!lockAcquired) {
-                const holder = await DistributedLock.getLockHolder(CLEANUP_LOCK_NAME)
-                winston.info(`CleanupJob: Lock held by ${holder}, skipping this execution`)
-                return
-            }
-
             winston.info("CleanupJob: Starting file expiration cleanup...")
             const stats = await FileService.executeCleanup()
             winston.info(`CleanupJob: Cleanup finished. Deleted: ${stats.deletedCount}, Errors: ${stats.errorCount}`)
         } catch (error) {
             winston.error(`CleanupJob.execute error: ${error}`)
         } finally {
-            if (lockAcquired) {
-                await DistributedLock.releaseLock(CLEANUP_LOCK_NAME)
-            }
             this.isRunning = false
             if (reSchedule) await this.schedule()
         }
