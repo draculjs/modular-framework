@@ -1,6 +1,6 @@
 {
   "name": "@dracul/queue-frontend",
-  "version": "1.44.0",
+  "version": "1.44.2",
   "description": "Dracul Vue Queue",
   "main": "./src/index.js",
   "publishConfig": {
@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "@dracul/common-frontend": "^1.44.0",
-    "@dracul/dayjs-frontend": "^1.44.0"
+    "@dracul/dayjs-frontend": "^1.44.2"
   },
   "peerDependencies": {
     "deepmerge": "^4.2.2",
