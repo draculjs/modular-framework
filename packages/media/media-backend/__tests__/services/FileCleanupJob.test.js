@@ -740,3 +740,112 @@ describe("FileCleanupJob - Distributed Lock Integration", () => {
         });
     });
 });
+
+describe("FileCleanupJob - Scheduler Wakeup from Standby", () => {
+    beforeAll(async () => {
+        await mongoHandler.connect();
+    });
+
+    afterAll(async () => {
+        await mongoHandler.closeDatabase();
+    });
+
+    beforeEach(async () => {
+        await mongoHandler.clearDatabase();
+        FileCleanupJob.stopFileCleanupJob();
+    });
+
+    afterEach(async () => {
+        FileCleanupJob.stopFileCleanupJob();
+        FileService.removeAllListeners('expirationChanged');
+    });
+
+    describe("Upload triggers scheduler exit from standby", () => {
+        test('should receive expirationChanged event when file is uploaded without explicit expiration', async () => {
+            await UserStorage.create({
+                user: TEST_USER_ID,
+                capacity: 1024,
+                usedSpace: 0,
+                maxFileSize: 100,
+                fileExpirationTime: 30,
+                deleteByLastAccess: true,
+                deleteByCreatedAt: false,
+                filesPrivacy: 'private'
+            });
+
+            let eventReceived = false;
+            FileService.on('expirationChanged', () => {
+                eventReceived = true;
+            });
+
+            const { fileUpload } = require('../../src/services/UploadService');
+            const mockInputFile = {
+                filename: 'test-file.txt',
+                mimetype: 'text/plain',
+                encoding: '7bit',
+                createReadStream: () => {
+                    const { Readable } = require('stream');
+                    return Readable.from(['test content']);
+                }
+            };
+
+            await fileUpload(
+                { id: TEST_USER_ID, username: 'testuser' },
+                mockInputFile,
+                null,
+                false,
+                'Test file for standby',
+                [],
+                [],
+                []
+            );
+
+            expect(eventReceived).toBe(true);
+        });
+
+        test('should receive expirationChanged event when file is uploaded WITH explicit expiration', async () => {
+            await UserStorage.create({
+                user: TEST_USER_ID,
+                capacity: 1024,
+                usedSpace: 0,
+                maxFileSize: 100,
+                fileExpirationTime: 30,
+                deleteByLastAccess: true,
+                deleteByCreatedAt: false,
+                filesPrivacy: 'private'
+            });
+
+            let eventReceived = false;
+            FileService.on('expirationChanged', () => {
+                eventReceived = true;
+            });
+
+            const { fileUpload } = require('../../src/services/UploadService');
+            const mockInputFile = {
+                filename: 'test-file.txt',
+                mimetype: 'text/plain',
+                encoding: '7bit',
+                createReadStream: () => {
+                    const { Readable } = require('stream');
+                    return Readable.from(['test content']);
+                }
+            };
+
+            const futureDate = new Date();
+            futureDate.setDate(futureDate.getDate() + 5);
+
+            await fileUpload(
+                { id: TEST_USER_ID, username: 'testuser' },
+                mockInputFile,
+                futureDate.toISOString(),
+                false,
+                'Test file with explicit expiration',
+                [],
+                [],
+                []
+            );
+
+            expect(eventReceived).toBe(true);
+        });
+    });
+});

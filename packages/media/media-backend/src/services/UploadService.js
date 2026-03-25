@@ -80,9 +80,7 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic, de
 
       await updateUserUsedStorage(user.id, fileSizeMB)
       
-      if (expirationDate) {
-        FileService.emit('expirationChanged')
-      }
+      FileService.emit('expirationChanged')
 
       winston.info("fileUpload file saved: " + doc._id)
       return doc
