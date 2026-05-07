@@ -2,6 +2,20 @@ import dayjs from '../utils/Dayjs'
 import setTimeToDatetimeHelper from "../helpers/setTimeToDatetimeHelper";
 import setDateToDatetimeHelper from "../helpers/setDateToDatetimeHelper";
 
+// API values usually arrive as full datetimes, for example:
+// "2026-05-08T03:00:00.000Z". We must format those with timezone before
+// checking for time-only values, otherwise the "03:00" fragment could be
+// mistaken for the complete value of a TimeInput.
+const ISO_DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+
+// Some components use a local datetime string without the "T", for example:
+// "2026-05-08 15:45" or "2026-05-08 15:45:30".
+const LOCAL_DATETIME_REGEX = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/
+
+// v-time-picker works with pure time strings. This regex is intentionally
+// anchored so full ISO datetimes are not returned unchanged.
+const TIME_ONLY_REGEX = /^\d{2}:\d{2}(:\d{2})?$/
+
 export default {
     methods: {
         setTimeToFormField(field, newTime) {
@@ -105,7 +119,15 @@ export default {
                     return date.format(format)
                 }
 
-                if (/(\d{2}):(\d{2})(:(\d{2}))?/.test(date)) {
+                if (ISO_DATETIME_REGEX.test(date) && dayjs(date).isValid()) {
+                    return dayjs(date).tz().format(format)
+                }
+
+                if (LOCAL_DATETIME_REGEX.test(date) && dayjs(date).isValid()) {
+                    return dayjs(date).tz().format(format)
+                }
+
+                if (TIME_ONLY_REGEX.test(date)) {
                     return date
                 }
 
