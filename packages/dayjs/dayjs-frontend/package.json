@@ -1,6 +1,6 @@
 {
   "name": "@dracul/dayjs-frontend",
-  "version": "1.44.2",
+  "version": "1.44.4",
   "description": "vue dayjs utils",
   "main": "./src/index.js",
   "publishConfig": {
