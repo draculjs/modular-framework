@@ -68,6 +68,10 @@ export default {
       this.form.file = file
     },
     async onCreate() {
+      if (this.$refs.form && !this.$refs.form.validate()) {
+        return
+      }
+
       if (this.form.file) {
         this.loading = true;
 

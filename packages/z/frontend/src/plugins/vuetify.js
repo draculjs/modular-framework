@@ -15,13 +15,13 @@ const LIGHT_THEME = {
 }
 
 const DARK_THEME = {
-    primary : "#71DDC7",
+    primary : "#40C746",
     onPrimary : "#000000",
-    secondary : "#E57FFB",
-    onSecondary : "#010101",
-    background : "#121212",
-    appBar: '#000000',
-    onAppBar: '#71DDC7',
+    secondary : "#4AC54F",
+    onSecondary : "#000000",
+    background : "#0C0C0C",
+    appBar: '#030303',
+    onAppBar: '#00FF0A',
 }
 
 

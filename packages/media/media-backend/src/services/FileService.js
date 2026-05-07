@@ -1,4 +1,4 @@
-import { updateUserUsedStorage, findUserStorageByUser } from './UserStorageService'
+import { updateUserUsedStorage } from './UserStorageService'
 import userStorage from '../models/UserStorageModel'
 import { FILE_SHOW_ALL, FILE_SHOW_OWN } from '../permissions/File'
 import { DefaultLogger as winston } from '@dracul/logger-backend'
@@ -113,10 +113,6 @@ class FileService extends EventEmitter {
             const { id, description, tags, expirationDate, isPublic, groups, users } = data
 
             const expirationUpdate = this._normalizeUpdateExpirationDate(expirationDate)
-            if (expirationUpdate.hasValue && expirationUpdate.value) {
-                const userStorage = await findUserStorageByUser(authUser)
-                this._validateExpirationWithinUserStorage(expirationUpdate.value, userStorage)
-            }
 
             const updateFields = { description, tags, isPublic, groups, users }
             if (expirationUpdate.hasValue) updateFields.expirationDate = expirationUpdate.value
@@ -164,10 +160,6 @@ class FileService extends EventEmitter {
             }
 
             const expirationUpdate = this._normalizeUpdateExpirationDate(expirationDate)
-            if (expirationUpdate.hasValue && expirationUpdate.value) {
-                const userStorage = await findUserStorageByUser(user)
-                this._validateExpirationWithinUserStorage(expirationUpdate.value, userStorage)
-            }
             
             const userGroups = await GroupService.fetchMyGroups(user.id)
             const updateFields = {};
@@ -644,7 +636,6 @@ class FileService extends EventEmitter {
 
     _normalizeUpdateExpirationDate(expirationDate) {
         try {
-            winston.info(`expirationDate recibido: ${expirationDate}`)
             if (expirationDate === undefined) {
                 return { hasValue: false }
             }
@@ -723,9 +714,7 @@ class FileService extends EventEmitter {
     }
 
     _getExpirationDateTimezone() {
-        winston.info("BEFORE getExpirationDateTimezone")
-        const expirationDateTimezone = process.env.MEDIA_TIMEZONE || process.env.TZ || 'America/Argentina/Buenos_Aires'
-        winston.info("getExpirationDateTimezone:", expirationDateTimezone)
+        const expirationDateTimezone = process.env.MEDIA_TIMEZONE || process.env.TZ || 'UTC'
 
         try {
             Intl.DateTimeFormat('en-US', { timeZone: expirationDateTimezone }).format(new Date())

@@ -202,6 +202,57 @@ describe('FileService update expiration safety (#167382 Case 1)', () => {
         expect(await File.countDocuments({ _id: file._id })).toBe(1);
     });
 
+    test('updateFile allows extending explicit expirationDate beyond the user storage creation limit', async () => {
+        await createStorage({ fileExpirationTime: 1 });
+        const originalExpiration = daysFromNow(1);
+        const extendedExpiration = daysFromNow(10);
+        const file = await File.create(createTestFile({
+            filename: 'extended-expiration.json',
+            expirationDate: originalExpiration,
+            createdBy: { user: TEST_USER_ID, username: authUser.username }
+        }));
+
+        const updated = await FileService.updateFile(
+            authUser,
+            null,
+            updateInput(file, {
+                description: 'expiration extended',
+                expirationDate: extendedExpiration.toISOString()
+            }),
+            authUser.id,
+            true,
+            false,
+            false
+        );
+
+        expect(updated.description).toBe('expiration extended');
+        expect(new Date(updated.expirationDate).getTime()).toBe(extendedExpiration.getTime());
+    });
+
+    test('updateFileMetadata allows extending explicit expirationDate beyond the user storage creation limit', async () => {
+        await createStorage({ fileExpirationTime: 1 });
+        const originalExpiration = daysFromNow(1);
+        const extendedExpiration = daysFromNow(10);
+        const file = await File.create(createTestFile({
+            filename: 'metadata-extended-expiration.json',
+            expirationDate: originalExpiration,
+            createdBy: { user: TEST_USER_ID, username: authUser.username }
+        }));
+
+        const updated = await FileService.updateFileMetadata(
+            file.id,
+            authUser,
+            FILE_SHOW_ALL,
+            {
+                description: 'metadata expiration extended',
+                expirationDate: extendedExpiration.toISOString()
+            }
+        );
+
+        expect(updated.description).toBe('metadata expiration extended');
+        expect(new Date(updated.expirationDate).getTime()).toBe(extendedExpiration.getTime());
+    });
+
     test('updateFile accepts a future expirationDate serialized as a GraphQL timestamp string', async () => {
         await createStorage({ fileExpirationTime: 10 });
         const file = await File.create(createTestFile({

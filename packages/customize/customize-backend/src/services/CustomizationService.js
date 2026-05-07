@@ -61,6 +61,16 @@ export const updateColors = async function ({lightTheme, darkTheme}) {
 
 }
 
+export const updateDarkTheme = async function (darkTheme) {
+    try {
+        const customization = await Customization.findOneAndUpdate({}, {darkTheme},{new: true}).exec()
+        return customization
+    } catch (e) {
+        throw e
+    }
+
+}
+
 export const updateLogo = async function ({mode, title}) {
 
     try {

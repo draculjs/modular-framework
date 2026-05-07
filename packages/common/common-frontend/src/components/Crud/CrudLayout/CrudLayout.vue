@@ -5,6 +5,7 @@
         <span v-t="title"></span>
         <v-btn
           v-if="addButton"
+          data-testid="crud-add-button"
           fab
           small
           color="primary"
