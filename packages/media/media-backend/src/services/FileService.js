@@ -13,7 +13,11 @@ import fs from 'fs/promises'
 import EventEmitter from 'events'
 
 const customParseFormat = require('dayjs/plugin/customParseFormat')
+const utc = require('dayjs/plugin/utc')
+const timezone = require('dayjs/plugin/timezone')
 dayjs.extend(customParseFormat)
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 /**
  * @description Número máximo de archivos a eliminar en paralelo durante el cleanup.
@@ -108,26 +112,18 @@ class FileService extends EventEmitter {
         try {
             const { id, description, tags, expirationDate, isPublic, groups, users } = data
 
-            let formattedExpirationDate = expirationDate
-            if (expirationDate) {
-                const userProvidedDate = dayjs(expirationDate)
-                if (userProvidedDate.isValid()) {
-                     formattedExpirationDate = userProvidedDate.toDate()
-                }
-                
-                // Validate against user storage limits
+            const expirationUpdate = this._normalizeUpdateExpirationDate(expirationDate)
+            if (expirationUpdate.hasValue && expirationUpdate.value) {
                 const userStorage = await findUserStorageByUser(authUser)
-                if (userStorage) {
-                     const timeDiff = this._validateExpirationDate(formattedExpirationDate)
-                     if (timeDiff > userStorage.fileExpirationTime) {
-                         throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
-                     }
-                }
+                this._validateExpirationWithinUserStorage(expirationUpdate.value, userStorage)
             }
+
+            const updateFields = { description, tags, isPublic, groups, users }
+            if (expirationUpdate.hasValue) updateFields.expirationDate = expirationUpdate.value
 
             const updatedFile = await this._updateFileDocument(
                 id,
-                { description, tags, expirationDate: formattedExpirationDate, isPublic, groups, users },
+                updateFields,
                 userId,
                 allFilesAllowed,
                 ownFilesAllowed,
@@ -137,7 +133,7 @@ class FileService extends EventEmitter {
             if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
             if (newFile) await this._replaceFileContent(updatedFile, newFile, userId, authUser.username)
 
-            if (updatedFile && expirationDate) {
+            if (updatedFile && expirationUpdate.hasValue) {
                 this.emit('expirationChanged')
             }
 
@@ -167,21 +163,16 @@ class FileService extends EventEmitter {
                 throw new Error('File fields to update were not provided')
             }
 
-            const userProvidedDate = expirationDate ? dayjs(expirationDate) : null
-            if (userProvidedDate && !userProvidedDate.isValid()) throw new Error('Invalid date format')
-
-            const userStorage = await findUserStorageByUser(user)
-            const formattedExpirationDate = userProvidedDate ? userProvidedDate.toDate() : null
-            
-            if (formattedExpirationDate) {
-                const timeDiff = this._validateExpirationDate(formattedExpirationDate)
-                if (timeDiff > userStorage.fileExpirationTime) throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
+            const expirationUpdate = this._normalizeUpdateExpirationDate(expirationDate)
+            if (expirationUpdate.hasValue && expirationUpdate.value) {
+                const userStorage = await findUserStorageByUser(user)
+                this._validateExpirationWithinUserStorage(expirationUpdate.value, userStorage)
             }
             
             const userGroups = await GroupService.fetchMyGroups(user.id)
             const updateFields = {};
             if (description !== undefined) updateFields.description = description;
-            if (expirationDate !== undefined) updateFields.expirationDate = formattedExpirationDate;
+            if (expirationUpdate.hasValue) updateFields.expirationDate = expirationUpdate.value;
             if (tags !== undefined) updateFields.tags = tags;
             if (isPublic !== undefined) updateFields.isPublic = isPublic;
             
@@ -194,7 +185,9 @@ class FileService extends EventEmitter {
             if (!updatedFile) throw new Error(`File not found with id ${id}`)
             if (updatedFile && updatedFile.relativePath) cache.delete(updatedFile.relativePath)
 
-            this.emit('expirationChanged')
+            if (expirationUpdate.hasValue) {
+                this.emit('expirationChanged')
+            }
 
             return updatedFile
         } catch (error) {
@@ -645,6 +638,113 @@ class FileService extends EventEmitter {
                 .populate('createdBy.user.username')
         } catch (error) {
             winston.error(`FileService._getFileForUpdate error: ${error}`)
+            throw error
+        }
+    }
+
+    _normalizeUpdateExpirationDate(expirationDate) {
+        try {
+            winston.info(`expirationDate recibido: ${expirationDate}`)
+            if (expirationDate === undefined) {
+                return { hasValue: false }
+            }
+
+            if (expirationDate === null || expirationDate === '') {
+                return { hasValue: true, value: null }
+            }
+
+            const formattedExpirationDate = this._parseExpirationDate(expirationDate)
+            if (formattedExpirationDate <= new Date()) {
+                throw new Error('Expiration date must be older than current date')
+            }
+
+            return { hasValue: true, value: formattedExpirationDate }
+        } catch (error) {
+            winston.error(`FileService._normalizeUpdateExpirationDate error: ${error}`)
+            throw error
+        }
+    }
+
+    _parseExpirationDate(expirationDate) {
+        const dateOnlyExpiration = this._parseDateOnlyExpirationDate(expirationDate)
+        if (dateOnlyExpiration) return dateOnlyExpiration
+
+        const timestampExpiration = this._parseTimestampExpirationDate(expirationDate)
+        if (timestampExpiration) return timestampExpiration
+
+        const userProvidedDate = dayjs(expirationDate)
+        if (!userProvidedDate.isValid()) {
+            throw new Error('Invalid date format')
+        }
+
+        return userProvidedDate.toDate()
+    }
+
+    _parseTimestampExpirationDate(expirationDate) {
+        const timestampRegex = /^[+-]?\d+$/
+        if (typeof expirationDate !== 'string' || !timestampRegex.test(expirationDate.trim())) {
+            return null
+        }
+
+        const parsedDate = new Date(parseInt(expirationDate, 10))
+        if (Number.isNaN(parsedDate.getTime())) {
+            throw new Error('Invalid date format')
+        }
+
+        return parsedDate
+    }
+
+    _parseDateOnlyExpirationDate(expirationDate) {
+        if (typeof expirationDate !== 'string') return null
+
+        const trimmedDate = expirationDate.trim()
+        const dateOnlyMatch = trimmedDate.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+        const utcMidnightMatch = trimmedDate.match(/^(\d{4})-(\d{2})-(\d{2})T00:00:00(?:\.000)?Z$/)
+        const match = dateOnlyMatch || utcMidnightMatch
+
+        if (!match) return null
+
+        const year = parseInt(match[1], 10)
+        const month = parseInt(match[2], 10)
+        const day = parseInt(match[3], 10)
+        const dateKey = `${match[1]}-${match[2]}-${match[3]}`
+        const parsedDate = dayjs.tz(`${dateKey} 00:00:00`, 'YYYY-MM-DD HH:mm:ss', this._getExpirationDateTimezone())
+
+        if (
+            !parsedDate.isValid() ||
+            parsedDate.year() !== year ||
+            parsedDate.month() !== month - 1 ||
+            parsedDate.date() !== day
+        ) {
+            throw new Error('Invalid date format')
+        }
+
+        return parsedDate.toDate()
+    }
+
+    _getExpirationDateTimezone() {
+        winston.info("BEFORE getExpirationDateTimezone")
+        const expirationDateTimezone = process.env.MEDIA_TIMEZONE || process.env.TZ || 'America/Argentina/Buenos_Aires'
+        winston.info("getExpirationDateTimezone:", expirationDateTimezone)
+
+        try {
+            Intl.DateTimeFormat('en-US', { timeZone: expirationDateTimezone }).format(new Date())
+            return expirationDateTimezone
+        } catch (error) {
+            throw new Error(`Invalid media expiration timezone: ${expirationDateTimezone}`)
+        }
+    }
+
+    _validateExpirationWithinUserStorage(expirationDate, userStorage) {
+        try {
+            if (!userStorage || !expirationDate) return
+
+            const timeDiff = this._validateExpirationDate(expirationDate)
+            if (timeDiff > userStorage.fileExpirationTime) {
+                throw new Error(`File expiration exceeds maximum of ${userStorage.fileExpirationTime} days`)
+            }
+        } catch (error) {
+            winston.error(`FileService._validateExpirationWithinUserStorage error: ${error}`)
             throw error
         }
     }

@@ -1,5 +1,5 @@
 import Dayjs from '../utils/Dayjs'
-import {isDayjs} from 'dayjs'
+import parseDatetimeSourceHelper from './parseDatetimeSourceHelper'
 /**
  *
  * @param {Dayjs} sourceDate
@@ -12,11 +12,7 @@ const setDateToDatetimeHelper = (sourceDate, newDate) => {
         return null
     }
 
-    if(sourceDate === null || sourceDate === ''){
-        sourceDate = Dayjs()
-    }else if(!(isDayjs(sourceDate))){
-        throw new Error("Date is not a Dayjs instance")
-    }
+    sourceDate = parseDatetimeSourceHelper(sourceDate)
 
     return  Dayjs(newDate).hour(sourceDate.hour()).minute(sourceDate.minute())
 }

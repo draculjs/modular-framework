@@ -22,6 +22,16 @@ describe("DayjsMixin", () => {
         assert.strictEqual(result,'23:59')
     })
 
+    it('ISO getTimeFormat 2026-05-08T03:00:00.000Z => 00:00', async () => {
+        let result =DayjsMixin.default.computed.getTimeFormat()('2026-05-08T03:00:00.000Z')
+        assert.strictEqual(result,'00:00')
+    })
+
+    it('timestamp string getTimeFormat 1746658800000 => 20:00', async () => {
+        let result =DayjsMixin.default.computed.getTimeFormat()('1746658800000')
+        assert.strictEqual(result,'20:00')
+    })
+
 
     it('getDateTimeFormat 2022-11-24 21:00 => 2022-11-24  21:00', async () => {
         let result =DayjsMixin.default.computed.getDateTimeFormat()('2022-11-24 21:00')
