@@ -6,6 +6,7 @@
       </template>
 
       <template v-slot:toolbar-right>
+        <DarkMode/>
         <notification-button v-if="me && $store.getters.hasPermission('NOTIFICATION_SHOW')" :user-id="getUserId"/>
         <dashboard-button/>
         <app-bar-user-menu/>
@@ -24,10 +25,11 @@ import {DashboardButton, AppBarUserMenu} from '@dracul/user-frontend'
 import {LogoToolbar, TitleToolbar} from '@dracul/customize-frontend'
 import {mapGetters} from "vuex";
 import ErrorSnackbar from "@/modules/base/components/ErrorSnackbar"
+import {DarkMode} from "@dracul/customize-frontend";
 
 export default {
   name: 'App',
-  components: {ErrorSnackbar, Layout, DashboardButton, AppBarUserMenu, LogoToolbar, TitleToolbar, NotificationButton},
+  components: {ErrorSnackbar, Layout, DashboardButton, AppBarUserMenu, LogoToolbar, TitleToolbar, NotificationButton, DarkMode},
   data() {
     return {
       menu: menuConfig

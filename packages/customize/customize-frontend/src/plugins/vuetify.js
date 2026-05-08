@@ -100,11 +100,11 @@ const LIGHT_THEME = {
 }
 
 const DARK_THEME = {
-    primary : "#71DDC7",
+    primary : "#40C746",
     onPrimary : "#000000",
-    secondary : "#E57FFB",
-    onSecondary : "#010101",
-    background : "#121212"
+    secondary : "#4AC54F",
+    onSecondary : "#000000",
+    background : "#0C0C0C"
 }
 
 

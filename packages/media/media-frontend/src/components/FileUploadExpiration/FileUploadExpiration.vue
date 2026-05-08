@@ -61,7 +61,7 @@
           :close-on-click="false"
           offset-x
       >
-        <template v-slot:activator="{ on, attrs }">
+        <template v-slot:activator="{ attrs }">
           <v-btn v-on:click="pickFile()"
                 fab dark
                 :color="getState.color"
@@ -100,6 +100,7 @@
 import uploadProvider from "../../providers/UploadProvider";
 import UserStorageProvider from "../../providers/UserStorageProvider"
 import {DateTimeInput} from '@dracul/dayjs-frontend';
+import {isExpirationDateInPast} from "../../utils/expirationDateValidation";
 
 const INITIAL = 'initial'
 const SELECTED = 'selected'
@@ -129,8 +130,8 @@ export default {
       uploadedFile: null,
       state: INITIAL,
       maxFileSize: 0,
+      fileSize: null,
       expirationDate: null,
-      fileExpirationTime: null,
       disableUploadButton: false,
       states: {
         initial: {
@@ -160,10 +161,8 @@ export default {
       fileExpirationTimeRules: [
         () => {
           this.disableUploadButton = true;
-          if (this.getDifferenceInDays < -1){ 
+          if (this.hasExpirationDateInPast){
             return this.$t("media.userStorage.fileExpirationTimeOlderThanToday")
-          } else if (this.fileExpirationTime && this.getDifferenceInDays && this.getDifferenceInDays >= this.fileExpirationTime) {
-            return `${this.$t("media.userStorage.fileExpirationLimitExceeded")} ${this.fileExpirationTime} ${this.$t("media.file.days")}`
           }
           this.disableUploadButton = false;
           return true
@@ -192,13 +191,14 @@ export default {
       }
       return null
     },
-    getDifferenceInDays() {
-      if (this.expirationDate) {
-        const today = new Date();
-        const expirationDate = new Date(this.expirationDate);
-        return Math.floor((expirationDate - today) / (1000 * 3600 * 24));
-      }
-      return null;
+    hasExpirationDateInPast() {
+      return isExpirationDateInPast(this.expirationDate);
+    },
+    canUploadFile() {
+      return this.file
+          && this.state !== UPLOADED
+          && this.fileSize <= this.maxFileSize
+          && !this.hasExpirationDateInPast
     },
     visibilityOptions() {
       return [
@@ -237,7 +237,6 @@ export default {
       return UserStorageProvider.findUserStorageByUser().then((res) => {
         if (res.data.userStorageFindByUser && res.data.userStorageFindByUser.maxFileSize) {
           this.maxFileSize = res.data.userStorageFindByUser.maxFileSize;
-          this.fileExpirationTime = res.data.userStorageFindByUser.fileExpirationTime;
         }
 
       }).catch(
@@ -245,7 +244,7 @@ export default {
       )
     },
      async upload() {
-      if (this.file && this.state !== UPLOADED && this.fileSize <= this.maxFileSize && this.getDifferenceInDays <= this.fileExpirationTime) {
+      if (this.canUploadFile) {
         this.loading = true;
         let expirationDate = this.expirationDate ? new Date(this.expirationDate).toISOString() : null;
 
@@ -263,16 +262,20 @@ export default {
         this.$emit('fileUploaded', this.uploadedFile);
         return this.uploadedFile;
       } else {
-        this.setErrorFileExceeded();
+        this.setUploadValidationError();
       }
     },
     resetUpload() {
       this.showErrorMessage = false;
       this.setState(INITIAL);
     },
-    setErrorFileExceeded() {
+    setUploadValidationError() {
       this.setState(ERROR);
-      this.setErrorMessage(`${this.$t("media.file.fileSizeExceeded")} ${this.maxFileSize} Mb`);
+      if (this.hasExpirationDateInPast) {
+        this.setErrorMessage(this.$t("media.userStorage.fileExpirationTimeOlderThanToday"));
+      } else {
+        this.setErrorMessage(`${this.$t("media.file.fileSizeExceeded")} ${this.maxFileSize} Mb`);
+      }
       this.showErrorMessage = true;
     },
     setState(state) {
@@ -288,4 +291,3 @@ export default {
 <style scoped>
 
 </style>
-

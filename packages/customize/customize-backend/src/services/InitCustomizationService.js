@@ -9,9 +9,9 @@ import {
     CUSTOMIZATION_UPDATE
 } from "../permissions";
 
-import {LIGHT_DEFAULT_THEME, DARK_DEFAULT_THEME} from '../constants/themes'
+import {LIGHT_DEFAULT_THEME, DARK_DEFAULT_THEME, NEW_DARK_DEFAULT_THEME} from '../constants/themes'
 import {InitService} from "@dracul/user-backend";
-import {createCustomization, findCustomization, updateColors} from "./CustomizationService";
+import {createCustomization, findCustomization, updateColors, updateDarkTheme} from "./CustomizationService";
 
 export const initCustomization = async function ({lightTheme, darkTheme, logo, language}) {
 
@@ -19,11 +19,30 @@ export const initCustomization = async function ({lightTheme, darkTheme, logo, l
     let data = {}
 
     data.lightTheme = lightTheme ? lightTheme : LIGHT_DEFAULT_THEME
-    data.darkTheme = darkTheme ? darkTheme : DARK_DEFAULT_THEME
+    data.darkTheme = darkTheme ? darkTheme : NEW_DARK_DEFAULT_THEME
     data.logo = logo ? logo : {mode: 'OnlyTitle', title: 'APP'}
     data.language = language ? language : 'es'
 
     let customDoc = await findCustomization()
+
+    //if customDoc has original dark theme (DARK_DEFAULT_THEME) replace it by the newer one (NEW_DARK_DEFAULT_THEME):
+    const hasDarkTheme = customDoc?.darkTheme
+    DefaultLogger.debug("darkTheme: ", JSON.stringify(customDoc,null,2))
+    DefaultLogger.debug("hasDarkTheme: ", hasDarkTheme)
+    const hasDarkThemeAndIsTheOriginal = hasDarkTheme &&
+        hasDarkTheme.primary === DARK_DEFAULT_THEME.primary &&
+        hasDarkTheme.onPrimary === DARK_DEFAULT_THEME.onPrimary &&
+        hasDarkTheme.secondary === DARK_DEFAULT_THEME.secondary &&
+        hasDarkTheme.onSecondary === DARK_DEFAULT_THEME.onSecondary &&
+        hasDarkTheme.background === DARK_DEFAULT_THEME.background &&
+        hasDarkTheme.appBar === DARK_DEFAULT_THEME.appBar &&
+        hasDarkTheme.onAppBar === DARK_DEFAULT_THEME.onAppBar
+    DefaultLogger.debug("hasDarkThemeAndIsTheOriginal: ", hasDarkThemeAndIsTheOriginal)
+    if(hasDarkThemeAndIsTheOriginal){
+        await updateDarkTheme(NEW_DARK_DEFAULT_THEME)
+        DefaultLogger.debug(`Customization Dark Theme updated from DARK_DEFAULT_THEME. ID: ${customDoc._id}`)
+    }
+
 
     if (!customDoc) {
         let customDoc = await createCustomization(data)

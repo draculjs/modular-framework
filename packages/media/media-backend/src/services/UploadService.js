@@ -43,12 +43,6 @@ const fileUpload = async function (user, inputFile, expirationDate, isPublic, de
         winston.error("Expiration date must be older than current date")
         throw new expirationDateMustBeOlderError("Expiration date must be older than current date")
       }
-
-
-      if (timeDiffExpirationDate > userStorage.fileExpirationTime) {
-        winston.error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
-        throw new Error(`File expiration can not be longer than max user expiration time per file (${userStorage.fileExpirationTime} days)`)
-      }
     }
 
     let url = baseUrl() + relativePath

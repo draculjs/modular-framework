@@ -85,6 +85,7 @@ import {DateTimeInput} from '@dracul/dayjs-frontend';
 import UserStorageProvider from "../../../providers/UserStorageProvider"
 import FileUploadButton from "../../../components/FileUploadButton";
 import { GroupAutocomplete, UserAutocomplete } from '@dracul/user-frontend'
+import {isExpirationDateInPast} from "../../../utils/expirationDateValidation";
 
 export default {
   name: "FileForm",
@@ -100,14 +101,10 @@ export default {
   data() {
     return {
       maxFileSize: null,
-      fileExpirationTime: null,
       fileExpirationTimeRules: [
         () => {
-          if (this.differenceInDays < -1){
+          if (this.hasExpirationDateInPast){
             return this.$t("media.userStorage.fileExpirationTimeOlderThanToday")
-          } else if (this.fileExpirationTime && this.differenceInDays) {
-            return (this.differenceInDays < this.fileExpirationTime)
-                || `${this.$t("media.userStorage.fileExpirationLimitExceeded")} ${this.fileExpirationTime} ${this.$t("media.file.days")}`
           } else {
             return true
           }
@@ -128,13 +125,8 @@ export default {
         this.$emit('input', val)
       }
     },
-    differenceInDays() {
-      if(this.form.expirationDate){
-        const today = new Date();
-        const expirationDate = new Date(this.form.expirationDate);
-        return Math.floor((expirationDate - today) / (1000 * 3600 * 24))
-      }
-      return null
+    hasExpirationDateInPast() {
+      return isExpirationDateInPast(this.form.expirationDate)
     },
     visibilityOptions() {
       return [
@@ -162,7 +154,6 @@ export default {
       return UserStorageProvider.findUserStorageByUser().then((res) => {
         if (res.data.userStorageFindByUser && res.data.userStorageFindByUser.maxFileSize) {
           this.maxFileSize = res.data.userStorageFindByUser.maxFileSize;
-          this.fileExpirationTime = res.data.userStorageFindByUser.fileExpirationTime;
         }
       }).catch(
           err => console.error(err)
