@@ -80,6 +80,22 @@ const settings = [
         value: '',
         group: 'File',
         label: {en: 'File Setting', es: 'archivo configurable', pt: 'File Setting'}
+    },
+
+    {
+        key: 'html',
+        type: 'html',
+        value: '',
+        group: 'EDITORS',
+        label: {en: 'HTML Setting', es: 'html Setting', pt: 'html Setting'}
+    },
+
+    {
+        key: 'markdown',
+        type: 'markdown',
+        value: '',
+        group: 'EDITORS',
+        label: {en: 'markdown Setting', es: 'markdown Setting', pt: 'markdown Setting'}
     }
 ]
 

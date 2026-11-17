@@ -1,3 +1,5 @@
+import HtmlEditor from "./components/HtmlEditor";
+import MarkdownEditor from "./components/MarkdownEditor";
 import SubmitButton from "./components/SubmitButton";
 import CloseButton from "./components/CloseButton";
 import Loading from "./components/Loading";
@@ -35,6 +37,8 @@ import i18nMessages from './i18n/messages'
 
 export {
     //Components
+    HtmlEditor,
+    MarkdownEditor,
     SubmitButton,
     CloseButton,
     Loading,

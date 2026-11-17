@@ -13,6 +13,13 @@
         >
         </v-text-field>
 
+        <html-editor v-if="item.type === 'html'" v-model="form.value"
+                     :name="item.key" :label="item.label[getLanguage]"
+                     :placeholder="item.label[getLanguage]" :rules="validateRegex" />
+        <markdown-editor v-if="item.type === 'markdown'" v-model="form.value"
+                         :name="item.key" :label="item.label[getLanguage]"
+                         :placeholder="item.label[getLanguage]" :rules="validateRegex" />
+
         <!--number-->
         <v-text-field v-if="item.type === 'number'"
                       prepend-icon="text_snippet" type="number"
@@ -89,12 +96,13 @@
 
 <script>
 
-import {InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
+import {HtmlEditor, MarkdownEditor, InputErrorsByProps, RequiredRule} from '@dracul/common-frontend'
 import SettingsProvider from '../../../providers/SettingsProvider'
 import {mapGetters} from "vuex";
 
 export default {
   name: "SettingsForm",
+  components: {HtmlEditor, MarkdownEditor},
   mixins: [InputErrorsByProps, RequiredRule],
   props: {
     value: {type: Object, required: true},

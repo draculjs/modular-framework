@@ -28,5 +28,9 @@
     "sass": "1.32.13",
     "sass-loader": "^8.0.2"
   },
-  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1"
+  "gitHead": "f747e67912f903a50cd8821361dffad4cd99c1b1",
+  "dependencies": {
+    "dompurify": "^3.3.0",
+    "marked": "^12.0.2"
+  }
 }

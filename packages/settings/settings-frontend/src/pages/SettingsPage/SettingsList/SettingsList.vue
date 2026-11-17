@@ -38,6 +38,9 @@
               {{getCensoredPassword(item.value)}}
             </template>
 
+            <settings-rich-text v-else-if="item.type === 'html' || item.type === 'markdown'"
+                                :type="item.type" :value="item.value" />
+
             <template v-else>
              {{item.prefix}} {{ item.value }} {{item.suffix}}
             </template>
@@ -70,13 +73,14 @@
 </template>
 
 <script>
+import SettingsRichText from "../SettingsRichText.vue";
 import SettingsProvider from "../../../providers/SettingsProvider";
 import {EditButton, ShowButton, SearchInput} from '@dracul/common-frontend'
 import {mapGetters} from "vuex";
 
 export default {
   name: "SettingsList",
-  components: {EditButton, ShowButton, SearchInput},
+  components: {SettingsRichText, EditButton, ShowButton, SearchInput},
 
   data() {
     return {
